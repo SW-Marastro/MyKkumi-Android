@@ -1,4 +1,4 @@
-package jmi.gnu.mykkumi_aos
+package marastro.jmi.mykkumi
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
