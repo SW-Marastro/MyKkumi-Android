@@ -1,4 +1,4 @@
-package jmi.gnu.mykkumi_aos
+package marastro.jmi.mykkumi
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
