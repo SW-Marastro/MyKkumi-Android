@@ -1,4 +1,4 @@
-package jmi.gnu.mykkumi_aos
+package marastro.jmi.mykkumi
 
 import org.junit.Test
 

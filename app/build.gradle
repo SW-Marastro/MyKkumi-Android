@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'jmi.gnu.mykkumi_aos'
+    namespace 'marastro.jmi.mykkumi'
     compileSdk 34
 
     defaultConfig {
-        applicationId "jmi.gnu.mykkumi_aos"
+        applicationId "marastro.jmi.mykkumi"
         minSdk 26
         targetSdk 33
         versionCode 1
