@@ -1,4 +1,4 @@
-package marastro.jmi.mykkumi
+package com.swmarastro.mykkumi.android
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
