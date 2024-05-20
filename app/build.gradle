@@ -8,9 +8,9 @@ plugins {
 android {
     namespace 'com.swmarastro.mykkumi.android'
     compileSdk 34
-    // https://github.com/SW-Maestro-OSS/soma-weather-viewer-android/blob/b27fa5afe6034c0232c3ef533ee76b8d7760bba7/core/data/src/main/java/org/soma/weatherviewer/data/di/NetworkModule.kt#L5
+
     defaultConfig {
-        applicationId "marastro.jmi.mykkumi"
+        applicationId "com.swmarastro.mykkumi.android"
         minSdk 28
         targetSdk 34
         versionCode 1
@@ -26,16 +26,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 }
 
 dependencies {
-
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.12.0'
