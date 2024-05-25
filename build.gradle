@@ -1,6 +1,23 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
+        // Sdk Version
+        min_sdk_version = 28
+        target_sdk_version = 34
+        compile_sdk_version = 34
+
+        // UI
+        androidx_core_version = "1.10.0"
+        androidx_appcompat_version = "1.6.1"
+        meterial_version = "1.12.0"
+        constraintlayout_version = "2.1.4"
+
+        // Test
+        junit_version = "4.13.2"
+        junit_test_version = "1.1.5"
+        espresso_core_version = "3.5.1"
+
+        // Dependency Injection
         hilt_version = "2.44"
     }
 }
