@@ -19,6 +19,11 @@ buildscript {
 
         // Dependency Injection
         hilt_version = "2.44"
+
+        // Network
+        retrofit_version = "2.9.0"
+        okhttp_version = "4.10.0"
+        // sandwich_version = "1.3.4"
     }
 }
 
