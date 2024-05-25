@@ -1,16 +1,15 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library' // 다른 애플리케이션이나 모듈에서 재사용할 수 있는 코드를 포함
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
 }
 
 android {
-    namespace 'com.swmarastro.mykkumi'
+    namespace 'com.swmarastro.mykkumi.data'
     compileSdk compile_sdk_version
 
     defaultConfig {
-        applicationId "com.swmarastro.mykkumi"
         minSdk min_sdk_version
         targetSdk target_sdk_version
         versionCode 1
@@ -26,11 +25,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = jvm_target_version
     }
 }
 
