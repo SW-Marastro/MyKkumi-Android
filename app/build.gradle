@@ -41,6 +41,9 @@ android {
     kotlinOptions {
         jvmTarget = jvm_target_version
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
