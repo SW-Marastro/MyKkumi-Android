@@ -40,6 +40,10 @@ jobs:
     - name: Build release Apk
       run: ./gradlew assembleDebug
 
+    # Build AAB Release
+    - name: Build release Bundle
+      run: ./gradlew bundleRelease
+
     # Firebase에 배포
     - name: Upload Firebase App Distribution
       uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -48,7 +52,3 @@ jobs:
         serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
         groups: swmarastro
         file: app/build/outputs/apk/release/app-debug.apk
-
-    # Build AAB Release
-    - name: Build release Bundle
-      run: ./gradlew bundleRelease
