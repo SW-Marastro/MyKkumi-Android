@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.data.di
 
+import com.swmarastro.mykkumi.data.datasource.HelloWorldDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,9 +51,9 @@ object NetworkModule {
     }
 
     // API 생기면 이 부분 작성
-    /*@Provides
+    @Provides
     @Singleton
-    fun provideWeatherDataSource(retrofit: Retrofit): MyKkumiDataSource {
-        return retrofit.create(MyKkumiDataSource::class.java)
-    }*/
+    fun provideHelloWorldDataSource(retrofit: Retrofit): HelloWorldDataSource {
+        return retrofit.create(HelloWorldDataSource::class.java)
+    }
 }
