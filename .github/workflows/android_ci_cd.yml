@@ -6,6 +6,7 @@ on:
     branches: [ "Develop" ]
   pull_request:
     branches: [ "Develop" ]
+  workflow_dispatch: # 테스트를 위한 수동 실행 옵션
 
 jobs:
   build:
