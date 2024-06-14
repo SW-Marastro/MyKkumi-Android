@@ -35,12 +35,12 @@ jobs:
     #  run: echo "$LOCAL_PROPERTIES_CONTENTS" > local.properties
       
     # Build APK Release
-    - name: Build release Apk
-      run: ./gradlew assembleDebug
+    - name: Build Release Apk
+      run: ./gradlew assembleRelease
 
     # Build AAB Release
-    - name: Build release Bundle
-      run: ./gradlew bundleRelease
+    #- name: Build release Bundle
+    #  run: ./gradlew bundleRelease
 
     # Firebase에 배포
     - name: Upload Firebase App Distribution
@@ -49,4 +49,4 @@ jobs:
         appId: ${{secrets.FIREBASE_APP_ID}}
         serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
         groups: swmarastro
-        file: app/build/outputs/apk/release/app-debug.apk
+        file: app/build/outputs/apk/release/app-release.apk
