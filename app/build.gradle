@@ -21,18 +21,18 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            /*manifestPlaceholders = [
+            manifestPlaceholders = [
                     appName : "@string/app_name"
-            ]*/
+            ]
         }
-        /*debug {
+        debug {
             applicationIdSuffix '.dev'
             manifestPlaceholders = [
                     appName : "@string/app_name_dev"
             ]
-        }*/
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
