@@ -1,9 +1,9 @@
 name: Android CI/CD to Firebase App Distribution
 
-# Develop 브랜치에 PR 될 때 확인
+# Develop 브랜치에 push 될 때 확인
 on:
-  pull_request:
-    branches: [ "Develop" ]
+  push:
+    branches: [ "develop" ]
   workflow_dispatch: # 테스트를 위한 수동 실행 옵션
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
     # 깃허브 runner에서 돌아가는 환경은 java 17버전으로 설정
     - name: set up JDK 17
       uses: actions/setup-java@v3
