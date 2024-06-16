@@ -36,7 +36,7 @@ jobs:
       
     # Build APK Release
     - name: Build Release Apk
-      run: ./gradlew assembleRelease --stacktrace
+      run: ./gradlew assembleRelease
 
     # Build AAB Release
     #- name: Build release Bundle
