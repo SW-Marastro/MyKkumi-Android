@@ -38,8 +38,8 @@ jobs:
     - name: Build Release Apk
       run: ./gradlew assembleRelease
 
-    - name: APK 디렉토리 확인 (디버깅용)
-      run: ls -alh app/build/outputs/apk/release/
+    #- name: APK 디렉토리 확인 (디버깅용)
+    #  run: ls -alh app/build/outputs/apk/release/
 
     # Build AAB Release
     #- name: Build release Bundle
