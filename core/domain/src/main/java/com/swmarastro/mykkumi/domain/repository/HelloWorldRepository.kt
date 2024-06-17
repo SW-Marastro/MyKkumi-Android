@@ -1,5 +1,7 @@
 package com.swmarastro.mykkumi.domain.repository
 
+import com.swmarastro.mykkumi.domain.entity.GetHelloWorldResponse
+
 interface HelloWorldRepository {
-    fun getHelloWorld(): Result<Unit>
+    suspend fun getHelloWorld(): GetHelloWorldResponse
 }
