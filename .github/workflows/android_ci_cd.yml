@@ -19,6 +19,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '11'
+        distribution: 'temurin'
         cache: gradle
 
     - name: Grant execute permission for gradlew
@@ -36,6 +37,9 @@ jobs:
     # Build APK Release
     - name: Build Release Apk
       run: ./gradlew assembleRelease
+
+    - name: List APK directory for debugging
+      run: ls -alh app/build/outputs/apk/release/
 
     # Build AAB Release
     #- name: Build release Bundle
