@@ -1,4 +1,4 @@
-package marastro.jmi.mykkumi
+package com.swmarastro.mykkumi.android
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
