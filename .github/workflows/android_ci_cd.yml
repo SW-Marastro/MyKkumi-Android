@@ -38,6 +38,11 @@ jobs:
     - name: Build Release Apk
       run: ./gradlew assembleRelease
 
+    - name: Move Apk to custom directory
+      run: |
+        mkdir -p ${{ github.workspace }}/app/build/outputs/apk/release/
+        mv app/build/outputs/apk/release/app-release.apk ${{ github.workspace }}/app/build/outputs/apk/release/
+
     # Build AAB Release
     #- name: Build release Bundle
     #  run: ./gradlew bundleRelease
@@ -49,4 +54,4 @@ jobs:
         appId: ${{secrets.FIREBASE_APP_ID}}
         serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
         groups: swmarastro
-        file: app/build/outputs/apk/release/app-release.apk
+        file: ${{ github.workspace }}/app/build/outputs/apk/release/app-release.apk
