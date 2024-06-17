@@ -15,10 +15,10 @@ jobs:
     - uses: actions/checkout@v4
 
     # 깃허브 runner에서 돌아가는 환경은 java 17버전으로 설정
-    - name: set up JDK 11
+    - name: set up JDK 17
       uses: actions/setup-java@v3
       with:
-        java-version: '11'
+        java-version: '17'
         distribution: 'temurin'
         cache: gradle
 
@@ -38,7 +38,7 @@ jobs:
     - name: Build Release Apk
       run: ./gradlew assembleRelease
 
-    - name: List APK directory for debugging
+    - name: APK 디렉토리 확인 (디버깅용)
       run: ls -alh app/build/outputs/apk/release/
 
     # Build AAB Release
