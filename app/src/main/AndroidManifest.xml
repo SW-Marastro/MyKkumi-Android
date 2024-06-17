@@ -24,6 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity android:name="com.swmarastro.mykkumi.feature.home.HelloWorldActivity"
+            android:exported="false">
+
+        </activity>
     </application>
 
 </manifest>

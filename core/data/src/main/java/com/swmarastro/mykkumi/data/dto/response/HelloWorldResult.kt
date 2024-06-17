@@ -7,7 +7,7 @@ data class HelloWorldResult(
     @SerializedName("title")
     val title: String
 ) {
-    fun toEntity() : HelloWorld = HelloWorld(
+    fun toEntity(): HelloWorld = HelloWorld(
         title = title
     )
 }
