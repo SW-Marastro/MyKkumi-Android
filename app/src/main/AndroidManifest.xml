@@ -6,6 +6,7 @@
 
     <application
         android:name=".MyKkumiApplication"
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -18,16 +19,16 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
+        </activity>
+        
+        <activity android:name="com.swmarastro.mykkumi.feature.home.hello.HelloWorldActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        
-        <activity android:name="com.swmarastro.mykkumi.feature.home.hello.HelloWorldActivity"
-            android:exported="false">
-
         </activity>
     </application>
 

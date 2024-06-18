@@ -28,12 +28,12 @@ android {
                     appName : "@string/app_name"
             ]
         }
-        debug {
+        /*debug {
             applicationIdSuffix '.dev'
             manifestPlaceholders = [
                     appName : "@string/app_name_dev"
             ]
-        }
+        }*/
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -41,6 +41,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = jvm_target_version
+    }
+    dataBinding {
+        enabled = true
     }
 }
 

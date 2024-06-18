@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.data.repository
 
+import android.util.Log
 import com.swmarastro.mykkumi.data.datasource.HelloWorldDataSource
 import com.swmarastro.mykkumi.data.dto.response.HelloWorldResult
 import com.swmarastro.mykkumi.domain.entity.GetHelloWorldResponse
@@ -21,6 +22,7 @@ class HelloWorldRepositoryImpl @Inject constructor(
     }*/
 
     override suspend fun getHelloWorld(): HelloWorld {
+        Log.d("-------repository", helloWorldDataSource.getHelloWorld().toString())
         return helloWorldDataSource.getHelloWorld().toEntity()
     }
 }

@@ -20,7 +20,7 @@ abstract class BaseActivity<T: ViewDataBinding>(
         binding = DataBindingUtil.setContentView(this, layoutId)
     }
 
-    abstract fun initView()
+    abstract suspend fun initView()
 
     protected inline fun bind(block: T.() -> Unit) {
         binding.apply(block)

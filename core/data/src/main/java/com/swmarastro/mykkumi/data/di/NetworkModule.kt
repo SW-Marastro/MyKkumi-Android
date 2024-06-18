@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.data.di
 
+import android.util.Log
 import com.swmarastro.mykkumi.data.datasource.HelloWorldDataSource
 import dagger.Module
 import dagger.Provides
@@ -54,6 +55,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideHelloWorldDataSource(retrofit: Retrofit): HelloWorldDataSource {
+        Log.d("---network", "test retrofit")
         return retrofit.create(HelloWorldDataSource::class.java)
     }
 }
