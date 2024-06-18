@@ -9,9 +9,13 @@ import javax.inject.Inject
 class GetHelloWorldUseCase @Inject constructor(
     private val repository: HelloWorldRepository
 ){
-    suspend operator fun invoke(): ApiResult<HelloWorld> {
+    /*suspend operator fun invoke(): ApiResult<HelloWorld> {
         return apiResult {
             repository.getHelloWorld()
         }
+    }*/
+
+    suspend operator fun invoke(): HelloWorld {
+        return repository.getHelloWorld()
     }
 }

@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         
-        <activity android:name="com.swmarastro.mykkumi.feature.home.HelloWorldActivity"
+        <activity android:name="com.swmarastro.mykkumi.feature.home.hello.HelloWorldActivity"
             android:exported="false">
 
         </activity>

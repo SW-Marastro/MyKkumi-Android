@@ -33,6 +33,10 @@ buildscript {
 
         // Coroutines
         coroutines_version = "1.3.9"
+
+        // lifecycle
+        lifecycle_viewmodel_version = "2.5.1"
+        lifecycle_runtime_version = "2.5.1"
     }
 }
 

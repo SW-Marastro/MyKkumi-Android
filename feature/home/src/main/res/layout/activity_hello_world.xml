@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.swmarastro.mykkumi.feature.home.HelloWorldActivity">
+    tools:context="com.swmarastro.mykkumi.feature.home.hello.HelloWorldActivity">
     
     <data>
         <variable
             name="vm"
-            type="com.swmarastro.mykkumi.feature.home.HelloWorldViewModel" />
+            type="com.swmarastro.mykkumi.feature.home.hello.HelloWorldViewModel" />
     </data>
 
     <RelativeLayout
