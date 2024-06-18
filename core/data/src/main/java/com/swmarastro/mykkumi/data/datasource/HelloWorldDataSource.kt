@@ -11,5 +11,5 @@ interface HelloWorldDataSource {
     ) : Response<HelloWorldResult>*/
     @GET("v1/home")
     suspend fun getHelloWorld(
-    ) : Call<HelloWorldResult>
+    ) : HelloWorldResult
 }

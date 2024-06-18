@@ -21,7 +21,6 @@ class HelloWorldRepositoryImpl @Inject constructor(
     }*/
 
     override suspend fun getHelloWorld(): HelloWorld {
-        val response = helloWorldDataSource.getHelloWorld()
-        return response
+        return helloWorldDataSource.getHelloWorld().toEntity()
     }
 }
