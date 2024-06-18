@@ -16,5 +16,10 @@ class HelloWorldActivity : BaseActivity<ActivityHelloWorldBinding>(R.layout.acti
         bind {
             vm = viewModel
         }
+        setTitle()
+    }
+
+    private fun setTitle() {
+        viewModel.setHelloWorld()
     }
 }

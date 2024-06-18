@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -15,12 +16,17 @@ class HelloWorldViewModel @Inject constructor(
     private val getHelloWorldUseCase: GetHelloWorldUseCase
 ) : ViewModel() {
 
-    private val _helloWorldDataUiState = MutableStateFlow<String?>(null)
-    val helloWorldUiState: StateFlow<String?> get() = _helloWorldDataUiState
+    private val _helloWorldUiState = MutableStateFlow<String>("")
+    val helloWorldUiState: StateFlow<String> get() = _helloWorldUiState
 
     fun setHelloWorld() {
         viewModelScope.launch {
-            getHelloWorldUseCase.invoke()
+            try {
+                val helloWorld = getHelloWorldUseCase.invoke()
+                _helloWorldUiState.value = helloWorld.title
+            } catch (e: Exception) {
+                _helloWorldUiState.value = "API 통신 실패"
+            }
         }
     }
 }
