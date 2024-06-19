@@ -1,6 +1,5 @@
 package com.swmarastro.mykkumi.feature.home.hello
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swmarastro.mykkumi.domain.usecase.GetHelloWorldUseCase
@@ -29,7 +28,6 @@ class HelloWorldViewModel @Inject constructor(
                     getHelloWorldUseCase.invoke()
                 }
                 _helloWorldUiState.value = helloWorld.title
-                Log.d("---viewmodel", _helloWorldUiState.value)
             } catch (e: Exception) {
                 _helloWorldUiState.value = "API 통신 실패"
             }
