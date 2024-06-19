@@ -18,6 +18,7 @@ abstract class BaseActivity<T: ViewDataBinding>(
     ) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, layoutId)
+        setContentView(binding.root)
     }
 
     abstract suspend fun initView()
