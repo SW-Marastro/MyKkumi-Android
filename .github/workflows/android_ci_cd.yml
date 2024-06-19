@@ -57,7 +57,7 @@ jobs:
       
     # Build APK Release
     - name: Build Release Apk
-      run: ./gradlew assembleRelease
+      run: ./gradlew assembleRelease --stacktrace
 
     - name: APK 디렉토리 확인 (디버깅용)
       run: ls -alh app/build/outputs/apk/release/
