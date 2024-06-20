@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">MyKkumi_AOS</string>
+    <string name="app_name">마이꾸미</string>
+    <string name="app_name_dev">마이꾸미 개발용</string>
 </resources>

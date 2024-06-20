@@ -15,3 +15,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "MyKkumi_AOS"
 include ':app'
+include ':core:data'
+include ':core:domain'
+include ':feature:home'
+include ':core:common-ui'
