@@ -29,13 +29,12 @@ android {
     kotlinOptions {
         jvmTarget = jvm_target_version
     }
-    dataBinding {
-        enabled = true
+
+    buildFeatures {
+        dataBinding = true
+        //compose = true
     }
     /*
-    buildFeatures {
-        compose = true
-    }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }

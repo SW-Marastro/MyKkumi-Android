@@ -5,16 +5,16 @@
         android:id="@id/nav_home"
         android:title="@string/menu_home" />
 
-    <!--<item
+    <item
         android:id="@id/nav_around"
         android:title="@string/menu_around" />
 
     <item
-        android:id="@id/nav_around"
-        android:title="@string/menu_around" />
+        android:id="@id/nav_shopping"
+        android:title="@string/menu_shopping" />
 
     <item
         android:id="@id/nav_mypage"
-        android:title="@string/menu_mypage" />-->
+        android:title="@string/menu_mypage" />
 
 </menu>

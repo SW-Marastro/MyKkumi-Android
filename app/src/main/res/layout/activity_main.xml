@@ -5,6 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
+    <data>
+
+    </data>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -16,14 +20,14 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             app:defaultNavHost="true"
-            android:layout_alignParentTop="true"
             app:navGraph="@navigation/nav_graph"
+            android:layout_alignParentTop="true"
             android:layout_above="@id/bottom_nav"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="53dp"
             app:menu="@menu/bottom_nav"
             app:labelVisibilityMode="labeled"
             android:background="@color/white"

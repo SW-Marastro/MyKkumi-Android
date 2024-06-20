@@ -2,6 +2,7 @@ package com.swmarastro.mykkumi.android
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
@@ -30,24 +31,10 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         binding.bottomNav.setupWithNavController(navController)
-
-        // 최상위 화면을 제외하고는 BottomNavigation Bar 없애기
-        setBottomNavigation()
-    }
-
-    // 최상위 화면을 제외하고는 BottomNavigation Bar 없애기
-    private fun setBottomNavigation() {
-        navController.addOnDestinationChangedListener{_, destination, _ ->
-            if(destination.id == com.swmarastro.mykkumi.feature.home.R.id.nav_home) {
-                binding.bottomNav.visibility = View.VISIBLE
-            } else {
-                binding.bottomNav.visibility = View.GONE
-            }
-        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        _binding = null
+        _binding?.unbind()
     }
 }
