@@ -5,6 +5,10 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
+//def keystorePropertiesFile = project.rootProject.file("keystore.properties")
+//def keystoreProperties = new Properties()
+//keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     namespace 'com.swmarastro.mykkumi.android'
     compileSdk compile_sdk_version
@@ -20,6 +24,15 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+//    signingConfigs {
+//        config {
+//            keyAlias keystoreProperties['keyAlias']
+//            keyPassword keystoreProperties['keyPassword']
+//            storeFile file(keystoreProperties['storeFile'])
+//            storePassword keystoreProperties['storePassword']
+//        }
+//    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -27,6 +40,7 @@ android {
             manifestPlaceholders = [
                     appName : "@string/app_name"
             ]
+//            signingConfig signingConfigs.config
         }
         /*debug {
             applicationIdSuffix '.dev'
