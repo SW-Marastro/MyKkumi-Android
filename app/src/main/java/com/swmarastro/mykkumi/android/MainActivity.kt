@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -31,6 +32,23 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         binding.bottomNav.setupWithNavController(navController)
+    }
+
+    var waitTime = 0L
+    override fun onBackPressed() {
+        var fragmentList = supportFragmentManager.fragments
+
+        if(fragmentList.size <= 1) {
+            if(System.currentTimeMillis() - waitTime >= 1500 ) {
+                waitTime = System.currentTimeMillis()
+                Toast.makeText(this, R.string.back_pressed_toast, Toast.LENGTH_SHORT).show()
+            } else {
+                finish() // 액티비티 종료
+            }
+        }
+        else {
+            super.onBackPressed()
+        }
     }
 
     override fun onDestroy() {
