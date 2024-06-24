@@ -10,7 +10,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(R.layout.fragment_myp
 
     private val viewModel by viewModels<MypageViewModel>()
 
-    override fun initView() {
+    override suspend fun initView() {
         bind {
             vm = viewModel
         }

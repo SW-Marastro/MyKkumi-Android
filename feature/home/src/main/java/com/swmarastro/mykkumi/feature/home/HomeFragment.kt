@@ -10,7 +10,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val viewModel by viewModels<HomeViewModel>()
 
-    override fun initView() {
+    override suspend fun initView() {
         bind {
             vm = viewModel
         }

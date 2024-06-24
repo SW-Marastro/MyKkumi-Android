@@ -11,7 +11,7 @@ class AroundFragment : BaseFragment<FragmentAroundBinding>(R.layout.fragment_aro
 
     private val viewModel by viewModels<AroundViewModel>()
 
-    override fun initView() {
+    override suspend fun initView() {
         bind {
             vm = viewModel
         }

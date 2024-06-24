@@ -11,6 +11,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+import com.swmarastro.mykkumi.data.BuildConfig
 
 /*
 @Module: 인터페이스나, 빌더 패턴을 사용한 경우, 외부 라이브러리 클래스 등등 생성자를 사용할 수 없는 Class를 주입해야 할 경우
@@ -22,7 +23,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     // API BASE URL
-    private const val BASE_URL = ""
+    private const val BASE_URL = BuildConfig.BASE_URL
 
     // 로깅인터셉터 세팅
     @Provides
