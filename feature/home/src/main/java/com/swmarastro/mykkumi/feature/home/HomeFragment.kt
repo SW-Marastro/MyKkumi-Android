@@ -6,11 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,8 +25,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
@@ -37,7 +45,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate<FragmentHomeBinding?>(
             inflater, R.layout.fragment_home, container, false
         ).apply {
@@ -66,14 +74,30 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(10.dp)
+                .fillMaxWidth(),
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_toolbar_menu),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(24.dp)
+                    .size(24.dp),
             )
+            Spacer(modifier = Modifier.width(4.dp))
             SearchBar()
+            Spacer(modifier = Modifier.width(4.dp))
+            Image(
+                painter = painterResource(id = R.drawable.ic_notice),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(24.dp),
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Image(
+                painter = painterResource(id = R.drawable.ic_shopping_cart),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(24.dp),
+            )
         }
     }
 
@@ -85,20 +109,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         var text by remember { mutableStateOf("") }
         Row(
             modifier = Modifier
-                .background(Color(context?.resources!!.getColor(com.swmarastro.mykkumi.common_ui.R.color.gray_DD)))
+                .background(colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.gray_DD))
                 .padding(horizontal = 10.dp, vertical = 5.dp)
+                .fillMaxWidth(fraction = 0.8f),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_search),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(16.dp)
+                    .size(16.dp),
             )
-            TextField(
+            Spacer(modifier = Modifier.width(4.dp))
+            BasicTextField(
                 value = text,
                 onValueChange = { text = it },
-                modifier = Modifier
-                    .height(13.dp)
+                singleLine = true,
+                textStyle = TextStyle(
+                    fontSize = 12.sp,
+                    color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.black),
+                ),
             )
         }
     }
