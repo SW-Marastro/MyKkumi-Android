@@ -32,6 +32,21 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         binding.bottomNav.setupWithNavController(navController)
+
+        // 최상위 화면을 제외하고는 BottomNavigation Bar 없애기
+        setBottomNavigation()
+    }
+
+    private fun setBottomNavigation() {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            var fragmentList = supportFragmentManager.fragments
+            if(fragmentList.size <= 1) {
+                binding.bottomNav.visibility = View.VISIBLE
+            }
+            else {
+                binding.bottomNav.visibility = View.GONE
+            }
+        }
     }
 
     var waitTime = 0L
