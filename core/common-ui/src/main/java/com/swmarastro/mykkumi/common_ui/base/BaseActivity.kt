@@ -11,45 +11,25 @@ import androidx.databinding.ViewDataBinding
 abstract class BaseActivity<T: ViewDataBinding>(
     @LayoutRes private val layoutId: Int
 ) : AppCompatActivity(){
-    lateinit var binding: T
+    var _binding: T? = null
+    val binding get() = _binding!!
 
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, layoutId)
+        _binding = DataBindingUtil.setContentView(this, layoutId)
         setContentView(binding.root)
     }
 
     abstract suspend fun initView()
 
-    protected inline fun bind(block: T.() -> Unit) {
-        binding.apply(block)
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
+    protected inline fun bind(block: T?.() -> Unit) {
+        _binding.apply(block)
     }
 
     override fun onDestroy() {
-        binding.unbind()
+        _binding?.unbind()
         super.onDestroy()
     }
 }

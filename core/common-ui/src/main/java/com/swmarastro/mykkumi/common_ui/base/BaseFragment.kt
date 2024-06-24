@@ -13,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 abstract class BaseFragment<T: ViewDataBinding>(
     @LayoutRes private val layoutId: Int
 ) : Fragment() {
-
     lateinit var binding: T
 
     override fun onCreateView(
@@ -42,5 +41,10 @@ abstract class BaseFragment<T: ViewDataBinding>(
 
     protected inline fun bind(block: T.() -> Unit) {
         binding.apply(block)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.unbind()
     }
 }
