@@ -1,8 +1,7 @@
 package com.swmarastro.mykkumi.data.repository
 
 import com.swmarastro.mykkumi.data.datasource.HelloWorldDataSource
-import com.swmarastro.mykkumi.domain.entity.GetHelloWorldResponse
-import com.swmarastro.mykkumi.domain.entity.HelloWorld
+import com.swmarastro.mykkumi.domain.entity.HelloWorldVO
 import com.swmarastro.mykkumi.domain.repository.HelloWorldRepository
 import javax.inject.Inject
 
@@ -19,7 +18,7 @@ class HelloWorldRepositoryImpl @Inject constructor(
         }
     }*/
 
-    override suspend fun getHelloWorld(): HelloWorld {
+    override suspend fun getHelloWorld(): HelloWorldVO {
         return helloWorldDataSource.getHelloWorld().toEntity()
     }
 }
