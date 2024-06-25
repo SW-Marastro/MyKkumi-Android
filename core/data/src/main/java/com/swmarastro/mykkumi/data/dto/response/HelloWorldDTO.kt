@@ -3,7 +3,7 @@ package com.swmarastro.mykkumi.data.dto.response
 import com.google.gson.annotations.SerializedName
 import com.swmarastro.mykkumi.domain.entity.HelloWorld
 
-data class HelloWorldResult(
+data class HelloWorldDTO(
     @SerializedName("title")
     val title: String
 ) {

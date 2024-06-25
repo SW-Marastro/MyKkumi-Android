@@ -1,7 +1,6 @@
 package com.swmarastro.mykkumi.data.repository
 
 import com.swmarastro.mykkumi.data.datasource.HelloWorldDataSource
-import com.swmarastro.mykkumi.data.dto.response.HelloWorldResult
 import com.swmarastro.mykkumi.domain.entity.GetHelloWorldResponse
 import com.swmarastro.mykkumi.domain.entity.HelloWorld
 import com.swmarastro.mykkumi.domain.repository.HelloWorldRepository
