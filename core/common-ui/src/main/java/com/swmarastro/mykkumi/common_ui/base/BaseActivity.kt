@@ -9,8 +9,8 @@ import androidx.databinding.ViewDataBinding
 abstract class BaseActivity<T: ViewDataBinding>(
     @LayoutRes private val layoutId: Int
 ) : AppCompatActivity(){
-    var _binding: T? = null
-    val binding get() = _binding!!
+    private var _binding: T? = null
+    protected val binding get() = _binding!!
 
     override fun onCreate(
         savedInstanceState: Bundle?
@@ -22,12 +22,12 @@ abstract class BaseActivity<T: ViewDataBinding>(
 
     abstract suspend fun initView()
 
-    protected inline fun bind(block: T?.() -> Unit) {
-        _binding.apply(block)
+    protected inline fun bind(block: T.() -> Unit) {
+        binding.apply(block)
     }
 
     override fun onDestroy() {
-        _binding?.unbind()
+        _binding = null
         super.onDestroy()
     }
 }

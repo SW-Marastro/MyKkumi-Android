@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        _binding?.unbind()
+        _binding = null
         super.onDestroy()
     }
 }
