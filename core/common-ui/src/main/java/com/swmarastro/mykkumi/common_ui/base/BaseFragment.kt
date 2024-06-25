@@ -8,6 +8,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 
 abstract class BaseFragment<T: ViewDataBinding>(
     @LayoutRes private val layoutId: Int
@@ -26,11 +27,13 @@ abstract class BaseFragment<T: ViewDataBinding>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this@BaseFragment
-        initView()
+        lifecycleScope.launchWhenCreated {
+            initView()
+        }
         super.onViewCreated(view, savedInstanceState)
     }
 
-    abstract fun initView()
+    abstract suspend fun initView()
 
     override fun onDestroyView() {
         binding.unbind()

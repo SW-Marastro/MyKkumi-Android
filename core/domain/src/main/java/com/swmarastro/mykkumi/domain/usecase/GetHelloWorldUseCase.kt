@@ -1,7 +1,7 @@
 package com.swmarastro.mykkumi.domain.usecase
 
 import com.swmarastro.mykkumi.domain.entity.ApiResult
-import com.swmarastro.mykkumi.domain.entity.HelloWorld
+import com.swmarastro.mykkumi.domain.entity.HelloWorldVO
 import com.swmarastro.mykkumi.domain.entity.apiResult
 import com.swmarastro.mykkumi.domain.repository.HelloWorldRepository
 import javax.inject.Inject
@@ -15,7 +15,7 @@ class GetHelloWorldUseCase @Inject constructor(
         }
     }*/
 
-    suspend operator fun invoke(): HelloWorld {
+    suspend operator fun invoke(): HelloWorldVO {
         return repository.getHelloWorld()
     }
 }

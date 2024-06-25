@@ -1,9 +1,8 @@
-package com.swmarastro.mykkumi.feature.home.hello
+package com.swmarastro.mykkumi.feature.shopping
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swmarastro.mykkumi.domain.usecase.GetHelloWorldUseCase
-import com.swmarastro.mykkumi.feature.home.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,10 +13,9 @@ import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class HelloWorldViewModel @Inject constructor(
+class ShoppingViewModel @Inject constructor(
     private val getHelloWorldUseCase: GetHelloWorldUseCase
 ) : ViewModel() {
-
     private val _helloWorldUiState = MutableStateFlow<String>("")
     val helloWorldUiState: StateFlow<String> get() = _helloWorldUiState
 

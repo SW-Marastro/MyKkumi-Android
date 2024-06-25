@@ -29,13 +29,12 @@ android {
     kotlinOptions {
         jvmTarget = jvm_target_version
     }
-    dataBinding {
-        enabled = true
+
+    buildFeatures {
+        dataBinding = true
+        //compose = true
     }
     /*
-    buildFeatures {
-        compose = true
-    }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
@@ -52,6 +51,9 @@ dependencies {
     implementation "com.google.android.material:material:$meterial_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
     implementation "androidx.activity:activity-ktx:$activity_version"
+    // UI - Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
 
     // Test
     testImplementation "junit:junit:$junit_version"
