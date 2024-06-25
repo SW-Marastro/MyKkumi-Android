@@ -60,10 +60,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     ) {
                         HomeToolbar() // 상단바
                     }
-                    AddPostBtn(
+                    FloatingActionButton(
+                        onClick = { /*onClick()*/ },
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
-                    ) // 포스트 작성 버튼
+                            .padding(10.dp)
+                    ) {
+                        Text(text = "작성")
+                    }
+                    // AddPostBtn()
                 }
             }
         }
