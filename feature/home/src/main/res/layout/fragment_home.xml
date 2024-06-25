@@ -14,10 +14,82 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.compose.ui.platform.ComposeView
-            android:id="@+id/compose_view_home"
+        <!-- 상단바 -->
+        <RelativeLayout
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp">
+
+            <ImageButton
+                android:id="@+id/btn_home_menu"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_toolbar_menu"
+                android:layout_marginRight="10dp"
+                android:layout_centerVertical="true"/>
+
+            <RelativeLayout
+                android:id="@+id/search_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/btn_home_menu"
+                android:orientation="horizontal"
+                android:paddingHorizontal="5dp"
+                android:background="@color/gray_DD"
+                android:layout_marginRight="10dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/btn_notice">
+
+                <EditText
+                    android:id="@+id/edit_text_search_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray_86"
+                    android:hint="검색어를 입력하세요"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/icon_search"/>
+
+                <ImageView
+                    android:id="@+id/icon_search"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_search"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <ImageButton
+                android:id="@+id/btn_notice"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_notice"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/btn_shopping_cart"
+                android:layout_centerVertical="true"/>
+
+            <ImageButton
+                android:id="@+id/btn_shopping_cart"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_shopping_cart"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
 
     </RelativeLayout>
 
