@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity() {
     // NavController 선언
     private lateinit var navController: NavController
 
+    private var waitTime = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -34,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNav.setupWithNavController(navController)
     }
 
-    var waitTime = 0L
     override fun onBackPressed() {
         var fragmentList = supportFragmentManager.fragments
 
