@@ -32,7 +32,7 @@ class ShoppingFragment : BaseFragment<FragmentShoppingBinding>(
 
     suspend fun setTitle() {
         viewModel.setHelloWorld()
-        viewModel.helloWorldUiState.collect { response ->
+        viewModel.shoppingUiState.collect { response ->
             binding.textHelloworld.text = response
         }
     }
