@@ -16,18 +16,18 @@ import javax.inject.Inject
 class ShoppingViewModel @Inject constructor(
     private val getHelloWorldUseCase: GetHelloWorldUseCase
 ) : ViewModel() {
-    private val _helloWorldUiState = MutableStateFlow<String>("")
-    val helloWorldUiState: StateFlow<String> get() = _helloWorldUiState
+    private val _shoppingUiState = MutableStateFlow<String>("")
+    val shoppingUiState: StateFlow<String> get() = _shoppingUiState
 
     fun setHelloWorld() {
         viewModelScope.launch {
             try {
                 val helloWorld = withContext(Dispatchers.IO) {
-                    getHelloWorldUseCase.invoke()
+                    getHelloWorldUseCase() // invoke()
                 }
-                _helloWorldUiState.value = helloWorld.title
+                _shoppingUiState.value = helloWorld.title
             } catch (e: Exception) {
-                _helloWorldUiState.value = "API 통신 실패"
+                _shoppingUiState.value = "API 통신 실패"
             }
         }
     }
