@@ -42,12 +42,6 @@ android {
 dependencies {
     implementation project(path: ':core:domain')
 
-    // UI
-    implementation "androidx.core:core-ktx:$androidx_core_version"
-    implementation "androidx.appcompat:appcompat:$androidx_appcompat_version"
-    implementation "com.google.android.material:material:$meterial_version"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
-
     // Test
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$junit_test_version"
