@@ -73,4 +73,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-themeadapter-material3:$meterial3_version")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
+
+    // Coil
+    implementation("io.coil-kt:coil-compose:$coil_version")
 }
