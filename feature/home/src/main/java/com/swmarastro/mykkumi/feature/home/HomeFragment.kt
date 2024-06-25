@@ -6,14 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,17 +46,29 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate<FragmentHomeBinding?>(
+        _binding = DataBindingUtil.inflate<FragmentHomeBinding?>(
             inflater, R.layout.fragment_home, container, false
         ).apply {
             composeViewHome.setContent {
-                Column {
-                    HomeToolbar()
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                ) {
+                    Column (
+                        modifier = Modifier
+                            .fillMaxSize(),
+                    ) {
+                        HomeToolbar() // 상단바
+                    }
+                    AddPostBtn(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                    ) // 포스트 작성 버튼
                 }
             }
         }
 
-        return binding.root
+        return _binding!!.root
     }
 
     override suspend fun initView() {
@@ -72,23 +88,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 .padding(10.dp)
                 .fillMaxWidth(),
         ) {
-            Image(
+            Image( // 메뉴 햄버거바 icon
                 painter = painterResource(id = R.drawable.ic_toolbar_menu),
                 contentDescription = null,
                 modifier = Modifier
                     .size(24.dp),
             )
             Spacer(modifier = Modifier.width(4.dp))
-            SearchBar()
+            SearchBar() // 검색창
             Spacer(modifier = Modifier.width(4.dp))
-            Image(
+            Image( // 알림 icon
                 painter = painterResource(id = R.drawable.ic_notice),
                 contentDescription = null,
                 modifier = Modifier
                     .size(24.dp),
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Image(
+            Image( // 장바구니 icon
                 painter = painterResource(id = R.drawable.ic_shopping_cart),
                 contentDescription = null,
                 modifier = Modifier
@@ -110,14 +126,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 .fillMaxWidth(fraction = 0.8f),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Image(
+            Image( // 검색 icon
                 painter = painterResource(id = R.drawable.ic_search),
                 contentDescription = null,
                 modifier = Modifier
                     .size(16.dp),
             )
             Spacer(modifier = Modifier.width(4.dp))
-            BasicTextField(
+            BasicTextField( // 검색어 입력창
                 value = text,
                 onValueChange = { text = it },
                 singleLine = true,
@@ -126,6 +142,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.black),
                 ),
             )
+        }
+    }
+
+    // 포스트 작성 버튼
+    @Composable
+    private fun AddPostBtn(
+        modifier: Modifier = Modifier,
+        // onClick: () -> Unit
+    ) {
+        FloatingActionButton(
+            onClick = { /*onClick()*/ },
+        ) {
+            Text(text = "작성")
         }
     }
 }
