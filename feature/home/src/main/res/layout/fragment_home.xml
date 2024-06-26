@@ -98,12 +98,21 @@
 
                 </RelativeLayout>
 
+                <!-- 배너 -->
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewpager_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:orientation="horizontal"
+                    android:layout_below="@id/toolbar"/>
+
             </RelativeLayout>
 
         </ScrollView>
 
+        <!-- 작성 버튼 -->
         <RelativeLayout
-            android:id="@+id/floating_add_post_btn"
+            android:id="@+id/floating_btn_add_post"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="right|bottom"
