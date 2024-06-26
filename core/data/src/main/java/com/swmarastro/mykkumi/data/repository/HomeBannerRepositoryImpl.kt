@@ -1,10 +1,15 @@
 package com.swmarastro.mykkumi.data.repository
 
 import com.swmarastro.mykkumi.data.datasource.HomeBannerDataSource
+import com.swmarastro.mykkumi.domain.entity.HomeBannerListVO
 import com.swmarastro.mykkumi.domain.repository.HomeBannerRepository
 import javax.inject.Inject
 
-class HomeBannerRepository @Inject constructor(
+class HomeBannerRepositoryImpl @Inject constructor(
     private val homeBannerDataSource: HomeBannerDataSource
 ) : HomeBannerRepository {
+
+    override suspend fun getHomeBanner(): HomeBannerListVO {
+        return homeBannerDataSource.getHomeBanners().toEntity()
+    }
 }
