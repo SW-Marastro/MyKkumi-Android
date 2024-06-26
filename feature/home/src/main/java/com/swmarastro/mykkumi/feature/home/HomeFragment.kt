@@ -9,11 +9,15 @@ import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.domain.entity.HomeBannerListVO
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Timer
+import java.util.TimerTask
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val viewModel by viewModels<HomeViewModel>()
+    private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
+    private lateinit var timer: Timer
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this
@@ -30,6 +34,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             )
         )
         initBannerViewPager(bannerList)*/
+
+        startAutoScroll()
     }
 
     override suspend fun initView() {
@@ -40,7 +46,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun initBannerViewPager(banners: HomeBannerListVO) {
-        binding.viewpagerBanner.adapter = HomeBannerViewPagerAdapter(mutableListOf())
+        bannerAdapter = HomeBannerViewPagerAdapter(mutableListOf())
+        binding.viewpagerBanner.adapter = bannerAdapter
         binding.viewpagerBanner.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
         binding.lifecycleOwner = this
@@ -62,5 +69,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         viewModel.homeBannerUiState.collect { response ->
             initBannerViewPager(response)
         }
+    }
+
+    private fun startAutoScroll() {
+        timer = Timer()
+        timer.schedule(object : TimerTask() {
+            override fun run() {
+                binding.viewpagerBanner.post {
+                    binding.viewpagerBanner.currentItem = (binding.viewpagerBanner.currentItem + 1) % bannerAdapter.itemCount
+                }
+            }
+        }, 3000, 3000) // Delay 3 seconds, repeat every 3 seconds
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        timer.cancel()
+        super.onDestroyView()
     }
 }

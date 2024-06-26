@@ -1,12 +1,16 @@
 package com.swmarastro.mykkumi.feature.home
 
 import android.graphics.Bitmap
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerViewpagerBinding
+import java.util.TimerTask
 
 class HomeBannerViewPagerAdapter(
     private var bannerList: MutableList<Bitmap?>
@@ -38,6 +42,22 @@ class HomeBannerViewPagerAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(bitmap: Bitmap?) {
             binding.imageHomeBanner.setImageBitmap(bitmap)
+        }
+    }
+}
+
+class AutoScrollTask(
+    private val viewPager: ViewPager2,
+    private val adapter: HomeBannerViewPagerAdapter
+) : TimerTask() {
+
+    private val handler = Handler(Looper.getMainLooper())
+
+    override fun run() {
+        handler.post {
+            val currentItem = viewPager.currentItem
+            val nextItem = if (currentItem == adapter.itemCount - 1) 0 else currentItem + 1
+            viewPager.setCurrentItem(nextItem, true)
         }
     }
 }
