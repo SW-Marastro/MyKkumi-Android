@@ -50,7 +50,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         bannerAdapter = HomeBannerViewPagerAdapter(mutableListOf())
         binding.viewpagerBanner.adapter = bannerAdapter
         binding.viewpagerBanner.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.viewpagerBanner.currentItem = 1000
 
         binding.lifecycleOwner = this
         lifecycleScope.launchWhenStarted {
@@ -60,6 +59,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                         it.setImages(bitmaps)
                     }
                 }
+                binding.viewpagerBanner.setCurrentItem(1000, false) // 좌측으로도 배너 전환 가능하도록
             }
         }
         viewModel.loadImages(banners.banners)
