@@ -63,6 +63,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             }
         }
         viewModel.loadImages(banners.banners)
+
+        // 배너가 수동으로 변경되면, 자동 전환되는 타이머를 리셋 - 변경된 시점부터 3초 카운트
+        binding.viewpagerBanner.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                timer.cancel()    // 기존 타이머 중지
+                startAutoScroll() // 타이머 리셋
+            }
+        })
     }
 
     // 배너 내용 세팅
@@ -84,7 +92,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             }
         }, 3000, 3000) // 3초마다 전환 -> 너무 빠른가?
     }
-
 
     override fun onDestroyView() {
         _binding = null
