@@ -1,6 +1,5 @@
 package com.swmarastro.mykkumi.feature.home
 
-import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
