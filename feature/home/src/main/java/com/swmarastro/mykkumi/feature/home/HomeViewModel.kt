@@ -35,13 +35,14 @@ class HomeViewModel @Inject constructor(
     private val _homeBannerUiState = MutableStateFlow<HomeBannerListVO>(HomeBannerListVO())
     val homeBannerUiState: StateFlow<HomeBannerListVO> get() = _homeBannerUiState
 
-    // 선택된 배너
-    private val _selectBannerId = MutableLiveData<Int>()
-    val selectBannerId: LiveData<Int> get() = _selectBannerId
-
     // 배너 상세
     private val _homeBannerDetailUiState = MutableStateFlow<HomeBannerItemVO>(HomeBannerItemVO())
     val homeBannerDetailUiState: StateFlow<HomeBannerItemVO> get() = _homeBannerDetailUiState
+
+
+    // 선택된 배너
+    private val _selectBannerId = MutableLiveData<Int>()
+    val selectBannerId: LiveData<Int> get() = _selectBannerId
 
     fun loadImages(imageUrls: List<HomeBannerItemVO>) {
         viewModelScope.launch {
@@ -72,19 +73,16 @@ class HomeViewModel @Inject constructor(
     // 홈 > 배너 캐러셀에서 배너 선택
     fun selectHomeBanner(bannerId: Int) {
         _selectBannerId.value = bannerId
-        Log.d("---viewModel1", selectBannerId.value.toString())
     }
 
     // 배너 상세
     fun setBannerDetail(bannerId: Int) {
         viewModelScope.launch {
             try {
-                Log.d("---viewModel2-1", selectBannerId.value.toString())
                 val homeBannerDetail = withContext(Dispatchers.IO) {
                     getHomeBannerDetailUseCase(bannerId)
                 }
                 _homeBannerDetailUiState.value = homeBannerDetail
-                Log.d("---viewModel2-2", _homeBannerDetailUiState.value.toString())
             } catch (e: Exception) {
                 _homeBannerDetailUiState.value = HomeBannerItemVO()
             }
