@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swmarastro.mykkumi.domain.entity.HomeBannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomeBannerVO
-import com.swmarastro.mykkumi.domain.repository.ImageRepository
 import com.swmarastro.mykkumi.domain.usecase.GetHomeBannerUseCase
 import com.swmarastro.mykkumi.domain.usecase.LoadImageUseCase
 import com.swmarastro.mykkumi.util.ImageLoader

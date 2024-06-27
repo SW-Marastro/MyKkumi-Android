@@ -1,7 +1,5 @@
 package com.swmarastro.mykkumi.data.di
 
-import android.util.Log
-import com.swmarastro.mykkumi.data.datasource.HelloWorldDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,13 +49,6 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
             //.addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
             .build()
-    }
-
-    // API 생기면 이 부분 작성
-    @Provides
-    @Singleton
-    fun provideHelloWorldDataSource(retrofit: Retrofit): HelloWorldDataSource {
-        return retrofit.create(HelloWorldDataSource::class.java)
     }
 
     @Provides
