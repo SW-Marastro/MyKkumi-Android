@@ -1,10 +1,10 @@
 package com.swmarastro.mykkumi.domain.entity
 
 data class HomeBannerListVO(
-    val banners: List<HomeBannerVO>
+    val banners: List<HomeBannerItemVO> = listOf()
 )
 
-data class HomeBannerVO(
-    val id: Int,
-    val imageUrl: String
+data class HomeBannerItemVO(
+    val id: Int = -1,
+    val imageUrl: String = ""
 )

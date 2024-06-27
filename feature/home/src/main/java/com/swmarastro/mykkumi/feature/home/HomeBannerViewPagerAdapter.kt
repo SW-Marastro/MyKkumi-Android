@@ -4,18 +4,20 @@ import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.swmarastro.mykkumi.domain.entity.HomeBannerVO
+import com.swmarastro.mykkumi.domain.entity.HomeBannerItemVO
 import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerViewpagerBinding
 import java.util.TimerTask
 import coil.load
 
 class HomeBannerViewPagerAdapter(
     //private var bannerList: MutableList<Bitmap?>,
-    private var bannerList: MutableList<HomeBannerVO>
+    private var bannerList: MutableList<HomeBannerItemVO>,
+    private val onClickBannerItem: (bannerId: Int) -> Unit
 ) : RecyclerView.Adapter<HomeBannerViewPagerAdapter.HomeBannerViewHolder>() {
     private var _binding: ItemBannerViewpagerBinding? = null
     private val binding get() = _binding!!
@@ -48,9 +50,14 @@ class HomeBannerViewPagerAdapter(
     inner class HomeBannerViewHolder(
         private val binding: ItemBannerViewpagerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: HomeBannerVO) {
+        fun bind(item: HomeBannerItemVO) {
             // binding.imageHomeBanner.setImageBitmap(bitmap)
             binding.imageHomeBanner.load(item.imageUrl)
+
+            // 배너 클릭
+            binding.imageHomeBanner.setOnClickListener(View.OnClickListener {
+                onClickBannerItem(item.id)
+            })
         }
     }
 }

@@ -9,6 +9,18 @@
         android:id="@+id/homeFragment"
         android:name="com.swmarastro.mykkumi.feature.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+
+        <action
+            android:id="@+id/action_navigate_fragment_to_home_banner_detail"
+            app:destination="@+id/homeBannerDetailFragment"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/homeBannerDetailFragment"
+        android:name="com.swmarastro.mykkumi.feature.home.HomeBannerDetailFragment"
+        android:label="fragment_home_banner_detail"
+        tools:layout="@layout/fragment_home_banner_detail"/>
 
 </navigation>

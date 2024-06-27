@@ -1,7 +1,7 @@
 package com.swmarastro.mykkumi.data.dto.response
 
 import com.google.gson.annotations.SerializedName
-import com.swmarastro.mykkumi.domain.entity.HomeBannerVO
+import com.swmarastro.mykkumi.domain.entity.HomeBannerItemVO
 
 data class HomeBannerItemDTO(
     @SerializedName("id")
@@ -10,7 +10,7 @@ data class HomeBannerItemDTO(
     @SerializedName("imageUrl")
     val imageUrl: String
 ) {
-    fun toEntity(): HomeBannerVO = HomeBannerVO(
+    fun toEntity(): HomeBannerItemVO = HomeBannerItemVO(
         id = id,
         imageUrl = imageUrl
     )

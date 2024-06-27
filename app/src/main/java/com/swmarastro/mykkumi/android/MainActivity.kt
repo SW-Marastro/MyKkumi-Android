@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
+    /*override fun onBackPressed() {
         var fragmentList = supportFragmentManager.fragments
 
         if(fragmentList.size <= 1) {
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         else {
             super.onBackPressed()
         }
-    }
+    }*/
 
     override fun onDestroy() {
         _binding = null

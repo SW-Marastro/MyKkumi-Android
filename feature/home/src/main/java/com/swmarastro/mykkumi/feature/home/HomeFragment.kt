@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.domain.entity.HomeBannerListVO
@@ -47,7 +48,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 배너 viewpager
     private fun initBannerViewPager(banners: HomeBannerListVO) {
-        bannerAdapter = HomeBannerViewPagerAdapter(banners.banners.toMutableList())
+        bannerAdapter = HomeBannerViewPagerAdapter(
+            banners.banners.toMutableList(),
+            onClickBannerItem = {
+                onClickBannerItem(it)
+            }
+        )
         binding.viewpagerBanner.adapter = bannerAdapter
         binding.viewpagerBanner.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.viewpagerBanner.setCurrentItem(1000, false) // 좌측으로도 배너 전환 가능하도록
@@ -100,6 +106,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 }
             }
         }, 3000, 3000) // 3초마다 전환 -> 너무 빠른가?
+    }
+
+    // 배너 클릭
+    private fun onClickBannerItem(bannerId: Int) {
+        viewModel.selectHomeBanner(bannerId)
+        view?.findNavController()?.navigate(R.id.action_navigate_fragment_to_home_banner_detail)
     }
 
     override fun onDestroyView() {
