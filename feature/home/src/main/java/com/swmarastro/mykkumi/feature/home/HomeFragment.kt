@@ -69,7 +69,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     // 배너 내용 세팅
-    suspend fun setHomeBanner() {
+    private suspend fun setHomeBanner() {
         viewModel.setHomeBanner()
         viewModel.homeBannerUiState.collect { response ->
             initBannerViewPager(response)
