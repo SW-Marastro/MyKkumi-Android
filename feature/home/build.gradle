@@ -32,13 +32,11 @@ android {
 
     buildFeatures {
         dataBinding = true
-        //compose = true
+//        compose = true
     }
-    /*
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
-    */
+//    composeOptions {
+//        kotlinCompilerExtensionVersion = compose_options_version
+//    }
 }
 
 dependencies {
@@ -66,4 +64,13 @@ dependencies {
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
+    // Compose
+//    implementation(platform("androidx.compose:compose-bom:$compose_bom_date"))
+//
+//    implementation("androidx.activity:activity-compose:$activity_compose_version")
+//    implementation("androidx.compose.material3:material3")
+//    implementation("com.google.accompanist:accompanist-themeadapter-material3:$meterial3_version")
+//
+//    debugImplementation("androidx.compose.ui:ui-tooling")
 }
