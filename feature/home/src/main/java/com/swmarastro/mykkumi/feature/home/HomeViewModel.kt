@@ -7,6 +7,7 @@ import com.swmarastro.mykkumi.domain.entity.HomeBannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomeBannerVO
 import com.swmarastro.mykkumi.domain.repository.ImageRepository
 import com.swmarastro.mykkumi.domain.usecase.GetHomeBannerUseCase
+import com.swmarastro.mykkumi.domain.usecase.LoadImageUseCase
 import com.swmarastro.mykkumi.util.ImageLoader
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val imageRepository: ImageRepository,
+    private val loadImageUseCase: LoadImageUseCase,
     private val getHomeBannerUseCase: GetHomeBannerUseCase
 ) : ViewModel() {
     private val _bannerImageUiState = MutableStateFlow<MutableList<Bitmap?>>(mutableListOf())
@@ -32,7 +33,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             val bitmaps = imageUrls.map { homeBannerVO ->
                 val byteArray = withContext(Dispatchers.IO) {
-                    imageRepository.loadImage(homeBannerVO.imageUrl)
+                    loadImageUseCase(homeBannerVO.imageUrl)
                 }
                 byteArray?.let { ImageLoader.byteArrayToBitmap(it) }
             }.toMutableList()

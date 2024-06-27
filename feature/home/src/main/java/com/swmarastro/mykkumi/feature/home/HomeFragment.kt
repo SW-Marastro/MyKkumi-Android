@@ -18,6 +18,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private val viewModel by viewModels<HomeViewModel>()
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
     private lateinit var timer: Timer
+    private var currentPage = 0
+    private var isAutoScroll = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this
@@ -45,10 +47,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         setHomeBanner() // 배너
     }
 
+    // 배너 viewpager
     private fun initBannerViewPager(banners: HomeBannerListVO) {
         bannerAdapter = HomeBannerViewPagerAdapter(mutableListOf())
         binding.viewpagerBanner.adapter = bannerAdapter
         binding.viewpagerBanner.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.viewpagerBanner.registerOnPageChangeCallback(pageChangeCallback)
 
         binding.lifecycleOwner = this
         lifecycleScope.launchWhenStarted {
@@ -64,6 +68,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         viewModel.loadImages(banners.banners)
     }
 
+    // 배너 내용 세팅
     suspend fun setHomeBanner() {
         viewModel.setHomeBanner()
         viewModel.homeBannerUiState.collect { response ->
@@ -71,15 +76,25 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         }
     }
 
+    // 배너 자동 전환
     private fun startAutoScroll() {
         timer = Timer()
         timer.schedule(object : TimerTask() {
             override fun run() {
-                binding.viewpagerBanner.post {
-                    binding.viewpagerBanner.currentItem = (binding.viewpagerBanner.currentItem + 1) % bannerAdapter.itemCount
+                if (isAutoScroll) {
+                    currentPage = if (currentPage == bannerAdapter.itemCount - 1) 0 else currentPage + 1
+                    binding.viewpagerBanner.post {
+                        binding.viewpagerBanner.setCurrentItem(currentPage, true)
+                    }
                 }
             }
-        }, 3000, 3000) // Delay 3 seconds, repeat every 3 seconds
+        }, 3000, 3000) // 3초마다 전환 -> 너무 빠른가?
+    }
+
+    private val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            currentPage = position
+        }
     }
 
     override fun onDestroyView() {

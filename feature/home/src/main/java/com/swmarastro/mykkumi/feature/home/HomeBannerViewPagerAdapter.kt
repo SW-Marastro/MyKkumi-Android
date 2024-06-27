@@ -46,6 +46,7 @@ class HomeBannerViewPagerAdapter(
     }
 }
 
+// 배너 자동 전환
 class AutoScrollTask(
     private val viewPager: ViewPager2,
     private val adapter: HomeBannerViewPagerAdapter
