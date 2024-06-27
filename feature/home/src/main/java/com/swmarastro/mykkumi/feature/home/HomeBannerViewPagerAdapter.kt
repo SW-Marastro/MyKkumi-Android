@@ -8,11 +8,14 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.swmarastro.mykkumi.domain.entity.HomeBannerVO
 import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerViewpagerBinding
 import java.util.TimerTask
+import coil.load
 
 class HomeBannerViewPagerAdapter(
-    private var bannerList: MutableList<Bitmap?>
+    //private var bannerList: MutableList<Bitmap?>,
+    private var bannerList: MutableList<HomeBannerVO>
 ) : RecyclerView.Adapter<HomeBannerViewPagerAdapter.HomeBannerViewHolder>() {
     private var _binding: ItemBannerViewpagerBinding? = null
     private val binding get() = _binding!!
@@ -26,8 +29,10 @@ class HomeBannerViewPagerAdapter(
 
     override fun onBindViewHolder(holder: HomeBannerViewHolder, position: Int) {
         val index = position % bannerList.size
-        val bitmap = bannerList[index]
-        holder.bind(bitmap)
+        //val bitmap = bannerList[index]
+        //holder.bind(bitmap)
+        val item = bannerList[index]
+        holder.bind(item)
     }
 
     override fun getItemCount(): Int {
@@ -35,16 +40,17 @@ class HomeBannerViewPagerAdapter(
         else return Int.MAX_VALUE // 무한 페이지 뷰를 위한
     }
 
-    fun setImages(bitmaps: MutableList<Bitmap?>) {
+    /*fun setImages(bitmaps: MutableList<Bitmap?>) {
         bannerList = bitmaps
         notifyDataSetChanged()
-    }
+    }*/
 
     inner class HomeBannerViewHolder(
         private val binding: ItemBannerViewpagerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(bitmap: Bitmap?) {
-            binding.imageHomeBanner.setImageBitmap(bitmap)
+        fun bind(item: HomeBannerVO) {
+            // binding.imageHomeBanner.setImageBitmap(bitmap)
+            binding.imageHomeBanner.load(item.imageUrl)
         }
     }
 }

@@ -47,11 +47,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 배너 viewpager
     private fun initBannerViewPager(banners: HomeBannerListVO) {
-        bannerAdapter = HomeBannerViewPagerAdapter(mutableListOf())
+        bannerAdapter = HomeBannerViewPagerAdapter(banners.banners.toMutableList())
         binding.viewpagerBanner.adapter = bannerAdapter
         binding.viewpagerBanner.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.viewpagerBanner.setCurrentItem(1000, false) // 좌측으로도 배너 전환 가능하도록
 
-        binding.lifecycleOwner = this
+        // 배너 페이지 표시
+        binding.textBannerTotalPage.text = "/" + banners.banners.size
+        binding.textBannerCurrentPage.text = "1"
+
+        /*binding.lifecycleOwner = this
         lifecycleScope.launchWhenStarted {
             viewModel.bannerImageUiState.collect { bitmaps ->
                 binding.viewpagerBanner.adapter?.let {
@@ -59,16 +64,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                         it.setImages(bitmaps)
                     }
                 }
-                binding.viewpagerBanner.setCurrentItem(1000, false) // 좌측으로도 배너 전환 가능하도록
+
             }
         }
-        viewModel.loadImages(banners.banners)
+        viewModel.loadImages(banners.banners)*/
 
         // 배너가 수동으로 변경되면, 자동 전환되는 타이머를 리셋 - 변경된 시점부터 3초 카운트
         binding.viewpagerBanner.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 timer.cancel()    // 기존 타이머 중지
                 startAutoScroll() // 타이머 리셋
+
+                // 현재 배너 페이지 표시
+                if(banners.banners.size != 0)
+                    binding.textBannerCurrentPage.text = (binding.viewpagerBanner.currentItem % banners.banners.size + 1).toString()
             }
         })
     }
