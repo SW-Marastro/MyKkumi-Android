@@ -25,11 +25,15 @@ class HomeBannerViewPagerAdapter(
     }
 
     override fun onBindViewHolder(holder: HomeBannerViewHolder, position: Int) {
-        val bitmap = bannerList[position]
+        val index = position % bannerList.size
+        val bitmap = bannerList[index]
         holder.bind(bitmap)
     }
 
-    override fun getItemCount(): Int = bannerList.size
+    override fun getItemCount(): Int {
+        if(bannerList.size == 0) return 0
+        else return Int.MAX_VALUE // 무한 페이지 뷰를 위한
+    }
 
     fun setImages(bitmaps: MutableList<Bitmap?>) {
         bannerList = bitmaps

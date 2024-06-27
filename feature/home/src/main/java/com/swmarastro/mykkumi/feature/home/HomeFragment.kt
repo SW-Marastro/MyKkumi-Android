@@ -18,8 +18,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private val viewModel by viewModels<HomeViewModel>()
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
     private lateinit var timer: Timer
-    private var currentPage = 0
-    private var isAutoScroll = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this
@@ -52,7 +50,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         bannerAdapter = HomeBannerViewPagerAdapter(mutableListOf())
         binding.viewpagerBanner.adapter = bannerAdapter
         binding.viewpagerBanner.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.viewpagerBanner.registerOnPageChangeCallback(pageChangeCallback)
+        binding.viewpagerBanner.currentItem = 1000
 
         binding.lifecycleOwner = this
         lifecycleScope.launchWhenStarted {
@@ -64,7 +62,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 }
             }
         }
-
         viewModel.loadImages(banners.banners)
     }
 
@@ -81,21 +78,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         timer = Timer()
         timer.schedule(object : TimerTask() {
             override fun run() {
-                if (isAutoScroll) {
-                    currentPage = if (currentPage == bannerAdapter.itemCount - 1) 0 else currentPage + 1
-                    binding.viewpagerBanner.post {
-                        binding.viewpagerBanner.setCurrentItem(currentPage, true)
-                    }
+                binding.viewpagerBanner.post {
+                    binding.viewpagerBanner.currentItem = (binding.viewpagerBanner.currentItem + 1) % Int.MAX_VALUE
                 }
             }
         }, 3000, 3000) // 3초마다 전환 -> 너무 빠른가?
     }
 
-    private val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
-        override fun onPageSelected(position: Int) {
-            currentPage = position
-        }
-    }
 
     override fun onDestroyView() {
         _binding = null
