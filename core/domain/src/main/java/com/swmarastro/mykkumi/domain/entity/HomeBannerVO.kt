@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.domain.entity
 
+class HomeBannerListResponse : BaseResponse<HomeBannerListVO>()
 data class HomeBannerListVO(
     val banners: List<HomeBannerItemVO> = listOf()
 )
