@@ -10,87 +10,169 @@
             type="com.swmarastro.mykkumi.feature.home.HomeViewModel" />
     </data>
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <!-- 상단바 -->
-        <RelativeLayout
-            android:id="@+id/toolbar"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp">
-
-            <ImageButton
-                android:id="@+id/btn_home_menu"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitXY"
-                android:src="@drawable/ic_toolbar_menu"
-                android:layout_marginRight="10dp"
-                android:layout_centerVertical="true"/>
+            android:layout_height="wrap_content">
 
             <RelativeLayout
-                android:id="@+id/search_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/btn_home_menu"
-                android:orientation="horizontal"
-                android:paddingHorizontal="5dp"
-                android:background="@color/gray_DD"
-                android:layout_marginRight="10dp"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/btn_notice">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/edit_text_search_input"
-                    android:layout_width="wrap_content"
+                <!-- 상단바 -->
+                <RelativeLayout
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="10dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray_86"
-                    android:hint="검색어를 입력하세요"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/icon_search"/>
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp">
 
-                <ImageView
-                    android:id="@+id/icon_search"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_search"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"/>
+                    <ImageButton
+                        android:id="@+id/btn_home_menu"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_toolbar_menu"
+                        android:layout_marginRight="10dp"
+                        android:layout_centerVertical="true"/>
+
+                    <RelativeLayout
+                        android:id="@+id/search_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/btn_home_menu"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="5dp"
+                        android:background="@color/gray_DD"
+                        android:layout_marginRight="10dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/btn_notice">
+
+                        <EditText
+                            android:id="@+id/edit_text_search_input"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="10dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/gray_86"
+                            android:hint="검색어를 입력하세요"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@id/icon_search"/>
+
+                        <ImageView
+                            android:id="@+id/icon_search"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_search"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"/>
+
+                    </RelativeLayout>
+
+                    <ImageButton
+                        android:id="@+id/btn_notice"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_notice"
+                        android:layout_marginRight="10dp"
+                        android:layout_toLeftOf="@id/btn_shopping_cart"
+                        android:layout_centerVertical="true"/>
+
+                    <ImageButton
+                        android:id="@+id/btn_shopping_cart"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_shopping_cart"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"/>
+
+                </RelativeLayout>
+
+                <!-- 배너 -->
+                <RelativeLayout
+                    android:id="@+id/relative_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/toolbar">
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/viewpager_banner"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:orientation="horizontal" />
+
+                    <LinearLayout
+                        android:id="@+id/banner_page"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@color/gray_DD"
+                        android:gravity="center_vertical"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="5dp"
+                        android:padding="2dp">
+
+                        <TextView
+                            android:id="@+id/text_banner_current_page"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="12dp"
+                            android:textColor="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/text_banner_total_page"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="/0"
+                            android:textSize="12dp"
+                            android:textColor="@color/black"
+                            android:layout_marginRight="5dp"/>
+
+                        <ImageButton
+                            android:id="@+id/btn_banner_more"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:background="@android:color/transparent"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_plus"/>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
 
             </RelativeLayout>
 
-            <ImageButton
-                android:id="@+id/btn_notice"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitXY"
-                android:src="@drawable/ic_notice"
-                android:layout_marginRight="10dp"
-                android:layout_toLeftOf="@id/btn_shopping_cart"
-                android:layout_centerVertical="true"/>
+        </ScrollView>
 
-            <ImageButton
-                android:id="@+id/btn_shopping_cart"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitXY"
-                android:src="@drawable/ic_shopping_cart"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"/>
+        <!-- 작성 버튼 -->
+        <RelativeLayout
+            android:id="@+id/floating_btn_add_post"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right|bottom"
+            android:background="@color/gray_DD"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="작성"
+                android:layout_centerInParent="true"/>
 
         </RelativeLayout>
 
-
-    </RelativeLayout>
+    </FrameLayout>
 
 </layout>
