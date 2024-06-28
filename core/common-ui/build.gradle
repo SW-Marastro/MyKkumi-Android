@@ -10,7 +10,6 @@ android {
 
     defaultConfig {
         minSdk min_sdk_version
-        targetSdk target_sdk_version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -46,4 +45,7 @@ dependencies {
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$junit_test_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core_version"
+
+    // Coil
+    implementation("io.coil-kt:coil:$coil_version")
 }
