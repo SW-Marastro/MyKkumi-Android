@@ -9,10 +9,11 @@
             type="com.swmarastro.mykkumi.feature.home.HomeViewModel" />
     </data>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:clickable="true">
 
         <ImageView
             android:id="@+id/image_banner_detail"
@@ -20,6 +21,6 @@
             android:layout_height="match_parent"
             android:scaleType="fitCenter" />
 
-    </FrameLayout>
+    </RelativeLayout>
 
 </layout>

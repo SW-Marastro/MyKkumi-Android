@@ -40,20 +40,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun setBottomNavigation() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            var fragmentList = supportFragmentManager.fragments
-            if(fragmentList.size <= 1) {
-                binding.bottomNav.visibility = View.VISIBLE
-            }
-            else {
-                binding.bottomNav.visibility = View.GONE
+            when (destination.id) {
+                com.swmarastro.mykkumi.feature.home.R.id.homeFragment,
+                com.swmarastro.mykkumi.feature.around.R.id.aroundFragment,
+                com.swmarastro.mykkumi.feature.shopping.R.id.shoppingFragment,
+                com.swmarastro.mykkumi.feature.mypage.R.id.mypageFragment -> {
+                    binding.bottomNav.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.bottomNav.visibility = View.GONE
+                }
             }
         }
     }
 
-    /*override fun onBackPressed() {
-        var fragmentList = supportFragmentManager.fragments
-
-        if(fragmentList.size <= 1) {
+    override fun onBackPressed() {
+        if(navController.currentDestination?.id == com.swmarastro.mykkumi.feature.home.R.id.homeFragment ||
+            navController.currentDestination?.id == com.swmarastro.mykkumi.feature.around.R.id.aroundFragment ||
+            navController.currentDestination?.id == com.swmarastro.mykkumi.feature.shopping.R.id.shoppingFragment ||
+            navController.currentDestination?.id == com.swmarastro.mykkumi.feature.mypage.R.id.mypageFragment) {
             if(System.currentTimeMillis() - waitTime >= 1500 ) {
                 waitTime = System.currentTimeMillis()
                 Toast.makeText(this, R.string.back_pressed_toast, Toast.LENGTH_SHORT).show()
@@ -64,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         else {
             super.onBackPressed()
         }
-    }*/
+    }
 
     override fun onDestroy() {
         _binding = null
