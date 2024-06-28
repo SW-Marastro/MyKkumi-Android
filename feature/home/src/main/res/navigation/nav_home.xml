@@ -15,6 +15,10 @@
             android:id="@+id/action_navigate_fragment_to_home_banner_detail"
             app:destination="@+id/homeBannerDetailFragment"/>
 
+        <action
+            android:id="@+id/action_navigate_fragment_to_home_banner_all"
+            app:destination="@+id/homeBannerAllFragment"/>
+
     </fragment>
 
     <fragment
@@ -22,5 +26,11 @@
         android:name="com.swmarastro.mykkumi.feature.home.HomeBannerDetailFragment"
         android:label="fragment_home_banner_detail"
         tools:layout="@layout/fragment_home_banner_detail"/>
+
+    <fragment
+        android:id="@+id/homeBannerAllFragment"
+        android:name="com.swmarastro.mykkumi.feature.home.HomeBannerAllFragment"
+        android:label="fragment_home_banner_all"
+        tools:layout="@layout/fragment_home_banner_all"/>
 
 </navigation>

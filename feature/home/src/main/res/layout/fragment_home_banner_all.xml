@@ -13,8 +13,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- 배너 전체 리스트 -->
+        <RelativeLayout
+            android:id="@+id/toolbar_banner_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true">
 
+            <ImageButton
+                android:id="@+id/btn_close_banner_all"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_close"
+                android:layout_margin="10dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/text_title_banner_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/home_banner_all_title"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+
+        <!-- 배너 전체 리스트 -->
 
     </RelativeLayout>
 

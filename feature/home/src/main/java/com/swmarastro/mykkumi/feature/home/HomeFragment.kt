@@ -37,6 +37,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         initBannerViewPager(bannerList)*/
 
         startAutoScroll()
+        onClickBannerAll() // 배너 > + 버튼 선택 시 전체 리스트 페이지로 이동
     }
 
     override suspend fun initView() {
@@ -112,6 +113,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun onClickBannerItem(bannerId: Int) {
         viewModel.selectHomeBanner(bannerId)
         view?.findNavController()?.navigate(R.id.action_navigate_fragment_to_home_banner_detail)
+    }
+
+    // 배너 > + 버튼 클릭
+    private fun onClickBannerAll() {
+        binding.btnBannerMore.setOnClickListener {
+            view?.findNavController()?.navigate(R.id.action_navigate_fragment_to_home_banner_all)
+        }
     }
 
     override fun onDestroyView() {
