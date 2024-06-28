@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_post_writer">
 
     <data>
         <variable
@@ -8,7 +9,6 @@
     </data>
 
     <RelativeLayout
-        android:id="@+id/item_post_writer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -23,24 +23,26 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"/>
 
+        <!--android:text="@{item.writer.nickname}"-->
         <TextView
             android:id="@+id/text_writer_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{item.writer.nickname}"
+            android:text="nickname"
             android:textColor="@color/black"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:textStyle="bold"
             android:layout_toRightOf="@id/image_writer_profile"
             android:layout_alignParentTop="true"/>
 
+        <!--android:text="@{item.category + '-' + item.subCategory}"-->
         <TextView
             android:id="@+id/text_post_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{item.category + '-' + item.subCategory}"
+            android:text="요리 - 일식"
             android:textColor="@color/black"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:layout_toRightOf="@id/image_writer_profile"
             android:layout_alignParentBottom="true"/>
 
