@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="item"
+            type="com.swmarastro.mykkumi.domain.entity.PostItemVO" />
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/item_post_writer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/image_writer_profile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:id="@+id/text_writer_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.writer.nickname}"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:layout_toRightOf="@id/image_writer_profile"
+            android:layout_alignParentTop="true"/>
+
+        <TextView
+            android:id="@+id/text_post_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.category + '-' + item.subCategory}"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:layout_toRightOf="@id/image_writer_profile"
+            android:layout_alignParentBottom="true"/>
+
+        <ImageButton
+            android:id="@+id/btn_post_more_menu"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+</layout>
