@@ -5,10 +5,16 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.domain.entity.HomeBannerListVO
+import com.swmarastro.mykkumi.domain.entity.PostItemVO
+import com.swmarastro.mykkumi.domain.entity.PostListVO
+import com.swmarastro.mykkumi.domain.entity.PostWriterVO
+import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBinding
+import com.swmarastro.mykkumi.feature.home.post.PostListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Timer
 import java.util.TimerTask
@@ -18,6 +24,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val viewModel by viewModels<HomeViewModel>({ requireActivity() })
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
+    private lateinit var postListAdapter: PostListAdapter
     private lateinit var timer: Timer
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,6 +45,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         startAutoScroll()
         onClickBannerAll() // 배너 > + 버튼 선택 시 전체 리스트 페이지로 이동
+
+        setPostList() // 포스트 리스트
     }
 
     override suspend fun initView() {
@@ -45,6 +54,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             vm = viewModel
         }
         setHomeBanner() // 배너
+
     }
 
     // 배너 viewpager
@@ -120,6 +130,61 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.btnBannerMore.setOnClickListener {
             view?.findNavController()?.navigate(R.id.action_navigate_fragment_to_home_banner_all)
         }
+    }
+
+    // 포스트 리스트 recyclerview
+    private fun initPostRecyclerView(posts: PostListVO) {
+        postListAdapter = PostListAdapter(
+            posts.posts.toMutableList()
+        )
+        binding.recyclerviewPostList.layoutManager = LinearLayoutManager(
+            context,
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+        binding.recyclerviewPostList.adapter = postListAdapter
+    }
+
+    // 포스트 내용 세팅
+    private fun setPostList() {
+        val test: PostListVO = PostListVO(
+            listOf(
+                PostItemVO(
+                    id = 1,
+                    image = listOf("https://avatars.githubusercontent.com/u/76805879?v=4", "https://avatars.githubusercontent.com/u/76805879?v=4"),
+                    category = "공예/DIY",
+                    subCategory = "다이어리 꾸미기",
+                    writer = PostWriterVO(
+                        nickname = "마이꾸미",
+                        profileImage = "https://avatars.githubusercontent.com/u/76805879?v=4",
+                    ),
+                    content = "마라스트로"
+                ),
+                PostItemVO(
+                    id = 1,
+                    image = listOf("https://avatars.githubusercontent.com/u/76805879?v=4", "https://avatars.githubusercontent.com/u/76805879?v=4"),
+                    category = "동물",
+                    subCategory = "고양이",
+                    writer = PostWriterVO(
+                        nickname = "츄르",
+                        profileImage = "https://avatars.githubusercontent.com/u/168630394?s=48&v=4",
+                    ),
+                    content = "마라스트로"
+                ),
+                PostItemVO(
+                    id = 1,
+                    image = listOf("https://avatars.githubusercontent.com/u/76805879?v=4", "https://avatars.githubusercontent.com/u/76805879?v=4"),
+                    category = "공예/DIY",
+                    subCategory = "다이어리 꾸미기",
+                    writer = PostWriterVO(
+                        nickname = "마이꾸미",
+                        profileImage = "https://avatars.githubusercontent.com/u/76805879?v=4",
+                    ),
+                    content = "마라스트로"
+                )
+            ),
+        )
+        initPostRecyclerView(test)
     }
 
     override fun onDestroyView() {

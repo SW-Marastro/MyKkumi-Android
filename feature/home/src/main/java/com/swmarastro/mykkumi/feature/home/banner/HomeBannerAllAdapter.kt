@@ -1,4 +1,4 @@
-package com.swmarastro.mykkumi.feature.home
+package com.swmarastro.mykkumi.feature.home.banner
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.swmarastro.mykkumi.domain.entity.HomeBannerItemVO
+import com.swmarastro.mykkumi.feature.home.R
 import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerAllRecyclerviewBinding
 
 class HomeBannerAllAdapter (
@@ -18,12 +19,13 @@ class HomeBannerAllAdapter (
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
-    ): HomeBannerAllAdapter.HomeBannerAllViewHolder {
-        _binding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_banner_all_recyclerview, parent, false)
+    ): HomeBannerAllViewHolder {
+        _binding = DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+            R.layout.item_banner_all_recyclerview, parent, false)
         return HomeBannerAllViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: HomeBannerAllAdapter.HomeBannerAllViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: HomeBannerAllViewHolder, position: Int) {
         holder.bind(bannerList[position])
     }
 

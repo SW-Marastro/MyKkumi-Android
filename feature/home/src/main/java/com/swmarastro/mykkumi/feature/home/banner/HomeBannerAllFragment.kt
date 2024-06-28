@@ -1,4 +1,4 @@
-package com.swmarastro.mykkumi.feature.home
+package com.swmarastro.mykkumi.feature.home.banner
 
 import android.os.Bundle
 import android.view.View
@@ -6,9 +6,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.domain.entity.HomeBannerListVO
+import com.swmarastro.mykkumi.feature.home.HomeViewModel
+import com.swmarastro.mykkumi.feature.home.R
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBannerAllBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,7 +37,7 @@ class HomeBannerAllFragment : BaseFragment<FragmentHomeBannerAllBinding>(R.layou
         setBannerAll() // 배너 리스트
     }
 
-    // 배너 viewpager
+    // 배너 리스트 recyclerview
     private fun initBannerRecyclerView(banners: HomeBannerListVO) {
         bannerAllAdapter = HomeBannerAllAdapter(
             banners.banners.toMutableList(),

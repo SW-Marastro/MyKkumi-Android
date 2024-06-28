@@ -50,6 +50,7 @@
             android:id="@+id/btn_post_more_menu"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:src="@drawable/ic_more_menu_dots"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
             android:layout_alignParentRight="true"

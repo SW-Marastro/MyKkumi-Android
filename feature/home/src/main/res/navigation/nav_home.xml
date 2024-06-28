@@ -23,13 +23,13 @@
 
     <fragment
         android:id="@+id/homeBannerDetailFragment"
-        android:name="com.swmarastro.mykkumi.feature.home.HomeBannerDetailFragment"
+        android:name="com.swmarastro.mykkumi.feature.home.banner.HomeBannerDetailFragment"
         android:label="fragment_home_banner_detail"
         tools:layout="@layout/fragment_home_banner_detail"/>
 
     <fragment
         android:id="@+id/homeBannerAllFragment"
-        android:name="com.swmarastro.mykkumi.feature.home.HomeBannerAllFragment"
+        android:name="com.swmarastro.mykkumi.feature.home.banner.HomeBannerAllFragment"
         android:label="fragment_home_banner_all"
         tools:layout="@layout/fragment_home_banner_all">
 
