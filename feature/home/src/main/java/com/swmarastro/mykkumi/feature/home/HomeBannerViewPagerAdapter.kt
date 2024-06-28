@@ -1,6 +1,5 @@
 package com.swmarastro.mykkumi.feature.home
 
-import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -10,9 +9,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.domain.entity.HomeBannerItemVO
-import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerViewpagerBinding
 import java.util.TimerTask
 import coil.load
+import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerViewpagerBinding
 
 class HomeBannerViewPagerAdapter(
     //private var bannerList: MutableList<Bitmap?>,

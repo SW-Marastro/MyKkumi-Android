@@ -31,6 +31,11 @@
         android:id="@+id/homeBannerAllFragment"
         android:name="com.swmarastro.mykkumi.feature.home.HomeBannerAllFragment"
         android:label="fragment_home_banner_all"
-        tools:layout="@layout/fragment_home_banner_all"/>
+        tools:layout="@layout/fragment_home_banner_all">
+
+        <action
+            android:id="@+id/action_navigate_fragment_to_home_banner_detail"
+            app:destination="@+id/homeBannerDetailFragment"/>
+    </fragment>
 
 </navigation>
