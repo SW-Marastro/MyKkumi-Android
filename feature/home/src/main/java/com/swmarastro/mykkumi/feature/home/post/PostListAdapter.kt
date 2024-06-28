@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumi.feature.home.post
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -37,6 +38,14 @@ class PostListAdapter (
             binding.includePostWriter.imageWriterProfile.load(item.writer.profileImage) // 사용자 프로필
             binding.includePostWriter.textWriterNickname.text = item.writer.nickname // 닉네임
             binding.includePostWriter.textPostCategory.text = item.category + " - " + item.subCategory // 포스트 카테고리
+
+            binding.frameUserComplaint.visibility = View.GONE
+            binding.includePostWriter.btnPostMoreMenu.setOnClickListener {
+                if(binding.frameUserComplaint.visibility == View.GONE)
+                    binding.frameUserComplaint.visibility = View.VISIBLE
+                else
+                    binding.frameUserComplaint.visibility = View.GONE
+            }
         }
     }
 }
