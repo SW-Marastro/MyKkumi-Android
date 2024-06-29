@@ -10,7 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 import com.swmarastro.mykkumi.data.BuildConfig
-import com.swmarastro.mykkumi.data.datasource.HomeBannerDataSource
+import com.swmarastro.mykkumi.data.datasource.BannerDataSource
 
 /*
 @Module: 인터페이스나, 빌더 패턴을 사용한 경우, 외부 라이브러리 클래스 등등 생성자를 사용할 수 없는 Class를 주입해야 할 경우
@@ -53,7 +53,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideHomeBannerDataSource(retrofit: Retrofit): HomeBannerDataSource {
-        return retrofit.create(HomeBannerDataSource::class.java)
+    fun provideBannerDataSource(retrofit: Retrofit): BannerDataSource {
+        return retrofit.create(BannerDataSource::class.java)
     }
 }

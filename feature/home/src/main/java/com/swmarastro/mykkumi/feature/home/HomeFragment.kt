@@ -8,7 +8,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
-import com.swmarastro.mykkumi.domain.entity.HomeBannerListVO
+import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.PostItemVO
 import com.swmarastro.mykkumi.domain.entity.PostListVO
 import com.swmarastro.mykkumi.domain.entity.PostWriterVO
@@ -58,7 +58,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     // 배너 viewpager
-    private fun initBannerViewPager(banners: HomeBannerListVO) {
+    private fun initBannerViewPager(banners: BannerListVO) {
         bannerAdapter = HomeBannerViewPagerAdapter(
             banners.banners.toMutableList(),
             onClickBannerItem = {
@@ -71,7 +71,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         // 배너 페이지 표시
         binding.textBannerTotalPage.text = "/" + banners.banners.size
-        binding.textBannerCurrentPage.text = "1"
+        if(!banners.banners.isEmpty()) binding.textBannerCurrentPage.text = "1"
 
         /*binding.lifecycleOwner = this
         lifecycleScope.launchWhenStarted {
@@ -102,7 +102,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     // 배너 내용 세팅
     private suspend fun setHomeBanner() {
         viewModel.setHomeBanner()
-        viewModel.homeBannerUiState.collect { response ->
+        viewModel.bannerListUiState.collect { response ->
             initBannerViewPager(response)
         }
     }

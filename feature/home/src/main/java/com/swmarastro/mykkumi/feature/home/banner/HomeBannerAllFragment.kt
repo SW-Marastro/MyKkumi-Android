@@ -7,7 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
-import com.swmarastro.mykkumi.domain.entity.HomeBannerListVO
+import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.feature.home.HomeViewModel
 import com.swmarastro.mykkumi.feature.home.R
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBannerAllBinding
@@ -38,7 +38,7 @@ class HomeBannerAllFragment : BaseFragment<FragmentHomeBannerAllBinding>(R.layou
     }
 
     // 배너 리스트 recyclerview
-    private fun initBannerRecyclerView(banners: HomeBannerListVO) {
+    private fun initBannerRecyclerView(banners: BannerListVO) {
         bannerAllAdapter = HomeBannerAllAdapter(
             banners.banners.toMutableList(),
             onClickBannerItem = {
@@ -56,7 +56,7 @@ class HomeBannerAllFragment : BaseFragment<FragmentHomeBannerAllBinding>(R.layou
     // 배너 내용 세팅
     private suspend fun setBannerAll() {
         viewModel.setHomeBanner()
-        viewModel.homeBannerUiState.collect { response ->
+        viewModel.bannerListUiState.collect { response ->
             initBannerRecyclerView(response)
         }
     }

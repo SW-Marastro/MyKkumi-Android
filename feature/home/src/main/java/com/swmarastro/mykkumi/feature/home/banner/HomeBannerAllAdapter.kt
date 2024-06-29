@@ -6,12 +6,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.swmarastro.mykkumi.domain.entity.HomeBannerItemVO
+import com.swmarastro.mykkumi.domain.entity.BannerItemVO
 import com.swmarastro.mykkumi.feature.home.R
 import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerAllRecyclerviewBinding
 
 class HomeBannerAllAdapter (
-    private var bannerList: MutableList<HomeBannerItemVO>,
+    private var bannerList: MutableList<BannerItemVO>,
     private val onClickBannerItem: (bannerId: Int) -> Unit
 ) : RecyclerView.Adapter<HomeBannerAllAdapter.HomeBannerAllViewHolder>(){
     private var _binding: ItemBannerAllRecyclerviewBinding? = null
@@ -34,7 +34,7 @@ class HomeBannerAllAdapter (
     inner class HomeBannerAllViewHolder(
         private val binding: ItemBannerAllRecyclerviewBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: HomeBannerItemVO) {
+        fun bind(item: BannerItemVO) {
             binding.imageHomeBanner.load(item.imageUrl)
 
             // 배너 클릭

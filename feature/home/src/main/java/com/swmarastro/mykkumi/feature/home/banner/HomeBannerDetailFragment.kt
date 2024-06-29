@@ -27,7 +27,7 @@ class HomeBannerDetailFragment : BaseFragment<FragmentHomeBannerDetailBinding>(R
             viewModel.setBannerDetail(bannerId)
         }
         lifecycleScope.launchWhenStarted {
-            viewModel.homeBannerDetailUiState.collect { response ->
+            viewModel.bannerDetailUiState.collect { response ->
                 binding.imageBannerDetail.load(response.imageUrl)
             }
         }

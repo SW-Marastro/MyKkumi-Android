@@ -1,8 +1,8 @@
 package com.swmarastro.mykkumi.data.di
 
-import com.swmarastro.mykkumi.data.repository.HomeBannerRepositoryImpl
+import com.swmarastro.mykkumi.data.repository.BannerRepositoryImpl
 import com.swmarastro.mykkumi.data.repository.ImageRepositoryImpl
-import com.swmarastro.mykkumi.domain.repository.HomeBannerRepository
+import com.swmarastro.mykkumi.domain.repository.BannerRepository
 import com.swmarastro.mykkumi.domain.repository.ImageRepository
 import dagger.Binds
 import dagger.Module
@@ -22,7 +22,7 @@ interface RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindsHomeBannerRepository(
-        homeBannerRepositoryImpl: HomeBannerRepositoryImpl
-    ): HomeBannerRepository
+    abstract fun bindsBannerRepository(
+        bannerRepositoryImpl: BannerRepositoryImpl
+    ): BannerRepository
 }
