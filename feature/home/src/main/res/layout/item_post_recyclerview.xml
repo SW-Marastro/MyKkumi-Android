@@ -57,10 +57,19 @@
                     android:layout_height="wrap_content"
                     android:text="/0"
                     android:textSize="12dp"
-                    android:textColor="@color/black"
-                    android:layout_marginRight="5dp"/>
+                    android:textColor="@color/black"/>
 
             </LinearLayout>
+
+            <!-- 이미지 indicator -->
+            <com.swmarastro.mykkumi.common_ui.post.PostImageIndicator
+                android:id="@+id/indicator_post_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center_vertical"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"/>
 
         </RelativeLayout>
 

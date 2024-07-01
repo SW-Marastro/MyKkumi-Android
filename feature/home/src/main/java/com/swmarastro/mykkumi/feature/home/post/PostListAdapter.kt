@@ -61,11 +61,17 @@ class PostListAdapter (
             // 이미지 총 페이지 수 표시
             binding.textPostImagesTotalPage.text = "/" + item.image.size
             if(item.image.size != 0) binding.textPostImagesCurrentPage.text = "1"
-            // 이미지 현재 페이지 표시
+
+            // 이미지 indicator
+            binding.indicatorPostImage.createIndicator(item.image.size, 0)
+
+            // 이미지 현재 페이지 표시 + indicator 이동
             binding.viewpagerPostImages.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
-                    if(item.image.size != 0)
+                    if(item.image.size != 0) {
                         binding.textPostImagesCurrentPage.text = (position + 1).toString()
+                        binding.indicatorPostImage.selectDot(position)
+                    }
                 }
             })
 
