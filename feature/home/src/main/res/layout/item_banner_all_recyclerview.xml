@@ -4,12 +4,12 @@
     <RelativeLayout
         android:id="@+id/relative_banner"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/image_home_banner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"/>
 
