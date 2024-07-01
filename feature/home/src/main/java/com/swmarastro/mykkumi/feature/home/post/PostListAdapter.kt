@@ -56,6 +56,17 @@ class PostListAdapter (
             binding.viewpagerPostImages.adapter = postItemImageAdapter
             binding.viewpagerPostImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
+            // 이미지 총 페이지 수 표시
+            binding.textPostImagesTotalPage.text = "/" + item.image.size
+            if(item.image.size != 0) binding.textPostImagesCurrentPage.text = "1"
+            // 이미지 현재 페이지 표시
+            binding.viewpagerPostImages.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    if(item.image.size != 0)
+                        binding.textPostImagesCurrentPage.text = (position + 1).toString()
+                }
+            })
+
             // 좋아요 버튼 - 일단 클릭 이벤트 세팅만 -> 데이터 변경되는 건 이후에 수정
             binding.btnPostLike.setOnClickListener {
                 binding.btnPostLike.setImageResource(R.drawable.ic_like_checked)
