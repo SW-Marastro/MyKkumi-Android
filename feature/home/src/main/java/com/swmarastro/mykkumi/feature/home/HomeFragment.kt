@@ -153,7 +153,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             listOf(
                 PostItemVO(
                     id = 1,
-                    image = listOf("https://avatars.githubusercontent.com/u/76805879?v=4", "https://avatars.githubusercontent.com/u/76805879?v=4"),
+                    image = listOf("https://avatars.githubusercontent.com/u/76805879?v=4",
+                        "https://private-user-images.githubusercontent.com/76805879/259478361-f5d35106-6c93-4db6-b4be-c6f74fa9824f.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTk4MDkyMjUsIm5iZiI6MTcxOTgwODkyNSwicGF0aCI6Ii83NjgwNTg3OS8yNTk0NzgzNjEtZjVkMzUxMDYtNmM5My00ZGI2LWI0YmUtYzZmNzRmYTk4MjRmLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA3MDElMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwNzAxVDA0NDIwNVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTc4YzAwNDhhN2E3ODhkNjMwYjQ4ZmZlZDFiNWRhMDA1ZWEwMGFlZTA5YjAzNDI4N2VlNTU5ODQzMzRhNGMxYzYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.NywnylkbwGOLbSCIdnxj3lDkrkmvr8NtWeGAc2o3sBA",
+                        "https://user-images.githubusercontent.com/76805879/236372564-dd445ac3-3f7e-4032-b872-f1073ef5775e.jpg"),
                     category = "공예/DIY",
                     subCategory = "다이어리 꾸미기",
                     writer = PostWriterVO(
@@ -164,7 +166,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 ),
                 PostItemVO(
                     id = 1,
-                    image = listOf("https://avatars.githubusercontent.com/u/76805879?v=4", "https://avatars.githubusercontent.com/u/76805879?v=4"),
+                    image = listOf("https://user-images.githubusercontent.com/76805879/236372564-dd445ac3-3f7e-4032-b872-f1073ef5775e.jpg",
+                        "https://avatars.githubusercontent.com/u/76805879?v=4"),
                     category = "동물",
                     subCategory = "고양이",
                     writer = PostWriterVO(
@@ -175,7 +178,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 ),
                 PostItemVO(
                     id = 1,
-                    image = listOf("https://avatars.githubusercontent.com/u/76805879?v=4", "https://avatars.githubusercontent.com/u/76805879?v=4"),
+                    image = listOf("https://private-user-images.githubusercontent.com/76805879/259478361-f5d35106-6c93-4db6-b4be-c6f74fa9824f.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTk4MDkyMjUsIm5iZiI6MTcxOTgwODkyNSwicGF0aCI6Ii83NjgwNTg3OS8yNTk0NzgzNjEtZjVkMzUxMDYtNmM5My00ZGI2LWI0YmUtYzZmNzRmYTk4MjRmLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA3MDElMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwNzAxVDA0NDIwNVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTc4YzAwNDhhN2E3ODhkNjMwYjQ4ZmZlZDFiNWRhMDA1ZWEwMGFlZTA5YjAzNDI4N2VlNTU5ODQzMzRhNGMxYzYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.NywnylkbwGOLbSCIdnxj3lDkrkmvr8NtWeGAc2o3sBA",
+                        "https://avatars.githubusercontent.com/u/76805879?v=4"),
                     category = "공예/DIY",
                     subCategory = "다이어리 꾸미기",
                     writer = PostWriterVO(

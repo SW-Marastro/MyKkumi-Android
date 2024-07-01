@@ -36,6 +36,12 @@ class PostItemImagesAdapter(
         fun bind(item: String) {
             // 포스트 이미지 세팅
             binding.imagePost.load(item)
+
+            binding.imagePost.viewTreeObserver.addOnGlobalLayoutListener {
+                val width = binding.imagePost.width
+                binding.imagePost.layoutParams.height = width
+                binding.imagePost.requestLayout()
+            }
         }
     }
 }
