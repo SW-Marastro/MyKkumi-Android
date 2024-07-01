@@ -16,15 +16,11 @@ import com.swmarastro.mykkumi.feature.home.databinding.ItemPostRecyclerviewBindi
 class PostListAdapter (
     private var postList: MutableList<PostItemVO>
 ) : RecyclerView.Adapter<PostListAdapter.PostListViewHolder>(){
-    private var _binding: ItemPostRecyclerviewBinding? = null
-    private val binding get() = _binding!!
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
     ): PostListViewHolder {
-        _binding = DataBindingUtil.inflate(
-            LayoutInflater.from(parent.context),
-            R.layout.item_post_recyclerview, parent, false)
+        val binding = ItemPostRecyclerviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PostListViewHolder(binding)
     }
 

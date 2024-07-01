@@ -12,15 +12,11 @@ import com.swmarastro.mykkumi.common_ui.databinding.ItemPostImageViewpagerBindin
 class PostImagesAdapter(
     private var postImageList: MutableList<String>
 ) : RecyclerView.Adapter<PostImagesAdapter.PostItemImageViewHolder>() {
-    private var _binding: ItemPostImageViewpagerBinding? = null
-    private val binding get() = _binding!!
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
     ): PostItemImageViewHolder {
-        _binding = DataBindingUtil.inflate(
-            LayoutInflater.from(parent.context),
-            R.layout.item_post_image_viewpager, parent, false)
+        val binding = ItemPostImageViewpagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PostItemImageViewHolder(binding)
     }
 
@@ -37,6 +33,7 @@ class PostImagesAdapter(
             // 포스트 이미지 세팅
             binding.imagePost.load(item)
 
+            // 이미지 세로 사이즈를 가로 사이즈와 동일하게 설정
             binding.imagePost.viewTreeObserver.addOnGlobalLayoutListener {
                 val width = binding.imagePost.width
                 binding.imagePost.layoutParams.height = width

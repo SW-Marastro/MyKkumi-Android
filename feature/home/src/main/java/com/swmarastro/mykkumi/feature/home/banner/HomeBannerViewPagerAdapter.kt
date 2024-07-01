@@ -19,14 +19,10 @@ class HomeBannerViewPagerAdapter(
     private var bannerList: MutableList<BannerItemVO>,
     private val onClickBannerItem: (bannerId: Int) -> Unit
 ) : RecyclerView.Adapter<HomeBannerViewPagerAdapter.HomeBannerViewHolder>() {
-    private var _binding: ItemBannerViewpagerBinding? = null
-    private val binding get() = _binding!!
-
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
     ): HomeBannerViewHolder {
-        _binding = DataBindingUtil.inflate(LayoutInflater.from(parent.context),
-            R.layout.item_banner_viewpager, parent, false)
+        val binding = ItemBannerViewpagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HomeBannerViewHolder(binding)
     }
 
