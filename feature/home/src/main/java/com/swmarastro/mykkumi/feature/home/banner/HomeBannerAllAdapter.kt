@@ -3,11 +3,9 @@ package com.swmarastro.mykkumi.feature.home.banner
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.swmarastro.mykkumi.domain.entity.BannerItemVO
-import com.swmarastro.mykkumi.feature.home.R
 import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerAllRecyclerviewBinding
 
 class HomeBannerAllAdapter (

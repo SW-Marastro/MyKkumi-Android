@@ -2,10 +2,8 @@ package com.swmarastro.mykkumi.common_ui.post
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.swmarastro.mykkumi.common_ui.R
 import com.swmarastro.mykkumi.common_ui.databinding.ItemPostImageViewpagerBinding
 
 

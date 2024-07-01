@@ -5,13 +5,11 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.domain.entity.BannerItemVO
 import java.util.TimerTask
 import coil.load
-import com.swmarastro.mykkumi.feature.home.R
 import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerViewpagerBinding
 
 class HomeBannerViewPagerAdapter(
