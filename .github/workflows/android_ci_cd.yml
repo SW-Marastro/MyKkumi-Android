@@ -30,9 +30,11 @@ jobs:
       run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > app/google-services.json
         
     # (LOCAL_PROPERTIES_CONTENTS)를 기반으로 local.properties 생성
-    # 아직 추가할 Key가 없어서 주석 처리
-    #- name: Create local.properties
-    #  run: echo "$LOCAL_PROPERTIES_CONTENTS" > local.properties
+    - name: Create local.properties
+      run: echo "$LOCAL_PROPERTIES_CONTENTS" > local.properties
+
+    - name: local.properties 디렉토리 확인 (디버깅용)
+      run: ls -a
 
     # Generate Keystore File
 #    - name: Generate Keystore File
@@ -53,7 +55,7 @@ jobs:
 #        echo storePassword=$STORE_PASSWORD > ./keystore.properties
 #        echo keyPassword=$KEY_PASSWORD > ./keystore.properties
 #        echo keyAlias=$KEY_ALIAS > ./keystore.properties
-#        echo storeFile=$STORE_FILE > ./keystore.properties
+#        echo storeF가ile=$STORE_FILE > ./keystore.properties
       
     # Build APK Release
     - name: Build Release Apk
