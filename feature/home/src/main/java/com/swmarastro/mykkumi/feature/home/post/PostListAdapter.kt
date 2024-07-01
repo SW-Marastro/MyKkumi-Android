@@ -46,6 +46,15 @@ class PostListAdapter (
                 else
                     binding.frameUserComplaint.visibility = View.GONE
             }
+
+            // 좋아요 버튼 - 일단 클릭 이벤트 세팅만 -> 데이터 변경되는 건 이후에 수정
+            binding.btnPostLike.setOnClickListener {
+                binding.btnPostLike.setImageResource(R.drawable.ic_like_checked)
+            }
+            // 스크랩 버튼 - 일단 클릭 이벤트 세팅만 -> 데이터 변경되는 건 이후에 수정
+            binding.btnPostScrap.setOnClickListener {
+                binding.btnPostScrap.setImageResource(R.drawable.ic_scrap_checked)
+            }
         }
     }
 }
