@@ -30,12 +30,9 @@ class PostImagesAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: String, position: Int) {
             // 포스트 이미지 세팅
-            // binding.imagePost.load(item)
-            if(position == getPosition()) {
-                Log.d("---position", getPosition().toString())
-                Log.d("---position2", position.toString())
-                binding.imagePost.load(item)
-            }
+            // 페이지 넘길 때 이미지 로드
+            binding.imagePost.load(item)
+
 
             // 이미지 세로 사이즈를 가로 사이즈와 동일하게 설정
             binding.imagePost.viewTreeObserver.addOnGlobalLayoutListener {
