@@ -1,15 +1,14 @@
 package com.swmarastro.mykkumi.feature.home
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.swmarastro.mykkumi.domain.entity.HomeBannerListVO
-import com.swmarastro.mykkumi.domain.entity.HomeBannerItemVO
-import com.swmarastro.mykkumi.domain.usecase.GetHomeBannerDetailUseCase
-import com.swmarastro.mykkumi.domain.usecase.GetHomeBannerUseCase
+import com.swmarastro.mykkumi.domain.entity.BannerListVO
+import com.swmarastro.mykkumi.domain.entity.BannerItemVO
+import com.swmarastro.mykkumi.domain.usecase.GetBannerDetailUseCase
+import com.swmarastro.mykkumi.domain.usecase.GetBannerListUseCase
 import com.swmarastro.mykkumi.domain.usecase.LoadImageUseCase
 import com.swmarastro.mykkumi.util.ImageLoader
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,27 +23,27 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val loadImageUseCase: LoadImageUseCase,
-    private val getHomeBannerUseCase: GetHomeBannerUseCase,
-    private val getHomeBannerDetailUseCase: GetHomeBannerDetailUseCase
+    private val getBannerListUseCase: GetBannerListUseCase,
+    private val getBannerDetailUseCase: GetBannerDetailUseCase
 ) : ViewModel() {
     // 홈 > 배너 > 이미지 로드 (이미지 로더 라이브러리로 대체해서 삭제 고민 중)
     private val _bannerImageUiState = MutableStateFlow<MutableList<Bitmap?>>(mutableListOf())
     val bannerImageUiState: StateFlow<MutableList<Bitmap?>> get() = _bannerImageUiState
 
     // 홈 > 배너 캐러셀
-    private val _homeBannerUiState = MutableStateFlow<HomeBannerListVO>(HomeBannerListVO())
-    val homeBannerUiState: StateFlow<HomeBannerListVO> get() = _homeBannerUiState
+    private val _bannerListUiState = MutableStateFlow<BannerListVO>(BannerListVO())
+    val bannerListUiState: StateFlow<BannerListVO> get() = _bannerListUiState
 
     // 배너 상세
-    private val _homeBannerDetailUiState = MutableStateFlow<HomeBannerItemVO>(HomeBannerItemVO())
-    val homeBannerDetailUiState: StateFlow<HomeBannerItemVO> get() = _homeBannerDetailUiState
+    private val _bannerDetailUiState = MutableStateFlow<BannerItemVO>(BannerItemVO())
+    val bannerDetailUiState: StateFlow<BannerItemVO> get() = _bannerDetailUiState
 
 
     // 선택된 배너
     private val _selectBannerId = MutableLiveData<Int>()
     val selectBannerId: LiveData<Int> get() = _selectBannerId
 
-    fun loadImages(imageUrls: List<HomeBannerItemVO>) {
+    fun loadImages(imageUrls: List<BannerItemVO>) {
         viewModelScope.launch {
             val bitmaps = imageUrls.map { homeBannerVO ->
                 val byteArray = withContext(Dispatchers.IO) {
@@ -61,11 +60,11 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val homeBanner = withContext(Dispatchers.IO) {
-                    getHomeBannerUseCase()
+                    getBannerListUseCase()
                 }
-                _homeBannerUiState.value = homeBanner
+                _bannerListUiState.value = homeBanner
             } catch (e: Exception) {
-                _homeBannerUiState.value = HomeBannerListVO(listOf())
+                _bannerListUiState.value = BannerListVO(listOf())
             }
         }
     }
@@ -80,11 +79,11 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val homeBannerDetail = withContext(Dispatchers.IO) {
-                    getHomeBannerDetailUseCase(bannerId)
+                    getBannerDetailUseCase(bannerId)
                 }
-                _homeBannerDetailUiState.value = homeBannerDetail
+                _bannerDetailUiState.value = homeBannerDetail
             } catch (e: Exception) {
-                _homeBannerDetailUiState.value = HomeBannerItemVO()
+                _bannerDetailUiState.value = BannerItemVO()
             }
         }
     }

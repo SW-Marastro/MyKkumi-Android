@@ -1,4 +1,4 @@
-package com.swmarastro.mykkumi.feature.home
+package com.swmarastro.mykkumi.feature.home.banner
 
 import android.os.Handler
 import android.os.Looper
@@ -8,14 +8,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.swmarastro.mykkumi.domain.entity.HomeBannerItemVO
+import com.swmarastro.mykkumi.domain.entity.BannerItemVO
 import java.util.TimerTask
 import coil.load
+import com.swmarastro.mykkumi.feature.home.R
 import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerViewpagerBinding
 
 class HomeBannerViewPagerAdapter(
     //private var bannerList: MutableList<Bitmap?>,
-    private var bannerList: MutableList<HomeBannerItemVO>,
+    private var bannerList: MutableList<BannerItemVO>,
     private val onClickBannerItem: (bannerId: Int) -> Unit
 ) : RecyclerView.Adapter<HomeBannerViewPagerAdapter.HomeBannerViewHolder>() {
     private var _binding: ItemBannerViewpagerBinding? = null
@@ -24,7 +25,8 @@ class HomeBannerViewPagerAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
     ): HomeBannerViewHolder {
-        _binding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_banner_viewpager, parent, false)
+        _binding = DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+            R.layout.item_banner_viewpager, parent, false)
         return HomeBannerViewHolder(binding)
     }
 
@@ -49,7 +51,7 @@ class HomeBannerViewPagerAdapter(
     inner class HomeBannerViewHolder(
         private val binding: ItemBannerViewpagerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: HomeBannerItemVO) {
+        fun bind(item: BannerItemVO) {
             // binding.imageHomeBanner.setImageBitmap(bitmap)
             binding.imageHomeBanner.load(item.imageUrl)
 

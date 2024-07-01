@@ -1,4 +1,4 @@
-package com.swmarastro.mykkumi.feature.home
+package com.swmarastro.mykkumi.feature.home.banner
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,11 +6,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.swmarastro.mykkumi.domain.entity.HomeBannerItemVO
+import com.swmarastro.mykkumi.domain.entity.BannerItemVO
+import com.swmarastro.mykkumi.feature.home.R
 import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerAllRecyclerviewBinding
 
 class HomeBannerAllAdapter (
-    private var bannerList: MutableList<HomeBannerItemVO>,
+    private var bannerList: MutableList<BannerItemVO>,
     private val onClickBannerItem: (bannerId: Int) -> Unit
 ) : RecyclerView.Adapter<HomeBannerAllAdapter.HomeBannerAllViewHolder>(){
     private var _binding: ItemBannerAllRecyclerviewBinding? = null
@@ -18,12 +19,13 @@ class HomeBannerAllAdapter (
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
-    ): HomeBannerAllAdapter.HomeBannerAllViewHolder {
-        _binding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_banner_all_recyclerview, parent, false)
+    ): HomeBannerAllViewHolder {
+        _binding = DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+            R.layout.item_banner_all_recyclerview, parent, false)
         return HomeBannerAllViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: HomeBannerAllAdapter.HomeBannerAllViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: HomeBannerAllViewHolder, position: Int) {
         holder.bind(bannerList[position])
     }
 
@@ -32,7 +34,7 @@ class HomeBannerAllAdapter (
     inner class HomeBannerAllViewHolder(
         private val binding: ItemBannerAllRecyclerviewBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: HomeBannerItemVO) {
+        fun bind(item: BannerItemVO) {
             binding.imageHomeBanner.load(item.imageUrl)
 
             // 배너 클릭

@@ -1,10 +1,12 @@
-package com.swmarastro.mykkumi.feature.home
+package com.swmarastro.mykkumi.feature.home.banner
 
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBannerDetailBinding
 import coil.load
+import com.swmarastro.mykkumi.feature.home.HomeViewModel
+import com.swmarastro.mykkumi.feature.home.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,7 +27,7 @@ class HomeBannerDetailFragment : BaseFragment<FragmentHomeBannerDetailBinding>(R
             viewModel.setBannerDetail(bannerId)
         }
         lifecycleScope.launchWhenStarted {
-            viewModel.homeBannerDetailUiState.collect { response ->
+            viewModel.bannerDetailUiState.collect { response ->
                 binding.imageBannerDetail.load(response.imageUrl)
             }
         }

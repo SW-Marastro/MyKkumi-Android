@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/include_post_writer"
+            layout="@layout/item_post_writer"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/gray_86"
+            android:layout_below="@id/include_post_writer"/>
+
+        <FrameLayout
+            android:id="@+id/frame_user_complaint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/gray_DD"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/include_post_writer"
+            android:padding="5dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/text_user_complaint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_complaint"
+                android:textSize="12dp"
+                android:textColor="@color/black" />
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+</layout>
