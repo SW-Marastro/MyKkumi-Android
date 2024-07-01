@@ -14,7 +14,7 @@ import com.swmarastro.mykkumi.domain.entity.PostListVO
 import com.swmarastro.mykkumi.domain.entity.PostWriterVO
 import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBinding
-import com.swmarastro.mykkumi.feature.home.post.PostItemImagesAdapter
+import com.swmarastro.mykkumi.common_ui.post.PostImagesAdapter
 import com.swmarastro.mykkumi.feature.home.post.PostListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Timer
@@ -26,7 +26,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private val viewModel by viewModels<HomeViewModel>({ requireActivity() })
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
     private lateinit var postListAdapter: PostListAdapter
-    private lateinit var postItemImageAdapter: PostItemImagesAdapter
+    private lateinit var postItemImageAdapter: PostImagesAdapter
     private lateinit var timer: Timer
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

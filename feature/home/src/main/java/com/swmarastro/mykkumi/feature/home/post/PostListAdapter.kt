@@ -7,8 +7,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
+import com.swmarastro.mykkumi.common_ui.post.PostImagesAdapter
 import com.swmarastro.mykkumi.domain.entity.PostItemVO
 import com.swmarastro.mykkumi.feature.home.R
+import com.swmarastro.mykkumi.common_ui.R as R_common_ui
 import com.swmarastro.mykkumi.feature.home.databinding.ItemPostRecyclerviewBinding
 
 class PostListAdapter (
@@ -50,7 +52,7 @@ class PostListAdapter (
             }
 
             // 포스트 이미지 viewpager
-            var postItemImageAdapter: PostItemImagesAdapter = PostItemImagesAdapter(
+            var postItemImageAdapter: PostImagesAdapter = PostImagesAdapter(
                 item.image.toMutableList()
             )
             binding.viewpagerPostImages.adapter = postItemImageAdapter
@@ -69,11 +71,11 @@ class PostListAdapter (
 
             // 좋아요 버튼 - 일단 클릭 이벤트 세팅만 -> 데이터 변경되는 건 이후에 수정
             binding.btnPostLike.setOnClickListener {
-                binding.btnPostLike.setImageResource(R.drawable.ic_like_checked)
+                binding.btnPostLike.setImageResource(R_common_ui.drawable.ic_like_checked)
             }
             // 스크랩 버튼 - 일단 클릭 이벤트 세팅만 -> 데이터 변경되는 건 이후에 수정
             binding.btnPostScrap.setOnClickListener {
-                binding.btnPostScrap.setImageResource(R.drawable.ic_scrap_checked)
+                binding.btnPostScrap.setImageResource(R_common_ui.drawable.ic_scrap_checked)
             }
         }
     }

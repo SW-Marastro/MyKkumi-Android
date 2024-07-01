@@ -30,6 +30,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" />
 
+            <!-- 이미지 페이지 표시 -->
             <LinearLayout
                 android:id="@+id/post_images_page_num"
                 android:layout_width="wrap_content"
