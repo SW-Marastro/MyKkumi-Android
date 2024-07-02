@@ -7,6 +7,7 @@ import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.Log
 import android.view.LayoutInflater
@@ -90,7 +91,9 @@ class PostListAdapter (
                 binding.btnPostScrap.setImageResource(R.drawable.ic_scrap_checked)
             }
 
-            val testContent = "템빨, 즉 아이템의 비중이 크거나 다양한 취미를 즐기는 사람들이 모인 커뮤니티를 제공한다. 취미 생활에 관련된 팁을 주고 받거나, 새로운 제품과 스타일을 시도해볼 수 있다."
+            // 글 내용 --------------------------------------------------------------------------------------
+
+            val testContent = "#템빨 즉 아이템의 비중이 크거나 #다양한 취미를 즐기는 사람들이 모인 커뮤니티를 제공한다. #취미 생활에 관련된 팁을 주고 받거나, #새로운 제품과 스타일을 시도해볼 수 있다."
 
             // 닉네임 클릭 이벤트
             val clickableNicknameSpan = object : ClickableSpan() {
@@ -118,8 +121,33 @@ class PostListAdapter (
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
 
+                append("  ")
+
+                // 글 내용 중 해시태그 색상 강조
+                val words = testContent.split(" ")
+                var startIndex = item.writer.nickname.length + 2 // 닉네임 + 공백 다음에 시작
+                for (word in words) {
+                    if (word.startsWith("#")) {
+                        // 해시태그 시작과 끝
+                        val start = startIndex
+                        val end = startIndex + word.length
+
+                        append(word)
+                        setSpan(
+                            ForegroundColorSpan(Color.BLUE),
+                            start,
+                            end,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                    } else {
+                        append(word)
+                    }
+                    append(" ")
+                    startIndex += word.length + 1
+                }
+
                 // 글 내용
-                append("  " + testContent) // item.content
+                //append("  " + testContent) // item.content
             }
 
             binding.textPostNicknameContent.text = spannableStringBuilder
@@ -141,15 +169,39 @@ class PostListAdapter (
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
 
+                        append("  ")
+
                         // 숨기기
                         val availableTextLength = binding.textPostNicknameContent.layout.getLineEnd(postContentMaxLine - 1) - item.writer.nickname.length - postContentShowMoreText.length - 2
-                        val hideContent = "  " + testContent.substring(0, availableTextLength)
+                        val hideContent = testContent.substring(0, availableTextLength)
 
-                        // 글 내용
-                        append(hideContent) // item.content
+                        // 글 내용 중 해시태그 색상 강조
+                        val words = hideContent.split(" ")
+                        var startIndex = item.writer.nickname.length + 2 // 닉네임 + 공백 다음에 시작
+                        for (word in words) {
+                            if (word.startsWith("#")) {
+                                // 해시태그 시작과 끝
+                                val start = startIndex
+                                val end = startIndex + word.length
+
+                                append(word)
+                                setSpan(
+                                    ForegroundColorSpan(Color.BLUE),
+                                    start,
+                                    end,
+                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                                )
+
+                            } else {
+                                append(word)
+                            }
+                            append(" ")
+                            startIndex += word.length + 1
+                        }
 
                         // ...더보기
                         append(postContentShowMoreText)
+
                         // 더보기 클릭 이벤트
                         val clickableShowMoreSpan = object : ClickableSpan() {
                             override fun onClick(widget: View) {
@@ -162,8 +214,8 @@ class PostListAdapter (
                         }
                         setSpan(
                             clickableShowMoreSpan,
-                            item.writer.nickname.length + hideContent.length,
-                            item.writer.nickname.length + hideContent.length + postContentShowMoreText.length,
+                            item.writer.nickname.length + hideContent.length + 2,
+                            item.writer.nickname.length + hideContent.length + postContentShowMoreText.length + 2,
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
                     }
