@@ -110,7 +110,7 @@ class PostListAdapter (
             }
 
             // 글 내용
-            var spannableStringBuilder = SpannableStringBuilder().apply {
+            var originalSpannableStringBuilder = SpannableStringBuilder().apply {
                 // 닉네임
                 append(item.writer.nickname)
                 // 닉네임 클릭 이벤트
@@ -150,7 +150,7 @@ class PostListAdapter (
                 //append("  " + testContent) // item.content
             }
 
-            binding.textPostNicknameContent.text = spannableStringBuilder
+            binding.textPostNicknameContent.text = originalSpannableStringBuilder
             binding.textPostNicknameContent.movementMethod = LinkMovementMethod.getInstance()
 
             // 글이 2줄을 넘어가면 '...더보기'로 숨기기
@@ -205,7 +205,7 @@ class PostListAdapter (
                         // 더보기 클릭 이벤트
                         val clickableShowMoreSpan = object : ClickableSpan() {
                             override fun onClick(widget: View) {
-                                binding.textPostNicknameContent.text = spannableStringBuilder
+                                binding.textPostNicknameContent.text = originalSpannableStringBuilder
                             }
 
                             // 스타일 설정
