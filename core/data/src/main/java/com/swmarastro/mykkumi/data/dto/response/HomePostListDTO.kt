@@ -7,10 +7,14 @@ import com.swmarastro.mykkumi.domain.entity.HomePostWriterVO
 
 data class HomePostListDTO(
     @SerializedName("posts")
-    val posts: List<HomePostItemDTO>
+    val posts: List<HomePostItemDTO>,
+
+    @SerializedName("cursor")
+    val cursor: String,
 ){
     fun toEntity(): HomePostListVO = HomePostListVO(
-        posts = posts.map { it.toEntity() }
+        posts = posts.map { it.toEntity() },
+        cursor = cursor
     )
 
     data class HomePostItemDTO(

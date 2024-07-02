@@ -1,7 +1,8 @@
 package com.swmarastro.mykkumi.domain.entity
 
 data class HomePostListVO(
-    val posts: List<HomePostItemVO> = listOf()
+    val posts: List<HomePostItemVO> = listOf(),
+    val cursor: String = ""
 )
 
 data class HomePostItemVO(

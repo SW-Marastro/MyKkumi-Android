@@ -90,46 +90,87 @@ class PostListAdapter (
                 binding.btnPostScrap.setImageResource(R.drawable.ic_scrap_checked)
             }
 
+            val testContent = "템빨, 즉 아이템의 비중이 크거나 다양한 취미를 즐기는 사람들이 모인 커뮤니티를 제공한다. 취미 생활에 관련된 팁을 주고 받거나, 새로운 제품과 스타일을 시도해볼 수 있다."
+
+            // 닉네임 클릭 이벤트
+            val clickableNicknameSpan = object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    Log.d("---", "닉네임 클릭")
+                }
+
+                // 스타일 설정
+                override fun updateDrawState(ds: TextPaint) {
+                    ds.isUnderlineText = false
+                    ds.color = Color.parseColor("#000000")
+                    ds.isFakeBoldText = true
+                }
+            }
+
             // 글 내용
-            val spannableStringBuilder = SpannableStringBuilder().apply {
+            var spannableStringBuilder = SpannableStringBuilder().apply {
                 // 닉네임
                 append(item.writer.nickname)
+                // 닉네임 클릭 이벤트
                 setSpan(
-                    StyleSpan(Typeface.BOLD),
-                    0,
-                    item.writer.nickname.length,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-
-                val clickableSpan = object : ClickableSpan() {
-                    override fun onClick(widget: View) {
-                        Log.d("---", "닉네임 클릭")
-                    }
-
-                    // 스타일 설정
-                    override fun updateDrawState(ds: TextPaint) {
-                        ds.isUnderlineText = false
-                        ds.color = Color.parseColor("#000000")
-                    }
-                }
-                setSpan(
-                    clickableSpan,
+                    clickableNicknameSpan,
                     0,
                     item.writer.nickname.length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
 
                 // 글 내용
-                append("  " + item.content)
+                append("  " + testContent) // item.content
             }
 
             binding.textPostNicknameContent.text = spannableStringBuilder
             binding.textPostNicknameContent.movementMethod = LinkMovementMethod.getInstance()
-            /*binding.textPostNicknameContent.post {
-                if(binding.textPostNicknameContent.lineCount > postContentMaxLine) {
 
+            // 글이 2줄을 넘어가면 '...더보기'로 숨기기
+            binding.textPostNicknameContent.post {
+                if(binding.textPostNicknameContent.lineCount > postContentMaxLine) {
+                    // Log.d("--", binding.textPostNicknameContent.layout.getLineEnd(postContentMaxLine - 1).toString())
+
+                    var hideSpannableStringBuilder = SpannableStringBuilder().apply {
+                        // 닉네임
+                        append(item.writer.nickname)
+                        // 닉네임 클릭 이벤트
+                        setSpan(
+                            clickableNicknameSpan,
+                            0,
+                            item.writer.nickname.length,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+
+                        // 숨기기
+                        val availableTextLength = binding.textPostNicknameContent.layout.getLineEnd(postContentMaxLine - 1) - item.writer.nickname.length - postContentShowMoreText.length - 2
+                        val hideContent = "  " + testContent.substring(0, availableTextLength)
+
+                        // 글 내용
+                        append(hideContent) // item.content
+
+                        // ...더보기
+                        append(postContentShowMoreText)
+                        // 더보기 클릭 이벤트
+                        val clickableShowMoreSpan = object : ClickableSpan() {
+                            override fun onClick(widget: View) {
+                                binding.textPostNicknameContent.text = spannableStringBuilder
+                            }
+
+                            // 스타일 설정
+                            override fun updateDrawState(ds: TextPaint) {
+                            }
+                        }
+                        setSpan(
+                            clickableShowMoreSpan,
+                            item.writer.nickname.length + hideContent.length,
+                            item.writer.nickname.length + hideContent.length + postContentShowMoreText.length,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                    }
+
+                    binding.textPostNicknameContent.text = hideSpannableStringBuilder
                 }
-            }*/
+            }
         }
     }
 }
