@@ -12,17 +12,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
 import com.swmarastro.mykkumi.common_ui.post.PostImagesAdapter
-import com.swmarastro.mykkumi.domain.entity.PostItemVO
+import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.common_ui.R
 import com.swmarastro.mykkumi.feature.home.databinding.ItemPostRecyclerviewBinding
 
 class PostListAdapter (
-    private var postList: MutableList<PostItemVO>
+    private var postList: MutableList<HomePostItemVO>
 ) : RecyclerView.Adapter<PostListAdapter.PostListViewHolder>(){
 
     private val postContentMaxLine = 2
@@ -44,7 +43,7 @@ class PostListAdapter (
     inner class PostListViewHolder(
         private val binding: ItemPostRecyclerviewBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: PostItemVO) {
+        fun bind(item: HomePostItemVO) {
             binding.includePostWriter.imageWriterProfile.load(item.writer.profileImage) // 사용자 프로필
             binding.includePostWriter.textWriterNickname.text = item.writer.nickname // 닉네임
             binding.includePostWriter.textPostCategory.text = item.category + " - " + item.subCategory // 포스트 카테고리
@@ -60,22 +59,22 @@ class PostListAdapter (
 
             // 포스트 이미지 viewpager
             var postItemImageAdapter: PostImagesAdapter = PostImagesAdapter(
-                item.image.toMutableList()
+                item.images.toMutableList()
             )
             binding.viewpagerPostImages.adapter = postItemImageAdapter
             binding.viewpagerPostImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
             // 이미지 총 페이지 수 표시
-            binding.textPostImagesTotalPage.text = "/" + item.image.size
-            if(item.image.size != 0) binding.textPostImagesCurrentPage.text = "1"
+            binding.textPostImagesTotalPage.text = "/" + item.images.size
+            if(item.images.size != 0) binding.textPostImagesCurrentPage.text = "1"
 
             // 이미지 indicator
-            binding.indicatorPostImage.createIndicator(item.image.size, 0)
+            binding.indicatorPostImage.createIndicator(item.images.size, 0)
 
             // 이미지 현재 페이지 표시 + indicator 이동
             binding.viewpagerPostImages.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
-                    if(item.image.size != 0) {
+                    if(item.images.size != 0) {
                         binding.textPostImagesCurrentPage.text = (position + 1).toString()
                         binding.indicatorPostImage.selectDot(position)
                     }

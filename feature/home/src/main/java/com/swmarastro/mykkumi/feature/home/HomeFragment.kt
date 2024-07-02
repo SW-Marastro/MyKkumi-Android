@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
-import com.swmarastro.mykkumi.domain.entity.PostItemVO
-import com.swmarastro.mykkumi.domain.entity.PostListVO
-import com.swmarastro.mykkumi.domain.entity.PostWriterVO
+import com.swmarastro.mykkumi.domain.entity.HomePostListVO
 import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBinding
 import com.swmarastro.mykkumi.common_ui.post.PostImagesAdapter
 import com.swmarastro.mykkumi.feature.home.post.PostListAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.util.Timer
 import java.util.TimerTask
 
@@ -36,19 +36,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         }
         super.onViewCreated(view, savedInstanceState)
 
-        // 배너 테스트용
-        /*val bannerList: HomeBannerListVO = HomeBannerListVO(
-            mutableListOf(
-                HomeBannerVO(1, "https://avatars.githubusercontent.com/u/76805879?v=4"),
-                HomeBannerVO(2, "https://avatars.githubusercontent.com/u/168630394?s=200&v=4")
-            )
-        )
-        initBannerViewPager(bannerList)*/
-
         startAutoScroll()
         onClickBannerAll() // 배너 > + 버튼 선택 시 전체 리스트 페이지로 이동
-
-        setPostList() // 포스트 리스트
     }
 
     override suspend fun initView() {
@@ -56,7 +45,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             vm = viewModel
         }
         setHomeBanner() // 배너
-
+        setPostList() // 포스트
     }
 
     // 배너 viewpager
@@ -75,19 +64,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.textBannerTotalPage.text = "/" + banners.banners.size
         if(!banners.banners.isEmpty()) binding.textBannerCurrentPage.text = "1"
 
-        /*binding.lifecycleOwner = this
-        lifecycleScope.launchWhenStarted {
-            viewModel.bannerImageUiState.collect { bitmaps ->
-                binding.viewpagerBanner.adapter?.let {
-                    if (it is HomeBannerViewPagerAdapter) {
-                        it.setImages(bitmaps)
-                    }
-                }
-
-            }
-        }
-        viewModel.loadImages(banners.banners)*/
-
         // 배너가 수동으로 변경되면, 자동 전환되는 타이머를 리셋 - 변경된 시점부터 3초 카운트
         binding.viewpagerBanner.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -102,11 +78,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     // 배너 내용 세팅
-    private suspend fun setHomeBanner() {
+    private fun setHomeBanner() {
         viewModel.setHomeBanner()
-        viewModel.bannerListUiState.collect { response ->
-            initBannerViewPager(response)
-        }
+        viewModel.bannerListUiState
+            .onEach {
+                initBannerViewPager(it)
+            }
+            .launchIn(lifecycleScope)
     }
 
     // 배너 자동 전환
@@ -135,7 +113,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     // 포스트 리스트 recyclerview
-    private fun initPostRecyclerView(posts: PostListVO) {
+    private fun initPostRecyclerView(posts: HomePostListVO) {
         postListAdapter = PostListAdapter(
             posts.posts.toMutableList()
         )
@@ -149,49 +127,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 포스트 내용 세팅
     private fun setPostList() {
-        val test: PostListVO = PostListVO(
-            listOf(
-                PostItemVO(
-                    id = 1,
-                    category = "공예/DIY",
-                    image = listOf("https://avatars.githubusercontent.com/u/76805879?v=4",
-                        "https://user-images.githubusercontent.com/76805879/236372564-dd445ac3-3f7e-4032-b872-f1073ef5775e.jpg",
-                        "https://avatars.githubusercontent.com/u/168630394?s=400&u=a7c52691e6a47f8419477b917aa547a2ce3e8a6c&v=4"),
-                    subCategory = "다이어리 꾸미기",
-                    writer = PostWriterVO(
-                        nickname = "마이꾸미",
-                        profileImage = "https://avatars.githubusercontent.com/u/76805879?v=4",
-                    ),
-                    content = "fonts have a particular weight which corresponds to one of the numbers in Common weight name mapping. However some fonts, called variable fonts, can support a range of "
-                ),
-                PostItemVO(
-                    id = 2,
-                    image = listOf("https://user-images.githubusercontent.com/76805879/236372564-dd445ac3-3f7e-4032-b872-f1073ef5775e.jpg",
-                        "https://avatars.githubusercontent.com/u/76805879?v=4",
-                        "https://avatars.githubusercontent.com/u/168630394?s=400&u=a7c52691e6a47f8419477b917aa547a2ce3e8a6c&v=4"),
-                    category = "동물",
-                    subCategory = "고양이",
-                    writer = PostWriterVO(
-                        nickname = "츄르",
-                        profileImage = "https://avatars.githubusercontent.com/u/168630394?s=48&v=4",
-                    ),
-                    content = "마라스트로"
-                ),
-                PostItemVO(
-                    id = 3,
-                    image = listOf("https://avatars.githubusercontent.com/u/168630394?s=400&u=a7c52691e6a47f8419477b917aa547a2ce3e8a6c&v=4",
-                        "https://avatars.githubusercontent.com/u/76805879?v=4"),
-                    category = "공예/DIY",
-                    subCategory = "다이어리 꾸미기",
-                    writer = PostWriterVO(
-                        nickname = "마이꾸미",
-                        profileImage = "https://avatars.githubusercontent.com/u/76805879?v=4",
-                    ),
-                    content = "마라스트로"
-                )
-            ),
-        )
-        initPostRecyclerView(test)
+        viewModel.setPostList(null, null)
+        viewModel.postListUiState
+            .onEach {
+                initPostRecyclerView(it)
+            }
+            .launchIn(lifecycleScope)
     }
 
     override fun onDestroyView() {

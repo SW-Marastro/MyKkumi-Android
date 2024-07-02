@@ -1,6 +1,5 @@
 package com.swmarastro.mykkumi.common_ui.post
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +19,7 @@ class PostImagesAdapter(
     }
 
     override fun onBindViewHolder(holder: PostItemImageViewHolder, position: Int) {
-        holder.bind(postImageList[position], position)
+        holder.bind(postImageList[position])
     }
 
     override fun getItemCount(): Int = postImageList.size
@@ -28,7 +27,7 @@ class PostImagesAdapter(
     inner class PostItemImageViewHolder(
         private val binding: ItemPostImageViewpagerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: String, position: Int) {
+        fun bind(item: String) {
             // 포스트 이미지 세팅
             // 페이지 넘길 때 이미지 로드
             binding.imagePost.load(item)
