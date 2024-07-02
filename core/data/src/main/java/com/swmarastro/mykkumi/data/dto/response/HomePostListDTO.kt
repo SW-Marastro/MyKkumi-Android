@@ -5,7 +5,7 @@ import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.domain.entity.HomePostListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostWriterVO
 
-data class 정(
+data class HomePostListDTO(
     @SerializedName("posts")
     val posts: List<HomePostItemDTO>
 ){
