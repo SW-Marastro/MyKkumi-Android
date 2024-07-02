@@ -1,8 +1,18 @@
 package com.swmarastro.mykkumi.feature.home.post
 
+import android.graphics.Color
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
@@ -14,6 +24,9 @@ import com.swmarastro.mykkumi.feature.home.databinding.ItemPostRecyclerviewBindi
 class PostListAdapter (
     private var postList: MutableList<PostItemVO>
 ) : RecyclerView.Adapter<PostListAdapter.PostListViewHolder>(){
+
+    private val postContentMaxLine = 2
+    private val postContentShowMoreText = "...더보기"
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
@@ -77,6 +90,47 @@ class PostListAdapter (
             binding.btnPostScrap.setOnClickListener {
                 binding.btnPostScrap.setImageResource(R.drawable.ic_scrap_checked)
             }
+
+            // 글 내용
+            val spannableStringBuilder = SpannableStringBuilder().apply {
+                // 닉네임
+                append(item.writer.nickname)
+                setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    0,
+                    item.writer.nickname.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                val clickableSpan = object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        Log.d("---", "닉네임 클릭")
+                    }
+
+                    // 스타일 설정
+                    override fun updateDrawState(ds: TextPaint) {
+                        ds.isUnderlineText = false
+                        ds.color = Color.parseColor("#000000")
+                    }
+                }
+                setSpan(
+                    clickableSpan,
+                    0,
+                    item.writer.nickname.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                // 글 내용
+                append("  " + item.content)
+            }
+
+            binding.textPostNicknameContent.text = spannableStringBuilder
+            binding.textPostNicknameContent.movementMethod = LinkMovementMethod.getInstance()
+            /*binding.textPostNicknameContent.post {
+                if(binding.textPostNicknameContent.lineCount > postContentMaxLine) {
+
+                }
+            }*/
         }
     }
 }

@@ -162,10 +162,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                         nickname = "마이꾸미",
                         profileImage = "https://avatars.githubusercontent.com/u/76805879?v=4",
                     ),
-                    content = "마라스트로"
+                    content = "fonts have a particular weight which corresponds to one of the numbers in Common weight name mapping. However some fonts, called variable fonts, can support a range of "
                 ),
                 PostItemVO(
-                    id = 1,
+                    id = 2,
                     image = listOf("https://user-images.githubusercontent.com/76805879/236372564-dd445ac3-3f7e-4032-b872-f1073ef5775e.jpg",
                         "https://avatars.githubusercontent.com/u/76805879?v=4",
                         "https://avatars.githubusercontent.com/u/168630394?s=400&u=a7c52691e6a47f8419477b917aa547a2ce3e8a6c&v=4"),
@@ -178,7 +178,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     content = "마라스트로"
                 ),
                 PostItemVO(
-                    id = 1,
+                    id = 3,
                     image = listOf("https://avatars.githubusercontent.com/u/168630394?s=400&u=a7c52691e6a47f8419477b917aa547a2ce3e8a6c&v=4",
                         "https://avatars.githubusercontent.com/u/76805879?v=4"),
                     category = "공예/DIY",

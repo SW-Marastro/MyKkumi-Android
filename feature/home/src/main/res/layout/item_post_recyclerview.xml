@@ -184,6 +184,26 @@
 
         </RelativeLayout>
 
+        <!-- 글 내용 -->
+        <LinearLayout
+            android:id="@+id/relative_post_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/relative_post_btns"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:layout_marginVertical="2dp">
+
+            <TextView
+                android:id="@+id/text_post_nickname_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="fonts have a particular weight which corresponds to one of the numbers in Common weight name mapping. However some fonts, called variable fonts, can support a range of "
+                android:textSize="12dp"
+                android:clickable="true"/>
+
+        </LinearLayout>
+
     </RelativeLayout>
 
 </layout>
