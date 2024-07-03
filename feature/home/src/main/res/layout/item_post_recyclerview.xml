@@ -8,20 +8,70 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
 
         <!-- 사용자 정보 -->
         <include
             android:id="@+id/include_post_writer"
             layout="@layout/item_post_writer"/>
 
-        <!-- 포스트 이미지 임시 -->
-        <View
-            android:id="@+id/post_images"
+        <!-- 포스트 이미지 -->
+        <RelativeLayout
+            android:id="@+id/relative_post_images"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@color/gray_86"
-            android:layout_below="@id/include_post_writer"/>
+            android:layout_height="wrap_content"
+            android:layout_below="@id/include_post_writer">
+
+            <!-- 포스트 이미지 viewpager -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewpager_post_images"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+
+            <!-- 이미지 페이지 표시 -->
+            <LinearLayout
+                android:id="@+id/post_images_page_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/gray_DD"
+                android:gravity="center_vertical"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="5dp"
+                android:padding="2dp">
+
+                <TextView
+                    android:id="@+id/text_post_images_current_page"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="12dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/text_post_images_total_page"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/0"
+                    android:textSize="12dp"
+                    android:textColor="@color/black"/>
+
+            </LinearLayout>
+
+            <!-- 이미지 indicator -->
+            <com.swmarastro.mykkumi.common_ui.post.PostImageIndicator
+                android:id="@+id/indicator_post_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center_vertical"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"/>
+
+        </RelativeLayout>
 
         <!-- 신고하기 -->
         <FrameLayout
@@ -49,7 +99,7 @@
             android:id="@+id/relative_post_btns"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/post_images"
+            android:layout_below="@id/relative_post_images"
             android:paddingVertical="3dp"
             android:paddingHorizontal="5dp">
 
@@ -131,7 +181,6 @@
                 android:scaleType="fitXY"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"/>
-
 
         </RelativeLayout>
 

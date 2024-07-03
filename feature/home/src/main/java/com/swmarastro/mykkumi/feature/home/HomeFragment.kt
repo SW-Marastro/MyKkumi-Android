@@ -14,6 +14,7 @@ import com.swmarastro.mykkumi.domain.entity.PostListVO
 import com.swmarastro.mykkumi.domain.entity.PostWriterVO
 import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBinding
+import com.swmarastro.mykkumi.common_ui.post.PostImagesAdapter
 import com.swmarastro.mykkumi.feature.home.post.PostListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Timer
@@ -25,6 +26,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private val viewModel by viewModels<HomeViewModel>({ requireActivity() })
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
     private lateinit var postListAdapter: PostListAdapter
+    private lateinit var postItemImageAdapter: PostImagesAdapter
     private lateinit var timer: Timer
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -151,8 +153,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             listOf(
                 PostItemVO(
                     id = 1,
-                    image = listOf("https://avatars.githubusercontent.com/u/76805879?v=4", "https://avatars.githubusercontent.com/u/76805879?v=4"),
                     category = "공예/DIY",
+                    image = listOf("https://avatars.githubusercontent.com/u/76805879?v=4",
+                        "https://user-images.githubusercontent.com/76805879/236372564-dd445ac3-3f7e-4032-b872-f1073ef5775e.jpg",
+                        "https://avatars.githubusercontent.com/u/168630394?s=400&u=a7c52691e6a47f8419477b917aa547a2ce3e8a6c&v=4"),
                     subCategory = "다이어리 꾸미기",
                     writer = PostWriterVO(
                         nickname = "마이꾸미",
@@ -162,7 +166,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 ),
                 PostItemVO(
                     id = 1,
-                    image = listOf("https://avatars.githubusercontent.com/u/76805879?v=4", "https://avatars.githubusercontent.com/u/76805879?v=4"),
+                    image = listOf("https://user-images.githubusercontent.com/76805879/236372564-dd445ac3-3f7e-4032-b872-f1073ef5775e.jpg",
+                        "https://avatars.githubusercontent.com/u/76805879?v=4",
+                        "https://avatars.githubusercontent.com/u/168630394?s=400&u=a7c52691e6a47f8419477b917aa547a2ce3e8a6c&v=4"),
                     category = "동물",
                     subCategory = "고양이",
                     writer = PostWriterVO(
@@ -173,7 +179,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 ),
                 PostItemVO(
                     id = 1,
-                    image = listOf("https://avatars.githubusercontent.com/u/76805879?v=4", "https://avatars.githubusercontent.com/u/76805879?v=4"),
+                    image = listOf("https://avatars.githubusercontent.com/u/168630394?s=400&u=a7c52691e6a47f8419477b917aa547a2ce3e8a6c&v=4",
+                        "https://avatars.githubusercontent.com/u/76805879?v=4"),
                     category = "공예/DIY",
                     subCategory = "다이어리 꾸미기",
                     writer = PostWriterVO(

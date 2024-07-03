@@ -114,7 +114,7 @@
                         <androidx.viewpager2.widget.ViewPager2
                             android:id="@+id/viewpager_banner"
                             android:layout_width="match_parent"
-                            android:layout_height="100dp"
+                            android:layout_height="wrap_content"
                             android:orientation="horizontal" />
 
                         <LinearLayout
@@ -165,7 +165,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/item_home_post_recyclerview"
+                        tools:listitem="@layout/item_post_recyclerview"
                         android:layout_below="@id/relative_banner"
                         android:nestedScrollingEnabled="false"/>
 

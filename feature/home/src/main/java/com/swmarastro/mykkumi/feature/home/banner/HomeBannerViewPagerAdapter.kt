@@ -5,13 +5,11 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.domain.entity.BannerItemVO
 import java.util.TimerTask
 import coil.load
-import com.swmarastro.mykkumi.feature.home.R
 import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerViewpagerBinding
 
 class HomeBannerViewPagerAdapter(
@@ -19,14 +17,10 @@ class HomeBannerViewPagerAdapter(
     private var bannerList: MutableList<BannerItemVO>,
     private val onClickBannerItem: (bannerId: Int) -> Unit
 ) : RecyclerView.Adapter<HomeBannerViewPagerAdapter.HomeBannerViewHolder>() {
-    private var _binding: ItemBannerViewpagerBinding? = null
-    private val binding get() = _binding!!
-
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
     ): HomeBannerViewHolder {
-        _binding = DataBindingUtil.inflate(LayoutInflater.from(parent.context),
-            R.layout.item_banner_viewpager, parent, false)
+        val binding = ItemBannerViewpagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HomeBannerViewHolder(binding)
     }
 
