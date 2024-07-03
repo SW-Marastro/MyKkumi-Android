@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="vm"
-            type="com.swmarastro.mykkumi.feature.home.HomeViewModel" />
+            name="bannerVm"
+            type="com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewModel" />
     </data>
 
     <RelativeLayout

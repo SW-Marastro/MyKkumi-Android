@@ -12,8 +12,9 @@ import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostListVO
 import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBinding
-import com.swmarastro.mykkumi.common_ui.post.PostImagesAdapter
+import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewModel
 import com.swmarastro.mykkumi.feature.home.post.PostListAdapter
+import com.swmarastro.mykkumi.feature.home.post.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -23,7 +24,9 @@ import java.util.TimerTask
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
-    private val viewModel by viewModels<HomeViewModel>({ requireActivity() })
+    private val bannerViewModel by viewModels<HomeBannerViewModel>({ requireActivity() })
+    private val postViewModel by viewModels<PostViewModel>({ requireActivity() })
+
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
     private lateinit var postListAdapter: PostListAdapter
     private lateinit var timer: Timer
@@ -41,7 +44,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     override suspend fun initView() {
         bind {
-            vm = viewModel
+            postVm = postViewModel
+            bannerVm = bannerViewModel
         }
         setHomeBanner() // 배너
         setPostList() // 포스트
@@ -78,8 +82,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 배너 내용 세팅
     private fun setHomeBanner() {
-        viewModel.setHomeBanner()
-        viewModel.bannerListUiState
+        bannerViewModel.setHomeBanner()
+        bannerViewModel.bannerListUiState
             .onEach {
                 initBannerViewPager(it)
             }
@@ -100,7 +104,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 배너 클릭 -> 배너 상세 페이지 이동
     private fun onClickBannerItem(bannerId: Int) {
-        viewModel.selectHomeBanner(bannerId)
+        bannerViewModel.selectHomeBanner(bannerId)
         view?.findNavController()?.navigate(R.id.action_navigate_fragment_to_home_banner_detail)
     }
 
@@ -126,8 +130,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 포스트 내용 세팅
     private fun setPostList() {
-        viewModel.setPostList(null, null)
-        viewModel.postListUiState
+        postViewModel.setPostList(null, null)
+        postViewModel.postListUiState
             .onEach {
                 initPostRecyclerView(it)
             }
