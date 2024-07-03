@@ -1,7 +1,7 @@
 package com.swmarastro.mykkumi.data.repository
 
 import com.swmarastro.mykkumi.data.datasource.BannerDataSource
-import com.swmarastro.mykkumi.domain.entity.BannerItemVO
+import com.swmarastro.mykkumi.domain.entity.BannerDetailVO
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.repository.BannerRepository
 import javax.inject.Inject
@@ -25,7 +25,7 @@ class BannerRepositoryImpl @Inject constructor(
     }
     */
 
-    override suspend fun getBannerDetail(bannerId: Int): BannerItemVO {
+    override suspend fun getBannerDetail(bannerId: Int): BannerDetailVO {
         return bannerDataSource.getBannerDetail(bannerId).toEntity()
     }
 }

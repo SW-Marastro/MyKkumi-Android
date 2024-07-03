@@ -1,7 +1,5 @@
 package com.swmarastro.mykkumi.feature.home.post
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
