@@ -101,6 +101,7 @@
 
 
             <ScrollView
+                android:id="@+id/scroll_home_banner_n_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/toolbar">

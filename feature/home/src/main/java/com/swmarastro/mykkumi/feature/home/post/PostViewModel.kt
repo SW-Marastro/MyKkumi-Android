@@ -1,8 +1,10 @@
 package com.swmarastro.mykkumi.feature.home.post
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.swmarastro.mykkumi.domain.entity.HomePostListVO
+import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.domain.usecase.GetHomePostListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,20 +21,38 @@ class PostViewModel @Inject constructor(
 ) : ViewModel() {
 
     // 포스트 리스트
-    private val _postListUiState = MutableStateFlow<HomePostListVO>(HomePostListVO())
-    val postListUiState: StateFlow<HomePostListVO> get() = _postListUiState
+    private val _postListUiState = MutableStateFlow<MutableList<HomePostItemVO>>(mutableListOf())
+    val postListUiState: StateFlow<MutableList<HomePostItemVO>> get() = _postListUiState
+
+    // 포스트 리스트 cursor, limit
+    private val postLimit: Int? = null
+    private var postCursor: String? = null
+
+    // 포스트 끝 도달
+    private var isPostEnd = false
 
     // 포스트 리스트
-    fun setPostList(cursor: String?, limit: Int?) {
+    fun setPostList(isCursor: Boolean) {
         viewModelScope.launch {
             try {
                 val homePostList = withContext(Dispatchers.IO) {
-                    getHomePostListUseCase(cursor, limit)
+                    if(isCursor) getHomePostListUseCase(postCursor, postLimit)
+                    else getHomePostListUseCase(null, postLimit)
                 }
-                _postListUiState.value = homePostList
+                if(homePostList.posts.size == 0) isPostEnd = true
+                else {
+                    if (isCursor) _postListUiState.value.addAll(homePostList.posts)
+                    else _postListUiState.value = homePostList.posts.toMutableList()
+                    postCursor = homePostList.cursor
+                }
             } catch (e: Exception) {
-                _postListUiState.value = HomePostListVO()
+                _postListUiState.value = mutableListOf()
             }
         }
+    }
+
+    // 더 조회할 포스트가 있는지
+    fun getIsPostEnd() : Boolean {
+        return isPostEnd
     }
 }

@@ -1,14 +1,18 @@
 package com.swmarastro.mykkumi.feature.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.ScrollView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
+import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.domain.entity.HomePostListVO
 import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBinding
@@ -18,6 +22,7 @@ import com.swmarastro.mykkumi.feature.home.post.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import okhttp3.internal.notifyAll
 import java.util.Timer
 import java.util.TimerTask
 
@@ -29,6 +34,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
     private lateinit var postListAdapter: PostListAdapter
+
     private lateinit var timer: Timer
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -116,24 +122,49 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     // 포스트 리스트 recyclerview
-    private fun initPostRecyclerView(posts: HomePostListVO) {
-        postListAdapter = PostListAdapter(
-            posts.posts.toMutableList()
-        )
+    private fun initPostRecyclerView(posts: MutableList<HomePostItemVO>) {
+        //postList = posts
+        postListAdapter = PostListAdapter()
         binding.recyclerviewPostList.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.VERTICAL,
             false
         )
         binding.recyclerviewPostList.adapter = postListAdapter
+        postListAdapter.postList = posts
+
+        // 스크롤 다 내려가면 다음 데이터 받아오기
+        binding.scrollHomeBannerNPost.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (v is ScrollView) {
+                // 스크롤이 최하단까지 내려갔는지 확인
+                val view = v.getChildAt(v.childCount - 1)
+                val diff = view.bottom - (v.height + v.scrollY)
+                if (diff == 0) {
+                    if(!postViewModel.getIsPostEnd()) {
+                        postListAdapter.postList.add(HomePostItemVO())
+                        setNextPostList()
+                    }
+                }
+            }
+        }
     }
 
     // 포스트 내용 세팅
     private fun setPostList() {
-        postViewModel.setPostList(null, null)
+        postViewModel.setPostList(false)
         postViewModel.postListUiState
             .onEach {
                 initPostRecyclerView(it)
+            }
+            .launchIn(lifecycleScope)
+    }
+
+    // 포스트 무한 스크롤 -> 스크롤 최하단 도달 시 다음 데이터 요청
+    private fun setNextPostList() {
+        postViewModel.setPostList(true)
+        postViewModel.postListUiState
+            .onEach {
+                postListAdapter.postList = it
             }
             .launchIn(lifecycleScope)
     }
