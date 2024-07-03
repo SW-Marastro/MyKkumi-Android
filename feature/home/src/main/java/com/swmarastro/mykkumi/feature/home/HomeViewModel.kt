@@ -1,6 +1,5 @@
 package com.swmarastro.mykkumi.feature.home
 
-import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,8 +10,6 @@ import com.swmarastro.mykkumi.domain.entity.HomePostListVO
 import com.swmarastro.mykkumi.domain.usecase.GetBannerDetailUseCase
 import com.swmarastro.mykkumi.domain.usecase.GetBannerListUseCase
 import com.swmarastro.mykkumi.domain.usecase.GetHomePostListUseCase
-import com.swmarastro.mykkumi.domain.usecase.LoadImageUseCase
-import com.swmarastro.mykkumi.util.ImageLoader
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,15 +21,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val loadImageUseCase: LoadImageUseCase,
     private val getBannerListUseCase: GetBannerListUseCase,
     private val getBannerDetailUseCase: GetBannerDetailUseCase,
     private val getHomePostListUseCase: GetHomePostListUseCase
 ) : ViewModel() {
-    // 홈 > 배너 > 이미지 로드 (이미지 로더 라이브러리로 대체해서 삭제 고민 중)
-    private val _bannerImageUiState = MutableStateFlow<MutableList<Bitmap?>>(mutableListOf())
-    val bannerImageUiState: StateFlow<MutableList<Bitmap?>> get() = _bannerImageUiState
-
     // 홈 > 배너 캐러셀
     private val _bannerListUiState = MutableStateFlow<BannerListVO>(BannerListVO())
     val bannerListUiState: StateFlow<BannerListVO> get() = _bannerListUiState
@@ -49,18 +41,6 @@ class HomeViewModel @Inject constructor(
     // 선택된 배너
     private val _selectBannerId = MutableLiveData<Int>()
     val selectBannerId: LiveData<Int> get() = _selectBannerId
-
-    fun loadImages(imageUrls: List<BannerItemVO>) {
-        viewModelScope.launch {
-            val bitmaps = imageUrls.map { homeBannerVO ->
-                val byteArray = withContext(Dispatchers.IO) {
-                    loadImageUseCase(homeBannerVO.imageUrl)
-                }
-                byteArray?.let { ImageLoader.byteArrayToBitmap(it) }
-            }.toMutableList()
-            _bannerImageUiState.value = bitmaps
-        }
-    }
 
     // 홈 > 배너 캐러셀
     fun setHomeBanner() {
