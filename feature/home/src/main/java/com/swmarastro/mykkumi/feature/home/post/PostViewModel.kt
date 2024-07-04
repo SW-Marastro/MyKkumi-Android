@@ -31,21 +31,19 @@ class PostViewModel @Inject constructor(
 
     // 포스트 리스트
     // isCursor의 역할: 처음으로 데이터를 조회해오는 것인지, cursor가 있는 상태로 다음 데이터를 불러오는 것인지
-    fun setPostList(isCursor: Boolean) {
-        viewModelScope.launch {
-            try {
-                val homePostList = withContext(Dispatchers.IO) {
-                    getHomePostListUseCase(postCursor, postLimit)
-                }
-                if(homePostList.posts.size == 0) isPostEnd = true
-                else {
-                    if (isCursor) _postListUiState.value.addAll(homePostList.posts)
-                    else _postListUiState.value = homePostList.posts.toMutableList()
-                    postCursor = homePostList.cursor
-                }
-            } catch (e: Exception) {
-                _postListUiState.value = mutableListOf()
+    suspend fun setPostList(isCursor: Boolean) {
+        try {
+            val homePostList = withContext(Dispatchers.IO) {
+                getHomePostListUseCase(postCursor, postLimit)
             }
+            if(homePostList.posts.size == 0) isPostEnd = true
+            else {
+                if (isCursor) _postListUiState.value.addAll(homePostList.posts)
+                else _postListUiState.value = homePostList.posts.toMutableList()
+                postCursor = homePostList.cursor
+            }
+        } catch (e: Exception) {
+            _postListUiState.value = mutableListOf()
         }
     }
 

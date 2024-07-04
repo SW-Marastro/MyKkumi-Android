@@ -20,6 +20,7 @@ import com.swmarastro.mykkumi.feature.home.post.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import java.util.Timer
 import java.util.TimerTask
 
@@ -150,23 +151,31 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 포스트 내용 세팅
     private fun setPostList() {
+        lifecycleScope.launch {
         postViewModel.setPostList(false)
         postViewModel.postListUiState
             .onEach {
                 initPostRecyclerView(it)
             }
-            .launchIn(lifecycleScope)
+            .launchIn(viewLifecycleOwner.lifecycleScope)
+        }
     }
 
     // 포스트 무한 스크롤 -> 스크롤 최하단 도달 시 다음 데이터 요청
     private fun setNextPostList() {
-        postViewModel.setPostList(true)
-        postViewModel.postListUiState
-            .onEach {
-                postListAdapter.postList = it
-                isPostListLoading = false
-            }
-            .launchIn(lifecycleScope)
+        lifecycleScope.launch {
+            postViewModel.setPostList(true)
+            postViewModel.postListUiState
+                .onEach {
+                    postListAdapter.postList = it
+                    isPostListLoading = false
+
+                    if (postViewModel.getIsPostEnd()) {
+                        binding.includeListLoading.visibility = View.GONE
+                    }
+                }
+                .launchIn(viewLifecycleOwner.lifecycleScope)
+        }
     }
 
     override fun onDestroyView() {
