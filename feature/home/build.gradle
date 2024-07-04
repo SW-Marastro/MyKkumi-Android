@@ -37,7 +37,6 @@ android {
 
 dependencies {
     implementation project(path: ':core:common-ui')
-    implementation project(path: ':core:util')
     implementation project(path: ':core:domain')
 
     // UI

@@ -5,7 +5,7 @@
     <data>
         <variable
             name="item"
-            type="com.swmarastro.mykkumi.domain.entity.PostItemVO" />
+            type="com.swmarastro.mykkumi.domain.entity.HomePostItemVO" />
     </data>
 
     <RelativeLayout

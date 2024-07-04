@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumi.data.dto.response
 
 import com.google.gson.annotations.SerializedName
+import com.swmarastro.mykkumi.domain.entity.BannerItemVO
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
 
 data class BannerListDTO(
@@ -10,4 +11,18 @@ data class BannerListDTO(
     fun toEntity(): BannerListVO = BannerListVO(
         banners = banners.map { it.toEntity() }
     )
+
+    data class BannerItemDTO(
+        @SerializedName("id")
+        val id: Int,
+
+        @SerializedName("imageUrl")
+        val imageUrl: String
+    ) {
+        fun toEntity(): BannerItemVO = BannerItemVO(
+            id = id,
+            imageUrl = imageUrl
+        )
+    }
+
 }
