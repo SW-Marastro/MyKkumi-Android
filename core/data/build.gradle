@@ -5,6 +5,10 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
+// 프로퍼티를 선언하고, 저장한 키값을 불러온다.
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     namespace 'com.swmarastro.mykkumi.data'
     compileSdk compile_sdk_version
@@ -15,9 +19,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        // 프로퍼티를 선언하고, 저장한 키값을 불러온다.
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file('local.properties').newDataInputStream())
         buildConfigField "String", 'BASE_URL', properties['api.baseurl']?:""
     }
 
@@ -32,7 +33,7 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = jvm_target_version
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 }
 
