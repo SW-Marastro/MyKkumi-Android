@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyKkumi_AOS"
         tools:targetApi="31">
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -24,11 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity android:name="com.swmarastro.mykkumi.feature.home.hello.HelloWorldActivity"
-            android:exported="true">
 
-        </activity>
     </application>
 
 </manifest>

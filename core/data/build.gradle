@@ -7,7 +7,9 @@ plugins {
 
 // 프로퍼티를 선언하고, 저장한 키값을 불러온다.
 Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+if (project.rootProject.file('local.properties').exists()) {
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+}
 
 android {
     namespace 'com.swmarastro.mykkumi.data'
@@ -19,7 +21,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", 'BASE_URL', properties['api.baseurl']?:""
+        buildConfigField "String", 'BASE_URL', "${properties.getProperty('api.baseurl', '')}"
     }
 
     buildTypes {
