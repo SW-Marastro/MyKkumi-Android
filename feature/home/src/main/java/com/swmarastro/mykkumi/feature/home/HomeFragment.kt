@@ -8,12 +8,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
-import com.swmarastro.mykkumi.domain.entity.HomePostListVO
 import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBinding
 import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewModel
@@ -22,7 +20,6 @@ import com.swmarastro.mykkumi.feature.home.post.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import okhttp3.internal.notifyAll
 import java.util.Timer
 import java.util.TimerTask
 
@@ -36,6 +33,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var postListAdapter: PostListAdapter
 
     private lateinit var timer: Timer
+    private var isPostListLoading = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this
@@ -137,13 +135,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.scrollHomeBannerNPost.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (v is ScrollView) {
                 // 스크롤이 최하단까지 내려갔는지 확인
-                val view = v.getChildAt(v.childCount - 1)
-                val diff = view.bottom - (v.height + v.scrollY)
-                if (diff == 0) {
-                    if(!postViewModel.getIsPostEnd()) {
-                        postListAdapter.postList.add(HomePostItemVO())
-                        setNextPostList()
-                    }
+                val scroll = v.getChildAt(v.childCount - 1)
+                val diff = scroll.bottom - (v.height + v.scrollY)
+                if(postViewModel.getIsPostEnd()) {
+                    binding.includeListLoading.visibility = View.GONE
+                }
+                else if (diff == 0 && !postViewModel.getIsPostEnd() && !isPostListLoading) {
+                    isPostListLoading = true // 스크롤 이벤트가 연속적으로 호출되는 것을 방지
+                    setNextPostList()
                 }
             }
         }
@@ -165,6 +164,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         postViewModel.postListUiState
             .onEach {
                 postListAdapter.postList = it
+                isPostListLoading = false
             }
             .launchIn(lifecycleScope)
     }
