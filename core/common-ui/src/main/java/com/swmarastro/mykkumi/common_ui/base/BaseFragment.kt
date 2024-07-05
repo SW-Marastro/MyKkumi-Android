@@ -8,7 +8,10 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 
 abstract class BaseFragment<T: ViewDataBinding>(
     @LayoutRes private val layoutId: Int
@@ -27,8 +30,13 @@ abstract class BaseFragment<T: ViewDataBinding>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this@BaseFragment
-        lifecycleScope.launchWhenCreated {
+        /*lifecycleScope.launchWhenCreated {
             initView()
+        }*/
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                initView()
+            }
         }
         super.onViewCreated(view, savedInstanceState)
     }
