@@ -40,6 +40,9 @@ jobs:
     - name: local.properties 디렉토리 확인 (디버깅용)
       run: ls -a
 
+    - name: local.properties 파일 내용 확인 (디버깅용)
+      run: cat local.properties
+
     # Generate Keystore File
 #    - name: Generate Keystore File
 #      env:
