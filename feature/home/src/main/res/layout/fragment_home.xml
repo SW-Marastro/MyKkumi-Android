@@ -101,6 +101,7 @@
 
 
             <ScrollView
+                android:id="@+id/scroll_home_banner_n_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/toolbar">
@@ -172,6 +173,22 @@
                         tools:listitem="@layout/item_post_recyclerview"
                         android:layout_below="@id/relative_banner"
                         android:nestedScrollingEnabled="false"/>
+
+                    <!-- 로딩 -->
+                    <LinearLayout
+                        android:id="@+id/include_list_loading"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:orientation="vertical"
+                        android:layout_below="@id/recyclerview_post_list">
+
+                        <include
+                            layout="@layout/item_list_loading"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
 
                 </RelativeLayout>
 
