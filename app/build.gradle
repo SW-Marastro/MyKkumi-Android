@@ -42,12 +42,12 @@ android {
             ]
 //            signingConfig signingConfigs.config
         }
-        debug {
-            applicationIdSuffix '.dev'
-            manifestPlaceholders = [
-                    appName : "@string/app_name_dev"
-            ]
-        }
+//        debug {
+//            applicationIdSuffix '.dev'
+//            manifestPlaceholders = [
+//                    appName : "@string/app_name_dev"
+//            ]
+//        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
