@@ -32,14 +32,11 @@ jobs:
     # (LOCAL_PROPERTIES_CONTENTS)를 기반으로 local.properties 생성
     - name: Create local.properties
       run: |
-        echo "api.baseurl=${{ secrets.API_BASE_URL }}" >> local.properties
+        echo "api.baseurl=${{ secrets.API_BASE_URL }}" > $GITHUB_WORKSPACE/local.properties
         cat local.properties
 
     - name: local.properties 디렉토리 확인 (디버깅용)
-      run: ls -a
-
-    - name: Move local.properties to root directory
-      run: mv local.properties $GITHUB_WORKSPACE
+      run: ls -r
 
     # 캐시 정리
     - name: Clean Gradle cache
