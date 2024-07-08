@@ -3,9 +3,7 @@
     android:id="@+id/item_post_writer">
 
     <data>
-        <variable
-            name="item"
-            type="com.swmarastro.mykkumi.domain.entity.HomePostItemVO" />
+
     </data>
 
     <RelativeLayout
