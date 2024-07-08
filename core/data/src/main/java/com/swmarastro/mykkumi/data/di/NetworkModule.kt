@@ -23,7 +23,7 @@ import com.swmarastro.mykkumi.data.datasource.PostDataSource
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     // API BASE URL
-    private const val BASE_URL = BuildConfig.BASE_URL
+    private var BASE_URL = BuildConfig.BASE_URL
 
     // 로깅인터셉터 세팅
     @Provides
