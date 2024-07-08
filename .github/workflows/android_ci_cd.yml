@@ -11,6 +11,9 @@ jobs:
   
     runs-on: ubuntu-latest
 
+    env:
+      BASE_URL: ${{ secrets.API_BASE_URL }}
+
     steps:
     - uses: actions/checkout@v4
 
@@ -24,6 +27,7 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+      shell: bash
 
     # 환경변수(GOOGLE_SERVICES_JSON) 값의 내용을 기반으로 `app/google-services.json` 생성
     - name: Create google-services.json
@@ -32,11 +36,7 @@ jobs:
     # (LOCAL_PROPERTIES_CONTENTS)를 기반으로 local.properties 생성
     - name: Create local.properties
       run: |
-        echo "api.baseurl=${{ secrets.API_BASE_URL }}" > $GITHUB_WORKSPACE/local.properties
-        cat local.properties
-
-    - name: local.properties 디렉토리 확인 (디버깅용)
-      run: ls -r
+        echo "api.baseurl=$BASE_URL" > $GITHUB_WORKSPACE/local.properties
 
     # 캐시 정리
     - name: Clean Gradle cache
