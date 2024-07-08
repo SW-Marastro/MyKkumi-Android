@@ -1,6 +1,8 @@
 package com.swmarastro.mykkumi.feature.home
 
 sealed class UiState<out T : Any> {
+    data object Loading : UiState<Nothing>()
+
     data class Success<out T : Any>(
         val data: T,
         val isFirstMeet: Boolean = false

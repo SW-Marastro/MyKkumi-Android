@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.swmarastro.mykkumi.domain.entity.BannerDetailVO
 import com.swmarastro.mykkumi.domain.entity.BannerItemVO
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.usecase.GetBannerDetailUseCase
@@ -27,8 +28,8 @@ class HomeBannerViewModel @Inject constructor(
     val bannerListUiState: StateFlow<BannerListVO> get() = _bannerListUiState
 
     // 배너 상세
-    private val _bannerDetailUiState = MutableStateFlow<BannerItemVO>(BannerItemVO())
-    val bannerDetailUiState: StateFlow<BannerItemVO> get() = _bannerDetailUiState
+    private val _bannerDetailUiState = MutableStateFlow<BannerDetailVO>(BannerDetailVO())
+    val bannerDetailUiState: StateFlow<BannerDetailVO> get() = _bannerDetailUiState
 
     // 선택된 배너
     private val _selectBannerId = MutableLiveData<Int>()
@@ -62,7 +63,7 @@ class HomeBannerViewModel @Inject constructor(
                 }
                 _bannerDetailUiState.value = homeBannerDetail
             } catch (e: Exception) {
-                _bannerDetailUiState.value = BannerItemVO()
+                _bannerDetailUiState.value = BannerDetailVO()
             }
         }
     }

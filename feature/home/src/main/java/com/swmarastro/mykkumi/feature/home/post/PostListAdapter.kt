@@ -22,8 +22,9 @@ import com.swmarastro.mykkumi.common_ui.R
 import com.swmarastro.mykkumi.feature.home.databinding.ItemPostRecyclerviewBinding
 
 class PostListAdapter (
-    private var postList: MutableList<HomePostItemVO>
 ) : RecyclerView.Adapter<PostListAdapter.PostListViewHolder>(){
+
+    var postList = mutableListOf<HomePostItemVO>()
 
     private val postContentMaxLine = 2
     private val postContentShowMoreText = "...더보기"
@@ -93,7 +94,7 @@ class PostListAdapter (
 
             // 글 내용 --------------------------------------------------------------------------------------
 
-            val testContent = "#템빨 즉 아이템의 비중이 크거나 #다양한 취미를 즐기는 사람들이 모인 커뮤니티를 제공한다. #취미 생활에 관련된 팁을 주고 받거나, #새로운 제품과 스타일을 시도해볼 수 있다."
+            // val testContent = "#템빨 즉 아이템의 비중이 크거나 #다양한 취미를 즐기는 사람들이 모인 커뮤니티를 제공한다. #취미 생활에 관련된 팁을 주고 받거나, #새로운 제품과 스타일을 시도해볼 수 있다."
 
             // 닉네임 클릭 이벤트
             val clickableNicknameSpan = object : ClickableSpan() {
@@ -124,7 +125,7 @@ class PostListAdapter (
                 append("  ")
 
                 // 글 내용 중 해시태그 색상 강조
-                val words = testContent.split(" ")
+                val words = item.content.split(" ")
                 var startIndex = item.writer.nickname.length + 2 // 닉네임 + 공백 다음에 시작
                 for (word in words) {
                     if (word.startsWith("#")) {
@@ -145,9 +146,6 @@ class PostListAdapter (
                     append(" ")
                     startIndex += word.length + 1
                 }
-
-                // 글 내용
-                //append("  " + testContent) // item.content
             }
 
             binding.textPostNicknameContent.text = originalSpannableStringBuilder
@@ -173,7 +171,7 @@ class PostListAdapter (
 
                         // 숨기기
                         val availableTextLength = binding.textPostNicknameContent.layout.getLineEnd(postContentMaxLine - 1) - item.writer.nickname.length - postContentShowMoreText.length - 2
-                        val hideContent = testContent.substring(0, availableTextLength)
+                        val hideContent = item.content.substring(0, availableTextLength)
 
                         // 글 내용 중 해시태그 색상 강조
                         val words = hideContent.split(" ")
