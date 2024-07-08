@@ -40,9 +40,6 @@ jobs:
     - name: local.properties 디렉토리 확인 (디버깅용)
       run: ls -a
 
-    - name: local.properties 파일 내용 확인 (디버깅용)
-      run: cat local.properties
-
     # Generate Keystore File
 #    - name: Generate Keystore File
 #      env:
@@ -66,7 +63,7 @@ jobs:
       
     # Build APK Release
     - name: Build Release Apk
-      run: ./gradlew assembleRelease --warning-mode=all
+      run: ./gradlew assembleRelease --stacktrace --warning-mode=all
 
 #    - name: APK 디렉토리 확인 (디버깅용)
 #      run: ls -alh app/build/outputs/apk/release/

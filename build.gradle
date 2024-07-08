@@ -12,7 +12,7 @@ buildscript {
         // JVM
         jvm_target_version = '17'
 
-        kotlin_version = '1.5.31'
+        kotlin_version = '1.7.0'
 
         // UI
         androidx_core_version = "1.10.0"
