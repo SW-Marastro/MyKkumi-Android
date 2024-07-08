@@ -23,21 +23,21 @@ android {
         targetSdk target_sdk_version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        def baseUrl = properties.getProperty('api.baseurl', '')
+        println "BASE_URL: ${baseUrl}"
+
+        if (!baseUrl.isEmpty()) {
+            buildConfigField "String", 'BASE_URL', "${properties.getProperty('api.baseurl', '')}"
+        } else {
+            throw new GradleException("BASE_URL is not set in local.properties")
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            def baseUrl = properties.getProperty('api.baseurl', '')
-            println "BASE_URL: ${baseUrl}"
-
-            if (!baseUrl.isEmpty()) {
-                buildConfigField "String", 'BASE_URL', "${properties.getProperty('api.baseurl', '')}"
-            } else {
-                throw new GradleException("BASE_URL is not set in local.properties")
-            }
         }
     }
     compileOptions {
