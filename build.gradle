@@ -12,6 +12,7 @@ buildscript {
         // JVM
         jvm_target_version = '17'
 
+        // Kotlin
         kotlin_version = '1.7.0'
 
         // UI
