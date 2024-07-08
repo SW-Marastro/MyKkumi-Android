@@ -73,7 +73,9 @@ dependencies {
 
     // domain
     implementation project(path: ":core:domain")
-    
+
+    implementation project(path: ":core:common-ui")
+
     // UI - Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
