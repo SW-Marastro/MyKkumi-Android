@@ -27,7 +27,7 @@ buildscript {
         espresso_core_version = "3.5.1"
 
         // Dependency Injection
-        hilt_version = "2.46.1"
+        hilt_version = "2.48.1"
 
         // Network
         retrofit_version = "2.9.0"
