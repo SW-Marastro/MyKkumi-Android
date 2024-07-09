@@ -46,10 +46,11 @@ buildscript {
         activity_version = "1.6.1"
 
         // Compose
-        compose_options_version = "1.5.1"
+        compose_version = "1.5.1"
         compose_bom_date = "2024.06.00"
         activity_compose_version = "1.9.0"
         meterial3_version = "0.28.0"
+        navigation_compose_version = "2.7.7"
 
         // Coil
         coil_version = "2.4.0"
