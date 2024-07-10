@@ -9,6 +9,12 @@ plugins {
 //def keystoreProperties = new Properties()
 //keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
+// 프로퍼티를 선언하고, 저장한 키값을 불러온다.
+Properties properties = new Properties()
+if (project.rootProject.file('local.properties').exists()) {
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+}
+
 android {
     namespace 'com.swmarastro.mykkumi.android'
     compileSdk compile_sdk_version
@@ -22,6 +28,15 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        def kakaoNativeAppKey = properties.getProperty('kakao.native.app.key', '')
+
+        if (!kakaoNativeAppKey.isEmpty()) {
+            buildConfigField "String", 'KAKAO_NATIVE_APP_KEY', "${kakaoNativeAppKey}"
+            manifestPlaceholders = [KAKAO_NATIVE_APP_KEY: "\"${kakaoNativeAppKey}\""]
+        } else {
+            throw new GradleException("KAKAO_NATIVE_APP_KEY is not set in local.properties")
+        }
     }
 
 //    signingConfigs {
@@ -59,6 +74,9 @@ android {
     dataBinding {
         enabled = true
     }
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {
@@ -87,4 +105,7 @@ dependencies {
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
+    // 카카오 로그인 SDK
+    implementation "com.kakao.sdk:v2-user:$kakao_sdk_version" // 카카오 로그인 API 모듈
 }

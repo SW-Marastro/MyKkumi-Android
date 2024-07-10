@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumi.android
 
 import android.app.Application
+import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.HiltAndroidApp
 
 /*
@@ -8,4 +9,12 @@ import dagger.hilt.android.HiltAndroidApp
 Hilt를 사용하는 모든 앱은 Application 클래스에 @HiltAndoidApp 이라는 어노테이션을 적용해야 함.
 */
 @HiltAndroidApp
-class MyKkumiApplication : Application() 
+class MyKkumiApplication : Application() {
+    private var KAKAO_NATIVE_APP_KEY = BuildConfig.KAKAO_NATIVE_APP_KEY
+
+    override fun onCreate() {
+        super.onCreate()
+        // Kakao SDK 초기화
+        KakaoSdk.init(this, KAKAO_NATIVE_APP_KEY)
+    }
+}

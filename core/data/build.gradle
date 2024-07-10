@@ -9,9 +9,6 @@ plugins {
 Properties properties = new Properties()
 if (project.rootProject.file('local.properties').exists()) {
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    println "local.properties 파일을 읽었습니다."
-} else {
-    println "local.properties 파일을 찾을 수 없습니다."
 }
 
 android {
@@ -25,10 +22,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         def baseUrl = properties.getProperty('api.baseurl', '')
-        println "BASE_URL: ${baseUrl}"
 
         if (!baseUrl.isEmpty()) {
-            buildConfigField "String", 'BASE_URL', "${properties.getProperty('api.baseurl', '')}"
+            buildConfigField "String", 'BASE_URL', "${baseUrl}"
         } else {
             throw new GradleException("BASE_URL is not set in local.properties")
         }
