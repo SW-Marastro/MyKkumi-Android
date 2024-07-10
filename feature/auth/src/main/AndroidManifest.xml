@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest package="com.swmarastro.mykkumi.feature.auth"/>
+<!--<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.swmarastro.mykkumi.feature.auth">
 
     <application>
         <activity
-            android:name=".TestActivity"
+            android:name=".LoginComposeActivity"
             android:exported="false"
-            android:label="@string/title_activity_test"
+            android:label="@string/title_activity_login_compose"
             android:theme="@style/Theme.MyKkumi_AOS" />
     </application>
 
-</manifest>
+</manifest>-->

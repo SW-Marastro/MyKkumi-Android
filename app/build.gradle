@@ -67,7 +67,7 @@ dependencies {
     implementation project(path: ":feature:around")
     implementation project(path: ":feature:shopping")
     implementation project(path: ":feature:mypage")
-    // implementation project(path: ":feature:auth")
+    implementation project(path: ":feature:auth")
 
     // data
     implementation project(path: ":core:data")

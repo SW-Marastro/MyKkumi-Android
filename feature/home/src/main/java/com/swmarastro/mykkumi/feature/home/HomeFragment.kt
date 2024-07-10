@@ -1,5 +1,7 @@
 package com.swmarastro.mykkumi.feature.home
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -46,9 +48,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         startAutoScroll()
         onClickBannerAll() // 배너 > + 버튼 선택 시 전체 리스트 페이지로 이동
 
-        // 테스트
+        // 로그인 테스트
         binding.btnShoppingCart.setOnClickListener {
-
+            val loginScheme = "mykkumi://mykkumi-signin"
+            val intent = Intent();
+            intent.setAction(Intent.ACTION_VIEW)
+            intent.setData(Uri.parse(loginScheme))
+            startActivity(intent)
         }
     }
 

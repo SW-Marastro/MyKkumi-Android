@@ -26,6 +26,18 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.swmarastro.mykkumi.feature.auth.LoginComposeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="mykkumi" android:host="mykkumi-signin"/>
+            </intent-filter>
+
+        </activity>
+
     </application>
 
 </manifest>
