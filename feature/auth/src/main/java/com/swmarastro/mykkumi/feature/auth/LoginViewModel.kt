@@ -17,9 +17,6 @@ class LoginViewModel @Inject constructor(
 
     fun kakaoLogin() {
         _loginUiState.value = LoginUiState.KakaoLogin
-        Log.d("---", "카카오 로그인 시도 1")
-
-
     }
 
     fun kakaoLoginSuccess() {

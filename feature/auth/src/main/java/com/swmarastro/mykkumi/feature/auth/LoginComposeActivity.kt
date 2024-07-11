@@ -36,7 +36,8 @@ import kotlinx.coroutines.launch
 class LoginComposeActivity : ComponentActivity() {
 
     private val viewModel by viewModels<LoginViewModel>()
-    private lateinit var callback: (OAuthToken?, Throwable?) -> Unit
+    private lateinit var kakaoCallback: (OAuthToken?, Throwable?) -> Unit
+    private var kakaoScopes = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,8 +110,9 @@ class LoginComposeActivity : ComponentActivity() {
         )
     }
 
+    // 카카오 로그인 callback 세팅
     private fun setKakaoCallback() {
-        callback = { token, error ->
+        kakaoCallback = { token, error ->
             if (error != null) { //에러가 있는 경우
                 when {
                     error.toString() == AuthErrorCause.AccessDenied.toString() -> {
@@ -151,6 +153,12 @@ class LoginComposeActivity : ComponentActivity() {
         }
     }
 
+    // 카카오 로그인 - 추가 정보 수집 동의 scope 세팅
+    private fun setKakaoScopes() {
+
+
+    }
+
     // 카카오 로그인
     private fun handleKakaoLogin() {
         val content = this
@@ -158,11 +166,11 @@ class LoginComposeActivity : ComponentActivity() {
             try {
                 if (UserApiClient.instance.isKakaoTalkLoginAvailable(content)) {
                     // 카카오톡 앱이 설치되어 있고, 연결된 계정이 있는 경우 카카오톡 앱으로 로그인 시도
-                    UserApiClient.instance.loginWithKakaoTalk(content, callback = callback)
+                    UserApiClient.instance.loginWithKakaoTalk(content, callback = kakaoCallback)
                     Log.d(TAG, "카카오톡으로 로그인")
                 } else {
                     // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
-                    UserApiClient.instance.loginWithKakaoAccount(content, callback = callback)
+                    UserApiClient.instance.loginWithKakaoAccount(content, callback = kakaoCallback)
                     Log.d(TAG, "카카오 계정으로 로그인")
                 }
             } catch (error: Throwable) {

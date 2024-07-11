@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.data.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,6 +13,8 @@ import javax.inject.Singleton
 import com.swmarastro.mykkumi.data.BuildConfig
 import com.swmarastro.mykkumi.data.datasource.BannerDataSource
 import com.swmarastro.mykkumi.data.datasource.PostDataSource
+import com.swmarastro.mykkumi.data.util.KakaoInitializer
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 /*
 @Module: 인터페이스나, 빌더 패턴을 사용한 경우, 외부 라이브러리 클래스 등등 생성자를 사용할 수 없는 Class를 주입해야 할 경우
@@ -50,6 +53,13 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
             //.addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
             .build()
+    }
+
+    // 카카오 sdk init을 위한
+    @Provides
+    @Singleton
+    fun provideKakaoInitializer(@ApplicationContext context: Context) : KakaoInitializer {
+        return KakaoInitializer(context)
     }
 
     @Provides
