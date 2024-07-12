@@ -78,29 +78,6 @@ class LoginComposeActivity : ComponentActivity() {
                     when (it.action) {
                         MotionEvent.ACTION_DOWN -> {
                             handleKakaoLogin()
-//                            viewModel.kakaoLogin()
-//                            lifecycleScope.launch {
-//                                repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                                    viewModel.loginUiState.collect { uiState ->
-//                                        Log.d("---", "카카오 로그인 시도 1-2")
-//                                        when (uiState) {
-//                                            LoginUiState.KakaoLogin -> {
-//                                                handleKakaoLogin()
-//                                                Log.d("---", "카카오 로그인 시도 2")
-//                                            }
-//                                            LoginUiState.LoginSuccess -> {
-//                                                showToast("Login Success")
-//                                                Log.d("---", "카카오 로그인 시도 2-1")
-//                                            }
-//                                            LoginUiState.LoginFail -> {
-//                                                showToast("Login Fail")
-//                                                Log.d("---", "카카오 로그인 시도 2-2")
-//                                            }
-//                                            else -> {}
-//                                        }
-//                                    }
-//                                }
-//                            }
                         }
 
                         else -> false
