@@ -13,16 +13,16 @@ import androidx.lifecycle.lifecycleScope
 abstract class BaseFragment<T: ViewDataBinding>(
     @LayoutRes private val layoutId: Int
 ) : Fragment() {
-
-    lateinit var binding: T
+    protected var _binding: T? = null
+    protected val binding get() = _binding ?: throw IllegalStateException("Binding is not initialized")
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
-        return binding.root
+        _binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
+        return _binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,17 +30,23 @@ abstract class BaseFragment<T: ViewDataBinding>(
         lifecycleScope.launchWhenCreated {
             initView()
         }
+
+//        lifecycleScope.launch {
+//            lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
+//                initView()
+//            }
+//        }
         super.onViewCreated(view, savedInstanceState)
     }
 
     abstract suspend fun initView()
 
-    override fun onDestroyView() {
-        binding.unbind()
-        super.onDestroyView()
-    }
-
     protected inline fun bind(block: T.() -> Unit) {
         binding.apply(block)
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }
