@@ -19,8 +19,3 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--dontwarn com.swmarastro.mykkumi.common_ui.post.PostImagesAdapter
--dontwarn com.swmarastro.mykkumi.common_ui.base.BaseFragment
--dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemListLoadingBinding
--dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemPostWriterBinding
--dontwarn com.swmarastro.mykkumi.common_ui.post.PostImageIndicator
