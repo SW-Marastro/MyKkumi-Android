@@ -10,19 +10,27 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.common.model.ClientError
@@ -37,7 +45,6 @@ class LoginComposeActivity : ComponentActivity() {
 
     private val viewModel by viewModels<LoginViewModel>()
     private lateinit var kakaoCallback: (OAuthToken?, Throwable?) -> Unit
-    private var kakaoScopes = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,79 +52,114 @@ class LoginComposeActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            MyKkumi_AOSTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(
-                        modifier = Modifier
-                            .padding(innerPadding)
-                            .fillMaxSize()
-                    ) {
+            MyApp {
+                LoginNavigation()
+            }
+        }
+    }
 
-                        KakaoLogin(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(30.dp)
-                                .align(Alignment.Center)
-                        )
+    @Composable
+    private fun MyApp(content: @Composable (modifier: Modifier) -> Unit) {
+        MyKkumi_AOSTheme {
+            Scaffold(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .statusBarsPadding()
+            ) { innerPadding ->
+                content(
+                    Modifier.padding(innerPadding)
+                )
+            }
+        }
+    }
 
-                    }
-                }
+    @Composable
+    private fun LoginNavigation() {
+        val navController = rememberNavController()
+        NavHost(navController = navController,
+            startDestination = LoginScreens.KakaoLoginScreen.name) {
+            composable(LoginScreens.KakaoLoginScreen.name) {
+                KakaoLoginScreen(navController = navController)
+            }
+            composable(LoginScreens.LoginSelectHobbyScreen.name) {
+                LoginSelectHobbyScreen(navController = navController)
+            }
+            composable(LoginScreens.LoginInputUserScreen.name) {
+                LoginInputUserScreen(navController = navController)
             }
         }
     }
 
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
-    fun KakaoLogin(modifier: Modifier = Modifier) {
-        Image(
-            painter = painterResource(id = R.drawable.kakao_login_large_wide_kor),
-            contentDescription = "kakao login btn",
-            modifier = modifier
+    private fun KakaoLoginScreen(navController: NavController) {
+        Box(
+            modifier = Modifier
                 .fillMaxSize()
-                .pointerInteropFilter {
-                    when (it.action) {
-                        MotionEvent.ACTION_DOWN -> {
-                            handleKakaoLogin()
-                        }
+                .background(Color.White)
+        ) {
 
-                        else -> false
+            Image(
+                painter = painterResource(id = R.drawable.kakao_login_large_wide_kor),
+                contentDescription = "kakao login btn",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(30.dp)
+                    .align(Alignment.Center)
+                    .pointerInteropFilter {
+                        when (it.action) {
+                            MotionEvent.ACTION_DOWN -> handleKakaoLogin()
+                            else -> false
+                        }
+                        true
                     }
-                    true
-                }
-        )
+            )
+
+            // 추가 정보 입력 테스트용 버튼
+            Button(
+                onClick = {
+                    navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+            ) {
+                Text(text = "테스트용 버튼")
+            }
+        }
+
     }
 
     // 카카오 로그인 callback 세팅
     private fun setKakaoCallback() {
         kakaoCallback = { token, error ->
-            if (error != null) { //에러가 있는 경우
+            if (error != null) { // 에러가 있는 경우
                 when {
                     error.toString() == AuthErrorCause.AccessDenied.toString() -> {
-                        Toast.makeText(this, "접근이 거부 됨(동의 취소)", Toast.LENGTH_SHORT).show()
+                        showToast("접근이 거부 됨(동의 취소)")
                     }
                     error.toString() == AuthErrorCause.InvalidClient.toString() -> {
-                        Toast.makeText(this, "유효하지 않은 앱", Toast.LENGTH_SHORT).show()
+                        showToast("유효하지 않은 앱")
                     }
                     error.toString() == AuthErrorCause.InvalidGrant.toString() -> {
-                        Toast.makeText(this, "인증 수단이 유효하지 않아 인증할 수 없는 상태", Toast.LENGTH_SHORT).show()
+                        showToast("인증 수단이 유효하지 않아 인증할 수 없는 상태")
                     }
                     error.toString() == AuthErrorCause.InvalidRequest.toString() -> {
-                        Toast.makeText(this, "요청 파라미터 오류", Toast.LENGTH_SHORT).show()
+                        showToast("요청 파라미터 오류")
                     }
                     error.toString() == AuthErrorCause.InvalidScope.toString() -> {
-                        Toast.makeText(this, "유효하지 않은 scope ID", Toast.LENGTH_SHORT).show()
+                        showToast("유효하지 않은 scope ID")
                     }
                     error.toString() == AuthErrorCause.Misconfigured.toString() -> {
-                        Toast.makeText(this, "설정이 올바르지 않음(android key hash)", Toast.LENGTH_SHORT).show()
+                        showToast("설정이 올바르지 않음(android key hash)")
                     }
                     error.toString() == AuthErrorCause.ServerError.toString() -> {
-                        Toast.makeText(this, "서버 내부 에러", Toast.LENGTH_SHORT).show()
+                        showToast("서버 내부 에러")
                     }
                     error.toString() == AuthErrorCause.Unauthorized.toString() -> {
-                        Toast.makeText(this, "앱이 요청 권한이 없음", Toast.LENGTH_SHORT).show()
+                        showToast("앱이 요청 권한이 없음")
                     }
                     else -> { // Unknown
-                        Toast.makeText(this, "기타 에러", Toast.LENGTH_SHORT).show()
+                        showToast("기타 에러")
                     }
                 }
                 Log.e(TAG, "카카오계정으로 로그인 실패", error)
@@ -128,12 +170,6 @@ class LoginComposeActivity : ComponentActivity() {
                 viewModel.kakaoLoginSuccess()
             }
         }
-    }
-
-    // 카카오 로그인 - 추가 정보 수집 동의 scope 세팅
-    private fun setKakaoScopes() {
-
-
     }
 
     // 카카오 로그인

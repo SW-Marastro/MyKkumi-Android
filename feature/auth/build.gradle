@@ -97,7 +97,8 @@ dependencies {
     // implementation "com.google.accompanist:accompanist-themeadapter-material3:$meterial3_version"
     debugImplementation "androidx.compose.ui:ui-tooling"
 
-    //implementation "androidx.navigation:navigation-compose:$navigation_compose_version"
+    // Compose Navigation
+    implementation "androidx.navigation:navigation-compose:$navigation_compose_version"
 
     // 카카오 로그인 SDK
     implementation "com.kakao.sdk:v2-user:$kakao_sdk_version" // 카카오 로그인 API 모듈

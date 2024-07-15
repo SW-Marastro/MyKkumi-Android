@@ -1,10 +1,7 @@
 package com.swmarastro.mykkumi.data.repository
 
-import android.app.Activity
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.user.UserApiClient
