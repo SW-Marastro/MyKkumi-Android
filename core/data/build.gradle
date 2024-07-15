@@ -7,12 +7,7 @@ plugins {
 
 // 프로퍼티를 선언하고, 저장한 키값을 불러온다.
 Properties properties = new Properties()
-if (project.rootProject.file('local.properties').exists()) {
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    println "local.properties 파일을 읽었습니다."
-} else {
-    println "local.properties 파일을 찾을 수 없습니다."
-}
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
     namespace 'com.swmarastro.mykkumi.data'
@@ -21,17 +16,12 @@ android {
     defaultConfig {
         minSdk min_sdk_version
         targetSdk target_sdk_version
+        versionCode 1
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        def baseUrl = properties.getProperty('api.baseurl', '')
-        println "BASE_URL: ${baseUrl}"
-
-        if (!baseUrl.isEmpty()) {
-            buildConfigField "String", 'BASE_URL', "${properties.getProperty('api.baseurl', '')}"
-        } else {
-            throw new GradleException("BASE_URL is not set in local.properties")
-        }
+        buildConfigField "String", 'BASE_URL', properties['api.baseurl']
     }
 
     buildTypes {
@@ -47,13 +37,6 @@ android {
     kotlinOptions {
         jvmTarget = jvm_target_version
     }
-    buildFeatures {
-        buildConfig true
-    }
-}
-
-kapt {
-    correctErrorTypes = true
 }
 
 dependencies {
