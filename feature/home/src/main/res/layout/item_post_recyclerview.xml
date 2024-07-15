@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <!-- 사용자 정보 -->
+        <include
+            android:id="@+id/include_post_writer"
+            layout="@layout/item_post_writer"/>
+
+        <!-- 포스트 이미지 -->
+        <RelativeLayout
+            android:id="@+id/relative_post_images"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/include_post_writer">
+
+            <!-- 포스트 이미지 viewpager -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewpager_post_images"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+
+            <!-- 이미지 페이지 표시 -->
+            <LinearLayout
+                android:id="@+id/post_images_page_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/gray_DD"
+                android:gravity="center_vertical"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="5dp"
+                android:padding="2dp">
+
+                <TextView
+                    android:id="@+id/text_post_images_current_page"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="12dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/text_post_images_total_page"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/0"
+                    android:textSize="12dp"
+                    android:textColor="@color/black"/>
+
+            </LinearLayout>
+
+            <!-- 이미지 indicator -->
+            <com.swmarastro.mykkumi.common_ui.post.PostImageIndicator
+                android:id="@+id/indicator_post_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center_vertical"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"/>
+
+        </RelativeLayout>
+
+        <!-- 신고하기 -->
+        <FrameLayout
+            android:id="@+id/frame_user_complaint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/gray_DD"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/include_post_writer"
+            android:padding="5dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/text_user_complaint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_complaint"
+                android:textSize="12dp"
+                android:textColor="@color/black" />
+
+        </FrameLayout>
+
+        <!-- 좋아요, 댓글, 스크랩, 공유 버튼 -->
+        <RelativeLayout
+            android:id="@+id/relative_post_btns"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/relative_post_images"
+            android:paddingVertical="3dp"
+            android:paddingHorizontal="5dp">
+
+            <ImageButton
+                android:id="@+id/btn_post_like"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_like_unchecked"
+                android:background="@android:color/transparent"
+                app:tint="@color/black"
+                android:scaleType="fitXY"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/text_post_like_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textColor="@color/black"
+                android:textSize="12dp"
+                android:layout_marginLeft="2dp"
+                android:layout_toRightOf="@id/btn_post_like"
+                android:layout_centerVertical="true"/>
+
+            <ImageButton
+                android:id="@+id/btn_post_comment"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_comment"
+                android:background="@android:color/transparent"
+                app:tint="@color/black"
+                android:scaleType="fitXY"
+                android:layout_marginLeft="6dp"
+                android:layout_toRightOf="@id/text_post_like_count"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/text_post_comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="12dp"
+                android:layout_marginLeft="2dp"
+                android:layout_toRightOf="@id/btn_post_comment"
+                android:layout_centerVertical="true"/>
+
+            <ImageButton
+                android:id="@+id/btn_post_scrap"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_scrap_unchecked"
+                android:background="@android:color/transparent"
+                app:tint="@color/black"
+                android:scaleType="fitXY"
+                android:layout_marginLeft="6dp"
+                android:layout_toRightOf="@id/text_post_comment_count"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/text_post_scrap_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="12dp"
+                android:layout_marginLeft="2dp"
+                android:layout_toRightOf="@id/btn_post_scrap"
+                android:layout_centerVertical="true"/>
+
+            <ImageButton
+                android:id="@+id/btn_post_share"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_share"
+                android:background="@android:color/transparent"
+                app:tint="@color/black"
+                android:scaleType="fitXY"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+        <!-- 글 내용 -->
+        <LinearLayout
+            android:id="@+id/relative_post_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/relative_post_btns"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:layout_marginVertical="2dp">
+
+            <TextView
+                android:id="@+id/text_post_nickname_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="fonts have a particular weight which corresponds to one of the numbers in Common weight name mapping. However some fonts, called variable fonts, can support a range of "
+                android:textSize="12dp"
+                android:clickable="true"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

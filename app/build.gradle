@@ -42,12 +42,12 @@ android {
             ]
 //            signingConfig signingConfigs.config
         }
-        /*debug {
-            applicationIdSuffix '.dev'
-            manifestPlaceholders = [
-                    appName : "@string/app_name_dev"
-            ]
-        }*/
+//        debug {
+//            applicationIdSuffix '.dev'
+//            manifestPlaceholders = [
+//                    appName : "@string/app_name_dev"
+//            ]
+//        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -73,7 +73,9 @@ dependencies {
 
     // domain
     implementation project(path: ":core:domain")
-    
+
+    implementation project(path: ":core:common-ui")
+
     // UI - Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
