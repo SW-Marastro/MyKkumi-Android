@@ -32,7 +32,13 @@ android {
 
     buildFeatures {
         dataBinding = true
+        //compose = true
     }
+    /*
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.1"
+    }
+    */
 }
 
 dependencies {
@@ -60,7 +66,4 @@ dependencies {
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-
-    // Coil
-    implementation("io.coil-kt:coil:$coil_version")
 }

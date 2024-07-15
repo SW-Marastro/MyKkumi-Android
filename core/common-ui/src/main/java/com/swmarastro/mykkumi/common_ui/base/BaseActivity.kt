@@ -1,6 +1,8 @@
 package com.swmarastro.mykkumi.common_ui.base
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -9,14 +11,13 @@ import androidx.databinding.ViewDataBinding
 abstract class BaseActivity<T: ViewDataBinding>(
     @LayoutRes private val layoutId: Int
 ) : AppCompatActivity(){
-    private var _binding: T? = null
-    protected val binding get() = _binding ?: throw IllegalStateException("Binding is not initialized")
+    lateinit var binding: T
 
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
         super.onCreate(savedInstanceState)
-        _binding = DataBindingUtil.setContentView(this, layoutId)
+        binding = DataBindingUtil.setContentView(this, layoutId)
         setContentView(binding.root)
     }
 
@@ -26,8 +27,29 @@ abstract class BaseActivity<T: ViewDataBinding>(
         binding.apply(block)
     }
 
+    override fun onRestart() {
+        super.onRestart()
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+    }
+
     override fun onDestroy() {
-        _binding = null
+        binding.unbind()
         super.onDestroy()
     }
 }

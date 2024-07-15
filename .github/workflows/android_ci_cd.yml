@@ -11,9 +11,6 @@ jobs:
   
     runs-on: ubuntu-latest
 
-    env:
-      BASE_URL: ${{ secrets.API_BASE_URL }}
-
     steps:
     - uses: actions/checkout@v4
 
@@ -27,19 +24,15 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-      shell: bash
 
     # 환경변수(GOOGLE_SERVICES_JSON) 값의 내용을 기반으로 `app/google-services.json` 생성
     - name: Create google-services.json
       run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > app/google-services.json
         
-    # BASE_URL -> local.properties 생성
-    - name: Create local.properties
-      run: echo "api.baseurl=$BASE_URL" > $GITHUB_WORKSPACE/local.properties
-
-    # 캐시 정리
-#    - name: Clean Gradle cache
-#      run: ./gradlew clean
+    # (LOCAL_PROPERTIES_CONTENTS)를 기반으로 local.properties 생성
+    # 아직 추가할 Key가 없어서 주석 처리
+    #- name: Create local.properties
+    #  run: echo "$LOCAL_PROPERTIES_CONTENTS" > local.properties
 
     # Generate Keystore File
 #    - name: Generate Keystore File
@@ -64,34 +57,20 @@ jobs:
       
     # Build APK Release
     - name: Build Release Apk
-      run: ./gradlew assembleRelease --warning-mode=all --stacktrace
+      run: ./gradlew assembleRelease --stacktrace
 
-    - name: APK 디렉토리 확인 (디버깅용) / Release
-      run: ls -alh app/build/outputs/apk/release/
-
-#    - name: Build Debug Apk
-#      run: ./gradlew assembleDebug
-
-#    - name: APK 디렉토리 확인 (디버깅용) / Debug
-#      run: ls -alh app/build/outputs/apk/debug/
+#    - name: APK 디렉토리 확인 (디버깅용)
+#      run: ls -alh app/build/outputs/apk/release/
 
     # Build AAB Release
-#    - name: Build release Bundle
-#      run: ./gradlew bundleRelease
+    #- name: Build release Bundle
+    #  run: ./gradlew bundleRelease
 
     # Firebase에 배포
-    - name: Upload Firebase App Distribution / Release
+    - name: Upload Firebase App Distribution
       uses: wzieba/Firebase-Distribution-Github-Action@v1
       with:
         appId: ${{secrets.FIREBASE_APP_ID}}
         serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
         groups: swmarastro
         file: app/build/outputs/apk/release/app-release-unsigned.apk
-
-#    - name: Upload Firebase App Distribution / Debug
-#      uses: wzieba/Firebase-Distribution-Github-Action@v1
-#      with:
-#        appId: ${{secrets.FIREBASE_APP_ID}}
-#        serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-#        groups: swmarastro
-#        file: app/build/outputs/apk/debug/app-debug.apk
