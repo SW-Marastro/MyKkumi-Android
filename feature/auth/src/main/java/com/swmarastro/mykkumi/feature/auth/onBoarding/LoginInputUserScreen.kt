@@ -1,7 +1,9 @@
 package com.swmarastro.mykkumi.feature.auth.onBoarding
 
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +30,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.swmarastro.mykkumi.feature.auth.R
 
 private const val MAX_NICKNAME_LENGTH = 16
@@ -35,9 +39,22 @@ private const val MIN_NICKNAME_LENGTH = 3
 private val NICKNAME_REGEX = Regex("^[a-zA-Z0-9._\\-ㄱ-ㅎ가-힣ㅏ-ㅣ]*$")
 
 // 사용자 정보 입력 페이지 - 프로필 이미지, 닉네임
+@ExperimentalPermissionsApi
 @Composable
 fun LoginInputUserScreen(navController: NavController) {
     var nickname : String by remember { mutableStateOf("") }
+
+    // 갤러리, 카메라 접근 권한 허용 요청
+    val multiplePermissionsState = rememberMultiplePermissionsState(
+        permissions = mutableListOf(
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.CAMERA,
+        ).apply {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+        }
+    )
 
     Column(
         modifier = Modifier
@@ -56,6 +73,10 @@ fun LoginInputUserScreen(navController: NavController) {
                 .align(Alignment.CenterHorizontally)
                 .padding(3.dp)
                 .clip(CircleShape)
+                .clickable {
+                    // 갤러리, 카메라 접근 권한 허용 요청
+                    multiplePermissionsState.launchMultiplePermissionRequest()
+                }
         )
 
         Spacer(
@@ -111,5 +132,6 @@ fun LoginInputUserScreen(navController: NavController) {
                     )
             )
         }
+
     }
 }

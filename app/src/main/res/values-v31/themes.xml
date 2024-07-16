@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.MyKkumi_AOS" parent="Base.Theme.MyKkumi_AOS">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_mykkumi_logo</item>
+        <item name="android:windowSplashScreenBackground">@color/background_navy</item>
+    </style>
+</resources>

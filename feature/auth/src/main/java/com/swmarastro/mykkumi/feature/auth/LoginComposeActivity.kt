@@ -13,6 +13,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Button
@@ -31,6 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.common.model.ClientError
@@ -48,6 +50,7 @@ class LoginComposeActivity : ComponentActivity() {
     private val viewModel by viewModels<LoginViewModel>()
     private lateinit var kakaoCallback: (OAuthToken?, Throwable?) -> Unit
 
+    @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setKakaoCallback()
@@ -67,6 +70,7 @@ class LoginComposeActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxSize()
                     .statusBarsPadding()
+                    .navigationBarsPadding()
             ) { innerPadding ->
                 content(
                     Modifier.padding(innerPadding)
@@ -75,6 +79,7 @@ class LoginComposeActivity : ComponentActivity() {
         }
     }
 
+    @ExperimentalPermissionsApi
     @Composable
     private fun LoginNavigation() {
         val navController = rememberNavController()
