@@ -26,6 +26,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
+private val MAX_NICKNAME_LENGTH = 16
+private val MIN_NICKNAME_LENGTH = 3
+private val NICKNAME_REGEX = Regex("^[a-zA-Z0-9._\\-ㄱ-ㅎ가-힣]*$")
+
 // 사용자 정보 입력 페이지 - 프로필 이미지, 닉네임
 @Composable
 fun LoginInputUserScreen(navController: NavController) {
@@ -56,7 +60,14 @@ fun LoginInputUserScreen(navController: NavController) {
 
         BasicTextField(
             value = nickname,
-            onValueChange = { nickname = it },
+            onValueChange = {
+                // 입력 문자 제한 - 한글, 영문자, 숫자, _, -, .
+                if(it.matches(NICKNAME_REGEX)) {
+                    // 닉네임 최대 길이 제한
+                    if (it.length <= MAX_NICKNAME_LENGTH) nickname = it
+                    else nickname = it.substring(0, MAX_NICKNAME_LENGTH)
+                }
+            },
             modifier = Modifier
                 .height(20.dp)
                 .fillMaxWidth()
@@ -77,7 +88,7 @@ fun LoginInputUserScreen(navController: NavController) {
                         ),
                         strokeWidth = 1.dp.toPx(),
                     )
-                }
+                },
         )
     }
 }
