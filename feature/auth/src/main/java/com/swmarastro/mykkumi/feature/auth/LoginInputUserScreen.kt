@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 
+// 사용자 정보 입력 페이지 - 프로필 이미지, 닉네임
 @Composable
 fun LoginInputUserScreen(navController: NavController) {
     Column(
