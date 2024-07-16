@@ -1,4 +1,4 @@
-package com.swmarastro.mykkumi.feature.auth
+package com.swmarastro.mykkumi.feature.auth.onBoarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,10 +28,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.swmarastro.mykkumi.feature.auth.R
 
-private val MAX_NICKNAME_LENGTH = 16
-private val MIN_NICKNAME_LENGTH = 3
-private val NICKNAME_REGEX = Regex("^[a-zA-Z0-9._\\-ㄱ-ㅎ가-힣]*$")
+private const val MAX_NICKNAME_LENGTH = 16
+private const val MIN_NICKNAME_LENGTH = 3
+private val NICKNAME_REGEX = Regex("^[a-zA-Z0-9._\\-ㄱ-ㅎ가-힣ㅏ-ㅣ]*$")
 
 // 사용자 정보 입력 페이지 - 프로필 이미지, 닉네임
 @Composable

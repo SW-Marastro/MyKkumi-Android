@@ -1,4 +1,4 @@
-package com.swmarastro.mykkumi.feature.auth
+package com.swmarastro.mykkumi.feature.auth.onBoarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,6 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.swmarastro.mykkumi.feature.auth.LoginScreens
+import com.swmarastro.mykkumi.feature.auth.R
 
 // 더미 데이터 - api 연결 시 삭제 예정
 data class TestHobby (
