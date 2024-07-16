@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumi.feature.auth.onBoarding
 
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,12 +48,21 @@ fun LoginInputUserScreen(navController: NavController) {
     // 갤러리, 카메라 접근 권한 허용 요청
     val multiplePermissionsState = rememberMultiplePermissionsState(
         permissions = mutableListOf(
-            android.Manifest.permission.READ_EXTERNAL_STORAGE,
             android.Manifest.permission.CAMERA,
         ).apply {
+            // sdk version 28 이하 - 사진 촬영 후 저장 권한 허용 요청
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
                 add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
             }
+            // sdk version 32 이하 - 파일 접근 권한 허용 요청
+            if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.S) {
+                add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
+            // sdk version 33 이상 - 이미지 접근 권한 허용 요청
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                add(android.Manifest.permission.READ_MEDIA_IMAGES)
+            }
+            Log.d("test", Build.VERSION.SDK_INT.toString())
         }
     )
 
