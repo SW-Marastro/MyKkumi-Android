@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +24,9 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 private val MAX_NICKNAME_LENGTH = 16
@@ -90,5 +93,22 @@ fun LoginInputUserScreen(navController: NavController) {
                     )
                 },
         )
+
+        Spacer(
+            modifier = Modifier.height(10.dp)
+        )
+
+        // 최소글자수 미충족 경고
+        if (nickname.length < MIN_NICKNAME_LENGTH) {
+            Text(
+                text = stringResource(id = R.string.notice_nickname_min_length),
+                color = Color.Red,
+                fontSize = 12.sp,
+                modifier = Modifier
+                    .padding(
+                        horizontal = 40.dp,
+                    )
+            )
+        }
     }
 }
