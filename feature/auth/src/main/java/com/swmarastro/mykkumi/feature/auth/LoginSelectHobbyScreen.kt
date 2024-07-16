@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
+// 더미 데이터 - api 연결 시 삭제 예정
 data class TestHobby (
     val categoryName: String,
     val subCategories: MutableList<String>
@@ -37,6 +38,7 @@ private val testHobbies : MutableList<TestHobby> = mutableListOf(
     TestHobby("뷰티", mutableListOf("메이크업", "헤어"))
 )
 
+// 관심 취미 선택
 @Composable
 fun LoginSelectHobbyScreen(navController: NavController) {
     Column(
@@ -136,6 +138,7 @@ fun HobbySubCategoryItem(subCategory: String) {
             text = subCategory,
             modifier = Modifier
                 .padding(horizontal = 5.dp)
+                .align(Alignment.CenterHorizontally)
         )
     }
 }
