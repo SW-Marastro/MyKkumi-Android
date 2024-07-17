@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.entity.KakaoToken
 import com.swmarastro.mykkumi.domain.usecase.KakaoLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,11 +33,19 @@ class LoginViewModel @Inject constructor(
     }
 
     fun kakaoLoginSuccess() {
-        _loginUiState.tryEmit(LoginUiState.LoginSuccess)
+        _loginUiState.tryEmit(LoginUiState.KakaoLoginSuccess)
     }
 
     fun kakaoLoginFail() {
-        _loginUiState.tryEmit(LoginUiState.LoginFail)
+        _loginUiState.tryEmit(LoginUiState.KakaoLoginFail)
+    }
+
+    fun mykkumiLoginSuccess() {
+        _loginUiState.tryEmit(LoginUiState.MykkumiLoginSuccess)
+    }
+
+    fun mykkumiLoginFail() {
+        _loginUiState.tryEmit(LoginUiState.MykkumiLoginFail)
     }
 
     fun setUiStateIdle() {
@@ -87,14 +96,18 @@ class LoginViewModel @Inject constructor(
                 Log.e(TAG, "카카오계정으로 로그인 실패", error)
                 kakaoLoginFail()
             } else if (token != null) { // 토큰을 받아온 경우
-                Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
+                // Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
                 kakaoLoginSuccess()
+                setKakaoToken(token.accessToken, token.refreshToken)
             }
         }
     }
 
     // 카카오 로그인 token 값
-    fun setKakaoToken(accessToken: String, refreshToken: String) {
+    fun setKakaoToken(
+        accessToken: String,
+        refreshToken: String
+    ) {
         viewModelScope.launch {
             try {
                 val isSuccessLogin = kakaoLoginUseCase(
@@ -104,11 +117,21 @@ class LoginViewModel @Inject constructor(
                     )
                 )
 
-
+                if(isSuccessLogin) {
+                    mykkumiLoginSuccess()
+                }
+                else {
+                    mykkumiLoginFail()
+                }
             }
             catch (e: Exception) {
 
             }
         }
+    }
+
+    // 다음 화면으로 네비게이션 처리
+    fun navigateToNextScreen(navController: NavController) {
+        navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
     }
 }

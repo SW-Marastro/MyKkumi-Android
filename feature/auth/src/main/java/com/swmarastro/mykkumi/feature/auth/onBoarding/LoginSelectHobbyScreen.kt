@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.swmarastro.mykkumi.feature.auth.LoginScreens
 import com.swmarastro.mykkumi.feature.auth.R
+import kotlinx.coroutines.flow.onEach
 
 // 더미 데이터 - api 연결 시 삭제 예정
 data class TestHobby (
@@ -39,9 +41,9 @@ data class TestHobby (
 @Composable
 fun LoginSelectHobbyScreen(
     navController: NavController,
-   viewModel: LoginSelectHobbyViewModel
+    viewModel: LoginSelectHobbyViewModel
 ) {
-    viewModel.getHobbyCategiryList()
+    viewModel.getHobbyCategoryList()
 
     Column(
         modifier = Modifier
@@ -61,7 +63,12 @@ fun LoginSelectHobbyScreen(
         ) {
             items(
                 items = viewModel.hobbyCategoryUiState.value,
-                itemContent = { HobbyCategoryItem(hobby = it) }
+                itemContent = {
+                    HobbyCategoryItem(
+                        hobby = it,
+                        viewModel = viewModel
+                    )
+                }
             )
         }
 
@@ -75,14 +82,14 @@ fun LoginSelectHobbyScreen(
                 .align(Alignment.CenterHorizontally)
                 .padding(vertical = 10.dp)
                 .clickable {
-                    navController.navigate(route = LoginScreens.LoginInputUserScreen.name)
+                    viewModel.navigateToNextScreen(navController)
                 }
         )
 
         // 다음
         Button(
             onClick = {
-                navController.navigate(route = LoginScreens.LoginInputUserScreen.name)
+                viewModel.navigateToNextScreen(navController)
             },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -97,7 +104,10 @@ fun LoginSelectHobbyScreen(
 }
 
 @Composable
-fun HobbyCategoryItem(hobby: TestHobby) {
+fun HobbyCategoryItem(
+    hobby: TestHobby,
+    viewModel: LoginSelectHobbyViewModel
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = hobby.categoryName,
@@ -108,23 +118,39 @@ fun HobbyCategoryItem(hobby: TestHobby) {
         ) {
             items(
                 items = hobby.subCategories,
-                itemContent = { HobbySubCategoryItem(it) }
+                itemContent = {
+                    HobbySubCategoryItem(
+                        subCategory = it,
+                        viewModel = viewModel
+                    )
+                }
             )
         }
     }
 }
 
 @Composable
-fun HobbySubCategoryItem(subCategory: String) {
-    var backgroundColor = remember { mutableStateOf(Color.LightGray) }
+fun HobbySubCategoryItem(
+    subCategory: String,
+    viewModel: LoginSelectHobbyViewModel
+) {
+    //val isSelected by viewModel.selectedHobbies.collectAsState().value.map { it.contains(subCategory) }
+    var isSelected = false
+
+    viewModel.selectedHobbies
+        .onEach {
+            if(viewModel.isHobbySelected(subCategory)) isSelected = true
+        }
 
     Column(
         modifier = Modifier
             .padding(horizontal = 5.dp)
-            .background(backgroundColor.value)
+            .background(
+                if(isSelected) Color.Green
+                else Color.Gray
+            )
             .clickable {
-                backgroundColor.value =
-                    if (backgroundColor.value == Color.LightGray) Color.Green else Color.LightGray
+                viewModel.setHobbySelected(subCategory)
             }
     ) {
         Image(

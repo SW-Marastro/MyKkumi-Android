@@ -41,6 +41,8 @@ import com.swmarastro.mykkumi.feature.auth.onBoarding.LoginSelectHobbyScreen
 import com.swmarastro.mykkumi.feature.auth.onBoarding.LoginSelectHobbyViewModel
 import com.swmarastro.mykkumi.feature.auth.ui.theme.MyKkumi_AOSTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -105,6 +107,13 @@ class LoginComposeActivity : ComponentActivity() {
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
     private fun KakaoLoginScreen(navController: NavController) {
+        viewModel.loginUiState
+            .onEach {
+                if(it == LoginUiState.MykkumiLoginSuccess)
+                    viewModel.navigateToNextScreen(navController)
+            }
+            .launchIn(lifecycleScope)
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -126,23 +135,14 @@ class LoginComposeActivity : ComponentActivity() {
                         true
                     }
             )
-
-            // 추가 정보 입력 테스트용 버튼
-            Button(
-                onClick = {
-                    navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-            ) {
-                Text(text = "테스트용 버튼")
-            }
         }
     }
 
     // 카카오 로그인
     private fun handleKakaoLogin() {
         val activityContext = this
+        viewModel.kakaoLogin()
+
         lifecycleScope.launch {
             try {
                 if (UserApiClient.instance.isKakaoTalkLoginAvailable(activityContext)) {
