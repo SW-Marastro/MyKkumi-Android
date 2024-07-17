@@ -5,20 +5,31 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
+import androidx.lifecycle.viewModelScope
+import com.swmarastro.mykkumi.domain.entity.KakaoToken
+import com.swmarastro.mykkumi.domain.usecase.KakaoLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-
+    private val kakaoLoginUseCase: KakaoLoginUseCase
 ): ViewModel() {
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.IDle)
     val loginUiState: StateFlow<LoginUiState> get() = _loginUiState
 
     lateinit var kakaoCallback: (OAuthToken?, Throwable?) -> Unit
+
+//    private val _kakaoLoginToken = MutableLiveData<KakaoToken>()
+//    val kakaoLoginToken: LiveData<KakaoToken> get() = _kakaoLoginToken
+
+    fun kakaoLogin() {
+        _loginUiState.value = LoginUiState.KakaoLogin
+    }
 
     fun kakaoLoginSuccess() {
         _loginUiState.tryEmit(LoginUiState.LoginSuccess)
@@ -40,37 +51,63 @@ class LoginViewModel @Inject constructor(
                     error.toString() == AuthErrorCause.AccessDenied.toString() -> {
                         showToast("카카오 정보 제공 동의가 취소되었습니다.") // 접근이 거부 됨(동의 취소)
                     }
+
                     error.toString() == AuthErrorCause.InvalidClient.toString() -> {
                         showToast("유효하지 않은 앱입니다.") // 유효하지 않은 앱
                     }
+
                     error.toString() == AuthErrorCause.InvalidGrant.toString() -> {
                         showToast("인증 수단이 유효하지 않아 인증할 수 없습니다.") // 인증 수단이 유효하지 않아 인증할 수 없는 상태
                     }
+
                     error.toString() == AuthErrorCause.InvalidRequest.toString() -> {
                         showToast("서비스 에러가 발생했습니다.") // 요청 파라미터 오류
                     }
+
                     error.toString() == AuthErrorCause.InvalidScope.toString() -> {
                         showToast("서비스 에러가 발생했습니다.") // 유효하지 않은 scope ID
                     }
+
                     error.toString() == AuthErrorCause.Misconfigured.toString() -> {
                         showToast("서비스 에러가 발생했습니다.") // 설정이 올바르지 않음(android key hash)
                     }
+
                     error.toString() == AuthErrorCause.ServerError.toString() -> {
                         showToast("카카오 서버 내부 에러가 발생했습니다.") // 서버 내부 에러
                     }
+
                     error.toString() == AuthErrorCause.Unauthorized.toString() -> {
                         showToast("요청 권한이 없는 앱입니다.") // 앱이 요청 권한이 없음
                     }
+
                     else -> { // Unknown
                         showToast("서비스 에러가 발생했습니다.") // 기타 에러
                     }
                 }
                 Log.e(TAG, "카카오계정으로 로그인 실패", error)
                 kakaoLoginFail()
-            }
-            else if (token != null) { // 토큰을 받아온 경우
+            } else if (token != null) { // 토큰을 받아온 경우
                 Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
                 kakaoLoginSuccess()
+            }
+        }
+    }
+
+    // 카카오 로그인 token 값
+    fun setKakaoToken(accessToken: String, refreshToken: String) {
+        viewModelScope.launch {
+            try {
+                val isSuccessLogin = kakaoLoginUseCase(
+                    KakaoToken(
+                        accessToken = accessToken,
+                        refreshToken = refreshToken
+                    )
+                )
+
+
+            }
+            catch (e: Exception) {
+
             }
         }
     }
