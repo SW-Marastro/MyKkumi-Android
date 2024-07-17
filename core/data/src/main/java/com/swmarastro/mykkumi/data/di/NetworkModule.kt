@@ -11,7 +11,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 import com.swmarastro.mykkumi.data.BuildConfig
-import com.swmarastro.mykkumi.data.datasource.AuthTokenDataSource
 import com.swmarastro.mykkumi.data.datasource.BannerDataSource
 import com.swmarastro.mykkumi.data.datasource.KakaoLoginDataSource
 import com.swmarastro.mykkumi.data.datasource.PostDataSource
@@ -40,7 +39,9 @@ object NetworkModule {
     // OKHttpClient에 로깅인터셉터 등록
     @Provides
     @Singleton
-    fun provideOkHttpClient(interceptor: HttpLoggingInterceptor) : OkHttpClient {
+    fun provideOkHttpClient(
+        interceptor: HttpLoggingInterceptor
+    ) : OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
             .build()
@@ -80,11 +81,5 @@ object NetworkModule {
     @Singleton
     fun provideKakaoLoginDataSource(retrofit: Retrofit): KakaoLoginDataSource {
         return retrofit.create(KakaoLoginDataSource::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAuthTokenDataSource(retrofit: Retrofit): AuthTokenDataSource {
-        return retrofit.create(AuthTokenDataSource::class.java)
     }
 }

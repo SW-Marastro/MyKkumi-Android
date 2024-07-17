@@ -1,6 +1,6 @@
-package com.swmarastro.mykkumi.data.datasource
+package com.swmarastro.mykkumi.domain.datastore
 
-interface AuthTokenDataSource {
+interface AuthTokenDataStore {
     fun saveAccessToken(accessToken: String)
     fun saveRefreshToken(refreshToken: String)
     fun getAccessToken(): String?
