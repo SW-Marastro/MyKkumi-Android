@@ -59,7 +59,10 @@ private val NICKNAME_REGEX = Regex("^[a-zA-Z0-9._\\-ㄱ-ㅎ가-힣ㅏ-ㅣ]*$")
 // 사용자 정보 입력 페이지 - 프로필 이미지, 닉네임
 @ExperimentalPermissionsApi
 @Composable
-fun LoginInputUserScreen(navController: NavController) {
+fun LoginInputUserScreen(
+    navController: NavController,
+    viewModel: LoginInputUserViewModel
+) {
     val localContext = LocalContext.current
     var nickname : String by remember { mutableStateOf("") }
 
@@ -168,12 +171,8 @@ fun LoginInputUserScreen(navController: NavController) {
             BasicTextField(
                 value = nickname,
                 onValueChange = {
-                    // 입력 문자 제한 - 한글, 영문자, 숫자, _, -, .
-                    if(it.matches(NICKNAME_REGEX)) {
-                        // 닉네임 최대 길이 제한
-                        if (it.length <= MAX_NICKNAME_LENGTH) nickname = it
-                        else nickname = it.substring(0, MAX_NICKNAME_LENGTH)
-                    }
+                    viewModel.onNicknameChange(it)
+                    nickname = viewModel.nickname.value
                 },
                 modifier = Modifier
                     .height(20.dp)
