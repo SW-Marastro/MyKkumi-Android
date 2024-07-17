@@ -44,12 +44,14 @@ class LoginViewModel @Inject constructor(
     fun setKakaoToken(accessToken: String, refreshToken: String) {
         viewModelScope.launch {
             try {
-                kakaoLoginUseCase(
+                val isSuccessLogin = kakaoLoginUseCase(
                     KakaoToken(
                         accessToken = accessToken,
                         refreshToken = refreshToken
                     )
                 )
+
+
             }
             catch (e: Exception) {
 

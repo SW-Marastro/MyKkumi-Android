@@ -14,16 +14,22 @@ class KakaoLoginRepositoryImpl @Inject constructor(
     private val authTokenDataSource: AuthTokenDataStore
 ) : KakaoLoginRepository {
 
-    override suspend fun kakaoLogin(kakaoLoginToken: KakaoToken) {
+    override suspend fun kakaoLogin(kakaoLoginToken: KakaoToken) : Boolean {
         val kakaoLoginTokenRequest: KakaoLoginRequestDTO = KakaoLoginRequestDTO(
             refreshToken = kakaoLoginToken.refreshToken,
             accessToken = kakaoLoginToken.accessToken
         )
-        val mykkumiLoginResponseDTO : MykkumiLoginResponseDTO = kakaoLoginDataSource.signInKakao(kakaoLoginTokenRequest)
+        val mykkumiLoginResponse : MykkumiLoginResponseDTO = kakaoLoginDataSource.signInKakao(kakaoLoginTokenRequest)
 
-        authTokenDataSource.saveAccessToken(mykkumiLoginResponseDTO.accessToken)
-        authTokenDataSource.saveRefreshToken(mykkumiLoginResponseDTO.refreshToken)
-
-        // 로그인 완료 시
+        // 로그인 완료 후 token 값 받기 성공
+        if(!mykkumiLoginResponse.accessToken.isNullOrEmpty() && !mykkumiLoginResponse.refreshToken.isNullOrEmpty()) {
+            authTokenDataSource.saveAccessToken(mykkumiLoginResponse.accessToken)
+            authTokenDataSource.saveRefreshToken(mykkumiLoginResponse.refreshToken)
+            return true
+        }
+        // 실패
+        else {
+            return false
+        }
     }
 }

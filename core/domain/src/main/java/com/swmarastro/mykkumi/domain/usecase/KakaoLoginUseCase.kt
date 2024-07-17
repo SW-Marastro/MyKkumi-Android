@@ -7,7 +7,7 @@ import javax.inject.Inject
 class KakaoLoginUseCase @Inject constructor(
     private val repository: KakaoLoginRepository,
 ){
-    suspend operator fun invoke(kakaoLoginToken: KakaoToken) {
-        repository.kakaoLogin(kakaoLoginToken)
+    suspend operator fun invoke(kakaoLoginToken: KakaoToken) : Boolean {
+        return repository.kakaoLogin(kakaoLoginToken)
     }
 }

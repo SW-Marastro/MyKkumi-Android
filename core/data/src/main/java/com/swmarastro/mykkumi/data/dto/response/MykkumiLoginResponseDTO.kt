@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 data class MykkumiLoginResponseDTO(
     @SerializedName("refreshToken")
-    val refreshToken: String,
+    val refreshToken: String?,
 
     @SerializedName("accessToken")
-    val accessToken: String,
+    val accessToken: String?,
 )
