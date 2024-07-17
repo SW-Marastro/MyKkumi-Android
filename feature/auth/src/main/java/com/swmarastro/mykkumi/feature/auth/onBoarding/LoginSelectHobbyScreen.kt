@@ -34,15 +34,15 @@ data class TestHobby (
     val categoryName: String,
     val subCategories: MutableList<String>
 )
-private val testHobbies : MutableList<TestHobby> = mutableListOf(
-    TestHobby("공예/DIY", mutableListOf("다이어리 꾸미기", "포토카드 꾸미기", "뜨개질")),
-    TestHobby("스포츠", mutableListOf("야구", "테니스", "골프")),
-    TestHobby("뷰티", mutableListOf("메이크업", "헤어"))
-)
 
 // 관심 취미 선택
 @Composable
-fun LoginSelectHobbyScreen(navController: NavController) {
+fun LoginSelectHobbyScreen(
+    navController: NavController,
+   viewModel: LoginSelectHobbyViewModel
+) {
+    viewModel.getHobbyCategiryList()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,7 +60,7 @@ fun LoginSelectHobbyScreen(navController: NavController) {
             contentPadding = PaddingValues(2.dp, 5.dp)
         ) {
             items(
-                items = testHobbies,
+                items = viewModel.hobbyCategoryUiState.value,
                 itemContent = { HobbyCategoryItem(hobby = it) }
             )
         }
