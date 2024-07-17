@@ -184,3 +184,5 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 .kotlin/
+
+output-metadata.json
