@@ -173,7 +173,7 @@ class LoginComposeActivity : ComponentActivity() {
                 viewModel.kakaoLoginFail()
             }
             else if (token != null) { // 토큰을 받아온 경우
-                //Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
+                Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
                 viewModel.kakaoLoginSuccess()
                 viewModel.setKakaoToken(accessToken = token.accessToken, refreshToken = token.refreshToken)
             }

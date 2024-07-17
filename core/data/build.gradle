@@ -80,4 +80,7 @@ dependencies {
 
     // 카카오 로그인 SDK
     implementation "com.kakao.sdk:v2-user:$kakao_sdk_version" // 카카오 로그인 API 모듈
+
+    // EncryptedSharedPreferences
+    implementation "androidx.security:security-crypto:$security_crypto_version"
 }

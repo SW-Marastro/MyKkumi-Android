@@ -105,6 +105,6 @@ dependencies {
     implementation "com.kakao.sdk:v2-user:$kakao_sdk_version" // 카카오 로그인 API 모듈
 
     // accompanist permissions > compose에서 접근 권한 요청
-    implementation "com.google.accompanist:accompanist-permissions:${accompanist_permissions}"
+    implementation "com.google.accompanist:accompanist-permissions:${accompanist_permissions_version}"
 
 }
