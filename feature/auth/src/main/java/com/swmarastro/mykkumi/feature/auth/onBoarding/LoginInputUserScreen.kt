@@ -1,10 +1,15 @@
 package com.swmarastro.mykkumi.feature.auth.onBoarding
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
 import android.provider.Settings
-import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,6 +44,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -83,20 +89,28 @@ fun LoginInputUserScreen(navController: NavController) {
     val permissioSnackbarMessage = stringResource(id = R.string.notice_permission_revoke_go_setting)
     val permissioSnackbarAction = stringResource(id = R.string.action_permission_revoke_go_setting)
 
+    // 갤러리에서 이미지 선택
+    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+
+        }
+    }
+
     Scaffold(
         scaffoldState = scaffoldState
-    ) {
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White),
+                .background(Color.White)
+                .padding(innerPadding),
         ) {
             Spacer(
                 modifier = Modifier.height(30.dp)
             )
             Image(
                 painter = painterResource(
-                    id = com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default),
+                id = com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default),
                 contentDescription = "default profile image",
                 modifier = Modifier
                     .size(160.dp)
@@ -106,11 +120,16 @@ fun LoginInputUserScreen(navController: NavController) {
                     .clickable {
                         // 갤러리, 카메라 접근 권한 허용 요청
                         // 권한 허용됨
-                        if (multiplePermissionsState.allPermissionsGranted)
-                            Log.d(
-                                "test",
-                                "권한 허용이 완료됨"
-                            )
+                        if (multiplePermissionsState.allPermissionsGranted) {
+                            // 갤러리 열기
+                            val type = "image/*"
+                            galleryLauncher.launch(type)
+//                            val intent = Intent(Intent.ACTION_PICK)
+//                            intent.type = "image/*"
+//                            intent.action = Intent.ACTION_GET_CONTENT
+//                            startActivityForResult(intent)
+                        }
+
                         // 권한을 요청한 적이 있지만 허용되지 않음
                         else if (multiplePermissionsState.shouldShowRationale) {
                             // 권한 허용을 위해 앱 디테일 설정 페이지로 이동시키기 위함
@@ -128,11 +147,15 @@ fun LoginInputUserScreen(navController: NavController) {
                                     actionLabel = permissioSnackbarAction
                                 )
                                 when (snackbarResult) {
-                                    SnackbarResult.ActionPerformed -> localContext.startActivity(intent)
+                                    SnackbarResult.ActionPerformed -> localContext.startActivity(
+                                        intent
+                                    )
+
                                     SnackbarResult.Dismissed -> null
                                 }
                             }
                         }
+
                         // 권한을 요청한 적이 없음
                         else multiplePermissionsState.launchMultiplePermissionRequest()
                     }
@@ -194,3 +217,20 @@ fun LoginInputUserScreen(navController: NavController) {
         }
     }
 }
+
+//private fun setImgUri(imgUri: Uri) {
+//    imgUri.let {
+//        val bitmap: Bitmap
+//        if (Build.VERSION.SDK_INT < 28) {
+//            bitmap = MediaStore.Images.Media.getBitmap(
+//                this.contentResolver,
+//                imgUri
+//            )
+//
+//        } else {
+//            val source =
+//                ImageDecoder.createSource(this.contentResolver, imgUri)
+//            bitmap = ImageDecoder.decodeBitmap(source)
+//        }
+//    }
+//}

@@ -181,16 +181,16 @@ class LoginComposeActivity : ComponentActivity() {
 
     // 카카오 로그인
     private fun handleKakaoLogin() {
-        val content = this
+        val activityContext = this
         lifecycleScope.launch {
             try {
-                if (UserApiClient.instance.isKakaoTalkLoginAvailable(content)) {
+                if (UserApiClient.instance.isKakaoTalkLoginAvailable(activityContext)) {
                     // 카카오톡 앱이 설치되어 있고, 연결된 계정이 있는 경우 카카오톡 앱으로 로그인 시도
-                    UserApiClient.instance.loginWithKakaoTalk(content, callback = kakaoCallback)
+                    UserApiClient.instance.loginWithKakaoTalk(activityContext, callback = kakaoCallback)
                     Log.d(TAG, "카카오톡으로 로그인")
                 } else {
                     // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
-                    UserApiClient.instance.loginWithKakaoAccount(content, callback = kakaoCallback)
+                    UserApiClient.instance.loginWithKakaoAccount(activityContext, callback = kakaoCallback)
                     Log.d(TAG, "카카오 계정으로 로그인")
                 }
             } catch (error: Throwable) {
