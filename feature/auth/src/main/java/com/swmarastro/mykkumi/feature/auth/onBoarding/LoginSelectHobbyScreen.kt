@@ -16,9 +16,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.lifecycle.lifecycleScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,9 +26,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import com.swmarastro.mykkumi.feature.auth.LoginScreens
 import com.swmarastro.mykkumi.feature.auth.R
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 // 더미 데이터 - api 연결 시 삭제 예정
@@ -134,23 +135,20 @@ fun HobbySubCategoryItem(
     subCategory: String,
     viewModel: LoginSelectHobbyViewModel
 ) {
-    //val isSelected by viewModel.selectedHobbies.collectAsState().value.map { it.contains(subCategory) }
-    var isSelected = false
-
-    viewModel.selectedHobbies
-        .onEach {
-            if(viewModel.isHobbySelected(subCategory)) isSelected = true
-        }
+    var backgroundColor = remember { mutableStateOf(Color.LightGray) }
 
     Column(
         modifier = Modifier
             .padding(horizontal = 5.dp)
-            .background(
-                if(isSelected) Color.Green
-                else Color.Gray
-            )
+            .background(backgroundColor.value)
             .clickable {
                 viewModel.setHobbySelected(subCategory)
+                if(viewModel.isHobbySelected(subCategory)) {
+                    backgroundColor.value = Color.Green
+                }
+                else {
+                    backgroundColor.value = Color.LightGray
+                }
             }
     ) {
         Image(
