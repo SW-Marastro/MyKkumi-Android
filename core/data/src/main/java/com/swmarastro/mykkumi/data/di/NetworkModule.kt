@@ -12,6 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 import com.swmarastro.mykkumi.data.BuildConfig
 import com.swmarastro.mykkumi.data.datasource.BannerDataSource
+import com.swmarastro.mykkumi.data.datasource.KakaoLoginDataSource
 import com.swmarastro.mykkumi.data.datasource.PostDataSource
 import com.swmarastro.mykkumi.data.util.KakaoInitializer
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -72,5 +73,11 @@ object NetworkModule {
     @Singleton
     fun providePostDataSource(retrofit: Retrofit): PostDataSource {
         return retrofit.create(PostDataSource::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideKakaoLoginDataSource(retrofit: Retrofit): KakaoLoginDataSource {
+        return retrofit.create(KakaoLoginDataSource::class.java)
     }
 }
