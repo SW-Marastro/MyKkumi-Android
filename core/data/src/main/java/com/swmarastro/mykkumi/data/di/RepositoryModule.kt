@@ -1,8 +1,10 @@
 package com.swmarastro.mykkumi.data.di
 
 import com.swmarastro.mykkumi.data.repository.BannerRepositoryImpl
+import com.swmarastro.mykkumi.data.repository.KakaoLoginRepositoryImpl
 import com.swmarastro.mykkumi.data.repository.PostRepositoryImpl
 import com.swmarastro.mykkumi.domain.repository.BannerRepository
+import com.swmarastro.mykkumi.domain.repository.KakaoLoginRepository
 import com.swmarastro.mykkumi.domain.repository.PostRepository
 import dagger.Binds
 import dagger.Module
@@ -25,4 +27,10 @@ interface RepositoryModule {
     abstract fun bindsPostRepository(
         postRepositoryImpl: PostRepositoryImpl
     ): PostRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsKakaoLoginRepository(
+        kakaoLoginRepositoryImpl: KakaoLoginRepositoryImpl
+    ): KakaoLoginRepository
 }

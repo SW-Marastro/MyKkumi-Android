@@ -2,6 +2,7 @@ package com.swmarastro.mykkumi.android
 
 import android.app.Application
 import com.swmarastro.mykkumi.data.util.KakaoInitializer
+import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -13,6 +14,9 @@ Hilt를 사용하는 모든 앱은 Application 클래스에 @HiltAndoidApp 이�
 class MyKkumiApplication : Application() {
     @Inject
     lateinit var kakaoInitializer: KakaoInitializer
+
+    @Inject
+    lateinit var authTokenDataStore: AuthTokenDataStore
 
     override fun onCreate() {
         super.onCreate()
