@@ -48,12 +48,15 @@ import kotlinx.coroutines.launch
 class LoginComposeActivity : ComponentActivity() {
 
     private val viewModel by viewModels<LoginViewModel>()
-    private lateinit var kakaoCallback: (OAuthToken?, Throwable?) -> Unit
 
     @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setKakaoCallback()
+        viewModel.setKakaoCallback(
+            showToast = {
+                showToast(it)
+            }
+        )
 
         enableEdgeToEdge()
         setContent {
@@ -133,50 +136,6 @@ class LoginComposeActivity : ComponentActivity() {
                 Text(text = "테스트용 버튼")
             }
         }
-
-    }
-
-    // 카카오 로그인 callback 세팅
-    private fun setKakaoCallback() {
-        kakaoCallback = { token, error ->
-            if (error != null) { // 에러가 있는 경우
-                when {
-                    error.toString() == AuthErrorCause.AccessDenied.toString() -> {
-                        showToast("접근이 거부 됨(동의 취소)")
-                    }
-                    error.toString() == AuthErrorCause.InvalidClient.toString() -> {
-                        showToast("유효하지 않은 앱")
-                    }
-                    error.toString() == AuthErrorCause.InvalidGrant.toString() -> {
-                        showToast("인증 수단이 유효하지 않아 인증할 수 없는 상태")
-                    }
-                    error.toString() == AuthErrorCause.InvalidRequest.toString() -> {
-                        showToast("요청 파라미터 오류")
-                    }
-                    error.toString() == AuthErrorCause.InvalidScope.toString() -> {
-                        showToast("유효하지 않은 scope ID")
-                    }
-                    error.toString() == AuthErrorCause.Misconfigured.toString() -> {
-                        showToast("설정이 올바르지 않음(android key hash)")
-                    }
-                    error.toString() == AuthErrorCause.ServerError.toString() -> {
-                        showToast("서버 내부 에러")
-                    }
-                    error.toString() == AuthErrorCause.Unauthorized.toString() -> {
-                        showToast("앱이 요청 권한이 없음")
-                    }
-                    else -> { // Unknown
-                        showToast("기타 에러")
-                    }
-                }
-                Log.e(TAG, "카카오계정으로 로그인 실패", error)
-                viewModel.kakaoLoginFail()
-            }
-            else if (token != null) { // 토큰을 받아온 경우
-                Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
-                viewModel.kakaoLoginSuccess()
-            }
-        }
     }
 
     // 카카오 로그인
@@ -186,11 +145,11 @@ class LoginComposeActivity : ComponentActivity() {
             try {
                 if (UserApiClient.instance.isKakaoTalkLoginAvailable(activityContext)) {
                     // 카카오톡 앱이 설치되어 있고, 연결된 계정이 있는 경우 카카오톡 앱으로 로그인 시도
-                    UserApiClient.instance.loginWithKakaoTalk(activityContext, callback = kakaoCallback)
+                    UserApiClient.instance.loginWithKakaoTalk(activityContext, callback = viewModel.kakaoCallback)
                     Log.d(TAG, "카카오톡으로 로그인")
                 } else {
                     // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
-                    UserApiClient.instance.loginWithKakaoAccount(activityContext, callback = kakaoCallback)
+                    UserApiClient.instance.loginWithKakaoAccount(activityContext, callback = viewModel.kakaoCallback)
                     Log.d(TAG, "카카오 계정으로 로그인")
                 }
             } catch (error: Throwable) {
