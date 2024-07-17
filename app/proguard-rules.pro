@@ -19,6 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
 -dontwarn com.swmarastro.mykkumi.common_ui.base.BaseFragment
 -dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemListLoadingBinding
 -dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemPostWriterBinding
@@ -32,7 +33,6 @@
 -dontwarn com.swmarastro.mykkumi.data.di.NetworkModule_ProvideRetrofitFactory
 -dontwarn com.swmarastro.mykkumi.data.repository.BannerRepositoryImpl
 -dontwarn com.swmarastro.mykkumi.data.repository.PostRepositoryImpl
-
 
 # 카카오 로그인을 위한 카카오 SDK를 코드 축소, 난독화, 최적화에서 제외
 -keep class com.kakao.sdk.**.model.* { <fields>; }
