@@ -107,4 +107,6 @@ dependencies {
     // accompanist permissions > compose에서 접근 권한 요청
     implementation "com.google.accompanist:accompanist-permissions:${accompanist_permissions_version}"
 
+    // Compose Coil
+    implementation "io.coil-kt:coil-compose:$coil_compose_version"
 }

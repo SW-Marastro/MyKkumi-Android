@@ -17,6 +17,9 @@ class LoginInputUserViewModel @Inject constructor(
     private val _nickname = MutableStateFlow("")
     val nickname: StateFlow<String> get() = _nickname
 
+    private val _profileImage = MutableStateFlow<Any>(com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default)
+    val profileImage : StateFlow<Any> get() = _profileImage
+
     fun onNicknameChange(newNickname: String) {
         // 입력 문자 제한 - 한글, 영문자, 숫자, _, -, .
         if(newNickname.matches(NICKNAME_REGEX)) {
@@ -24,5 +27,9 @@ class LoginInputUserViewModel @Inject constructor(
             if (newNickname.length <= MAX_NICKNAME_LENGTH) _nickname.value = newNickname
             else _nickname.value = newNickname.substring(0, MAX_NICKNAME_LENGTH)
         }
+    }
+
+    fun selectProfileImage(uri: Any) {
+        _profileImage.value = uri
     }
 }

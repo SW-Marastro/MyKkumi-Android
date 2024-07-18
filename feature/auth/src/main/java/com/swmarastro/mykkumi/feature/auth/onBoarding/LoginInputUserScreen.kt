@@ -47,10 +47,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.swmarastro.mykkumi.feature.auth.R
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 private const val MAX_NICKNAME_LENGTH = 16
@@ -95,7 +97,7 @@ fun LoginInputUserScreen(
     // 갤러리에서 이미지 선택
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
-
+            viewModel.selectProfileImage(uri)
         }
     }
 
@@ -112,9 +114,15 @@ fun LoginInputUserScreen(
                 modifier = Modifier.height(30.dp)
             )
             Image(
-                painter = painterResource(
-                    id = com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default
-                ),
+                painter = when(viewModel.profileImage.collectAsState().value) {
+                    is Int -> painterResource(
+                        id = viewModel.profileImage.collectAsState().value as Int
+                    )
+                    is Uri -> rememberImagePainter(data = viewModel.profileImage.collectAsState().value)
+                        else -> painterResource(
+                        id = com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default
+                    )
+                },
                 contentDescription = "default profile image",
                 modifier = Modifier
                     .size(160.dp)
