@@ -1,5 +1,8 @@
 package com.swmarastro.mykkumi.feature.auth.onBoarding
 
+import android.net.Uri
+import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +23,10 @@ class LoginInputUserViewModel @Inject constructor(
     private val _profileImage = MutableStateFlow<Any>(com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default)
     val profileImage : StateFlow<Any> get() = _profileImage
 
+    // 카메라로 촬영할 이미지를 저장할 path
+    private val _cameraImagePath = MutableStateFlow<Uri?>(null)
+    val cameraImagePath : StateFlow<Uri?> get() = _cameraImagePath
+
     fun onNicknameChange(newNickname: String) {
         // 입력 문자 제한 - 한글, 영문자, 숫자, _, -, .
         if(newNickname.matches(NICKNAME_REGEX)) {
@@ -31,5 +38,16 @@ class LoginInputUserViewModel @Inject constructor(
 
     fun selectProfileImage(uri: Any) {
         _profileImage.value = uri
+        resetCameraImagePath()
+    }
+
+    // 카메라로 촬영한 이미지가 저장될 경로
+    fun setCameraImagePath(path: Uri) {
+        _cameraImagePath.value = path
+    }
+
+    // 경로 사용하면 리셋
+    fun resetCameraImagePath() {
+        _cameraImagePath.value = null
     }
 }

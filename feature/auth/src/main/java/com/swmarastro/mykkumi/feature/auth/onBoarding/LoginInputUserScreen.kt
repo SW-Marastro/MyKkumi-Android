@@ -4,11 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,31 +32,32 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.core.content.FileProvider
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.swmarastro.mykkumi.feature.auth.R
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
 
 private const val MAX_NICKNAME_LENGTH = 16
 private const val MIN_NICKNAME_LENGTH = 3
@@ -87,6 +89,10 @@ fun LoginInputUserScreen(
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 add(android.Manifest.permission.READ_MEDIA_IMAGES)
             }
+            // sdk version 34 이상 - READ_MEDIA_VISUAL_USER_SELECTED
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                add(android.Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED)
+            }
         }
     )
 
@@ -97,11 +103,19 @@ fun LoginInputUserScreen(
     val permissioSnackbarAction = stringResource(id = R.string.action_permission_revoke_go_setting)
 
     // 갤러리에서 이미지 선택
+    val chooserTitle = stringResource(id = R.string.choose_way_for_profile_image)
     val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val uri: Uri? = result.data?.data
-            uri?.let {
-                viewModel.selectProfileImage(it)
+            val data: Intent? = result.data
+            val selectedImageUri: Uri? = data?.data
+
+            // 갤러리에서 이미지를 선택했을 경우
+            if (selectedImageUri != null) {
+                viewModel.selectProfileImage(selectedImageUri)
+            }
+            // 카메라로 촬영했을 경우
+            else if(viewModel.cameraImagePath.value != null) {
+                viewModel.selectProfileImage(viewModel.cameraImagePath.value!!)
             }
         }
     }
@@ -124,11 +138,12 @@ fun LoginInputUserScreen(
                         id = viewModel.profileImage.collectAsState().value as Int
                     )
                     is Uri -> rememberImagePainter(data = viewModel.profileImage.collectAsState().value)
-                        else -> painterResource(
+                    else -> painterResource(
                         id = com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default
                     )
                 },
                 contentDescription = "default profile image",
+                contentScale = ContentScale.Crop, // CenterCrop
                 modifier = Modifier
                     .size(160.dp)
                     .align(Alignment.CenterHorizontally)
@@ -138,14 +153,15 @@ fun LoginInputUserScreen(
                         // 갤러리, 카메라 접근 권한 허용 요청
                         // 권한 허용됨
                         if (multiplePermissionsState.allPermissionsGranted) {
-                            // 갤러리 열기
-//                            val type = "image/*"
-//                            galleryLauncher.launch(type)
-//                            val intent = Intent(Intent.ACTION_PICK)
-//                            intent.type = "image/*"
-//                            intent.action = Intent.ACTION_GET_CONTENT
-//                            startActivityForResult(intent)
-                            chooserImageIntent(localContext, imagePickerLauncher)
+                            // 이미지 가져오기
+                            chooserImageIntent(
+                                localContext,
+                                imagePickerLauncher,
+                                chooserTitle
+                            ) { uri -> // 카메라에서 선택했을 경우
+                                Log.d("test 2222222", uri.toString())
+                                viewModel.setCameraImagePath(uri)
+                            }
                         }
 
                         // 권한을 요청한 적이 있지만 허용되지 않음
@@ -159,6 +175,7 @@ fun LoginInputUserScreen(
                                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             }
 
+                            // 앱 디테일 설정 페이지로 이동할지 물어보는 Snackbar
                             coroutineScope.launch {
                                 val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
                                     message = permissioSnackbarMessage,
@@ -231,20 +248,60 @@ fun LoginInputUserScreen(
     }
 }
 
-private fun chooserImageIntent(localContext: Context, launcher: ActivityResultLauncher<Intent>) {
+private fun chooserImageIntent(
+    localContext: Context,
+    launcher: ActivityResultLauncher<Intent>,
+    chooserTitle: String,
+    onImageUriCreated: (Uri) -> Unit
+    ) {
     // 갤러리에서 불러오기
     val galleryIntent = Intent(Intent.ACTION_PICK)
     galleryIntent.type = "image/*"
 
-    // 다중 Intent 선택 창
-    val chooserIntent = Intent.createChooser(galleryIntent, "")
-
     // 카메라로 사진 찍기 Intent
-    Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { captureIntent ->
-        if(captureIntent.resolveActivity(localContext.packageManager) != null) {
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(captureIntent))
+    val captureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { intent ->
+        val photoFile: File? = try {
+            createImageFile(localContext)
+        } catch (ex: IOException) {
+            null
+        }
+
+        photoFile?.also {
+            val photoURI: Uri = FileProvider.getUriForFile(
+                localContext, "${localContext.packageName}.provider", it
+            )
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+            onImageUriCreated(photoURI)
         }
     }
 
+    // 다중 Intent 선택 창
+    val chooserIntent = Intent.createChooser(galleryIntent, chooserTitle).apply {
+        putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(captureIntent))
+    }
+
     launcher.launch(chooserIntent)
+}
+
+@Throws(IOException::class)
+private fun createImageFile(localContext: Context): File {
+    val timeStamp: String = SimpleDateFormat("yyyy-MM-dd_HH_mm_ss").format(Date())
+    val storageDir: File? = localContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+    val imageFile = File.createTempFile (
+        "JPEG_${timeStamp}_",
+        ".jpg",
+        storageDir
+    )
+
+    Log.d("test imageFile", imageFile.absolutePath)
+
+    return imageFile
+}
+
+private fun saveImageToUri(context: Context, bitmap: Bitmap): Uri {
+    val file = createImageFile(context)
+    FileOutputStream(file).use { out ->
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+    }
+    return FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
 }
