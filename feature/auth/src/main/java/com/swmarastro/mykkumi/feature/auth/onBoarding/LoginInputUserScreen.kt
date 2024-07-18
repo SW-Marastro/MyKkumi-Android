@@ -28,6 +28,7 @@ import androidx.compose.material.SnackbarResult
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,7 +65,6 @@ fun LoginInputUserScreen(
     viewModel: LoginInputUserViewModel
 ) {
     val localContext = LocalContext.current
-    var nickname : String by remember { mutableStateOf("") }
 
     // 갤러리, 카메라 접근 권한 허용 요청
     val multiplePermissionsState = rememberMultiplePermissionsState(
@@ -113,7 +113,8 @@ fun LoginInputUserScreen(
             )
             Image(
                 painter = painterResource(
-                id = com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default),
+                    id = com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default
+                ),
                 contentDescription = "default profile image",
                 modifier = Modifier
                     .size(160.dp)
@@ -169,10 +170,9 @@ fun LoginInputUserScreen(
             )
     
             BasicTextField(
-                value = nickname,
+                value = viewModel.nickname.collectAsState().value,
                 onValueChange = {
                     viewModel.onNicknameChange(it)
-                    nickname = viewModel.nickname.value
                 },
                 modifier = Modifier
                     .height(20.dp)
@@ -202,7 +202,7 @@ fun LoginInputUserScreen(
             )
     
             // 최소글자수 미충족 경고
-            if (nickname.length < MIN_NICKNAME_LENGTH) {
+            if (viewModel.nickname.value.length < MIN_NICKNAME_LENGTH) {
                 Text(
                     text = stringResource(id = R.string.notice_nickname_min_length),
                     color = Color.Red,
