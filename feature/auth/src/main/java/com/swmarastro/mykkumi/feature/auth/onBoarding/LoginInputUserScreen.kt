@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.feature.auth.onBoarding
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -9,6 +10,7 @@ import android.os.Build
 import android.provider.MediaStore
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -95,9 +97,12 @@ fun LoginInputUserScreen(
     val permissioSnackbarAction = stringResource(id = R.string.action_permission_revoke_go_setting)
 
     // 갤러리에서 이미지 선택
-    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let {
-            viewModel.selectProfileImage(uri)
+    val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val uri: Uri? = result.data?.data
+            uri?.let {
+                viewModel.selectProfileImage(it)
+            }
         }
     }
 
@@ -134,12 +139,13 @@ fun LoginInputUserScreen(
                         // 권한 허용됨
                         if (multiplePermissionsState.allPermissionsGranted) {
                             // 갤러리 열기
-                            val type = "image/*"
-                            galleryLauncher.launch(type)
+//                            val type = "image/*"
+//                            galleryLauncher.launch(type)
 //                            val intent = Intent(Intent.ACTION_PICK)
 //                            intent.type = "image/*"
 //                            intent.action = Intent.ACTION_GET_CONTENT
 //                            startActivityForResult(intent)
+                            chooserImageIntent(localContext, imagePickerLauncher)
                         }
 
                         // 권한을 요청한 적이 있지만 허용되지 않음
@@ -225,19 +231,20 @@ fun LoginInputUserScreen(
     }
 }
 
-//private fun setImgUri(imgUri: Uri) {
-//    imgUri.let {
-//        val bitmap: Bitmap
-//        if (Build.VERSION.SDK_INT < 28) {
-//            bitmap = MediaStore.Images.Media.getBitmap(
-//                this.contentResolver,
-//                imgUri
-//            )
-//
-//        } else {
-//            val source =
-//                ImageDecoder.createSource(this.contentResolver, imgUri)
-//            bitmap = ImageDecoder.decodeBitmap(source)
-//        }
-//    }
-//}
+private fun chooserImageIntent(localContext: Context, launcher: ActivityResultLauncher<Intent>) {
+    // 갤러리에서 불러오기
+    val galleryIntent = Intent(Intent.ACTION_PICK)
+    galleryIntent.type = "image/*"
+
+    // 다중 Intent 선택 창
+    val chooserIntent = Intent.createChooser(galleryIntent, "")
+
+    // 카메라로 사진 찍기 Intent
+    Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { captureIntent ->
+        if(captureIntent.resolveActivity(localContext.packageManager) != null) {
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(captureIntent))
+        }
+    }
+
+    launcher.launch(chooserIntent)
+}
