@@ -10,6 +10,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -50,6 +51,9 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.lyrebirdstudio.croppylib.Croppy
+import com.lyrebirdstudio.croppylib.main.CropRequest
+import com.lyrebirdstudio.croppylib.main.StorageType
 import com.swmarastro.mykkumi.feature.auth.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -59,16 +63,21 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 
+// 닉네임 형식 & 길이
 private const val MAX_NICKNAME_LENGTH = 16
 private const val MIN_NICKNAME_LENGTH = 3
 private val NICKNAME_REGEX = Regex("^[a-zA-Z0-9._\\-ㄱ-ㅎ가-힣ㅏ-ㅣ]*$")
+
+// 이미지 Croppy
+private const val RC_CROP_IMAGE = 101
 
 // 사용자 정보 입력 페이지 - 프로필 이미지, 닉네임
 @ExperimentalPermissionsApi
 @Composable
 fun LoginInputUserScreen(
     navController: NavController,
-    viewModel: LoginInputUserViewModel
+    viewModel: LoginInputUserViewModel,
+    activity: ComponentActivity
 ) {
     val localContext = LocalContext.current
 
@@ -102,6 +111,12 @@ fun LoginInputUserScreen(
     val permissioSnackbarMessage = stringResource(id = R.string.notice_permission_revoke_go_setting)
     val permissioSnackbarAction = stringResource(id = R.string.action_permission_revoke_go_setting)
 
+    // 이미지 Croppy
+    val imageCroppyLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            Log.d("test 333", result.data.toString())
+        }
+    }
     // 갤러리에서 이미지 선택
     val chooserTitle = stringResource(id = R.string.choose_way_for_profile_image)
     val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -111,14 +126,25 @@ fun LoginInputUserScreen(
 
             // 갤러리에서 이미지를 선택했을 경우
             if (selectedImageUri != null) {
+//                val intent = Intent(activity, Croppy::class.java)
+//                val cacheCropRequest = CropRequest.Auto(
+//                    sourceUri = selectedImageUri,
+//                    requestCode = RC_CROP_IMAGE,
+//                    storageType = StorageType.CACHE
+//                )
+//                Croppy.start(activity, cacheCropRequest)
+//                imageCroppyLauncher.launch(intent)
                 viewModel.selectProfileImage(selectedImageUri)
             }
             // 카메라로 촬영했을 경우
             else if(viewModel.cameraImagePath.value != null) {
+
                 viewModel.selectProfileImage(viewModel.cameraImagePath.value!!)
             }
         }
     }
+
+
 
     Scaffold(
         scaffoldState = scaffoldState

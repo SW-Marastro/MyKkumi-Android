@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.feature.auth
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
@@ -63,7 +64,7 @@ class LoginComposeActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyApp {
-                LoginNavigation()
+                LoginNavigation(this)
             }
         }
     }
@@ -86,7 +87,9 @@ class LoginComposeActivity : ComponentActivity() {
 
     @ExperimentalPermissionsApi
     @Composable
-    private fun LoginNavigation() {
+    private fun LoginNavigation(
+        activity: ComponentActivity
+    ) {
         val navController = rememberNavController()
         NavHost(navController = navController,
             startDestination = LoginScreens.KakaoLoginScreen.name) {
@@ -102,12 +105,14 @@ class LoginComposeActivity : ComponentActivity() {
             composable(LoginScreens.LoginInputUserScreen.name) {
                 LoginInputUserScreen(
                     navController = navController,
-                    viewModel = LoginInputUserViewModel()
+                    viewModel = LoginInputUserViewModel(),
+                    activity
                 )
             }
         }
     }
 
+    @SuppressLint("CoroutineCreationDuringComposition")
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
     private fun KakaoLoginScreen(navController: NavController) {

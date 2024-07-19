@@ -62,6 +62,10 @@ android {
     buildFeatures {
         buildConfig true
     }
+    // Croppy 라이브러리에서 dataBinding 사용
+    buildFeatures {
+        dataBinding = true
+    }
 }
 
 dependencies {
@@ -109,4 +113,7 @@ dependencies {
 
     // Compose Coil
     implementation "io.coil-kt:coil-compose:$coil_compose_version"
+
+    // Croppy
+    implementation "com.github.lyrebirdstudio:Croppy:$croppy_version"
 }

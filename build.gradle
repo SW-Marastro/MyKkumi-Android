@@ -64,6 +64,9 @@ buildscript {
 
         // EncryptedSharedPreferences
         security_crypto_version = "1.0.0"
+
+        // Croppy
+        croppy_version = "0.2"
     }
 }
 
