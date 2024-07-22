@@ -62,6 +62,10 @@ android {
     buildFeatures {
         buildConfig true
     }
+    // Croppy 라이브러리에서 dataBinding 사용
+    buildFeatures {
+        dataBinding = true
+    }
 }
 
 dependencies {
@@ -107,4 +111,9 @@ dependencies {
     // accompanist permissions > compose에서 접근 권한 요청
     implementation "com.google.accompanist:accompanist-permissions:${accompanist_permissions_version}"
 
+    // Compose Coil
+    implementation "io.coil-kt:coil-compose:$coil_compose_version"
+
+    // Croppy
+    implementation "com.github.lyrebirdstudio:Croppy:$croppy_version"
 }

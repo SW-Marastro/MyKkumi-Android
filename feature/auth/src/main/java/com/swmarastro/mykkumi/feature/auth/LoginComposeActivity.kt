@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.feature.auth
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
@@ -27,38 +28,50 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.swmarastro.mykkumi.feature.auth.onBoarding.LoginInputUserScreen
+import com.swmarastro.mykkumi.feature.auth.onBoarding.LoginInputUserViewModel
 import com.swmarastro.mykkumi.feature.auth.onBoarding.LoginSelectHobbyScreen
+import com.swmarastro.mykkumi.feature.auth.onBoarding.LoginSelectHobbyViewModel
 import com.swmarastro.mykkumi.feature.auth.ui.theme.MyKkumi_AOSTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginComposeActivity : ComponentActivity() {
 
     private val viewModel by viewModels<LoginViewModel>()
-    private lateinit var kakaoCallback: (OAuthToken?, Throwable?) -> Unit
 
     @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setKakaoCallback()
+
+        // 로그인 종료 상태 체크
+        viewModel.finishLoginUiState.observe(this, Observer {
+            finish()
+        })
+
+        viewModel.setKakaoCallback(
+            showToast = {
+                showToast(it)
+            }
+        )
 
         enableEdgeToEdge()
         setContent {
             MyApp {
-                LoginNavigation()
+                LoginNavigation(this)
             }
         }
     }
@@ -81,7 +94,9 @@ class LoginComposeActivity : ComponentActivity() {
 
     @ExperimentalPermissionsApi
     @Composable
-    private fun LoginNavigation() {
+    private fun LoginNavigation(
+        activity: ComponentActivity
+    ) {
         val navController = rememberNavController()
         NavHost(navController = navController,
             startDestination = LoginScreens.KakaoLoginScreen.name) {
@@ -89,17 +104,33 @@ class LoginComposeActivity : ComponentActivity() {
                 KakaoLoginScreen(navController = navController)
             }
             composable(LoginScreens.LoginSelectHobbyScreen.name) {
-                LoginSelectHobbyScreen(navController = navController)
+                LoginSelectHobbyScreen(
+                    navController = navController,
+                    viewModel = LoginSelectHobbyViewModel()
+                )
             }
             composable(LoginScreens.LoginInputUserScreen.name) {
-                LoginInputUserScreen(navController = navController)
+                LoginInputUserScreen(
+                    navController = navController,
+                    viewModel = LoginInputUserViewModel(),
+                    activity
+                )
             }
         }
     }
 
+    @SuppressLint("CoroutineCreationDuringComposition")
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
     private fun KakaoLoginScreen(navController: NavController) {
+        // 로그인 완료되면 화면 이동
+        viewModel.loginUiState
+            .onEach {
+                if(it == LoginUiState.MykkumiLoginSuccess)
+                    viewModel.navigateToNextScreen(navController)
+            }
+            .launchIn(lifecycleScope)
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -121,77 +152,23 @@ class LoginComposeActivity : ComponentActivity() {
                         true
                     }
             )
-
-            // 추가 정보 입력 테스트용 버튼
-            Button(
-                onClick = {
-                    navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-            ) {
-                Text(text = "테스트용 버튼")
-            }
-        }
-
-    }
-
-    // 카카오 로그인 callback 세팅
-    private fun setKakaoCallback() {
-        kakaoCallback = { token, error ->
-            if (error != null) { // 에러가 있는 경우
-                when {
-                    error.toString() == AuthErrorCause.AccessDenied.toString() -> {
-                        showToast("접근이 거부 됨(동의 취소)")
-                    }
-                    error.toString() == AuthErrorCause.InvalidClient.toString() -> {
-                        showToast("유효하지 않은 앱")
-                    }
-                    error.toString() == AuthErrorCause.InvalidGrant.toString() -> {
-                        showToast("인증 수단이 유효하지 않아 인증할 수 없는 상태")
-                    }
-                    error.toString() == AuthErrorCause.InvalidRequest.toString() -> {
-                        showToast("요청 파라미터 오류")
-                    }
-                    error.toString() == AuthErrorCause.InvalidScope.toString() -> {
-                        showToast("유효하지 않은 scope ID")
-                    }
-                    error.toString() == AuthErrorCause.Misconfigured.toString() -> {
-                        showToast("설정이 올바르지 않음(android key hash)")
-                    }
-                    error.toString() == AuthErrorCause.ServerError.toString() -> {
-                        showToast("서버 내부 에러")
-                    }
-                    error.toString() == AuthErrorCause.Unauthorized.toString() -> {
-                        showToast("앱이 요청 권한이 없음")
-                    }
-                    else -> { // Unknown
-                        showToast("기타 에러")
-                    }
-                }
-                Log.e(TAG, "카카오계정으로 로그인 실패", error)
-                viewModel.kakaoLoginFail()
-            }
-            else if (token != null) { // 토큰을 받아온 경우
-                Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
-                viewModel.kakaoLoginSuccess()
-                viewModel.setKakaoToken(accessToken = token.accessToken, refreshToken = token.refreshToken)
-            }
         }
     }
 
     // 카카오 로그인
     private fun handleKakaoLogin() {
         val activityContext = this
+        viewModel.kakaoLogin()
+
         lifecycleScope.launch {
             try {
                 if (UserApiClient.instance.isKakaoTalkLoginAvailable(activityContext)) {
                     // 카카오톡 앱이 설치되어 있고, 연결된 계정이 있는 경우 카카오톡 앱으로 로그인 시도
-                    UserApiClient.instance.loginWithKakaoTalk(activityContext, callback = kakaoCallback)
+                    UserApiClient.instance.loginWithKakaoTalk(activityContext, callback = viewModel.kakaoCallback)
                     Log.d(TAG, "카카오톡으로 로그인")
                 } else {
                     // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
-                    UserApiClient.instance.loginWithKakaoAccount(activityContext, callback = kakaoCallback)
+                    UserApiClient.instance.loginWithKakaoAccount(activityContext, callback = viewModel.kakaoCallback)
                     Log.d(TAG, "카카오 계정으로 로그인")
                 }
             } catch (error: Throwable) {

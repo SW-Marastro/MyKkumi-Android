@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.lifecycle.lifecycleScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,24 +26,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import com.swmarastro.mykkumi.feature.auth.LoginScreens
 import com.swmarastro.mykkumi.feature.auth.R
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 // 더미 데이터 - api 연결 시 삭제 예정
 data class TestHobby (
     val categoryName: String,
     val subCategories: MutableList<String>
 )
-private val testHobbies : MutableList<TestHobby> = mutableListOf(
-    TestHobby("공예/DIY", mutableListOf("다이어리 꾸미기", "포토카드 꾸미기", "뜨개질")),
-    TestHobby("스포츠", mutableListOf("야구", "테니스", "골프")),
-    TestHobby("뷰티", mutableListOf("메이크업", "헤어"))
-)
 
 // 관심 취미 선택
 @Composable
-fun LoginSelectHobbyScreen(navController: NavController) {
+fun LoginSelectHobbyScreen(
+    navController: NavController,
+    viewModel: LoginSelectHobbyViewModel
+) {
+    viewModel.getHobbyCategoryList()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,8 +63,13 @@ fun LoginSelectHobbyScreen(navController: NavController) {
             contentPadding = PaddingValues(2.dp, 5.dp)
         ) {
             items(
-                items = testHobbies,
-                itemContent = { HobbyCategoryItem(hobby = it) }
+                items = viewModel.hobbyCategoryUiState.value,
+                itemContent = {
+                    HobbyCategoryItem(
+                        hobby = it,
+                        viewModel = viewModel
+                    )
+                }
             )
         }
 
@@ -75,14 +83,14 @@ fun LoginSelectHobbyScreen(navController: NavController) {
                 .align(Alignment.CenterHorizontally)
                 .padding(vertical = 10.dp)
                 .clickable {
-                    navController.navigate(route = LoginScreens.LoginInputUserScreen.name)
+                    viewModel.navigateToNextScreen(navController)
                 }
         )
 
         // 다음
         Button(
             onClick = {
-                navController.navigate(route = LoginScreens.LoginInputUserScreen.name)
+                viewModel.navigateToNextScreen(navController)
             },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -97,7 +105,10 @@ fun LoginSelectHobbyScreen(navController: NavController) {
 }
 
 @Composable
-fun HobbyCategoryItem(hobby: TestHobby) {
+fun HobbyCategoryItem(
+    hobby: TestHobby,
+    viewModel: LoginSelectHobbyViewModel
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = hobby.categoryName,
@@ -108,14 +119,22 @@ fun HobbyCategoryItem(hobby: TestHobby) {
         ) {
             items(
                 items = hobby.subCategories,
-                itemContent = { HobbySubCategoryItem(it) }
+                itemContent = {
+                    HobbySubCategoryItem(
+                        subCategory = it,
+                        viewModel = viewModel
+                    )
+                }
             )
         }
     }
 }
 
 @Composable
-fun HobbySubCategoryItem(subCategory: String) {
+fun HobbySubCategoryItem(
+    subCategory: String,
+    viewModel: LoginSelectHobbyViewModel
+) {
     var backgroundColor = remember { mutableStateOf(Color.LightGray) }
 
     Column(
@@ -123,8 +142,13 @@ fun HobbySubCategoryItem(subCategory: String) {
             .padding(horizontal = 5.dp)
             .background(backgroundColor.value)
             .clickable {
-                backgroundColor.value =
-                    if (backgroundColor.value == Color.LightGray) Color.Green else Color.LightGray
+                viewModel.setHobbySelected(subCategory)
+                if(viewModel.isHobbySelected(subCategory)) {
+                    backgroundColor.value = Color.Green
+                }
+                else {
+                    backgroundColor.value = Color.LightGray
+                }
             }
     ) {
         Image(

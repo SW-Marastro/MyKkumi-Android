@@ -1,8 +1,10 @@
 package com.swmarastro.mykkumi.feature.auth
 
 sealed interface LoginUiState {
-    object LoginSuccess : LoginUiState
-    object LoginFail : LoginUiState
+    object KakaoLoginSuccess : LoginUiState
+    object KakaoLoginFail : LoginUiState
     object IDle : LoginUiState
     object KakaoLogin : LoginUiState
+    object MykkumiLoginSuccess : LoginUiState
+    object MykkumiLoginFail : LoginUiState
 }
