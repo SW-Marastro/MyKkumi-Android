@@ -1,4 +1,4 @@
-package com.swmarastro.mykkumi.domain.usecase
+package com.swmarastro.mykkumi.domain.usecase.auth
 
 import com.swmarastro.mykkumi.domain.entity.KakaoToken
 import com.swmarastro.mykkumi.domain.repository.KakaoLoginRepository

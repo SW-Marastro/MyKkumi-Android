@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumi.feature.auth
 
 import android.content.ContentValues.TAG
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,9 +11,12 @@ import com.kakao.sdk.common.model.AuthErrorCause
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.entity.KakaoToken
+import com.swmarastro.mykkumi.domain.entity.UpdateUserInfoRequestVO
 import com.swmarastro.mykkumi.domain.entity.UserInfoVO
-import com.swmarastro.mykkumi.domain.usecase.GetUserInfoUseCase
-import com.swmarastro.mykkumi.domain.usecase.KakaoLoginUseCase
+import com.swmarastro.mykkumi.domain.usecase.auth.GetUserInfoUseCase
+import com.swmarastro.mykkumi.domain.usecase.auth.KakaoLoginUseCase
+import com.swmarastro.mykkumi.domain.usecase.auth.UpdateUserInfoUseCase
+import com.swmarastro.mykkumi.feature.auth.onBoarding.TestHobby
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,9 +39,6 @@ class LoginViewModel @Inject constructor(
 
     private val _userInfoUiState = MutableStateFlow<UserInfoVO>(UserInfoVO(null, null, null, null))
     val userInfoUiState: StateFlow<UserInfoVO> get() = _userInfoUiState
-
-//    private val _kakaoLoginToken = MutableLiveData<KakaoToken>()
-//    val kakaoLoginToken: LiveData<KakaoToken> get() = _kakaoLoginToken
 
     fun kakaoLogin() {
         _loginUiState.value = LoginUiState.KakaoLogin

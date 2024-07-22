@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.data.repository
 
+import android.util.Log
 import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.swmarastro.mykkumi.data.datasource.KakaoLoginDataSource
 import com.swmarastro.mykkumi.data.dto.request.KakaoLoginRequestDTO
@@ -24,6 +25,8 @@ class KakaoLoginRepositoryImpl @Inject constructor(
         if(!mykkumiLoginResponse.accessToken.isNullOrEmpty() && !mykkumiLoginResponse.refreshToken.isNullOrEmpty()) {
             authTokenDataSource.saveAccessToken(mykkumiLoginResponse.accessToken)
             authTokenDataSource.saveRefreshToken(mykkumiLoginResponse.refreshToken)
+
+            Log.d("Test token", mykkumiLoginResponse.accessToken)
             return true
         }
         // 실패

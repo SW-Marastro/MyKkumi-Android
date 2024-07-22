@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumi.data.dto.response
 
 import com.google.gson.annotations.SerializedName
+import com.swmarastro.mykkumi.domain.entity.UpdateUserInfoResponseVO
 import com.swmarastro.mykkumi.domain.entity.UserInfoVO
 
 data class UserInfoDTO(
@@ -21,5 +22,26 @@ data class UserInfoDTO(
         email = email,
         introduction = introduction,
         profileImage = profileImage
+    )
+}
+
+data class UpdateUserInfoResponseDTO(
+    @SerializedName("nickname")
+    val nickname: String?,
+
+    @SerializedName("profileImage")
+    val profileImage: String,
+
+    @SerializedName("introduction")
+    val introduction: String?,
+
+    @SerializedName("categoryId")
+    val categoryId: List<Long>?
+) {
+    fun toEntity(): UpdateUserInfoResponseVO = UpdateUserInfoResponseVO(
+        nickname = nickname,
+        profileImage = profileImage,
+        introduction = introduction,
+        categoryId = categoryId
     )
 }

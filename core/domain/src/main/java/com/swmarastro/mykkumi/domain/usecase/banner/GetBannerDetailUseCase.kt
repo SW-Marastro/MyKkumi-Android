@@ -1,4 +1,4 @@
-package com.swmarastro.mykkumi.domain.usecase
+package com.swmarastro.mykkumi.domain.usecase.banner
 
 import com.swmarastro.mykkumi.domain.entity.BannerDetailVO
 import com.swmarastro.mykkumi.domain.repository.BannerRepository

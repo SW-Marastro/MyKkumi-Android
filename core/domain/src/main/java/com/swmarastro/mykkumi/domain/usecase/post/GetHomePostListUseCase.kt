@@ -1,4 +1,4 @@
-package com.swmarastro.mykkumi.domain.usecase
+package com.swmarastro.mykkumi.domain.usecase.post
 
 import com.swmarastro.mykkumi.domain.entity.HomePostListVO
 import com.swmarastro.mykkumi.domain.repository.PostRepository
