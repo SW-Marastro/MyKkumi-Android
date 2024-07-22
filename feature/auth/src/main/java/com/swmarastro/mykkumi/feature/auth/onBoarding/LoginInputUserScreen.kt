@@ -272,7 +272,7 @@ fun LoginInputUserScreen(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                Text(text = "완료")
+                Text(text = stringResource(id = R.string.clear_login_all_btn))
             }
         }
     }

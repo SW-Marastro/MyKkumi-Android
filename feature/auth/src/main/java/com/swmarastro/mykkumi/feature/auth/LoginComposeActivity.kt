@@ -161,6 +161,7 @@ class LoginComposeActivity : ComponentActivity() {
                 if (UserApiClient.instance.isKakaoTalkLoginAvailable(activityContext)) {
                     // 카카오톡 앱이 설치되어 있고, 연결된 계정이 있는 경우 카카오톡 앱으로 로그인 시도
                     UserApiClient.instance.loginWithKakaoTalk(activityContext, callback = viewModel.kakaoCallback)
+                    //UserApiClient.instance.loginWithKakaoAccount(activityContext, callback = viewModel.kakaoCallback)
                     Log.d(TAG, "카카오톡으로 로그인")
                 } else {
                     // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도

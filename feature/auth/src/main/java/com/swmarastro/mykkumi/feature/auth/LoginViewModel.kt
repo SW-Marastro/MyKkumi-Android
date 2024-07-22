@@ -28,6 +28,8 @@ class LoginViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
 ): ViewModel() {
 
+    private val INVALID_TOKEN = "INVALID_TOKEN"
+
     private val _finishLoginUiState = MutableLiveData<Unit>()
     val finishLoginUiState: LiveData<Unit> get() = _finishLoginUiState
 
@@ -107,7 +109,7 @@ class LoginViewModel @Inject constructor(
                 Log.e(TAG, "카카오계정으로 로그인 실패", error)
                 kakaoLoginFail()
             } else if (token != null) { // 토큰을 받아온 경우
-                // Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
+                Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
                 kakaoLoginSuccess()
                 setKakaoToken(token.accessToken, token.refreshToken)
             }
@@ -174,6 +176,11 @@ class LoginViewModel @Inject constructor(
             val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
             Log.d("test", errorResponse.message)
             //_error.value = "${errorResponse.message} (${errorResponse.errorCode})"
+
+            // 만료된 토큰
+            if(errorResponse.errorCode == INVALID_TOKEN) {
+
+            }
         } catch (e: Exception) {
            // _error.value = "An error occurred while processing the error response."
         }

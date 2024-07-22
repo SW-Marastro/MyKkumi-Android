@@ -2,6 +2,8 @@ package com.swmarastro.mykkumi.data.util
 
 import android.content.ContentResolver
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
@@ -31,22 +33,30 @@ object FormDataUtil {
         return MultipartBody.Part.createFormData("profileImage", file.name, requestFile)
     }
 
-    // URI를 파일로 변환하는 함수
+    // Content URI를 파일로 변환하는 함수
     fun uriToFile(context: Context, uri: Uri): File? {
         val contentResolver: ContentResolver = context.contentResolver
         val fileName = getFileName(contentResolver, uri)
         val tempFile = File(context.cacheDir, fileName)
 
         try {
+//            val inputStream: InputStream? = contentResolver.openInputStream(uri)
+//            val outputStream = FileOutputStream(tempFile)
+//            val buffer = ByteArray(1024)
+//            var length: Int
+//            while (inputStream?.read(buffer).also { length = it ?: -1 }!! > 0) {
+//                outputStream.write(buffer, 0, length)
+//            }
+//            outputStream.close()
+//            inputStream?.close()
             val inputStream: InputStream? = contentResolver.openInputStream(uri)
-            val outputStream = FileOutputStream(tempFile)
-            val buffer = ByteArray(1024)
-            var length: Int
-            while (inputStream?.read(buffer).also { length = it ?: -1 }!! > 0) {
-                outputStream.write(buffer, 0, length)
-            }
-            outputStream.close()
+            val bitmap = BitmapFactory.decodeStream(inputStream)
             inputStream?.close()
+
+            val outputStream = FileOutputStream(tempFile)
+            // 압축 품질 0~100 - 낮을수록 더 많이 압축됨
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
+            outputStream.close()
         } catch (e: Exception) {
             Log.e("FormDataUtil", "Error converting URI to File: ${e.message}")
             return null
