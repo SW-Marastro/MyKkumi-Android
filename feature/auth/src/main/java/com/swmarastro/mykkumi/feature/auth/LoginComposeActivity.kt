@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -55,6 +56,12 @@ class LoginComposeActivity : ComponentActivity() {
     @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 로그인 종료 상태 체크
+        viewModel.finishLoginUiState.observe(this, Observer {
+            finish()
+        })
+
         viewModel.setKakaoCallback(
             showToast = {
                 showToast(it)
@@ -116,6 +123,7 @@ class LoginComposeActivity : ComponentActivity() {
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
     private fun KakaoLoginScreen(navController: NavController) {
+        // 로그인 완료되면 화면 이동
         viewModel.loginUiState
             .onEach {
                 if(it == LoginUiState.MykkumiLoginSuccess)
@@ -144,10 +152,6 @@ class LoginComposeActivity : ComponentActivity() {
                         true
                     }
             )
-            
-            Button(onClick = { viewModel.navigateToNextScreen(navController) }) {
-                Text(text = "테스트 버튼")
-            }
         }
     }
 

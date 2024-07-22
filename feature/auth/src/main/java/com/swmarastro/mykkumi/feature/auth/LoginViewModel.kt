@@ -2,12 +2,16 @@ package com.swmarastro.mykkumi.feature.auth
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.entity.KakaoToken
+import com.swmarastro.mykkumi.domain.entity.UserInfoVO
+import com.swmarastro.mykkumi.domain.usecase.GetUserInfoUseCase
 import com.swmarastro.mykkumi.domain.usecase.KakaoLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,13 +21,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val kakaoLoginUseCase: KakaoLoginUseCase
+    private val kakaoLoginUseCase: KakaoLoginUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase,
 ): ViewModel() {
+
+    private val _finishLoginUiState = MutableLiveData<Unit>()
+    val finishLoginUiState: LiveData<Unit> get() = _finishLoginUiState
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.IDle)
     val loginUiState: StateFlow<LoginUiState> get() = _loginUiState
 
     lateinit var kakaoCallback: (OAuthToken?, Throwable?) -> Unit
+
+    private val _userInfoUiState = MutableStateFlow<UserInfoVO>(UserInfoVO(null, null, null, null))
+    val userInfoUiState: StateFlow<UserInfoVO> get() = _userInfoUiState
 
 //    private val _kakaoLoginToken = MutableLiveData<KakaoToken>()
 //    val kakaoLoginToken: LiveData<KakaoToken> get() = _kakaoLoginToken
@@ -132,6 +143,28 @@ class LoginViewModel @Inject constructor(
 
     // 다음 화면으로 네비게이션 처리
     fun navigateToNextScreen(navController: NavController) {
-        navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
+        viewModelScope.launch {
+            try {
+                val userInfo = getUserInfoUseCase()
+                _userInfoUiState.value = userInfo
+
+                // 최초 가입자 -> 추가 정보 입력 페이지로
+                if(_userInfoUiState.value.nickname == null) {
+                    navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
+                }
+                // 기존 가입자 -> 홈 화면으로
+                else {
+                    finishLogin()
+                }
+            }
+            catch (e: Exception) {
+
+            }
+        }
+    }
+
+    // 로그인 종료
+    fun finishLogin() {
+        _finishLoginUiState.value = Unit
     }
 }

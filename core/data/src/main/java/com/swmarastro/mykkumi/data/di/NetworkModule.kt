@@ -14,6 +14,7 @@ import com.swmarastro.mykkumi.data.BuildConfig
 import com.swmarastro.mykkumi.data.datasource.BannerDataSource
 import com.swmarastro.mykkumi.data.datasource.KakaoLoginDataSource
 import com.swmarastro.mykkumi.data.datasource.PostDataSource
+import com.swmarastro.mykkumi.data.datasource.UserInfoDataSource
 import com.swmarastro.mykkumi.data.util.KakaoInitializer
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -81,5 +82,11 @@ object NetworkModule {
     @Singleton
     fun provideKakaoLoginDataSource(retrofit: Retrofit): KakaoLoginDataSource {
         return retrofit.create(KakaoLoginDataSource::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserInfoDataSource(retrofit: Retrofit): UserInfoDataSource {
+        return retrofit.create(UserInfoDataSource::class.java)
     }
 }

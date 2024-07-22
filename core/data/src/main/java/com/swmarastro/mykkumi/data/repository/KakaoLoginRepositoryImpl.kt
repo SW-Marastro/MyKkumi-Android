@@ -1,6 +1,5 @@
 package com.swmarastro.mykkumi.data.repository
 
-import android.util.Log
 import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.swmarastro.mykkumi.data.datasource.KakaoLoginDataSource
 import com.swmarastro.mykkumi.data.dto.request.KakaoLoginRequestDTO
