@@ -61,7 +61,7 @@ class LoginInputUserViewModel @Inject constructor(
             nickname = nickname.value,
             profileImage = profileImage.value,
             introduction = null,
-            categoryId = null
+            categoryIds = null
         )
 
         viewModelScope.launch {

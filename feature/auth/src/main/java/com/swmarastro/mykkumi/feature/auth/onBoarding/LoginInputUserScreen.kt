@@ -30,6 +30,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarResult
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
@@ -74,10 +76,12 @@ private const val RC_CROP_IMAGE = 101
 @Composable
 fun LoginInputUserScreen(
     navController: NavController,
-    loginViewModel: LoginInputUserViewModel = viewModel(),
     activity: ComponentActivity
 ) {
     val localContext = LocalContext.current
+    val loginViewModel: LoginInputUserViewModel = ViewModelProvider(
+        LocalContext.current as ComponentActivity
+    ).get(LoginInputUserViewModel::class.java)
 
     // 갤러리, 카메라 접근 권한 허용 요청
     val multiplePermissionsState = rememberMultiplePermissionsState(
@@ -260,7 +264,16 @@ fun LoginInputUserScreen(
                 )
             }
 
+            // Spacer로 중간 공간을 채움
+            Spacer(modifier = Modifier.weight(1f))
 
+            Button(
+                onClick = { loginViewModel.updateUserInfo() },
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(text = "완료")
+            }
         }
     }
 }

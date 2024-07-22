@@ -1,18 +1,18 @@
 package com.swmarastro.mykkumi.data.dto.request
 
-import com.swmarastro.mykkumi.domain.entity.UpdateUserInfoRequestVO
+import com.google.gson.annotations.SerializedName
 import okhttp3.MultipartBody
 
 data class UpdateUserInfoRequestDTO(
+    @SerializedName("nickname")
     val nickname: String?,
+
+    @SerializedName("profileImage")
     val profileImage: MultipartBody.Part?,
+
+    @SerializedName("introduction")
     val introduction: String?,
-    val categoryId: List<Long>?
-) {
-    fun toEntity(): UpdateUserInfoRequestVO = UpdateUserInfoRequestVO(
-        nickname = nickname,
-        profileImage = profileImage,
-        introduction = introduction,
-        categoryId = categoryId
-    )
-}
+
+    @SerializedName("categoryIds")
+    val categoryIds: List<Long>?
+)

@@ -29,19 +29,19 @@ data class UpdateUserInfoResponseDTO(
     @SerializedName("nickname")
     val nickname: String?,
 
-    @SerializedName("profileImage")
-    val profileImage: String,
+    @SerializedName("email")
+    val email: String,
 
     @SerializedName("introduction")
     val introduction: String?,
 
-    @SerializedName("categoryId")
-    val categoryId: List<Long>?
+    @SerializedName("profileImage")
+    val profileImage: String?
 ) {
     fun toEntity(): UpdateUserInfoResponseVO = UpdateUserInfoResponseVO(
         nickname = nickname,
-        profileImage = profileImage,
+        email = email,
         introduction = introduction,
-        categoryId = categoryId
+        profileImage = profileImage
     )
 }

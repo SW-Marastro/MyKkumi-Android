@@ -1,7 +1,6 @@
 package com.swmarastro.mykkumi.feature.auth
 
 import android.content.ContentValues.TAG
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,17 +9,17 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.google.gson.Gson
+import com.swmarastro.mykkumi.domain.entity.ErrorResponse
 import com.swmarastro.mykkumi.domain.entity.KakaoToken
-import com.swmarastro.mykkumi.domain.entity.UpdateUserInfoRequestVO
 import com.swmarastro.mykkumi.domain.entity.UserInfoVO
 import com.swmarastro.mykkumi.domain.usecase.auth.GetUserInfoUseCase
 import com.swmarastro.mykkumi.domain.usecase.auth.KakaoLoginUseCase
-import com.swmarastro.mykkumi.domain.usecase.auth.UpdateUserInfoUseCase
-import com.swmarastro.mykkumi.feature.auth.onBoarding.TestHobby
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -155,12 +154,28 @@ class LoginViewModel @Inject constructor(
                 }
                 // 기존 가입자 -> 홈 화면으로
                 else {
-                    finishLogin()
+                    //테스트 중
+                    navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
+                    //finishLogin()
                 }
+            }
+            catch (e: HttpException){
+                handleApiError(e)
             }
             catch (e: Exception) {
 
             }
+        }
+    }
+
+    private fun handleApiError(exception: HttpException) {
+        try {
+            val errorBody = exception.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+            Log.d("test", errorResponse.message)
+            //_error.value = "${errorResponse.message} (${errorResponse.errorCode})"
+        } catch (e: Exception) {
+           // _error.value = "An error occurred while processing the error response."
         }
     }
 

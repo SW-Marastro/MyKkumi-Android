@@ -39,8 +39,8 @@ data class TestHobby (
 @Composable
 fun LoginSelectHobbyScreen(
     navController: NavController,
-    viewModel: LoginSelectHobbyViewModel = viewModel()
 ) {
+    val viewModel: LoginSelectHobbyViewModel = viewModel<LoginSelectHobbyViewModel>()
     viewModel.getHobbyCategoryList()
 
     Column(
@@ -57,7 +57,9 @@ fun LoginSelectHobbyScreen(
 
         // 취미 카테고리 : 대분류 > 소분류
         LazyColumn(
-            contentPadding = PaddingValues(2.dp, 5.dp)
+            contentPadding = PaddingValues(2.dp, 5.dp),
+            modifier = Modifier
+                .weight(1f) // Spacer로 중간 공간을 채움
         ) {
             items(
                 items = viewModel.hobbyCategoryUiState.value,
@@ -69,9 +71,6 @@ fun LoginSelectHobbyScreen(
                 }
             )
         }
-
-        // Spacer로 중간 공간을 채움
-        Spacer(modifier = Modifier.weight(1f))
 
         // 건너뛰기
         Text(
