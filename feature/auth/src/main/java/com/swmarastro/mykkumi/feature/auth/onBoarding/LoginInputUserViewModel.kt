@@ -3,6 +3,8 @@ package com.swmarastro.mykkumi.feature.auth.onBoarding
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -22,6 +24,9 @@ class LoginInputUserViewModel @Inject constructor(
 ): ViewModel() {
     private val INVALID_TOKEN = "INVALID_TOKEN"
     private val DUPLICATE_VALUE = "DUPLICATE_VALUE"
+
+    private val _finishLoginUiState = MutableLiveData<Unit>()
+    val finishLoginUiState: LiveData<Unit> get() = _finishLoginUiState
 
     private val MAX_NICKNAME_LENGTH = 16
     private val MIN_NICKNAME_LENGTH = 3
@@ -73,7 +78,7 @@ class LoginInputUserViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = updateUserInfoUseCase(userInfo)
-                Log.d("test update userInfo", response.toString())
+                finishLogin()
             } catch (e: HttpException){
                 handleApiError(e, showToast)
             } catch (e: Exception) {
@@ -88,7 +93,7 @@ class LoginInputUserViewModel @Inject constructor(
         if(nickname.value.length < MIN_NICKNAME_LENGTH) {
             showToast("닉네임은 3자 이상부터 가능합니다.")
         }
-        // 형식 모두 만족 -> 정보 수정으로
+        // 형식 모두 만족 -> 사용자 정보 업데이트
         else if(nickname.value.length <= MAX_NICKNAME_LENGTH
             && nickname.value.matches(NICKNAME_REGEX)) {
             updateUserInfo(showToast)
@@ -116,5 +121,10 @@ class LoginInputUserViewModel @Inject constructor(
         } catch (e: Exception) {
             // _error.value = "An error occurred while processing the error response."
         }
+    }
+
+    // 로그인 종료
+    fun finishLogin() {
+        _finishLoginUiState.value = Unit
     }
 }

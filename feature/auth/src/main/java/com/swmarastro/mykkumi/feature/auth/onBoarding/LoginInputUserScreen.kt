@@ -49,6 +49,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -84,6 +85,10 @@ fun LoginInputUserScreen(
         LocalContext.current as ComponentActivity
     ).get(LoginInputUserViewModel::class.java)
 
+    // 로그인 종료 상태 체크
+    loginViewModel.finishLoginUiState.observe(activity, Observer {
+        activity.finish()
+    })
     // 갤러리, 카메라 접근 권한 허용 요청
     val multiplePermissionsState = rememberMultiplePermissionsState(
         permissions = mutableListOf(
