@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ScrollView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
@@ -35,12 +36,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var timer: Timer
     private var isPostListLoading = false
 
+    private var navController: NavController? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this
         lifecycleScope.launchWhenCreated {
             initView()
         }
         super.onViewCreated(view, savedInstanceState)
+
+        navController = view.findNavController()
 
         startAutoScroll()
         onClickBannerAll() // 배너 > + 버튼 선택 시 전체 리스트 페이지로 이동
@@ -117,13 +122,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     // 배너 클릭 -> 배너 상세 페이지 이동
     private fun onClickBannerItem(bannerId: Int) {
         viewModel.selectHomeBanner(bannerId)
-        view?.findNavController()?.navigate(R.id.action_navigate_fragment_to_home_banner_detail)
+        //viewModel.navigationView(navController, R.id.action_navigate_fragment_to_home_banner_detail)
     }
 
     // 배너 > + 버튼 클릭 -> 배너 전체 리스트 페이지로 이동
     private fun onClickBannerAll() {
         binding.btnBannerMore.setOnClickListener {
-            view?.findNavController()?.navigate(R.id.action_navigate_fragment_to_home_banner_all)
+            viewModel.navigationAllBanner(navController)
         }
     }
 

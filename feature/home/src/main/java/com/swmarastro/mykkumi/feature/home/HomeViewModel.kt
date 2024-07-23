@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerListUseCase
@@ -82,5 +83,10 @@ class HomeViewModel @Inject constructor(
     // 더 조회할 포스트가 있는지
     fun getIsPostEnd() : Boolean {
         return isPostEnd
+    }
+
+    // 배너 전체 리스트 페이지로 이동
+    fun navigationAllBanner(navController: NavController?) {
+        navController?.navigate(R.id.action_navigate_fragment_to_home_banner_all)
     }
 }

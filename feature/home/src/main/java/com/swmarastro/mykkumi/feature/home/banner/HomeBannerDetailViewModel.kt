@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swmarastro.mykkumi.domain.entity.BannerDetailVO
 import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerDetailUseCase
-import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
