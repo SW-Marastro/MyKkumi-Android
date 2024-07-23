@@ -30,6 +30,8 @@ class LoginInputUserViewModel @Inject constructor(
     private val MIN_NICKNAME_LENGTH = 3
     private val NICKNAME_REGEX = Regex("^[a-zA-Z0-9._\\-ㄱ-ㅎ가-힣ㅏ-ㅣ]*$")
 
+    private val MAX_RETRIES = 1
+
     private val _nickname = MutableStateFlow("")
     val nickname: StateFlow<String> get() = _nickname
 
@@ -65,7 +67,7 @@ class LoginInputUserViewModel @Inject constructor(
     }
 
     // 사용자 정보 업데이트 후 가입 완료
-    fun updateUserInfo(showToast : (message: String) -> Unit) {
+    fun updateUserInfo(showToast : (message: String) -> Unit, retries: Int = 0) {
         val userInfo = UpdateUserInfoRequestVO(
             nickname = nickname.value,
             profileImage = profileImage.value,
@@ -78,11 +80,14 @@ class LoginInputUserViewModel @Inject constructor(
                 val response = updateUserInfoUseCase(userInfo)
                 finishLogin()
             } catch (e: ApiException.InvalidTokenException) { // access Token 만료
-                try { // Refresh Token으로 Access Token 재발급
-                    reAccessTokenRepository.getReAccessToken()
-                } catch (e: ApiException.InvalidRefreshTokenException) {
-                    e.message?.let { showToast(it) } // 로그아웃
-                    finishLogin()
+                if (retries < MAX_RETRIES) {
+                    try { // Refresh Token으로 Access Token 재발급
+                        reAccessTokenRepository.getReAccessToken()
+                        updateUserInfo(showToast, retries + 1) // accessToken 업데이트 해주고 재시도
+                    } catch (e: ApiException.InvalidRefreshTokenException) {
+                        e.message?.let { showToast(it) } // 로그아웃
+                        finishLogin()
+                    }
                 }
             } catch (e: ApiException.DuplicateValueException) { // 중복된 닉네임
                 e.message?.let { showToast(it) }
