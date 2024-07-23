@@ -19,7 +19,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
-                <data android:scheme="kakao${KAKAO_NATIVE_APP_KEY}" android:host="oauth" />
+                <data android:host="oauth"
+                    android:scheme="kakao${KAKAO_NATIVE_APP_KEY}" />
 
                 <data android:scheme="mykkumi" android:host="mykkumi-signin"/>
             </intent-filter>

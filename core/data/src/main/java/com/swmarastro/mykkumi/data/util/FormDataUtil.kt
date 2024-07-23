@@ -40,15 +40,6 @@ object FormDataUtil {
         val tempFile = File(context.cacheDir, fileName)
 
         try {
-//            val inputStream: InputStream? = contentResolver.openInputStream(uri)
-//            val outputStream = FileOutputStream(tempFile)
-//            val buffer = ByteArray(1024)
-//            var length: Int
-//            while (inputStream?.read(buffer).also { length = it ?: -1 }!! > 0) {
-//                outputStream.write(buffer, 0, length)
-//            }
-//            outputStream.close()
-//            inputStream?.close()
             val inputStream: InputStream? = contentResolver.openInputStream(uri)
             val bitmap = BitmapFactory.decodeStream(inputStream)
             inputStream?.close()

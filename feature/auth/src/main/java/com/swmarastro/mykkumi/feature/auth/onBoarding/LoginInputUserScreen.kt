@@ -10,6 +10,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -70,7 +71,7 @@ private val NICKNAME_REGEX = Regex("^[a-zA-Z0-9._\\-ㄱ-ㅎ가-힣ㅏ-ㅣ]*$")
 
 // 이미지 Croppy
 private const val RC_CROP_IMAGE = 101
-
+private lateinit var localContext: Context
 // 사용자 정보 입력 페이지 - 프로필 이미지, 닉네임
 @ExperimentalPermissionsApi
 @Composable
@@ -78,7 +79,7 @@ fun LoginInputUserScreen(
     navController: NavController,
     activity: ComponentActivity
 ) {
-    val localContext = LocalContext.current
+    localContext = LocalContext.current
     val loginViewModel: LoginInputUserViewModel = ViewModelProvider(
         LocalContext.current as ComponentActivity
     ).get(LoginInputUserViewModel::class.java)
@@ -268,7 +269,7 @@ fun LoginInputUserScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                onClick = { loginViewModel.updateUserInfo() },
+                onClick = { loginViewModel.confirmNickname { showToast(it) } },
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
@@ -334,4 +335,8 @@ private fun saveImageToUri(context: Context, bitmap: Bitmap): Uri {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
     }
     return FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+}
+
+private fun showToast(message: String) {
+    Toast.makeText(localContext, message, Toast.LENGTH_SHORT).show()
 }
