@@ -123,7 +123,12 @@ class LoginComposeActivity : ComponentActivity() {
         viewModel.loginUiState
             .onEach {
                 if(it == LoginUiState.MykkumiLoginSuccess)
-                    viewModel.navigateToNextScreen(navController)
+                    viewModel.navigateToNextScreen(
+                        navController = navController,
+                        showToast = {
+                            showToast(it)
+                        }
+                    )
             }
             .launchIn(lifecycleScope)
 

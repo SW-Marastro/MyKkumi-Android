@@ -10,9 +10,11 @@ import com.kakao.sdk.common.model.AuthErrorCause
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.google.gson.Gson
-import com.swmarastro.mykkumi.domain.entity.ErrorResponse
+import com.swmarastro.mykkumi.domain.exception.ErrorResponse
 import com.swmarastro.mykkumi.domain.entity.KakaoToken
 import com.swmarastro.mykkumi.domain.entity.UserInfoVO
+import com.swmarastro.mykkumi.domain.exception.ApiException
+import com.swmarastro.mykkumi.domain.repository.ReAccessTokenRepository
 import com.swmarastro.mykkumi.domain.usecase.auth.GetUserInfoUseCase
 import com.swmarastro.mykkumi.domain.usecase.auth.KakaoLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +28,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val kakaoLoginUseCase: KakaoLoginUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val reAccessTokenRepository: ReAccessTokenRepository,
 ): ViewModel() {
 
     private val INVALID_TOKEN = "INVALID_TOKEN"
@@ -144,7 +147,7 @@ class LoginViewModel @Inject constructor(
     }
 
     // 다음 화면으로 네비게이션 처리
-    fun navigateToNextScreen(navController: NavController) {
+    fun navigateToNextScreen(navController: NavController, showToast : (message: String) -> Unit) {
         viewModelScope.launch {
             try {
                 val userInfo = getUserInfoUseCase()
@@ -156,33 +159,25 @@ class LoginViewModel @Inject constructor(
                 }
                 // 기존 가입자 -> 홈 화면으로
                 else {
-                    //테스트 중
-                    navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
-                    //finishLogin()
+                    // 테스트용
+                    //navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
+                    finishLogin()
                 }
             }
-            catch (e: HttpException){
-                handleApiError(e)
+            catch (e: ApiException.InvalidTokenException) { // access Token 만료
+                try { // Refresh Token으로 Access Token 재발급
+                    reAccessTokenRepository.getReAccessToken()
+                } catch (e: ApiException.InvalidRefreshTokenException) {
+                    e.message?.let { showToast(it) } // 로그아웃
+                    finishLogin()
+                }
+            }
+            catch (e: ApiException.UnknownApiException) {
+                showToast("서비스 오류가 발생했습니다.")
             }
             catch (e: Exception) {
-
+                showToast("서비스 오류가 발생했습니다.")
             }
-        }
-    }
-
-    private fun handleApiError(exception: HttpException) {
-        try {
-            val errorBody = exception.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
-            Log.d("test", errorResponse.message)
-            //_error.value = "${errorResponse.message} (${errorResponse.errorCode})"
-
-            // 만료된 토큰
-            if(errorResponse.errorCode == INVALID_TOKEN) {
-
-            }
-        } catch (e: Exception) {
-           // _error.value = "An error occurred while processing the error response."
         }
     }
 
