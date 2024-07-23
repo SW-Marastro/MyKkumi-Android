@@ -1,13 +1,13 @@
-package com.swmarastro.mykkumi.feature.home.banner
+package com.swmarastro.mykkumi.feature.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.swmarastro.mykkumi.domain.entity.BannerDetailVO
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
-import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerDetailUseCase
+import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerListUseCase
+import com.swmarastro.mykkumi.domain.usecase.post.GetHomePostListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,21 +18,29 @@ import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeBannerViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val getBannerListUseCase: GetBannerListUseCase,
-    private val getBannerDetailUseCase: GetBannerDetailUseCase,
+    private val getHomePostListUseCase: GetHomePostListUseCase,
 ) : ViewModel() {
+
     // 홈 > 배너 캐러셀
     private val _bannerListUiState = MutableStateFlow<BannerListVO>(BannerListVO())
     val bannerListUiState: StateFlow<BannerListVO> get() = _bannerListUiState
 
-    // 배너 상세
-    private val _bannerDetailUiState = MutableStateFlow<BannerDetailVO>(BannerDetailVO())
-    val bannerDetailUiState: StateFlow<BannerDetailVO> get() = _bannerDetailUiState
+    // 포스트 리스트
+    private val _postListUiState = MutableStateFlow<MutableList<HomePostItemVO>>(mutableListOf())
+    val postListUiState: StateFlow<MutableList<HomePostItemVO>> get() = _postListUiState
 
     // 선택된 배너
     private val _selectBannerId = MutableLiveData<Int>()
     val selectBannerId: LiveData<Int> get() = _selectBannerId
+
+    // 포스트 리스트 cursor, limit
+    private val postLimit: Int? = null
+    private var postCursor: String? = null
+
+    // 포스트 끝 도달
+    private var isPostEnd = false
 
     // 홈 > 배너 캐러셀
     fun setHomeBanner() {
@@ -53,17 +61,26 @@ class HomeBannerViewModel @Inject constructor(
         _selectBannerId.value = bannerId
     }
 
-    // 배너 상세
-    fun setBannerDetail(bannerId: Int) {
-        viewModelScope.launch {
-            try {
-                val homeBannerDetail = withContext(Dispatchers.IO) {
-                    getBannerDetailUseCase(bannerId)
-                }
-                _bannerDetailUiState.value = homeBannerDetail
-            } catch (e: Exception) {
-                _bannerDetailUiState.value = BannerDetailVO()
+    // 포스트 리스트
+    // isCursor의 역할: 처음으로 데이터를 조회해오는 것인지, cursor가 있는 상태로 다음 데이터를 불러오는 것인지
+    suspend fun setPostList(isCursor: Boolean) {
+        try {
+            val homePostList = withContext(Dispatchers.IO) {
+                getHomePostListUseCase(postCursor, postLimit)
             }
+            if(homePostList.posts.size == 0) isPostEnd = true
+            else {
+                if (isCursor) _postListUiState.value.addAll(homePostList.posts)
+                else _postListUiState.value = homePostList.posts.toMutableList()
+                postCursor = homePostList.cursor
+            }
+        } catch (e: Exception) {
+            _postListUiState.value = mutableListOf()
         }
+    }
+
+    // 더 조회할 포스트가 있는지
+    fun getIsPostEnd() : Boolean {
+        return isPostEnd
     }
 }

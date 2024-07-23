@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeBannerAllFragment : BaseFragment<FragmentHomeBannerAllBinding>(R.layout.fragment_home_banner_all) {
 
-    private val bannerViewModel by viewModels<HomeBannerViewModel>({ requireActivity() })
+    private val viewModel by viewModels<HomeBannerAllViewModel>({ requireActivity() })
     private lateinit var bannerAllAdapter: HomeBannerAllAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,7 +30,7 @@ class HomeBannerAllFragment : BaseFragment<FragmentHomeBannerAllBinding>(R.layou
 
     override suspend fun initView() {
         bind {
-            bannerVm = bannerViewModel
+            vm = viewModel
         }
 
         setBannerAll() // 배너 리스트
@@ -54,15 +54,15 @@ class HomeBannerAllFragment : BaseFragment<FragmentHomeBannerAllBinding>(R.layou
 
     // 배너 내용 세팅
     private suspend fun setBannerAll() {
-        bannerViewModel.setHomeBanner()
-        bannerViewModel.bannerListUiState.collect { response ->
+        viewModel.setHomeBanner()
+        viewModel.bannerListUiState.collect { response ->
             initBannerRecyclerView(response)
         }
     }
 
     // 배너 클릭 -> 배너 상세 페이지 이동
     private fun onClickBannerItem(bannerId: Int) {
-        bannerViewModel.selectHomeBanner(bannerId)
+        viewModel.selectHomeBanner(bannerId)
         view?.findNavController()?.navigate(R.id.action_navigate_fragment_to_home_banner_detail)
     }
 

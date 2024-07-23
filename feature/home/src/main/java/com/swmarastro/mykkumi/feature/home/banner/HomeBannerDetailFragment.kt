@@ -11,22 +11,22 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeBannerDetailFragment : BaseFragment<FragmentHomeBannerDetailBinding>(R.layout.fragment_home_banner_detail) {
 
-    private val bannerViewModel by viewModels<HomeBannerViewModel>({ requireActivity() })
+    private val viewModel by viewModels<HomeBannerDetailViewModel>({ requireActivity() })
 
     override suspend fun initView() {
         bind {
-            bannerVm = bannerViewModel
+            vm = viewModel
         }
 
         setBannerDetail()
     }
 
     private suspend fun setBannerDetail() {
-        bannerViewModel.selectBannerId.observe(viewLifecycleOwner) { bannerId ->
-            bannerViewModel.setBannerDetail(bannerId)
-        }
+//        viewModel.selectBannerId.observe(viewLifecycleOwner) { bannerId ->
+//            viewModel.setBannerDetail(bannerId)
+//        }
         lifecycleScope.launchWhenStarted {
-            bannerViewModel.bannerDetailUiState.collect { response ->
+            viewModel.bannerDetailUiState.collect { response ->
                 binding.imageBannerDetail.load(response.imageUrl)
             }
         }

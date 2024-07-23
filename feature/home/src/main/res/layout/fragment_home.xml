@@ -7,12 +7,8 @@
 
     <data>
         <variable
-            name="postVm"
-            type="com.swmarastro.mykkumi.feature.home.post.PostViewModel" />
-
-        <variable
-            name="bannerVm"
-            type="com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewModel" />
+            name="vm"
+            type="com.swmarastro.mykkumi.feature.home.HomeViewModel" />
     </data>
 
     <FrameLayout
