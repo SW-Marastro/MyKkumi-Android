@@ -69,11 +69,14 @@ class HomeViewModel @Inject constructor(
             val homePostList = withContext(Dispatchers.IO) {
                 getHomePostListUseCase(postCursor, postLimit)
             }
-            if(homePostList.posts.size == 0) isPostEnd = true
+            if(homePostList.posts.isEmpty()) isPostEnd = true
             else {
                 if (isCursor) _postListUiState.value.addAll(homePostList.posts)
                 else _postListUiState.value = homePostList.posts.toMutableList()
-                postCursor = homePostList.cursor
+
+                // 마지막인지
+                if(homePostList.cursor.isEmpty()) isPostEnd = true
+                else postCursor = homePostList.cursor
             }
         } catch (e: Exception) {
             _postListUiState.value = mutableListOf()
@@ -86,7 +89,7 @@ class HomeViewModel @Inject constructor(
     }
 
     // 배너 전체 리스트 페이지로 이동
-    fun navigationAllBanner(navController: NavController?) {
+    fun navigationBannerAll(navController: NavController?) {
         navController?.navigate(R.id.action_navigate_fragment_to_home_banner_all)
     }
 }

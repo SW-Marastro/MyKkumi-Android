@@ -26,8 +26,6 @@ import java.util.TimerTask
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
-
-//    private val bannerViewModel by viewModels<HomeBannerAllViewModel>({ requireActivity() })
     private val viewModel by viewModels<HomeViewModel>({ requireActivity() })
 
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
@@ -39,10 +37,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private var navController: NavController? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.lifecycleOwner = this
-        lifecycleScope.launchWhenCreated {
-            initView()
-        }
         super.onViewCreated(view, savedInstanceState)
 
         navController = view.findNavController()
@@ -128,7 +122,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     // 배너 > + 버튼 클릭 -> 배너 전체 리스트 페이지로 이동
     private fun onClickBannerAll() {
         binding.btnBannerMore.setOnClickListener {
-            viewModel.navigationAllBanner(navController)
+            viewModel.navigationBannerAll(navController)
         }
     }
 
