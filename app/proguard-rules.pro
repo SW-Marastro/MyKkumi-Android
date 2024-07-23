@@ -32,3 +32,4 @@
 -dontwarn com.swmarastro.mykkumi.data.di.NetworkModule_ProvideRetrofitFactory
 -dontwarn com.swmarastro.mykkumi.data.repository.BannerRepositoryImpl
 -dontwarn com.swmarastro.mykkumi.data.repository.PostRepositoryImpl
+-keep class com.swmarastro.mykkumi.feature.home.HomeFragment { *; }
