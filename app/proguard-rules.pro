@@ -23,6 +23,7 @@
 -dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemListLoadingBinding
 -dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemPostWriterBinding
 -dontwarn com.swmarastro.mykkumi.common_ui.post.PostImageIndicator
+-dontwarn com.swmarastro.mykkumi.common_ui.post.PostImagesAdapter
 -dontwarn com.swmarastro.mykkumi.data.datasource.BannerDataSource
 -dontwarn com.swmarastro.mykkumi.data.datasource.PostDataSource
 -dontwarn com.swmarastro.mykkumi.data.di.NetworkModule_ProvideBannerDataSourceFactory
@@ -33,3 +34,6 @@
 -dontwarn com.swmarastro.mykkumi.data.repository.BannerRepositoryImpl
 -dontwarn com.swmarastro.mykkumi.data.repository.PostRepositoryImpl
 -keep class com.swmarastro.mykkumi.feature.home.HomeFragment { *; }
+-keep class com.swmarastro.mykkumi.feature.around.AroundFragment { *; }
+-keep class com.swmarastro.mykkumi.feature.shopping.ShoppingFragment { *; }
+-keep class com.swmarastro.mykkumi.feature.mypage.MypageFragment { *; }

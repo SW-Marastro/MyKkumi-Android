@@ -33,3 +33,4 @@
 -dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemListLoadingBinding
 -dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemPostWriterBinding
 -dontwarn com.swmarastro.mykkumi.common_ui.post.PostImageIndicator
+-keep class com.swmarastro.mykkumi.feature.home.HomeFragment { *; }
