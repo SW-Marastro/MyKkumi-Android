@@ -20,9 +20,6 @@ class HomeBannerAllFragment : BaseFragment<FragmentHomeBannerAllBinding>(R.layou
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this
-        lifecycleScope.launchWhenCreated {
-            initView()
-        }
         super.onViewCreated(view, savedInstanceState)
 
         onClickBack() // 창
