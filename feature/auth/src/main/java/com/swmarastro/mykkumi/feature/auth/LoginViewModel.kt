@@ -162,8 +162,8 @@ class LoginViewModel @Inject constructor(
                 // 기존 가입자 -> 홈 화면으로
                 else {
                     // 테스트용
-                    //navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
-                    finishLogin()
+                    navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
+                    //finishLogin()
                 }
             }
             catch (e: ApiException.InvalidTokenException) { // access Token 만료

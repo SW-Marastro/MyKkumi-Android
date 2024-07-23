@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
+import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -75,8 +76,9 @@ object FormDataUtil {
         return value?.toRequestBody("text/plain".toMediaType())
     }
 
-    fun getListLongBody(key: String, value: List<Long>?): List<MultipartBody.Part>? {
-        return value?.map { MultipartBody.Part.createFormData(key, it.toString())}
+    fun getListLongBody(value: List<Long>?): RequestBody? {
+        val json = Gson().toJson(value)
+        return json.toRequestBody("application/json; charset=utf-8".toMediaType())
     }
 
     fun anyToUri(imageUri: Any?): Uri? {

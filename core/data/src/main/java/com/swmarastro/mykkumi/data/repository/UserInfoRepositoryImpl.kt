@@ -62,7 +62,7 @@ class UserInfoRepositoryImpl @Inject constructor(
                 nickname = FormDataUtil.getBody(userInfo.nickname),
                 profileImage = FormDataUtil.convertUriToMultipart(context, userInfo.profileImage),
                 introduction = FormDataUtil.getBody(userInfo.introduction),
-                categoryIds = null
+                categoryIds = null //FormDataUtil.getListLongBody(listOf<Long>(1, 2))
             ).toEntity()
         } catch (e: HttpException) {
             handleApiException(e)
