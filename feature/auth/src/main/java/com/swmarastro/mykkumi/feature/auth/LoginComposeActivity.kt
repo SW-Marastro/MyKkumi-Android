@@ -17,9 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -106,14 +104,12 @@ class LoginComposeActivity : ComponentActivity() {
             composable(LoginScreens.LoginSelectHobbyScreen.name) {
                 LoginSelectHobbyScreen(
                     navController = navController,
-                    viewModel = LoginSelectHobbyViewModel()
                 )
             }
             composable(LoginScreens.LoginInputUserScreen.name) {
                 LoginInputUserScreen(
                     navController = navController,
-                    viewModel = LoginInputUserViewModel(),
-                    activity
+                    activity = activity
                 )
             }
         }
@@ -127,7 +123,12 @@ class LoginComposeActivity : ComponentActivity() {
         viewModel.loginUiState
             .onEach {
                 if(it == LoginUiState.MykkumiLoginSuccess)
-                    viewModel.navigateToNextScreen(navController)
+                    viewModel.navigateToNextScreen(
+                        navController = navController,
+                        showToast = {
+                            showToast(it)
+                        }
+                    )
             }
             .launchIn(lifecycleScope)
 
@@ -165,6 +166,7 @@ class LoginComposeActivity : ComponentActivity() {
                 if (UserApiClient.instance.isKakaoTalkLoginAvailable(activityContext)) {
                     // 카카오톡 앱이 설치되어 있고, 연결된 계정이 있는 경우 카카오톡 앱으로 로그인 시도
                     UserApiClient.instance.loginWithKakaoTalk(activityContext, callback = viewModel.kakaoCallback)
+                    //UserApiClient.instance.loginWithKakaoAccount(activityContext, callback = viewModel.kakaoCallback)
                     Log.d(TAG, "카카오톡으로 로그인")
                 } else {
                     // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도

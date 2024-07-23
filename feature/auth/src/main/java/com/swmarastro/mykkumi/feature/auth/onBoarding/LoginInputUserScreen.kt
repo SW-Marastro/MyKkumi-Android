@@ -10,6 +10,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -30,6 +31,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarResult
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,13 +49,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.lyrebirdstudio.croppylib.Croppy
-import com.lyrebirdstudio.croppylib.main.CropRequest
-import com.lyrebirdstudio.croppylib.main.StorageType
 import com.swmarastro.mykkumi.feature.auth.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -70,17 +72,23 @@ private val NICKNAME_REGEX = Regex("^[a-zA-Z0-9._\\-ㄱ-ㅎ가-힣ㅏ-ㅣ]*$")
 
 // 이미지 Croppy
 private const val RC_CROP_IMAGE = 101
-
+private lateinit var localContext: Context
 // 사용자 정보 입력 페이지 - 프로필 이미지, 닉네임
 @ExperimentalPermissionsApi
 @Composable
 fun LoginInputUserScreen(
     navController: NavController,
-    viewModel: LoginInputUserViewModel,
     activity: ComponentActivity
 ) {
-    val localContext = LocalContext.current
+    localContext = LocalContext.current
+    val loginViewModel: LoginInputUserViewModel = ViewModelProvider(
+        LocalContext.current as ComponentActivity
+    ).get(LoginInputUserViewModel::class.java)
 
+    // 로그인 종료 상태 체크
+    loginViewModel.finishLoginUiState.observe(activity, Observer {
+        activity.finish()
+    })
     // 갤러리, 카메라 접근 권한 허용 요청
     val multiplePermissionsState = rememberMultiplePermissionsState(
         permissions = mutableListOf(
@@ -126,20 +134,12 @@ fun LoginInputUserScreen(
 
             // 갤러리에서 이미지를 선택했을 경우
             if (selectedImageUri != null) {
-//                val intent = Intent(activity, Croppy::class.java)
-//                val cacheCropRequest = CropRequest.Auto(
-//                    sourceUri = selectedImageUri,
-//                    requestCode = RC_CROP_IMAGE,
-//                    storageType = StorageType.CACHE
-//                )
-//                Croppy.start(activity, cacheCropRequest)
-//                imageCroppyLauncher.launch(intent)
-                viewModel.selectProfileImage(selectedImageUri)
+                loginViewModel.selectProfileImage(selectedImageUri)
             }
             // 카메라로 촬영했을 경우
-            else if(viewModel.cameraImagePath.value != null) {
+            else if(loginViewModel.cameraImagePath.value != null) {
 
-                viewModel.selectProfileImage(viewModel.cameraImagePath.value!!)
+                loginViewModel.selectProfileImage(loginViewModel.cameraImagePath.value!!)
             }
         }
     }
@@ -159,11 +159,11 @@ fun LoginInputUserScreen(
                 modifier = Modifier.height(30.dp)
             )
             Image(
-                painter = when(viewModel.profileImage.collectAsState().value) {
+                painter = when(loginViewModel.profileImage.collectAsState().value) {
                     is Int -> painterResource(
-                        id = viewModel.profileImage.collectAsState().value as Int
+                        id = loginViewModel.profileImage.collectAsState().value as Int
                     )
-                    is Uri -> rememberImagePainter(data = viewModel.profileImage.collectAsState().value)
+                    is Uri -> rememberImagePainter(data = loginViewModel.profileImage.collectAsState().value)
                     else -> painterResource(
                         id = com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default
                     )
@@ -185,8 +185,7 @@ fun LoginInputUserScreen(
                                 imagePickerLauncher,
                                 chooserTitle
                             ) { uri -> // 카메라에서 선택했을 경우
-                                Log.d("test 2222222", uri.toString())
-                                viewModel.setCameraImagePath(uri)
+                                loginViewModel.setCameraImagePath(uri)
                             }
                         }
 
@@ -227,9 +226,9 @@ fun LoginInputUserScreen(
             )
     
             BasicTextField(
-                value = viewModel.nickname.collectAsState().value,
+                value = loginViewModel.nickname.collectAsState().value,
                 onValueChange = {
-                    viewModel.onNicknameChange(it)
+                    loginViewModel.onNicknameChange(it)
                 },
                 modifier = Modifier
                     .height(20.dp)
@@ -259,7 +258,7 @@ fun LoginInputUserScreen(
             )
     
             // 최소글자수 미충족 경고
-            if (viewModel.nickname.value.length < MIN_NICKNAME_LENGTH) {
+            if (loginViewModel.nickname.value.length < MIN_NICKNAME_LENGTH) {
                 Text(
                     text = stringResource(id = R.string.notice_nickname_min_length),
                     color = Color.Red,
@@ -269,6 +268,17 @@ fun LoginInputUserScreen(
                             horizontal = 40.dp,
                         )
                 )
+            }
+
+            // Spacer로 중간 공간을 채움
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = { loginViewModel.confirmNickname { showToast(it) } },
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(text = stringResource(id = R.string.clear_login_all_btn))
             }
         }
     }
@@ -330,4 +340,8 @@ private fun saveImageToUri(context: Context, bitmap: Bitmap): Uri {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
     }
     return FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+}
+
+private fun showToast(message: String) {
+    Toast.makeText(localContext, message, Toast.LENGTH_SHORT).show()
 }

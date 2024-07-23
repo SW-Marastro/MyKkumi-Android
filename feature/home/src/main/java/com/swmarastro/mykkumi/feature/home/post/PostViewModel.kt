@@ -1,14 +1,12 @@
 package com.swmarastro.mykkumi.feature.home.post
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
-import com.swmarastro.mykkumi.domain.usecase.GetHomePostListUseCase
+import com.swmarastro.mykkumi.domain.usecase.post.GetHomePostListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 import javax.inject.Inject

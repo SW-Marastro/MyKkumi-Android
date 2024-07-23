@@ -37,6 +37,11 @@ class AuthTokenDataStoreImpl @Inject constructor(
         return sharedPreferences.getString(REFRESH_TOKEN, null)
     }
 
+    override fun deleteToken() {
+        sharedPreferences.edit().remove(ACCESS_TOKEN)
+        sharedPreferences.edit().remove(REFRESH_TOKEN)
+    }
+
     companion object {
         private const val BEARER = "Bearer "
 

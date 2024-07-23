@@ -20,6 +20,7 @@ class LoginSelectHobbyViewModel @Inject constructor(
 
     // 관심 취미 데이터 세팅
     fun getHobbyCategoryList() {
+        _hobbyCategoryUiState.value.clear()
         _hobbyCategoryUiState.value.addAll(mutableListOf(
             TestHobby("공예/DIY", mutableListOf("다이어리 꾸미기", "포토카드 꾸미기", "뜨개질")),
             TestHobby("스포츠", mutableListOf("야구", "테니스", "골프")),
@@ -40,7 +41,7 @@ class LoginSelectHobbyViewModel @Inject constructor(
     }
 
     // 다음 화면으로 네비게이션 처리
-    fun navigateToNextScreen(navController: NavController) {
+    fun navigateToInputUserInfoScreen(navController: NavController) {
         navController.navigate(route = LoginScreens.LoginInputUserScreen.name)
     }
 

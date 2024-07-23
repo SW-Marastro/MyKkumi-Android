@@ -9,21 +9,29 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.google.gson.Gson
+import com.swmarastro.mykkumi.domain.exception.ErrorResponse
 import com.swmarastro.mykkumi.domain.entity.KakaoToken
 import com.swmarastro.mykkumi.domain.entity.UserInfoVO
-import com.swmarastro.mykkumi.domain.usecase.GetUserInfoUseCase
-import com.swmarastro.mykkumi.domain.usecase.KakaoLoginUseCase
+import com.swmarastro.mykkumi.domain.exception.ApiException
+import com.swmarastro.mykkumi.domain.repository.ReAccessTokenRepository
+import com.swmarastro.mykkumi.domain.usecase.auth.GetUserInfoUseCase
+import com.swmarastro.mykkumi.domain.usecase.auth.KakaoLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val kakaoLoginUseCase: KakaoLoginUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val reAccessTokenRepository: ReAccessTokenRepository,
 ): ViewModel() {
+
+    private val INVALID_TOKEN = "INVALID_TOKEN"
 
     private val _finishLoginUiState = MutableLiveData<Unit>()
     val finishLoginUiState: LiveData<Unit> get() = _finishLoginUiState
@@ -35,9 +43,6 @@ class LoginViewModel @Inject constructor(
 
     private val _userInfoUiState = MutableStateFlow<UserInfoVO>(UserInfoVO(null, null, null, null))
     val userInfoUiState: StateFlow<UserInfoVO> get() = _userInfoUiState
-
-//    private val _kakaoLoginToken = MutableLiveData<KakaoToken>()
-//    val kakaoLoginToken: LiveData<KakaoToken> get() = _kakaoLoginToken
 
     fun kakaoLogin() {
         _loginUiState.value = LoginUiState.KakaoLogin
@@ -107,7 +112,7 @@ class LoginViewModel @Inject constructor(
                 Log.e(TAG, "카카오계정으로 로그인 실패", error)
                 kakaoLoginFail()
             } else if (token != null) { // 토큰을 받아온 경우
-                // Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
+                Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
                 kakaoLoginSuccess()
                 setKakaoToken(token.accessToken, token.refreshToken)
             }
@@ -142,7 +147,7 @@ class LoginViewModel @Inject constructor(
     }
 
     // 다음 화면으로 네비게이션 처리
-    fun navigateToNextScreen(navController: NavController) {
+    fun navigateToNextScreen(navController: NavController, showToast : (message: String) -> Unit) {
         viewModelScope.launch {
             try {
                 val userInfo = getUserInfoUseCase()
@@ -154,11 +159,24 @@ class LoginViewModel @Inject constructor(
                 }
                 // 기존 가입자 -> 홈 화면으로
                 else {
+                    // 테스트용
+                    //navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
                     finishLogin()
                 }
             }
+            catch (e: ApiException.InvalidTokenException) { // access Token 만료
+                try { // Refresh Token으로 Access Token 재발급
+                    reAccessTokenRepository.getReAccessToken()
+                } catch (e: ApiException.InvalidRefreshTokenException) {
+                    e.message?.let { showToast(it) } // 로그아웃
+                    finishLogin()
+                }
+            }
+            catch (e: ApiException.UnknownApiException) {
+                showToast("서비스 오류가 발생했습니다.")
+            }
             catch (e: Exception) {
-
+                showToast("서비스 오류가 발생했습니다.")
             }
         }
     }

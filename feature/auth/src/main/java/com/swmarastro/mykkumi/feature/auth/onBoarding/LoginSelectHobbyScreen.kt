@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.lifecycle.lifecycleScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,11 +25,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.swmarastro.mykkumi.feature.auth.R
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 // 더미 데이터 - api 연결 시 삭제 예정
 data class TestHobby (
@@ -42,8 +39,8 @@ data class TestHobby (
 @Composable
 fun LoginSelectHobbyScreen(
     navController: NavController,
-    viewModel: LoginSelectHobbyViewModel
 ) {
+    val viewModel: LoginSelectHobbyViewModel = viewModel<LoginSelectHobbyViewModel>()
     viewModel.getHobbyCategoryList()
 
     Column(
@@ -60,7 +57,9 @@ fun LoginSelectHobbyScreen(
 
         // 취미 카테고리 : 대분류 > 소분류
         LazyColumn(
-            contentPadding = PaddingValues(2.dp, 5.dp)
+            contentPadding = PaddingValues(2.dp, 5.dp),
+            modifier = Modifier
+                .weight(1f) // Spacer로 중간 공간을 채움
         ) {
             items(
                 items = viewModel.hobbyCategoryUiState.value,
@@ -73,9 +72,6 @@ fun LoginSelectHobbyScreen(
             )
         }
 
-        // Spacer로 중간 공간을 채움
-        Spacer(modifier = Modifier.weight(1f))
-
         // 건너뛰기
         Text(
             text = stringResource(id = R.string.skip_login_select_hobby),
@@ -83,14 +79,14 @@ fun LoginSelectHobbyScreen(
                 .align(Alignment.CenterHorizontally)
                 .padding(vertical = 10.dp)
                 .clickable {
-                    viewModel.navigateToNextScreen(navController)
+                    viewModel.navigateToInputUserInfoScreen(navController)
                 }
         )
 
         // 다음
         Button(
             onClick = {
-                viewModel.navigateToNextScreen(navController)
+                viewModel.navigateToInputUserInfoScreen(navController)
             },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
