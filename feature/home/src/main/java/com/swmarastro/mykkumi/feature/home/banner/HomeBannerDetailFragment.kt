@@ -1,6 +1,5 @@
 package com.swmarastro.mykkumi.feature.home.banner
 
-import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
