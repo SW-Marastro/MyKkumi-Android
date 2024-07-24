@@ -65,8 +65,15 @@ buildscript {
         // EncryptedSharedPreferences
         security_crypto_version = "1.0.0"
 
+        // Safe Args
+        safe_args_version = "2.7.7"
+
         // Croppy
         croppy_version = "0.2"
+    }
+    dependencies {
+        // Safe Args
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$safe_args_version"
     }
 }
 

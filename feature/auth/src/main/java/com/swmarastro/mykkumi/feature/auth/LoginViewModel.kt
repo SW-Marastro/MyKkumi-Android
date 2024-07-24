@@ -33,6 +33,8 @@ class LoginViewModel @Inject constructor(
 
     private val INVALID_TOKEN = "INVALID_TOKEN"
 
+    private val MAX_RETRIES = 1
+
     private val _finishLoginUiState = MutableLiveData<Unit>()
     val finishLoginUiState: LiveData<Unit> get() = _finishLoginUiState
 
@@ -147,7 +149,7 @@ class LoginViewModel @Inject constructor(
     }
 
     // 다음 화면으로 네비게이션 처리
-    fun navigateToNextScreen(navController: NavController, showToast : (message: String) -> Unit) {
+    fun navigateToNextScreen(navController: NavController, showToast : (message: String) -> Unit, retries: Int = 0) {
         viewModelScope.launch {
             try {
                 val userInfo = getUserInfoUseCase()
@@ -165,11 +167,14 @@ class LoginViewModel @Inject constructor(
                 }
             }
             catch (e: ApiException.InvalidTokenException) { // access Token 만료
-                try { // Refresh Token으로 Access Token 재발급
-                    reAccessTokenRepository.getReAccessToken()
-                } catch (e: ApiException.InvalidRefreshTokenException) {
-                    e.message?.let { showToast(it) } // 로그아웃
-                    finishLogin()
+                if (retries < MAX_RETRIES) {
+                    try { // Refresh Token으로 Access Token 재발급
+                        reAccessTokenRepository.getReAccessToken()
+                        navigateToNextScreen(navController, showToast, retries + 1) // accessToken 업데이트 해주고 재시도
+                    } catch (e: ApiException.InvalidRefreshTokenException) {
+                        e.message?.let { showToast(it) } // 로그아웃
+                        finishLogin()
+                    }
                 }
             }
             catch (e: ApiException.UnknownApiException) {
