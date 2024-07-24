@@ -60,7 +60,7 @@ class HomeBannerAllFragment : BaseFragment<FragmentHomeBannerAllBinding>(R.layou
     // 배너 클릭 -> 배너 상세 페이지 이동
     private fun onClickBannerItem(bannerId: Int) {
         viewModel.selectHomeBanner(bannerId)
-        view?.findNavController()?.navigate(R.id.action_navigate_fragment_to_home_banner_detail)
+        viewModel.navigateBannerDetail(view?.findNavController())
     }
 
     private fun onClickBack() {

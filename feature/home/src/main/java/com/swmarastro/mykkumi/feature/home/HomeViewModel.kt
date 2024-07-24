@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.feature.home
 
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -89,7 +90,14 @@ class HomeViewModel @Inject constructor(
     }
 
     // 배너 전체 리스트 페이지로 이동
-    fun navigationBannerAll(navController: NavController?) {
+    fun navigateBannerAll(navController: NavController?) {
         navController?.navigate(R.id.action_navigate_fragment_to_home_banner_all)
+    }
+
+    // 배너 상세 페이지로 이동
+    fun navigateBannerDetail(navController: NavController?) {
+        val navigateDeepLink = "mykkumi://bannerDetail?bannerId=${selectBannerId.value}"
+        //val action = HomeFragmentDirections.actionNavigateFragmentToHomeBannerDetail(bannerId = selectBannerId)
+        navController?.navigate(deepLink = navigateDeepLink.toUri())
     }
 }

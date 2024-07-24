@@ -47,7 +47,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         // 로그인 테스트
         binding.btnShoppingCart.setOnClickListener {
             val loginScheme = "mykkumi://mykkumi-signin"
-            val intent = Intent();
+            val intent = Intent()
             intent.setAction(Intent.ACTION_VIEW)
             intent.setData(Uri.parse(loginScheme))
             startActivity(intent)
@@ -116,13 +116,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     // 배너 클릭 -> 배너 상세 페이지 이동
     private fun onClickBannerItem(bannerId: Int) {
         viewModel.selectHomeBanner(bannerId)
-        //viewModel.navigationView(navController, R.id.action_navigate_fragment_to_home_banner_detail)
+        viewModel.navigateBannerDetail(navController)
     }
 
     // 배너 > + 버튼 클릭 -> 배너 전체 리스트 페이지로 이동
     private fun onClickBannerAll() {
         binding.btnBannerMore.setOnClickListener {
-            viewModel.navigationBannerAll(navController)
+            viewModel.navigateBannerAll(navController)
         }
     }
 

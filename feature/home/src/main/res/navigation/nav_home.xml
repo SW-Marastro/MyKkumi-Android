@@ -25,7 +25,17 @@
         android:id="@+id/homeBannerDetailFragment"
         android:name="com.swmarastro.mykkumi.feature.home.banner.HomeBannerDetailFragment"
         android:label="fragment_home_banner_detail"
-        tools:layout="@layout/fragment_home_banner_detail"/>
+        tools:layout="@layout/fragment_home_banner_detail">
+
+        <argument
+            android:name="bannerId"
+            app:argType="integer"
+            android:defaultValue="0"/>
+
+        <deepLink
+            app:uri="mykkumi://bannerDetail?bannerId={bannerId}"/>
+
+    </fragment>
 
     <fragment
         android:id="@+id/homeBannerAllFragment"

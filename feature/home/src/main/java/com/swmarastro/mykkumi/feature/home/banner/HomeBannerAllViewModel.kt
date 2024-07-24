@@ -1,9 +1,11 @@
 package com.swmarastro.mykkumi.feature.home.banner
 
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,5 +46,11 @@ class HomeBannerAllViewModel @Inject constructor(
     // 홈 > 배너 캐러셀에서 배너 선택
     fun selectHomeBanner(bannerId: Int) {
         _selectBannerId.value = bannerId
+    }
+
+    // 배너 상세 페이지로 이동
+    fun navigateBannerDetail(navController: NavController?) {
+        val navigateDeepLink = "mykkumi://bannerDetail?bannerId=${selectBannerId.value}"
+        navController?.navigate(deepLink = navigateDeepLink.toUri())
     }
 }
