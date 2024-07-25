@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home_banner_all_title"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:layout_centerInParent="true"/>
