@@ -22,7 +22,7 @@
                 <data android:host="oauth"
                     android:scheme="kakao${KAKAO_NATIVE_APP_KEY}" />
 
-                <data android:scheme="mykkumi" android:host="mykkumi-signin"/>
+                <data android:scheme="mykkumi" android:host="mykkumi.signin"/>
             </intent-filter>
 
         </activity>

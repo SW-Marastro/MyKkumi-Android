@@ -33,7 +33,7 @@
             android:defaultValue="0"/>
 
         <deepLink
-            app:uri="mykkumi://bannerDetail?bannerId={bannerId}"/>
+            app:uri="mykkumi://banner.detail?bannerId={bannerId}"/>
 
     </fragment>
 

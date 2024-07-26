@@ -46,7 +46,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         // 로그인 테스트
         binding.btnShoppingCart.setOnClickListener {
-            val loginScheme = "mykkumi://mykkumi-signin"
+            val loginScheme = "mykkumi://mykkumi.signin"
             val intent = Intent()
             intent.setAction(Intent.ACTION_VIEW)
             intent.setData(Uri.parse(loginScheme))

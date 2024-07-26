@@ -96,7 +96,7 @@ class HomeViewModel @Inject constructor(
 
     // 배너 상세 페이지로 이동
     fun navigateBannerDetail(navController: NavController?) {
-        val navigateDeepLink = "mykkumi://bannerDetail?bannerId=${selectBannerId.value}"
+        val navigateDeepLink = "mykkumi://banner.detail?bannerId=${selectBannerId.value}"
         //val action = HomeFragmentDirections.actionNavigateFragmentToHomeBannerDetail(bannerId = selectBannerId)
         navController?.navigate(deepLink = navigateDeepLink.toUri())
     }
