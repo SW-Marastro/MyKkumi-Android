@@ -7,12 +7,8 @@
 
     <data>
         <variable
-            name="postVm"
-            type="com.swmarastro.mykkumi.feature.home.post.PostViewModel" />
-
-        <variable
-            name="bannerVm"
-            type="com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewModel" />
+            name="vm"
+            type="com.swmarastro.mykkumi.feature.home.HomeViewModel" />
     </data>
 
     <FrameLayout
@@ -57,7 +53,7 @@
                         android:id="@+id/edit_text_search_input"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="10dp"
+                        android:textSize="10sp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray_86"
                         android:hint="검색어를 입력하세요"
@@ -139,7 +135,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:textSize="12dp"
+                                android:textSize="12sp"
                                 android:textColor="@color/black"/>
 
                             <TextView
@@ -147,7 +143,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="/0"
-                                android:textSize="12dp"
+                                android:textSize="12sp"
                                 android:textColor="@color/black"
                                 android:layout_marginRight="5dp"/>
 

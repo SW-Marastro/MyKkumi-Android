@@ -22,15 +22,18 @@ class AuthTokenDataStoreImpl @Inject constructor(
     )
 
     override fun saveAccessToken(accessToken: String) {
-        sharedPreferences.edit().putString(ACCESS_TOKEN, BEARER + accessToken).apply()
+        sharedPreferences.edit().putString(ACCESS_TOKEN, accessToken).apply()
     }
 
     override fun saveRefreshToken(refreshToken: String) {
-        sharedPreferences.edit().putString(REFRESH_TOKEN, BEARER + refreshToken).apply()
+        sharedPreferences.edit().putString(REFRESH_TOKEN, refreshToken).apply()
     }
 
     override fun getAccessToken(): String? {
-        return sharedPreferences.getString(ACCESS_TOKEN, null)
+        val accessToken = sharedPreferences.getString(ACCESS_TOKEN, null)
+
+        if (accessToken.isNullOrEmpty()) return null
+        return BEARER + accessToken
     }
 
     override fun getRefreshToken(): String? {
@@ -42,7 +45,14 @@ class AuthTokenDataStoreImpl @Inject constructor(
         sharedPreferences.edit().remove(REFRESH_TOKEN)
     }
 
-    companion object {
+    override fun isLogin(): Boolean { // 로그인 유무 = Token 존재 유무
+        val accessToken = sharedPreferences.getString(ACCESS_TOKEN, null)
+        val refreshToken = sharedPreferences.getString(REFRESH_TOKEN, null)
+
+        return !accessToken.isNullOrEmpty() && !refreshToken.isNullOrEmpty()
+    }
+
+    private companion object {
         private const val BEARER = "Bearer "
 
         private const val ACCESS_TOKEN = "access_token"

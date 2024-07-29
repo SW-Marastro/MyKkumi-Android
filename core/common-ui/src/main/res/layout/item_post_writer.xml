@@ -26,9 +26,8 @@
             android:id="@+id/text_writer_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="nickname"
             android:textColor="@color/black"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:layout_toRightOf="@id/image_writer_profile"
             android:layout_alignParentTop="true"/>
@@ -38,9 +37,8 @@
             android:id="@+id/text_post_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="요리 - 일식"
             android:textColor="@color/black"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:layout_toRightOf="@id/image_writer_profile"
             android:layout_alignParentBottom="true"/>
 

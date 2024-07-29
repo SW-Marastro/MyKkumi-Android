@@ -44,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textSize="12dp"
+                    android:textSize="12sp"
                     android:textColor="@color/black"/>
 
                 <TextView
@@ -52,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="/0"
-                    android:textSize="12dp"
+                    android:textSize="12sp"
                     android:textColor="@color/black"/>
 
             </LinearLayout>
@@ -85,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/user_complaint"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 android:textColor="@color/black" />
 
         </FrameLayout>
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:text="1"
                 android:textColor="@color/black"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 android:layout_marginLeft="2dp"
                 android:layout_toRightOf="@id/btn_post_like"
                 android:layout_centerVertical="true"/>
@@ -139,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="@color/black"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 android:layout_marginLeft="2dp"
                 android:layout_toRightOf="@id/btn_post_comment"
                 android:layout_centerVertical="true"/>
@@ -162,7 +162,7 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="@color/black"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 android:layout_marginLeft="2dp"
                 android:layout_toRightOf="@id/btn_post_scrap"
                 android:layout_centerVertical="true"/>
@@ -195,7 +195,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="fonts have a particular weight which corresponds to one of the numbers in Common weight name mapping. However some fonts, called variable fonts, can support a range of "
-                android:textSize="12dp"
+                android:textSize="12sp"
                 android:clickable="true"/>
 
         </LinearLayout>

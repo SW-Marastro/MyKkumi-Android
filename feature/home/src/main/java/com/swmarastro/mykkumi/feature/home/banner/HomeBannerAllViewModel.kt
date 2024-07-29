@@ -1,12 +1,12 @@
 package com.swmarastro.mykkumi.feature.home.banner
 
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.swmarastro.mykkumi.domain.entity.BannerDetailVO
+import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
-import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerDetailUseCase
 import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,17 +18,12 @@ import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeBannerViewModel @Inject constructor(
+class HomeBannerAllViewModel @Inject constructor(
     private val getBannerListUseCase: GetBannerListUseCase,
-    private val getBannerDetailUseCase: GetBannerDetailUseCase,
 ) : ViewModel() {
     // 홈 > 배너 캐러셀
     private val _bannerListUiState = MutableStateFlow<BannerListVO>(BannerListVO())
     val bannerListUiState: StateFlow<BannerListVO> get() = _bannerListUiState
-
-    // 배너 상세
-    private val _bannerDetailUiState = MutableStateFlow<BannerDetailVO>(BannerDetailVO())
-    val bannerDetailUiState: StateFlow<BannerDetailVO> get() = _bannerDetailUiState
 
     // 선택된 배너
     private val _selectBannerId = MutableLiveData<Int>()
@@ -53,17 +48,9 @@ class HomeBannerViewModel @Inject constructor(
         _selectBannerId.value = bannerId
     }
 
-    // 배너 상세
-    fun setBannerDetail(bannerId: Int) {
-        viewModelScope.launch {
-            try {
-                val homeBannerDetail = withContext(Dispatchers.IO) {
-                    getBannerDetailUseCase(bannerId)
-                }
-                _bannerDetailUiState.value = homeBannerDetail
-            } catch (e: Exception) {
-                _bannerDetailUiState.value = BannerDetailVO()
-            }
-        }
+    // 배너 상세 페이지로 이동
+    fun navigateBannerDetail(navController: NavController?) {
+        val navigateDeepLink = "mykkumi://banner.detail?bannerId=${selectBannerId.value}"
+        navController?.navigate(deepLink = navigateDeepLink.toUri())
     }
 }

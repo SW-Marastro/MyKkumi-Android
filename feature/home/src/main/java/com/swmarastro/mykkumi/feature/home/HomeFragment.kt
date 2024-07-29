@@ -3,10 +3,12 @@ package com.swmarastro.mykkumi.feature.home
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ScrollView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
@@ -15,9 +17,7 @@ import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBinding
-import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewModel
 import com.swmarastro.mykkumi.feature.home.post.PostListAdapter
-import com.swmarastro.mykkumi.feature.home.post.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -27,9 +27,7 @@ import java.util.TimerTask
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
-
-    private val bannerViewModel by viewModels<HomeBannerViewModel>({ requireActivity() })
-    private val postViewModel by viewModels<PostViewModel>({ requireActivity() })
+    private val viewModel by viewModels<HomeViewModel>({ requireActivity() })
 
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
     private lateinit var postListAdapter: PostListAdapter
@@ -37,30 +35,31 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var timer: Timer
     private var isPostListLoading = false
 
+    private var navController: NavController? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.lifecycleOwner = this
-        lifecycleScope.launchWhenCreated {
-            initView()
-        }
         super.onViewCreated(view, savedInstanceState)
+
+        navController = view.findNavController()
 
         startAutoScroll()
         onClickBannerAll() // 배너 > + 버튼 선택 시 전체 리스트 페이지로 이동
 
         // 로그인 테스트
         binding.btnShoppingCart.setOnClickListener {
-            val loginScheme = "mykkumi://mykkumi-signin"
-            val intent = Intent();
-            intent.setAction(Intent.ACTION_VIEW)
-            intent.setData(Uri.parse(loginScheme))
-            startActivity(intent)
+            val intent = viewModel.navigateLogin()
+            if(intent == null) { // 로그인 됨
+                Log.d("Test", "로그인 된 사용자")
+            }
+            else { // 로그인 안 됨
+                startActivity(intent)
+            }
         }
     }
 
     override suspend fun initView() {
         bind {
-            postVm = postViewModel
-            bannerVm = bannerViewModel
+            vm = viewModel
         }
         setHomeBanner() // 배너
         setPostList() // 포스트
@@ -97,8 +96,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 배너 내용 세팅
     private fun setHomeBanner() {
-        bannerViewModel.setHomeBanner()
-        bannerViewModel.bannerListUiState
+        viewModel.setHomeBanner()
+        viewModel.bannerListUiState
             .onEach {
                 initBannerViewPager(it)
             }
@@ -119,14 +118,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 배너 클릭 -> 배너 상세 페이지 이동
     private fun onClickBannerItem(bannerId: Int) {
-        bannerViewModel.selectHomeBanner(bannerId)
-        view?.findNavController()?.navigate(R.id.action_navigate_fragment_to_home_banner_detail)
+        viewModel.selectHomeBanner(bannerId)
+        viewModel.navigateBannerDetail(navController)
     }
 
     // 배너 > + 버튼 클릭 -> 배너 전체 리스트 페이지로 이동
     private fun onClickBannerAll() {
         binding.btnBannerMore.setOnClickListener {
-            view?.findNavController()?.navigate(R.id.action_navigate_fragment_to_home_banner_all)
+            viewModel.navigateBannerAll(navController)
         }
     }
 
@@ -148,10 +147,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 // 스크롤이 최하단까지 내려갔는지 확인
                 val scroll = v.getChildAt(v.childCount - 1)
                 val diff = scroll.bottom - (v.height + v.scrollY)
-                if(postViewModel.getIsPostEnd()) {
+                if(viewModel.getIsPostEnd()) {
                     binding.includeListLoading.visibility = View.GONE
                 }
-                else if (diff == 0 && !postViewModel.getIsPostEnd() && !isPostListLoading) {
+                else if (diff == 0 && !viewModel.getIsPostEnd() && !isPostListLoading) {
                     isPostListLoading = true // 스크롤 이벤트가 연속적으로 호출되는 것을 방지
                     setNextPostList()
                 }
@@ -162,8 +161,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     // 포스트 내용 세팅
     private fun setPostList() {
         lifecycleScope.launch {
-        postViewModel.setPostList(false)
-        postViewModel.postListUiState
+            viewModel.setPostList(false)
+            viewModel.postListUiState
             .onEach {
                 initPostRecyclerView(it)
             }
@@ -174,13 +173,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     // 포스트 무한 스크롤 -> 스크롤 최하단 도달 시 다음 데이터 요청
     private fun setNextPostList() {
         lifecycleScope.launch {
-            postViewModel.setPostList(true)
-            postViewModel.postListUiState
+            viewModel.setPostList(true)
+            viewModel.postListUiState
                 .onEach {
                     postListAdapter.postList = it
                     isPostListLoading = false
 
-                    if (postViewModel.getIsPostEnd()) {
+                    if (viewModel.getIsPostEnd()) {
                         binding.includeListLoading.visibility = View.GONE
                     }
                 }

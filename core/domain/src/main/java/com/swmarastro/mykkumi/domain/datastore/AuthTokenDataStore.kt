@@ -6,4 +6,5 @@ interface AuthTokenDataStore {
     fun getAccessToken(): String?
     fun getRefreshToken(): String?
     fun deleteToken()
+    fun isLogin(): Boolean
 }

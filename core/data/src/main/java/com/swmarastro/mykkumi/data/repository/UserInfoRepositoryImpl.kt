@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import com.swmarastro.mykkumi.data.datasource.UserInfoDataSource
 import com.swmarastro.mykkumi.domain.exception.ApiException
 import com.swmarastro.mykkumi.data.util.FormDataUtil
-import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.swmarastro.mykkumi.domain.exception.ErrorResponse
 import com.swmarastro.mykkumi.domain.entity.UpdateUserInfoRequestVO
 import com.swmarastro.mykkumi.domain.entity.UpdateUserInfoResponseVO
@@ -18,31 +17,25 @@ import javax.inject.Inject
 class UserInfoRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val userInfoDataSource: UserInfoDataSource,
-    private val authTokenDataSource: AuthTokenDataStore,
 ) :UserInfoRepository {
 
-    private val INVALID_TOKEN = "INVALID_TOKEN"
-    private val DUPLICATE_VALUE = "DUPLICATE_VALUE"
-
-    private fun getAuthorization(): String {
-        return authTokenDataSource.getAccessToken() ?: throw ApiException.InvalidTokenException()
+    private companion object {
+        private const val INVALID_TOKEN = "INVALID_TOKEN"
+        private const val DUPLICATE_VALUE = "DUPLICATE_VALUE"
+        private const val INVALID_VALUE = "INVALID_VALUE"
     }
 
     //private var authorization = authTokenDataSource.getAccessToken()
 
     override suspend fun getUserInfo(): UserInfoVO {
-        val authorization = getAuthorization()
-
         return try {
-            userInfoDataSource.getUserInfo(authorization).toEntity()
+            userInfoDataSource.getUserInfo().toEntity()
         } catch (e: HttpException) {
             handleApiException(e)
         }
     }
 
     override suspend fun updateUserInfo(userInfo: UpdateUserInfoRequestVO): UpdateUserInfoResponseVO {
-        val authorization = getAuthorization()
-
 //        val userInfoDTO = UpdateUserInfoRequestDTO(
 //            nickname = userInfo.nickname,
 //            profileImage = FormDataUtil.convertUriToMultipart(context, userInfo.profileImage), // Uri를 Multipart/form-data로 변환
@@ -57,7 +50,6 @@ class UserInfoRepositoryImpl @Inject constructor(
 
         return try {
             userInfoDataSource.updateUserInfo(
-                authorization = authorization,
 //            params = userInfoDTO
                 nickname = FormDataUtil.getBody(userInfo.nickname),
                 profileImage = FormDataUtil.convertUriToMultipart(context, userInfo.profileImage),
@@ -75,7 +67,8 @@ class UserInfoRepositoryImpl @Inject constructor(
 
         when (errorResponse.errorCode) {
             INVALID_TOKEN -> throw ApiException.InvalidTokenException() // 만료된 토큰
-            DUPLICATE_VALUE -> throw ApiException.DuplicateValueException()
+            DUPLICATE_VALUE -> throw ApiException.DuplicateValueException(errorResponse.message)
+            INVALID_VALUE -> throw ApiException.InvalidNickNameValue(errorResponse.message) // 형식에 맞지 않는 닉네임
             else -> throw ApiException.UnknownApiException("An unknown error occurred: ${errorResponse.message}")
         }
     }
