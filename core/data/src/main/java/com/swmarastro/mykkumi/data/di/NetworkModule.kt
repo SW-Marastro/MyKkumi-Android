@@ -46,9 +46,9 @@ object NetworkModule {
     @Provides
     fun provideTokenInterceptor(
         authTokenDataSource: AuthTokenDataStore,
-        reAccessTokenDataSource: Provider<ReAccessTokenDataSource>,
+        reAccessTokenRepository: Provider<ReAccessTokenRepository>,
     ) : TokenAuthenticator {
-        return TokenAuthenticator(authTokenDataSource, reAccessTokenDataSource)
+        return TokenAuthenticator(authTokenDataSource, reAccessTokenRepository)
     }
 
     // OKHttpClient에 로깅인터셉터 등록

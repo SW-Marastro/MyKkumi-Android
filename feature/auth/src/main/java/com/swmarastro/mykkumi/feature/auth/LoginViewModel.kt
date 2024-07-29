@@ -141,15 +141,14 @@ class LoginViewModel @Inject constructor(
             try {
                 val userInfo = getUserInfoUseCase()
                 _userInfoUiState.value = userInfo
-                navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
+
                 // 최초 가입자 -> 추가 정보 입력 페이지로
                 if(_userInfoUiState.value.nickname == null) {
                     navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
                 }
                 // 기존 가입자 -> 홈 화면으로
                 else {
-                    // 테스트용
-                    //navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
+                    //navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name) // 테스트용
                     finishLogin()
                 }
             } catch (e: ApiException.InvalidRefreshTokenException) { // RefreshToken 만료
