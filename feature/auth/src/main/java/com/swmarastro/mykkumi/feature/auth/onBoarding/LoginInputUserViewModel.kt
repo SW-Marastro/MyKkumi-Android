@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swmarastro.mykkumi.domain.exception.ApiException
 import com.swmarastro.mykkumi.domain.entity.UpdateUserInfoRequestVO
-//import com.swmarastro.mykkumi.domain.repository.ReAccessTokenRepository
 import com.swmarastro.mykkumi.domain.usecase.auth.UpdateUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,11 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginInputUserViewModel @Inject constructor(
     private val updateUserInfoUseCase: UpdateUserInfoUseCase,
-    //private val reAccessTokenRepository: ReAccessTokenRepository,
 ): ViewModel() {
-    private val INVALID_TOKEN = "INVALID_TOKEN"
-    private val DUPLICATE_VALUE = "DUPLICATE_VALUE"
-
     private val _finishLoginUiState = MutableLiveData<Unit>()
     val finishLoginUiState: LiveData<Unit> get() = _finishLoginUiState
 
@@ -79,17 +74,11 @@ class LoginInputUserViewModel @Inject constructor(
             try { // 회원가입 완료
                 val response = updateUserInfoUseCase(userInfo)
                 finishLogin()
-            } catch (e: ApiException.InvalidTokenException) { // access Token 만료
-//                if (retries < MAX_RETRIES) {
-//                    try { // Refresh Token으로 Access Token 재발급
-//                        reAccessTokenRepository.getReAccessToken()
-//                        updateUserInfo(showToast, retries + 1) // accessToken 업데이트 해주고 재시도
-//                    } catch (e: ApiException.InvalidRefreshTokenException) {
-//                        e.message?.let { showToast(it) } // 로그아웃
-//                        finishLogin()
-//                    }
-//                }
             } catch (e: ApiException.DuplicateValueException) { // 중복된 닉네임
+                e.message?.let { showToast(it) }
+            } catch (e: ApiException.InvalidNickNameValue) { // 형식에 맞지 않는 닉네임
+                e.message?.let { showToast(it) }
+            } catch (e: ApiException.InvalidRefreshTokenException) { // RefreshToken 만료
                 e.message?.let { showToast(it) }
             } catch (e: ApiException.UnknownApiException) {
                 showToast("서비스 오류가 발생했습니다.")

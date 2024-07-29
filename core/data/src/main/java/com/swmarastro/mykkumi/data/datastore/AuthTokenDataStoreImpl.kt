@@ -22,15 +22,15 @@ class AuthTokenDataStoreImpl @Inject constructor(
     )
 
     override fun saveAccessToken(accessToken: String) {
-        sharedPreferences.edit().putString(ACCESS_TOKEN, BEARER + accessToken).apply()
+        sharedPreferences.edit().putString(ACCESS_TOKEN, accessToken).apply()
     }
 
     override fun saveRefreshToken(refreshToken: String) {
-        sharedPreferences.edit().putString(REFRESH_TOKEN, BEARER + refreshToken).apply()
+        sharedPreferences.edit().putString(REFRESH_TOKEN, refreshToken).apply()
     }
 
     override fun getAccessToken(): String? {
-        return sharedPreferences.getString(ACCESS_TOKEN, null)
+        return BEARER + sharedPreferences.getString(ACCESS_TOKEN, null)
     }
 
     override fun getRefreshToken(): String? {

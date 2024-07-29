@@ -15,7 +15,9 @@ class ReAccessTokenRepositoryImpl @Inject constructor(
     private val authTokenDataSource: AuthTokenDataStore,
 ) : ReAccessTokenRepository {
 
-    private val INVALID_TOKEN = "INVALID_TOKEN"
+    private companion object {
+        private const val INVALID_TOKEN = "INVALID_TOKEN"
+    }
 
     private fun getAuthorization(): String {
         return authTokenDataSource.getRefreshToken() ?: throw ApiException.InvalidTokenException()

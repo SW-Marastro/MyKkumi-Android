@@ -21,8 +21,12 @@ class UserInfoRepositoryImpl @Inject constructor(
     private val authTokenDataSource: AuthTokenDataStore,
 ) :UserInfoRepository {
 
-    private val INVALID_TOKEN = "INVALID_TOKEN"
-    private val DUPLICATE_VALUE = "DUPLICATE_VALUE"
+    private companion object {
+        private const val INVALID_TOKEN = "INVALID_TOKEN"
+        private const val DUPLICATE_VALUE = "DUPLICATE_VALUE"
+        private const val INVALID_VALUE = "INVALID_VALUE"
+    }
+
 
     private fun getAuthorization(): String {
         return authTokenDataSource.getAccessToken() ?: throw ApiException.InvalidTokenException()
@@ -75,7 +79,8 @@ class UserInfoRepositoryImpl @Inject constructor(
 
         when (errorResponse.errorCode) {
             INVALID_TOKEN -> throw ApiException.InvalidTokenException() // 만료된 토큰
-            DUPLICATE_VALUE -> throw ApiException.DuplicateValueException()
+            DUPLICATE_VALUE -> throw ApiException.DuplicateValueException(errorResponse.message)
+            INVALID_VALUE -> throw ApiException.InvalidNickNameValue(errorResponse.message) // 형식에 맞지 않는 닉네임
             else -> throw ApiException.UnknownApiException("An unknown error occurred: ${errorResponse.message}")
         }
     }
