@@ -27,8 +27,8 @@ android {
         def kakaoNativeAppKey = properties.getProperty('kakao.native.app.key', '')
 
         if (!kakaoNativeAppKey.isEmpty()) {
-            buildConfigField "String", 'KAKAO_NATIVE_APP_KEY', "${kakaoNativeAppKey}"
-            manifestPlaceholders = [KAKAO_NATIVE_APP_KEY: "\"${kakaoNativeAppKey}\""]
+            buildConfigField "String", 'KAKAO_NATIVE_APP_KEY', "\"${kakaoNativeAppKey}\""
+            manifestPlaceholders = [KAKAO_NATIVE_APP_KEY: kakaoNativeAppKey]
         } else {
             throw new GradleException("KAKAO_NATIVE_APP_KEY is not set in local.properties")
         }

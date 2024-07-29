@@ -25,8 +25,6 @@ class KakaoLoginRepositoryImpl @Inject constructor(
         if(!mykkumiLoginResponse.accessToken.isNullOrEmpty() && !mykkumiLoginResponse.refreshToken.isNullOrEmpty()) {
             authTokenDataSource.saveAccessToken(mykkumiLoginResponse.accessToken)
             authTokenDataSource.saveRefreshToken(mykkumiLoginResponse.refreshToken)
-
-            Log.d("Test token", mykkumiLoginResponse.accessToken)
             return true
         }
         // 실패
