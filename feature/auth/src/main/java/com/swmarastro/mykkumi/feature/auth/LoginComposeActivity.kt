@@ -108,7 +108,6 @@ class LoginComposeActivity : ComponentActivity() {
             }
             composable(LoginScreens.LoginInputUserScreen.name) {
                 LoginInputUserScreen(
-                    navController = navController,
                     activity = activity
                 )
             }
@@ -147,7 +146,12 @@ class LoginComposeActivity : ComponentActivity() {
                     .align(Alignment.Center)
                     .pointerInteropFilter {
                         when (it.action) {
-                            MotionEvent.ACTION_DOWN -> handleKakaoLogin()
+                            MotionEvent.ACTION_DOWN -> viewModel.navigateToNextScreen(
+                                navController = navController,
+                                showToast = {
+                                    showToast(it)
+                                }
+                            )//handleKakaoLogin()
                             else -> false
                         }
                         true

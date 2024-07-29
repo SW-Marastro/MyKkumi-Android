@@ -77,7 +77,6 @@ private lateinit var localContext: Context
 @ExperimentalPermissionsApi
 @Composable
 fun LoginInputUserScreen(
-    navController: NavController,
     activity: ComponentActivity
 ) {
     localContext = LocalContext.current

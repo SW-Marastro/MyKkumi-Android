@@ -1,35 +1,51 @@
 package com.swmarastro.mykkumi.feature.auth.onBoarding
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.swmarastro.mykkumi.domain.entity.BannerListVO
+import com.swmarastro.mykkumi.domain.entity.HobbyCategoryItemVO
+import com.swmarastro.mykkumi.domain.entity.HobbyCategoryVO
+import com.swmarastro.mykkumi.domain.entity.HobbySubCategoryItemVO
+import com.swmarastro.mykkumi.domain.usecase.post.GetHobbyCategoryListUseCase
 import com.swmarastro.mykkumi.feature.auth.LoginScreens
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginSelectHobbyViewModel @Inject constructor(
-
+    private val getHobbyCategoryListUseCase: GetHobbyCategoryListUseCase,
 ): ViewModel() {
-    private val _hobbyCategoryUiState = MutableStateFlow<MutableList<TestHobby>>(mutableListOf())
-    val hobbyCategoryUiState: StateFlow<MutableList<TestHobby>> get() = _hobbyCategoryUiState
+    private val _hobbyCategoryUiState = MutableStateFlow<MutableList<HobbyCategoryItemVO>>(mutableListOf())
+    val hobbyCategoryUiState: StateFlow<MutableList<HobbyCategoryItemVO>> get() = _hobbyCategoryUiState
 
-    private val _selectedHobbies = MutableStateFlow<MutableList<String>>(mutableListOf())
-    val selectedHobbies: StateFlow<MutableList<String>> get() = _selectedHobbies
+    private val _selectedHobbies = MutableStateFlow<MutableList<HobbySubCategoryItemVO>>(mutableListOf())
+    val selectedHobbies: StateFlow<MutableList<HobbySubCategoryItemVO>> get() = _selectedHobbies
 
     // 관심 취미 데이터 세팅
     fun getHobbyCategoryList() {
-        _hobbyCategoryUiState.value.clear()
-        _hobbyCategoryUiState.value.addAll(mutableListOf(
-            TestHobby("공예/DIY", mutableListOf("다이어리 꾸미기", "포토카드 꾸미기", "뜨개질")),
-            TestHobby("스포츠", mutableListOf("야구", "테니스", "골프")),
-            TestHobby("뷰티", mutableListOf("메이크업", "헤어"))
-        ))
+        viewModelScope.launch {
+            try {
+                _hobbyCategoryUiState.value.clear()
+                val hobbyCategories = withContext(Dispatchers.IO) {
+                    getHobbyCategoryListUseCase()
+                }
+                _hobbyCategoryUiState.value.addAll(hobbyCategories.categories)
+            } catch (e: Exception) {
+                _hobbyCategoryUiState.value.clear()
+            }
+        }
+        //_hobbyCategoryUiState.emit()
     }
 
     // 관심 취미 선택
-    fun setHobbySelected(selectHobby: String) {
+    fun setHobbySelected(selectHobby: HobbySubCategoryItemVO) {
         val updatedHobbies = _selectedHobbies.value
 
         if (updatedHobbies.contains(selectHobby)) { // 선택 취소
@@ -46,7 +62,7 @@ class LoginSelectHobbyViewModel @Inject constructor(
     }
 
     // 취미 선택 상태 확인
-    fun isHobbySelected(hobby: String): Boolean {
-        return _selectedHobbies.value.contains(hobby)
+    fun isHobbySelected(hobby: HobbySubCategoryItemVO): Boolean {
+        return selectedHobbies.value.contains(hobby)
     }
 }

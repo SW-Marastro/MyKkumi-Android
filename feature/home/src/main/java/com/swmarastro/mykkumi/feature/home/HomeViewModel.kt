@@ -106,7 +106,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun navigateLogin() : Intent? {
-        if(authTokenDataStore.isLogin()) return null
+        //if(authTokenDataStore.isLogin()) return null
 
         val loginScheme = "mykkumi://mykkumi.signin"
 
