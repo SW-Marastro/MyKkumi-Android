@@ -16,8 +16,12 @@ import com.swmarastro.mykkumi.data.datasource.KakaoLoginDataSource
 import com.swmarastro.mykkumi.data.datasource.PostDataSource
 import com.swmarastro.mykkumi.data.datasource.ReAccessTokenDataSource
 import com.swmarastro.mykkumi.data.datasource.UserInfoDataSource
+import com.swmarastro.mykkumi.data.interceptor.TokenAuthenticator
 import com.swmarastro.mykkumi.data.util.KakaoInitializer
+import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
+import com.swmarastro.mykkumi.domain.repository.ReAccessTokenRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Provider
 
 /*
 @Module: 인터페이스나, 빌더 패턴을 사용한 경우, 외부 라이브러리 클래스 등등 생성자를 사용할 수 없는 Class를 주입해야 할 경우
@@ -38,14 +42,25 @@ object NetworkModule {
         return HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
     }
 
+    // Token Interceptor - dependency cycle 방지
+    @Provides
+    fun provideTokenInterceptor(
+        authTokenDataSource: AuthTokenDataStore,
+        reAccessTokenRepository: Provider<ReAccessTokenRepository>,
+    ) : TokenAuthenticator {
+        return TokenAuthenticator(authTokenDataSource, reAccessTokenRepository)
+    }
+
     // OKHttpClient에 로깅인터셉터 등록
     @Provides
     @Singleton
     fun provideOkHttpClient(
-        interceptor: HttpLoggingInterceptor
+        httpLoggingInterceptor: HttpLoggingInterceptor,
+        tokenAuthenticator: TokenAuthenticator,
     ) : OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(interceptor)
+            .addInterceptor(httpLoggingInterceptor)
+            .authenticator(tokenAuthenticator)
             .build()
     }
 

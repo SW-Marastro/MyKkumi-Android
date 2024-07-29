@@ -14,7 +14,7 @@ import com.swmarastro.mykkumi.domain.exception.ErrorResponse
 import com.swmarastro.mykkumi.domain.entity.KakaoToken
 import com.swmarastro.mykkumi.domain.entity.UserInfoVO
 import com.swmarastro.mykkumi.domain.exception.ApiException
-import com.swmarastro.mykkumi.domain.repository.ReAccessTokenRepository
+//import com.swmarastro.mykkumi.domain.repository.ReAccessTokenRepository
 import com.swmarastro.mykkumi.domain.usecase.auth.GetUserInfoUseCase
 import com.swmarastro.mykkumi.domain.usecase.auth.KakaoLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +28,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val kakaoLoginUseCase: KakaoLoginUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val reAccessTokenRepository: ReAccessTokenRepository,
+    //private val reAccessTokenRepository: ReAccessTokenRepository,
 ): ViewModel() {
 
     private val INVALID_TOKEN = "INVALID_TOKEN"
@@ -167,15 +167,15 @@ class LoginViewModel @Inject constructor(
                 }
             }
             catch (e: ApiException.InvalidTokenException) { // access Token 만료
-                if (retries < MAX_RETRIES) {
-                    try { // Refresh Token으로 Access Token 재발급
-                        reAccessTokenRepository.getReAccessToken()
-                        navigateToNextScreen(navController, showToast, retries + 1) // accessToken 업데이트 해주고 재시도
-                    } catch (e: ApiException.InvalidRefreshTokenException) {
-                        e.message?.let { showToast(it) } // 로그아웃
-                        finishLogin()
-                    }
-                }
+//                if (retries < MAX_RETRIES) {
+//                    try { // Refresh Token으로 Access Token 재발급
+//                        reAccessTokenRepository.getReAccessToken()
+//                        navigateToNextScreen(navController, showToast, retries + 1) // accessToken 업데이트 해주고 재시도
+//                    } catch (e: ApiException.InvalidRefreshTokenException) {
+//                        e.message?.let { showToast(it) } // 로그아웃
+//                        finishLogin()
+//                    }
+//                }
             }
             catch (e: ApiException.UnknownApiException) {
                 showToast("서비스 오류가 발생했습니다.")
