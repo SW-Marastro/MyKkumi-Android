@@ -1,11 +1,14 @@
 package com.swmarastro.mykkumi.feature.home
 
+import android.content.Intent
+import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerListUseCase
@@ -23,6 +26,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getBannerListUseCase: GetBannerListUseCase,
     private val getHomePostListUseCase: GetHomePostListUseCase,
+    private val authTokenDataStore: AuthTokenDataStore,
 ) : ViewModel() {
 
     // 홈 > 배너 캐러셀
@@ -99,5 +103,17 @@ class HomeViewModel @Inject constructor(
         val navigateDeepLink = "mykkumi://banner.detail?bannerId=${selectBannerId.value}"
         //val action = HomeFragmentDirections.actionNavigateFragmentToHomeBannerDetail(bannerId = selectBannerId)
         navController?.navigate(deepLink = navigateDeepLink.toUri())
+    }
+
+    fun navigateLogin() : Intent? {
+        if(authTokenDataStore.isLogin()) return null
+
+        val loginScheme = "mykkumi://mykkumi.signin"
+
+        val intent = Intent()
+        intent.setAction(Intent.ACTION_VIEW)
+        intent.setData(Uri.parse(loginScheme))
+
+        return intent
     }
 }

@@ -3,6 +3,7 @@ package com.swmarastro.mykkumi.feature.home
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ScrollView
 import androidx.fragment.app.viewModels
@@ -46,11 +47,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         // 로그인 테스트
         binding.btnShoppingCart.setOnClickListener {
-            val loginScheme = "mykkumi://mykkumi.signin"
-            val intent = Intent()
-            intent.setAction(Intent.ACTION_VIEW)
-            intent.setData(Uri.parse(loginScheme))
-            startActivity(intent)
+            val intent = viewModel.navigateLogin()
+            if(intent == null) { // 로그인 됨
+                Log.d("Test", "로그인 된 사용자")
+            }
+            else { // 로그인 안 됨
+                startActivity(intent)
+            }
         }
     }
 
