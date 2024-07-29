@@ -17,6 +17,7 @@ import com.swmarastro.mykkumi.data.datasource.PostDataSource
 import com.swmarastro.mykkumi.data.datasource.ReAccessTokenDataSource
 import com.swmarastro.mykkumi.data.datasource.UserInfoDataSource
 import com.swmarastro.mykkumi.data.interceptor.TokenAuthenticator
+import com.swmarastro.mykkumi.data.interceptor.TokenInterceptor
 import com.swmarastro.mykkumi.data.util.KakaoInitializer
 import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.swmarastro.mykkumi.domain.repository.ReAccessTokenRepository
@@ -56,11 +57,13 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
+        tokenInterceptor: TokenInterceptor,
         tokenAuthenticator: TokenAuthenticator,
     ) : OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
-            .authenticator(tokenAuthenticator)
+            .addInterceptor(tokenInterceptor) // header에 accessToken 넣어줌
+            .authenticator(tokenAuthenticator) // token 만료 처리
             .build()
     }
 
