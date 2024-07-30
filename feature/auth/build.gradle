@@ -116,4 +116,7 @@ dependencies {
 
     // Croppy
     implementation "com.github.lyrebirdstudio:Croppy:$croppy_version"
+
+    //LifeCycle
+    implementation "androidx.lifecycle:lifecycle-runtime-compose-android:$lifecycle_compose_version"
 }

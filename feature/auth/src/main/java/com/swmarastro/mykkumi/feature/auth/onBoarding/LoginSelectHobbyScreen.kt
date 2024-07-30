@@ -1,6 +1,5 @@
 package com.swmarastro.mykkumi.feature.auth.onBoarding
 
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,7 +16,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.entity.HobbyCategoryItemVO
 import com.swmarastro.mykkumi.domain.entity.HobbySubCategoryItemVO
@@ -44,12 +43,7 @@ fun LoginSelectHobbyScreen(
         LocalContext.current as ComponentActivity
     ).get(LoginSelectHobbyViewModel::class.java)
 
-//    LifecycleEventEffect(event = Lifecycle.Event.ON_CREATE) {
-//        viewModel.getHobbyCategoryList()
-//    }
-
-    LaunchedEffect(Unit) {
-        Log.d("view", "view")
+    LifecycleEventEffect(event = Lifecycle.Event.ON_CREATE) {
         viewModel.getHobbyCategoryList()
     }
 

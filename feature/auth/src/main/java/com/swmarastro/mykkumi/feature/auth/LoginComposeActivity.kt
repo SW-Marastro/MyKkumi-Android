@@ -44,6 +44,7 @@ import com.swmarastro.mykkumi.feature.auth.onBoarding.LoginSelectHobbyScreen
 import com.swmarastro.mykkumi.feature.auth.onBoarding.LoginSelectHobbyViewModel
 import com.swmarastro.mykkumi.feature.auth.ui.theme.MyKkumi_AOSTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -132,14 +133,14 @@ class LoginComposeActivity : ComponentActivity() {
     private fun KakaoLoginScreen(navController: NavController) {
         // 로그인 완료되면 화면 이동
         viewModel.loginUiState
+            .filter { it == LoginUiState.MykkumiLoginSuccess } // 로그인 성공으로 바뀌었을 때
             .onEach {
-                if(it == LoginUiState.MykkumiLoginSuccess)
-                    viewModel.navigateToNextScreen(
-                        navController = navController,
-                        showToast = {
-                            showToast(it)
-                        }
-                    )
+                viewModel.navigateToNextScreen(
+                    navController = navController,
+                    showToast = {
+                        showToast(it)
+                    }
+                )
             }
             .launchIn(lifecycleScope)
 
@@ -198,6 +199,5 @@ class LoginComposeActivity : ComponentActivity() {
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        viewModel.setUiStateIdle()
     }
 }

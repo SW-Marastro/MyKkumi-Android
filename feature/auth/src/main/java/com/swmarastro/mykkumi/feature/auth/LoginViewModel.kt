@@ -66,8 +66,8 @@ class LoginViewModel @Inject constructor(
         _loginUiState.tryEmit(LoginUiState.MykkumiLoginFail)
     }
 
-    fun setUiStateIdle() {
-        _loginUiState.tryEmit(LoginUiState.IDle)
+    fun setDoneLoginProcess() {
+        _loginUiState.tryEmit(LoginUiState.DoneProcess)
     }
 
     // 카카오 로그인 callback 세팅
@@ -135,6 +135,7 @@ class LoginViewModel @Inject constructor(
                     )
                 )
 
+
                 if(isSuccessLogin) {
                     mykkumiLoginSuccess()
                 }
@@ -149,11 +150,13 @@ class LoginViewModel @Inject constructor(
     }
 
     // 다음 화면으로 네비게이션 처리
-    fun navigateToNextScreen(navController: NavController, showToast : (message: String) -> Unit, retries: Int = 0) {
+    fun navigateToNextScreen(navController: NavController, showToast : (message: String) -> Unit) {
         viewModelScope.launch {
             try {
                 val userInfo = getUserInfoUseCase()
                 _userInfoUiState.value = userInfo
+
+                setDoneLoginProcess()
 
                 // 최초 가입자 -> 추가 정보 입력 페이지로
                 if(_userInfoUiState.value.nickname == null) {
@@ -164,17 +167,6 @@ class LoginViewModel @Inject constructor(
                     // 테스트용
                     //navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
                     finishLogin()
-                }
-            }
-            catch (e: ApiException.InvalidTokenException) { // access Token 만료
-                if (retries < MAX_RETRIES) {
-                    try { // Refresh Token으로 Access Token 재발급
-                        reAccessTokenRepository.getReAccessToken()
-                        navigateToNextScreen(navController, showToast, retries + 1) // accessToken 업데이트 해주고 재시도
-                    } catch (e: ApiException.InvalidRefreshTokenException) {
-                        e.message?.let { showToast(it) } // 로그아웃
-                        finishLogin()
-                    }
                 }
             }
             catch (e: ApiException.UnknownApiException) {
