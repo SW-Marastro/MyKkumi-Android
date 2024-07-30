@@ -1,11 +1,11 @@
 package com.swmarastro.mykkumi.feature.auth.onBoarding
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,27 +21,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation.NavController
+import com.swmarastro.mykkumi.domain.entity.HobbyCategoryItemVO
+import com.swmarastro.mykkumi.domain.entity.HobbySubCategoryItemVO
 import com.swmarastro.mykkumi.feature.auth.R
-
-// 더미 데이터 - api 연결 시 삭제 예정
-data class TestHobby (
-    val categoryName: String,
-    val subCategories: MutableList<String>
-)
 
 // 관심 취미 선택
 @Composable
 fun LoginSelectHobbyScreen(
     navController: NavController,
 ) {
-    val viewModel: LoginSelectHobbyViewModel = viewModel<LoginSelectHobbyViewModel>()
-    viewModel.getHobbyCategoryList()
+    val viewModel: LoginSelectHobbyViewModel = ViewModelProvider(
+        LocalContext.current as ComponentActivity
+    ).get(LoginSelectHobbyViewModel::class.java)
+
+    LifecycleEventEffect(event = Lifecycle.Event.ON_CREATE) {
+        viewModel.getHobbyCategoryList()
+    }
 
     Column(
         modifier = Modifier
@@ -102,7 +106,7 @@ fun LoginSelectHobbyScreen(
 
 @Composable
 fun HobbyCategoryItem(
-    hobby: TestHobby,
+    hobby: HobbyCategoryItemVO,
     viewModel: LoginSelectHobbyViewModel
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -128,10 +132,16 @@ fun HobbyCategoryItem(
 
 @Composable
 fun HobbySubCategoryItem(
-    subCategory: String,
+    subCategory: HobbySubCategoryItemVO,
     viewModel: LoginSelectHobbyViewModel
 ) {
-    var backgroundColor = remember { mutableStateOf(Color.LightGray) }
+    var backgroundColor = remember { mutableStateOf(
+        if (viewModel.isHobbySelected(subCategory)) {
+            Color.Green
+        } else {
+            Color.LightGray
+        }
+    )}
 
     Column(
         modifier = Modifier
@@ -157,7 +167,7 @@ fun HobbySubCategoryItem(
                 .padding(3.dp)
         )
         Text(
-            text = subCategory,
+            text = subCategory.subCategoryName,
             modifier = Modifier
                 .padding(horizontal = 5.dp)
                 .align(Alignment.CenterHorizontally)

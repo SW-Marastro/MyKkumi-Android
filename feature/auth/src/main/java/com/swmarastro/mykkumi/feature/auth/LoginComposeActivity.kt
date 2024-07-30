@@ -29,9 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -42,6 +44,7 @@ import com.swmarastro.mykkumi.feature.auth.onBoarding.LoginSelectHobbyScreen
 import com.swmarastro.mykkumi.feature.auth.onBoarding.LoginSelectHobbyViewModel
 import com.swmarastro.mykkumi.feature.auth.ui.theme.MyKkumi_AOSTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -106,10 +109,19 @@ class LoginComposeActivity : ComponentActivity() {
                     navController = navController,
                 )
             }
-            composable(LoginScreens.LoginInputUserScreen.name) {
+            composable(
+                route = LoginScreens.LoginInputUserScreen.name + "/{selectedHobbies}",
+                arguments = listOf(
+                    navArgument("selectedHobbies") {
+//                        type = NavType.LongArrayType
+                        type = NavType.StringType
+                    }
+                )
+            ) { backstackEntry ->
                 LoginInputUserScreen(
-                    navController = navController,
-                    activity = activity
+                    activity = activity,
+                    //selectedHobbies = backstackEntry.arguments?.getLongArray("selectedHobbies"),
+                    selectedHobbies = backstackEntry.arguments?.getString("selectedHobbies"),
                 )
             }
         }
@@ -121,14 +133,14 @@ class LoginComposeActivity : ComponentActivity() {
     private fun KakaoLoginScreen(navController: NavController) {
         // 로그인 완료되면 화면 이동
         viewModel.loginUiState
+            .filter { it == LoginUiState.MykkumiLoginSuccess } // 로그인 성공으로 바뀌었을 때
             .onEach {
-                if(it == LoginUiState.MykkumiLoginSuccess)
-                    viewModel.navigateToNextScreen(
-                        navController = navController,
-                        showToast = {
-                            showToast(it)
-                        }
-                    )
+                viewModel.navigateToNextScreen(
+                    navController = navController,
+                    showToast = {
+                        showToast(it)
+                    }
+                )
             }
             .launchIn(lifecycleScope)
 
@@ -187,6 +199,5 @@ class LoginComposeActivity : ComponentActivity() {
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        viewModel.setUiStateIdle()
     }
 }

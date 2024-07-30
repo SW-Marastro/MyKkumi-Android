@@ -7,4 +7,5 @@ sealed interface LoginUiState {
     object KakaoLogin : LoginUiState
     object MykkumiLoginSuccess : LoginUiState
     object MykkumiLoginFail : LoginUiState
+    object DoneProcess : LoginUiState
 }

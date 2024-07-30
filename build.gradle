@@ -70,6 +70,9 @@ buildscript {
 
         // Croppy
         croppy_version = "0.2"
+
+        // LifeCycle
+        lifecycle_compose_version = "2.8.4"
     }
     dependencies {
         // Safe Args

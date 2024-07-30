@@ -12,6 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 import com.swmarastro.mykkumi.data.BuildConfig
 import com.swmarastro.mykkumi.data.datasource.BannerDataSource
+import com.swmarastro.mykkumi.data.datasource.HobbyCategoryDataSource
 import com.swmarastro.mykkumi.data.datasource.KakaoLoginDataSource
 import com.swmarastro.mykkumi.data.datasource.PostDataSource
 import com.swmarastro.mykkumi.data.datasource.ReAccessTokenDataSource
@@ -113,5 +114,11 @@ object NetworkModule {
     @Singleton
     fun provideReAccessTokenDataSource(retrofit: Retrofit): ReAccessTokenDataSource {
         return retrofit.create(ReAccessTokenDataSource::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHobbyCategoryDataSource(retrofit: Retrofit): HobbyCategoryDataSource {
+        return retrofit.create(HobbyCategoryDataSource::class.java)
     }
 }

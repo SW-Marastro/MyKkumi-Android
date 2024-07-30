@@ -7,7 +7,7 @@ import com.swmarastro.mykkumi.domain.repository.BannerRepository
 import javax.inject.Inject
 
 class BannerRepositoryImpl @Inject constructor(
-    private val bannerDataSource: BannerDataSource
+    private val bannerDataSource: BannerDataSource,
 ) : BannerRepository {
 
     override suspend fun getBannerList(): BannerListVO {

@@ -1,5 +1,7 @@
 package com.swmarastro.mykkumi.feature.auth
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,22 +9,32 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.google.gson.Gson
+import com.swmarastro.mykkumi.domain.exception.ErrorResponse
 import com.swmarastro.mykkumi.domain.entity.KakaoToken
 import com.swmarastro.mykkumi.domain.entity.UserInfoVO
 import com.swmarastro.mykkumi.domain.exception.ApiException
+import com.swmarastro.mykkumi.domain.repository.ReAccessTokenRepository
 import com.swmarastro.mykkumi.domain.usecase.auth.GetUserInfoUseCase
 import com.swmarastro.mykkumi.domain.usecase.auth.KakaoLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val kakaoLoginUseCase: KakaoLoginUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val reAccessTokenRepository: ReAccessTokenRepository,
 ): ViewModel() {
+
+    private val INVALID_TOKEN = "INVALID_TOKEN"
+
+    private val MAX_RETRIES = 1
+
     private val _finishLoginUiState = MutableLiveData<Unit>()
     val finishLoginUiState: LiveData<Unit> get() = _finishLoginUiState
 
@@ -54,8 +66,8 @@ class LoginViewModel @Inject constructor(
         _loginUiState.tryEmit(LoginUiState.MykkumiLoginFail)
     }
 
-    fun setUiStateIdle() {
-        _loginUiState.tryEmit(LoginUiState.IDle)
+    fun setDoneLoginProcess() {
+        _loginUiState.tryEmit(LoginUiState.DoneProcess)
     }
 
     // 카카오 로그인 callback 세팅
@@ -99,10 +111,10 @@ class LoginViewModel @Inject constructor(
                         showToast("서비스 에러가 발생했습니다.") // 기타 에러
                     }
                 }
-                //Log.e(TAG, "카카오계정으로 로그인 실패", error)
+                Log.e(TAG, "카카오계정으로 로그인 실패", error)
                 kakaoLoginFail()
             } else if (token != null) { // 토큰을 받아온 경우
-                //Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
+                Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
                 kakaoLoginSuccess()
                 setKakaoToken(token.accessToken, token.refreshToken)
             }
@@ -123,24 +135,28 @@ class LoginViewModel @Inject constructor(
                     )
                 )
 
+
                 if(isSuccessLogin) {
                     mykkumiLoginSuccess()
                 }
                 else {
                     mykkumiLoginFail()
                 }
-            } catch (e: Exception) {
+            }
+            catch (e: Exception) {
 
             }
         }
     }
 
     // 다음 화면으로 네비게이션 처리
-    fun navigateToNextScreen(navController: NavController, showToast : (message: String) -> Unit, retries: Int = 0) {
+    fun navigateToNextScreen(navController: NavController, showToast : (message: String) -> Unit) {
         viewModelScope.launch {
             try {
                 val userInfo = getUserInfoUseCase()
                 _userInfoUiState.value = userInfo
+
+                setDoneLoginProcess()
 
                 // 최초 가입자 -> 추가 정보 입력 페이지로
                 if(_userInfoUiState.value.nickname == null) {
@@ -148,14 +164,15 @@ class LoginViewModel @Inject constructor(
                 }
                 // 기존 가입자 -> 홈 화면으로
                 else {
-                    //navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name) // 테스트용
+                    // 테스트용
+                    //navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
                     finishLogin()
                 }
-            } catch (e: ApiException.InvalidRefreshTokenException) { // RefreshToken 만료
-                e.message?.let { showToast(it) }
-            } catch (e: ApiException.UnknownApiException) {
+            }
+            catch (e: ApiException.UnknownApiException) {
                 showToast("서비스 오류가 발생했습니다.")
-            } catch (e: Exception) {
+            }
+            catch (e: Exception) {
                 showToast("서비스 오류가 발생했습니다.")
             }
         }
