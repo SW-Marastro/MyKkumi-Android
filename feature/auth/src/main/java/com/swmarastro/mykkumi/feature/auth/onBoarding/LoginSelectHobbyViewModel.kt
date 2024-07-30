@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.feature.auth.onBoarding
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -60,7 +61,10 @@ class LoginSelectHobbyViewModel @Inject constructor(
 
     // 다음 화면으로 네비게이션 처리
     fun navigateToInputUserInfoScreen(navController: NavController) {
-        navController.navigate(route = LoginScreens.LoginInputUserScreen.name + "/${selectedHobbies.value.toString()}")
+        Log.d("test", selectedHobbies.value.toLongArray().contentToString())
+        //val argument: LongArray = selectedHobbies.value.toLongArray()
+        val argument: String = selectedHobbies.value.toLongArray().toString()
+        navController.navigate(route = LoginScreens.LoginInputUserScreen.name + "/${argument}")
     }
 
     // 취미 선택 상태 확인

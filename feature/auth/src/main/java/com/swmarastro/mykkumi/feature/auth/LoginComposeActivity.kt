@@ -112,12 +112,14 @@ class LoginComposeActivity : ComponentActivity() {
                 route = LoginScreens.LoginInputUserScreen.name + "/{selectedHobbies}",
                 arguments = listOf(
                     navArgument("selectedHobbies") {
+//                        type = NavType.LongArrayType
                         type = NavType.StringType
                     }
                 )
             ) { backstackEntry ->
                 LoginInputUserScreen(
                     activity = activity,
+                    //selectedHobbies = backstackEntry.arguments?.getLongArray("selectedHobbies"),
                     selectedHobbies = backstackEntry.arguments?.getString("selectedHobbies"),
                 )
             }

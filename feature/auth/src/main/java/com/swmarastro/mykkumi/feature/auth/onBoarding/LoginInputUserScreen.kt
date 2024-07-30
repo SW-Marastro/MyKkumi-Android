@@ -79,6 +79,7 @@ private lateinit var localContext: Context
 fun LoginInputUserScreen(
     activity: ComponentActivity,
     selectedHobbies: String?
+//    selectedHobbies: LongArray?
 ) {
     localContext = LocalContext.current
     val loginViewModel: LoginInputUserViewModel = ViewModelProvider(
