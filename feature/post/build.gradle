@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace 'com.swmarastro.mykkumi.feature.mypage'
+    namespace 'com.swmarastro.mykkumi.feature.post'
     compileSdk compile_sdk_version
 
     defaultConfig {
@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -29,7 +29,6 @@ android {
     kotlinOptions {
         jvmTarget = jvm_target_version
     }
-
     buildFeatures {
         dataBinding = true
     }
