@@ -77,12 +77,15 @@ private lateinit var localContext: Context
 @ExperimentalPermissionsApi
 @Composable
 fun LoginInputUserScreen(
-    activity: ComponentActivity
+    activity: ComponentActivity,
+    selectedHobbies: String?
 ) {
     localContext = LocalContext.current
     val loginViewModel: LoginInputUserViewModel = ViewModelProvider(
         LocalContext.current as ComponentActivity
     ).get(LoginInputUserViewModel::class.java)
+
+    //Log.d("select category", selectedHobbies.toString())
 
     // 로그인 종료 상태 체크
     loginViewModel.finishLoginUiState.observe(activity, Observer {

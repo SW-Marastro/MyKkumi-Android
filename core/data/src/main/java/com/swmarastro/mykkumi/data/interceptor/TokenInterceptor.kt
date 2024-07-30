@@ -17,7 +17,13 @@ class TokenInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val accessToken = runBlocking {
             authTokenDataSource.getAccessToken()
-        } ?: throw ApiException.InvalidTokenException()
+        }
+
+        if(accessToken.isNullOrEmpty()) {
+            return chain.proceed(
+                chain.request()
+            )
+        }
 
         return chain.proceed(
             chain.request().newBuilder()

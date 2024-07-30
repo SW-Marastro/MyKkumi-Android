@@ -29,9 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -106,9 +108,17 @@ class LoginComposeActivity : ComponentActivity() {
                     navController = navController,
                 )
             }
-            composable(LoginScreens.LoginInputUserScreen.name) {
+            composable(
+                route = LoginScreens.LoginInputUserScreen.name + "/{selectedHobbies}",
+                arguments = listOf(
+                    navArgument("selectedHobbies") {
+                        type = NavType.StringType
+                    }
+                )
+            ) { backstackEntry ->
                 LoginInputUserScreen(
-                    activity = activity
+                    activity = activity,
+                    selectedHobbies = backstackEntry.arguments?.getString("selectedHobbies"),
                 )
             }
         }
@@ -146,12 +156,7 @@ class LoginComposeActivity : ComponentActivity() {
                     .align(Alignment.Center)
                     .pointerInteropFilter {
                         when (it.action) {
-                            MotionEvent.ACTION_DOWN -> viewModel.navigateToNextScreen(
-                                navController = navController,
-                                showToast = {
-                                    showToast(it)
-                                }
-                            )//handleKakaoLogin()
+                            MotionEvent.ACTION_DOWN -> handleKakaoLogin()
                             else -> false
                         }
                         true

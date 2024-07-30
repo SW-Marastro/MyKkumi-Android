@@ -17,6 +17,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -134,7 +136,13 @@ fun HobbySubCategoryItem(
     subCategory: HobbySubCategoryItemVO,
     viewModel: LoginSelectHobbyViewModel
 ) {
-    var backgroundColor = remember { mutableStateOf(Color.LightGray) }
+    var backgroundColor = remember { mutableStateOf(
+        if (viewModel.isHobbySelected(subCategory)) {
+            Color.Green
+        } else {
+            Color.LightGray
+        }
+    )}
 
     Column(
         modifier = Modifier
