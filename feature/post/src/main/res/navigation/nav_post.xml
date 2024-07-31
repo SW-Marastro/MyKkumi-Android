@@ -8,6 +8,16 @@
         android:id="@+id/postEditFragment"
         android:name="com.swmarastro.mykkumi.feature.post.PostEditFragment"
         android:label="fragment_post_edit"
-        tools:layout="@layout/fragment_post_edit"/>
+        tools:layout="@layout/fragment_post_edit">
+
+        <argument
+            android:name="postId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+
+        <deepLink
+            app:uri="mykkumi://post.edit?postId={postId}"/>
+
+    </fragment>
 
 </navigation>

@@ -1,9 +1,16 @@
 package com.swmarastro.mykkumi.feature.home
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.ScrollView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -11,6 +18,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
+import com.swmarastro.mykkumi.common_ui.permission.ImagePermissionUtils
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
@@ -43,11 +51,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         startAutoScroll()
         onClickBannerAll() // 배너 > + 버튼 선택 시 전체 리스트 페이지로 이동
 
-        // 로그인 테스트
-        binding.btnShoppingCart.setOnClickListener {
+        // 포스트 작성 -> 로그인 유도 -> 이미지, 카메라 접근 권한 요청 -> 포스트 작성 페이지
+        binding.floatingBtnAddPost.setOnClickListener {
             val intent = viewModel.navigateLogin()
             if(intent == null) { // 로그인 됨
                 Log.d("Test", "로그인 된 사용자")
+                // 이미지 권한 요청하기
+                checkPermissionsAndProceed()
+//                viewModel.navigatePostEdit(navController)
             }
             else { // 로그인 안 됨
                 startActivity(intent)
@@ -182,6 +193,29 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     }
                 }
                 .launchIn(viewLifecycleOwner.lifecycleScope)
+        }
+    }
+
+    private fun checkPermissionsAndProceed() {
+        if (ImagePermissionUtils.allPermissionsGranted(requireContext())) {
+            // 포스트 작성 페이지로 이동
+            viewModel.navigatePostEdit(navController)
+        } else if (ImagePermissionUtils.shouldShowRationale(requireActivity())) {
+            val intent = Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.parse("package:${requireContext().packageName}")
+            ).apply {
+                addCategory(Intent.CATEGORY_DEFAULT)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+
+            ImagePermissionUtils.showSettingsSnackbar(
+                requireActivity(), requireView(),
+                intent
+            )
+        } else {
+            ImagePermissionUtils.requestPermissions(requireActivity())
+            //checkPermissionsAndProceed()
         }
     }
 

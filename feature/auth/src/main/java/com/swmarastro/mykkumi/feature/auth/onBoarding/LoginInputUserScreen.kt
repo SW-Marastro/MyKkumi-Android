@@ -56,6 +56,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.swmarastro.mykkumi.common_ui.permission.ImagePermissionUtils
 import com.swmarastro.mykkumi.feature.auth.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -94,26 +95,7 @@ fun LoginInputUserScreen(
     })
     // 갤러리, 카메라 접근 권한 허용 요청
     val multiplePermissionsState = rememberMultiplePermissionsState(
-        permissions = mutableListOf(
-            android.Manifest.permission.CAMERA,
-        ).apply {
-            // sdk version 28 이하 - 사진 촬영 후 저장 권한 허용 요청
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            }
-            // sdk version 32 이하 - 파일 접근 권한 허용 요청
-            if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.S) {
-                add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-            }
-            // sdk version 33 이상 - 이미지 접근 권한 허용 요청
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                add(android.Manifest.permission.READ_MEDIA_IMAGES)
-            }
-            // sdk version 34 이상 - READ_MEDIA_VISUAL_USER_SELECTED
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                add(android.Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED)
-            }
-        }
+        permissions = ImagePermissionUtils.multiplePermissions
     )
 
     // 권한을 거부했을 때, 설정 페이지로 이동시켜서 권한 허용 요청을 하기 위해 필요함
@@ -129,7 +111,6 @@ fun LoginInputUserScreen(
         }
     }
     // 갤러리에서 이미지 선택
-    val chooserTitle = stringResource(id = R.string.choose_way_for_profile_image)
     val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
@@ -183,10 +164,9 @@ fun LoginInputUserScreen(
                         // 권한 허용됨
                         if (multiplePermissionsState.allPermissionsGranted) {
                             // 이미지 가져오기
-                            chooserImageIntent(
+                            ImagePermissionUtils.chooserImageIntent(
                                 localContext,
                                 imagePickerLauncher,
-                                chooserTitle
                             ) { uri -> // 카메라에서 선택했을 경우
                                 loginViewModel.setCameraImagePath(uri)
                             }
@@ -285,64 +265,6 @@ fun LoginInputUserScreen(
             }
         }
     }
-}
-
-private fun chooserImageIntent(
-    localContext: Context,
-    launcher: ActivityResultLauncher<Intent>,
-    chooserTitle: String,
-    onImageUriCreated: (Uri) -> Unit
-    ) {
-    // 갤러리에서 불러오기
-    val galleryIntent = Intent(Intent.ACTION_PICK)
-    galleryIntent.type = "image/*"
-
-    // 카메라로 사진 찍기 Intent
-    val captureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { intent ->
-        val photoFile: File? = try {
-            createImageFile(localContext)
-        } catch (ex: IOException) {
-            null
-        }
-
-        photoFile?.also {
-            val photoURI: Uri = FileProvider.getUriForFile(
-                localContext, "${localContext.packageName}.provider", it
-            )
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-            onImageUriCreated(photoURI)
-        }
-    }
-
-    // 다중 Intent 선택 창
-    val chooserIntent = Intent.createChooser(galleryIntent, chooserTitle).apply {
-        putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(captureIntent))
-    }
-
-    launcher.launch(chooserIntent)
-}
-
-@Throws(IOException::class)
-private fun createImageFile(localContext: Context): File {
-    val timeStamp: String = SimpleDateFormat("yyyy-MM-dd_HH_mm_ss").format(Date())
-    val storageDir: File? = localContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-    val imageFile = File.createTempFile (
-        "JPEG_${timeStamp}_",
-        ".jpg",
-        storageDir
-    )
-
-    Log.d("test imageFile", imageFile.absolutePath)
-
-    return imageFile
-}
-
-private fun saveImageToUri(context: Context, bitmap: Bitmap): Uri {
-    val file = createImageFile(context)
-    FileOutputStream(file).use { out ->
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-    }
-    return FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
 }
 
 private fun showToast(message: String) {
