@@ -119,8 +119,6 @@ object ImagePermissionUtils {
             storageDir
         )
 
-        Log.d("test imageFile", imageFile.absolutePath)
-
         return imageFile
     }
 }

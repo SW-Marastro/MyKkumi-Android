@@ -1,28 +1,36 @@
 package com.swmarastro.mykkumi.feature.post
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.common_ui.permission.ImagePermissionUtils
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
-import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-
 
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit){
 
     private val viewModel by viewModels<PostEditViewModel>()
+
+    private lateinit var selectPostImageListAdapter: SelectPostImageListAdapter
+
+    private var navController: NavController? = null
 
     private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -40,11 +48,29 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        navController = view.findNavController()
+
+        viewModel.postEditUiState.observe(this, Observer {
+            selectPostImageListAdapter.postImageList = it
+            selectPostImageListAdapter.notifyDataSetChanged()
+            if(it.size > 0) binding.imagePostEdit.load(it[it.size - 1])
+        })
+
+        // 이미지 추가
+        binding.btnAddPostImage.setOnClickListener(View.OnClickListener {
+            pickPostImage()
+        })
+    }
+
     override suspend fun initView() {
         bind {
             vm = viewModel
         }
         pickPostImage()
+        initSelectPostImagesRecyclerView()
     }
 
     private fun pickPostImage() {
@@ -77,5 +103,24 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                 Toast.makeText(requireContext(), "권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    // 선택된 이미지 리스트 Recyclerview
+    private fun initSelectPostImagesRecyclerView() {
+        selectPostImageListAdapter = SelectPostImageListAdapter(
+            onClickPostImage = {
+                onClickPostImage(it)
+            }
+        )
+        binding.recyclerviewSelectPostImage.layoutManager = LinearLayoutManager(
+            context,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+        binding.recyclerviewSelectPostImage.adapter = selectPostImageListAdapter
+    }
+
+    private fun onClickPostImage(image: Uri) {
+        binding.imagePostEdit.load(image)
     }
 }
