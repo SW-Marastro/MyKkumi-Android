@@ -13,6 +13,11 @@ class SelectPostImageListAdapter (
     private val onClickPostImage: (image: Uri) -> Unit
 ) : RecyclerView.Adapter<SelectPostImageListAdapter.SelectPostImageListViewHolder>() {
     var postImageList = mutableListOf<Uri>()
+        set(value) { // 데이터 추가되면 마지막 데이터를 선택
+            field = value
+            selectImagePosition = value.size - 1
+            notifyDataSetChanged()
+        }
     var selectImagePosition: Int = 0
 
     override fun onCreateViewHolder(
@@ -30,10 +35,7 @@ class SelectPostImageListAdapter (
         holder.bind(postImageList[position], position)
     }
 
-    override fun getItemCount(): Int {
-        selectImagePosition = postImageList.size - 1
-        return postImageList.size
-    }
+    override fun getItemCount(): Int = postImageList.size
 
     inner class SelectPostImageListViewHolder(
         private val binding: ItemSelectPostImageBinding
@@ -41,9 +43,11 @@ class SelectPostImageListAdapter (
         fun bind(item: Uri, position: Int) {
             binding.imagePostEditThumbnail.load(item)
 
+            // 편집할 이미지 선택
             binding.imagePostEditThumbnail.setOnClickListener(View.OnClickListener {
                 onClickPostImage(item)
                 selectImagePosition = position
+                notifyDataSetChanged()
             })
 
             if (position == selectImagePosition) {
