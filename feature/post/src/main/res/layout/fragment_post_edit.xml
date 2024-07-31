@@ -57,25 +57,34 @@
 
         <HorizontalScrollView
             android:id="@+id/scroll_select_post_image_list"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:fillViewport="true"
             android:layout_below="@id/header_post_edit">
 
             <LinearLayout
-                android:id="@+id/relative_select_post_image_list"
+                android:id="@+id/linear_select_post_image_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:orientation="horizontal">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerview_select_post_image"
+                <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_select_post_image"
-                    android:nestedScrollingEnabled="false"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerview_select_post_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/item_select_post_image"
+                        android:overScrollMode="never"
+                        android:nestedScrollingEnabled="false"/>
+
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/btn_add_post_image"

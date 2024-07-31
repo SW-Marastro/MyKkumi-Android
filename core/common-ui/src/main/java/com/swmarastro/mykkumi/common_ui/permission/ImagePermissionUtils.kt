@@ -78,7 +78,7 @@ object ImagePermissionUtils {
         launcher: ActivityResultLauncher<Intent>,
         onImageUriCreated: (Uri) -> Unit
     ) {
-        val chooserTitle = getString(localContext, R.string.choose_way_for_profile_image)
+        val chooserTitle = getString(localContext, R.string.choose_way_for_image)
 
         // 갤러리에서 불러오기
         val galleryIntent = Intent(Intent.ACTION_PICK)

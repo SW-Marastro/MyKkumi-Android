@@ -23,8 +23,9 @@
     <string name="notice_nickname_min_length">닉네임은 3자 이상부터 설정 가능합니다.</string>
     <string name="notice_permission_revoke_go_setting">이미지 및 카메라 접근 권한이 필요한 작업입니다.</string>
     <string name="action_permission_revoke_go_setting">허용하러 가기</string>
-    <string name="choose_way_for_profile_image">프로필 이미지를 가져올 방법을 선택해주세요.</string>
     <string name="clear_login_all_btn">완료</string>
+
+    <string name="choose_way_for_image">이미지를 가져올 방법을 선택해주세요.</string>
 
     <!-- 홈 -->
     <string name="home_banner_all_title">이벤트</string>

@@ -1,16 +1,12 @@
 package com.swmarastro.mykkumi.feature.home
 
-import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.ScrollView
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -58,7 +54,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 Log.d("Test", "로그인 된 사용자")
                 // 이미지 권한 요청하기
                 checkPermissionsAndProceed()
-//                viewModel.navigatePostEdit(navController)
             }
             else { // 로그인 안 됨
                 startActivity(intent)

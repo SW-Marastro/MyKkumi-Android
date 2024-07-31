@@ -13,8 +13,6 @@ import javax.inject.Inject
 @HiltViewModel
 class PostEditViewModel  @Inject constructor(
 ) : ViewModel() {
-    private final val MAX_IMAGE_COUNT = 10
-
     private val _postEditUiState = MutableLiveData<MutableList<Uri>>(mutableListOf())
     val postEditUiState: LiveData<MutableList<Uri>> get() = _postEditUiState
 
@@ -26,6 +24,7 @@ class PostEditViewModel  @Inject constructor(
         val addPostImages = _postEditUiState.value
         addPostImages?.add(uri)
         _postEditUiState.value = addPostImages
+        postEditUiState.value?.let { Log.d("trst", it.joinToString()) }
         resetCameraImagePath()
     }
 

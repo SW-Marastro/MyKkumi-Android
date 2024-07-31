@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.HorizontalScrollView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
@@ -25,6 +26,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit){
+
+    private final val MAX_IMAGE_COUNT = 10
 
     private val viewModel by viewModels<PostEditViewModel>()
 
@@ -53,10 +56,24 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
         navController = view.findNavController()
 
+        // 추가된 이미지
         viewModel.postEditUiState.observe(this, Observer {
             selectPostImageListAdapter.postImageList = it
             selectPostImageListAdapter.notifyDataSetChanged()
-            if(it.size > 0) binding.imagePostEdit.load(it[it.size - 1])
+
+            // 스크롤을 맨 오른쪽으로 이동
+            binding.scrollSelectPostImageList.isSmoothScrollingEnabled = true
+            binding.scrollSelectPostImageList.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
+
+            if(it.size > 0) binding.imagePostEdit.load(it[it.size - 1]) // 추가된 이미지를 화면에 보여주기
+
+            // 이미지 10개 선택됐으면 추가 버튼 가리기
+            if(selectPostImageListAdapter.postImageList.size == MAX_IMAGE_COUNT) {
+                binding.btnAddPostImage.visibility = View.GONE
+            }
+            else {
+                binding.btnAddPostImage.visibility = View.VISIBLE
+            }
         })
 
         // 이미지 추가
@@ -118,6 +135,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             false
         )
         binding.recyclerviewSelectPostImage.adapter = selectPostImageListAdapter
+        binding.recyclerviewSelectPostImage.isNestedScrollingEnabled = false
     }
 
     private fun onClickPostImage(image: Uri) {
