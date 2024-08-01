@@ -1,7 +1,10 @@
 package com.swmarastro.mykkumi.feature.home
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -47,6 +50,13 @@ class HomeViewModel @Inject constructor(
 
     // 포스트 끝 도달
     private var isPostEnd = false
+
+    private val _postImage = MutableStateFlow<Any>(com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default)
+    val postImage : StateFlow<Any> get() = _postImage
+
+    // 카메라로 촬영할 이미지를 저장할 path
+    private val _cameraImagePath = MutableStateFlow<Uri?>(null)
+    val cameraImagePath : StateFlow<Uri?> get() = _cameraImagePath
 
     // 홈 > 배너 캐러셀
     fun setHomeBanner() {
@@ -105,6 +115,7 @@ class HomeViewModel @Inject constructor(
         navController?.navigate(deepLink = navigateDeepLink.toUri())
     }
 
+    // 로그인 페이지 이동
     fun navigateLogin() : Intent? {
         if(authTokenDataStore.isLogin()) return null
 
@@ -116,4 +127,27 @@ class HomeViewModel @Inject constructor(
 
         return intent
     }
+
+    // 포스트 작성 페이지로 이동
+    fun navigatePostEdit(navController: NavController?) {
+        val navigateDeepLink = "mykkumi://post.edit"
+        navController?.navigate(deepLink = navigateDeepLink.toUri())
+    }
+
+    fun selectPostImage(uri: Any, navController: NavController?) {
+        _postImage.value = uri
+        resetCameraImagePath()
+        navigatePostEdit(navController)
+    }
+
+    // 카메라로 촬영한 이미지가 저장될 경로
+    fun setCameraImagePath(path: Uri) {
+        _cameraImagePath.value = path
+    }
+
+    // 경로 사용하면 리셋
+    fun resetCameraImagePath() {
+        _cameraImagePath.value = null
+    }
+
 }
