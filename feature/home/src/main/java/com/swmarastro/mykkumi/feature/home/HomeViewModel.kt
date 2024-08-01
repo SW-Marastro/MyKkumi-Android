@@ -119,11 +119,11 @@ class HomeViewModel @Inject constructor(
     fun navigateLogin() : Intent? {
         if(authTokenDataStore.isLogin()) return null
 
-        val loginScheme = "mykkumi://mykkumi.signin"
+        val loginDeepLink = "mykkumi://mykkumi.signin"
 
         val intent = Intent()
         intent.setAction(Intent.ACTION_VIEW)
-        intent.setData(Uri.parse(loginScheme))
+        intent.setData(Uri.parse(loginDeepLink))
 
         return intent
     }

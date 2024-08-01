@@ -5,14 +5,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.HorizontalScrollView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,10 +19,6 @@ import coil.load
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.common_ui.permission.ImagePermissionUtils
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit){
 
@@ -51,13 +46,24 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        navController?.currentBackStackEntry?.savedStateHandle?.getLiveData<Array<String>>("selectImages")
+            ?.observe(viewLifecycleOwner) { images ->
+                for(image in images) {
+                    viewModel.selectPostImage(image.toUri())
+                }
+            }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         navController = view.findNavController()
 
         // 추가된 이미지
-        viewModel.postEditUiState.observe(this, Observer {
+        viewModel.postEditUiState.observe(viewLifecycleOwner, Observer {
             selectPostImageListAdapter.postImageList = it
             selectPostImageListAdapter.notifyDataSetChanged()
 
@@ -78,7 +84,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
         // 이미지 추가
         binding.btnAddPostImage.setOnClickListener(View.OnClickListener {
-            pickPostImage()
+            //pickPostImage()
+            viewModel.openImagePicker(navController)
         })
     }
 
@@ -86,7 +93,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         bind {
             vm = viewModel
         }
-        pickPostImage()
+        //pickPostImage()
         initSelectPostImagesRecyclerView()
     }
 
