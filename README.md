@@ -54,6 +54,17 @@
 |   [@eekrwl](https://github.com/eekrwl)   |    [@jung0115](https://github.com/jung0115)  | [@GomHyeok](https://github.com/GomHyeok)  |
 | Backend(Spring) | Android(Kotlin) | Leader, iOS(Swift) |
 
+#### Extra Member
+| 이연재 |
+| :---: | 
+| Design(Figma) |
+
+### 🚦Team Rules
+- [x] 9:30am까지 센터 출근
+- [x] 주중에는 매일 출근, 주말은 필요시 자유롭게 출근
+- [x] 2주 단위 Sprint. Spint 시작할 때 Task별 MD 설정
+- [x] [Git Convention Rules](https://github.com/SW-Marastro/MyKkumi-Android/wiki/%F0%9F%8C%B1-Git-Convention)
+
 ---
 
 ### 🛠️ Tech Stack
@@ -65,3 +76,4 @@
 **Backend**  
 <a href="https://spring.io/projects/spring-boot" target="_blank" rel="noreferrer"> <img src="http://img.shields.io/badge/-spring_boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="springboot" height="24"/> </a> <!-- SpringBoot -->
 <a href="https://www.java.com" target="_blank" rel="noreferrer"> <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white" alt="java" height="24"/> </a> <!-- Java -->  
+
