@@ -51,14 +51,9 @@ class ImagePickerAdapter (
 
             binding.imageForPicker.setOnClickListener(View.OnClickListener {
                 viewModel.imagePickerUiState.value?.let {
-                    if(it[position].isSelect) {
-                        it[position].isSelect = false
-                        //binding.checkboxPickImage.
-                    }
-                    else {
-                        it[position].isSelect = true
-
-                    }
+                    val isChecked = !binding.checkboxPickImage.isChecked
+                    it[position].isSelect = isChecked
+                    binding.checkboxPickImage.isChecked = isChecked
                 }
             })
         }
