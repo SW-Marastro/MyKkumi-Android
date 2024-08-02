@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.swmarastro.mykkumi.feature.post.image.ImagePickerFragment">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.swmarastro.mykkumi.feature.post.image.ImagePickerViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/text_title_image_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/image_picker_title"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:padding="10dp"
+            android:gravity="center"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_image_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="3"
+            android:layout_below="@+id/text_title_image_picker"/>
+
+        <Button
+            android:id="@+id/btn_done_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/done_image_picker"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:backgroundTint="#00FF00"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp" />
+
+    </RelativeLayout>
+
+</layout>

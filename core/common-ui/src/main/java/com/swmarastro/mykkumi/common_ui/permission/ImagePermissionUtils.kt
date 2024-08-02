@@ -109,6 +109,31 @@ object ImagePermissionUtils {
         launcher.launch(chooserIntent)
     }
 
+    fun captureWithCamera(
+        localContext: Context,
+        launcher: ActivityResultLauncher<Intent>,
+        onImageUriCreated: (Uri) -> Unit
+    ) {
+        // 카메라로 사진 찍기 Intent
+        val captureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { intent ->
+            val photoFile: File? = try {
+                createImageFile(localContext)
+            } catch (ex: IOException) {
+                null
+            }
+
+            photoFile?.also {
+                val photoURI: Uri = FileProvider.getUriForFile(
+                    localContext, "${localContext.packageName}.provider", it
+                )
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                onImageUriCreated(photoURI)
+            }
+        }
+
+        launcher.launch(captureIntent)
+    }
+
     @Throws(IOException::class)
     private fun createImageFile(localContext: Context): File {
         val timeStamp: String = SimpleDateFormat("yyyy-MM-dd_HH_mm_ss").format(Date())

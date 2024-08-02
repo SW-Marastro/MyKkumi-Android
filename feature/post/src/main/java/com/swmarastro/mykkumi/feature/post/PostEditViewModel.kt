@@ -1,10 +1,12 @@
 package com.swmarastro.mykkumi.feature.post
 
 import android.net.Uri
-import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,28 +15,29 @@ import javax.inject.Inject
 @HiltViewModel
 class PostEditViewModel  @Inject constructor(
 ) : ViewModel() {
+    final val MAX_IMAGE_COUNT = 10
+
     private val _postEditUiState = MutableLiveData<MutableList<Uri>>(mutableListOf())
     val postEditUiState: LiveData<MutableList<Uri>> get() = _postEditUiState
 
-    // 카메라로 촬영할 이미지를 저장할 path
-    private val _cameraImagePath = MutableStateFlow<Uri?>(null)
-    val cameraImagePath : StateFlow<Uri?> get() = _cameraImagePath
+    private val _checkCreateView = MutableStateFlow<Boolean>(true)
+    val checkCreateView : StateFlow<Boolean> get() = _checkCreateView
 
     fun selectPostImage(uri: Uri) {
         val addPostImages = _postEditUiState.value
         addPostImages?.add(uri)
-        _postEditUiState.value = addPostImages
-        postEditUiState.value?.let { Log.d("trst", it.joinToString()) }
-        resetCameraImagePath()
+        _postEditUiState.value = addPostImages!!
     }
 
-    // 카메라로 촬영한 이미지가 저장될 경로
-    fun setCameraImagePath(path: Uri) {
-        _cameraImagePath.value = path
+    fun openImagePicker(navController: NavController?) {
+        val maxImageCount: Int = MAX_IMAGE_COUNT - (_postEditUiState.value?.size ?: 0)
+
+        val imagePickerDeepLink = "mykkumi://image.picker?maxImageCount=${maxImageCount}"
+
+        navController?.navigate(deepLink = imagePickerDeepLink.toUri())
     }
 
-    // 경로 사용하면 리셋
-    fun resetCameraImagePath() {
-        _cameraImagePath.value = null
+    fun createViewDone() {
+        _checkCreateView.value = false
     }
 }
