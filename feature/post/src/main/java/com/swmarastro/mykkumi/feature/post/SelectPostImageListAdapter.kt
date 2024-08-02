@@ -18,8 +18,10 @@ class SelectPostImageListAdapter (
     var postImageList = mutableListOf<Uri>()
         set(value) { // 데이터 추가되면 마지막 데이터를 선택
             field = value
+            val oldSelect = selectImagePosition
             selectImagePosition = value.size - 1
-            notifyDataSetChanged()
+            notifyItemChanged(oldSelect)
+            notifyItemChanged(selectImagePosition)
         }
     var selectImagePosition: Int = 0
 
@@ -87,11 +89,14 @@ class SelectPostImageListAdapter (
             binding.btnDeleteEditImage.setOnClickListener {
                 postImageList.removeAt(position)
                 notifyItemRemoved(position)
+                notifyItemChanged(position)
 
                 if(position >= postImageList.size) {
                     selectImagePosition = postImageList.size - 1
                     notifyItemChanged(selectImagePosition)
                 }
+
+                onClickPostImage(postImageList[selectImagePosition])
             }
         }
     }
