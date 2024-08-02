@@ -1,27 +1,20 @@
 package com.swmarastro.mykkumi.feature.post
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.HorizontalScrollView
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
-import com.swmarastro.mykkumi.common_ui.permission.ImagePermissionUtils
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
 import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
+import com.swmarastro.mykkumi.feature.post.touchEvent.PostEditImageTouchCallback
 
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit){
     private val viewModel by viewModels<PostEditViewModel>()
@@ -30,6 +23,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
     private var navController: NavController? = null
 
+    // 포스트 이미지 recyclerview 아이템 이동 콜백 변수 : 드래그 시 이동하는 거
+    private lateinit var postEditImageTouchHelper: ItemTouchHelper
 
     override fun onResume() {
         super.onResume()
@@ -77,6 +72,11 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         binding.btnAddPostImage.setOnClickListener(View.OnClickListener {
             viewModel.openImagePicker(navController)
         })
+
+        // 이전 버튼
+        binding.btnBack.setOnClickListener {
+            navController?.popBackStack()
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -104,6 +104,11 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                 onClickPostImage(it)
             }
         )
+
+        // 드래그 이동 adapter
+        postEditImageTouchHelper = ItemTouchHelper(PostEditImageTouchCallback(selectPostImageListAdapter))
+        postEditImageTouchHelper.attachToRecyclerView(binding.recyclerviewSelectPostImage)
+
         binding.recyclerviewSelectPostImage.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.HORIZONTAL,

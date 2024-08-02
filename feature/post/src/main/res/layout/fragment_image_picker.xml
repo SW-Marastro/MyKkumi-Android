@@ -25,6 +25,17 @@
             android:padding="10dp"
             android:gravity="center"/>
 
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/ic_back_btn"
+            android:scaleType="fitXY"
+            android:layout_margin="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:background="@android:color/transparent"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_image_picker"
             android:layout_width="match_parent"

@@ -68,6 +68,13 @@ class ImagePickerAdapter (
         private val binding: ItemCameraBtnBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: CameraBtn) {
+            // 이미지를 1:1 비율로
+            binding.relativeCamera.post {
+                val width = binding.relativeCamera.width
+                binding.relativeCamera.layoutParams.height = width
+                binding.relativeCamera.requestLayout()
+            }
+
             binding.btnCamera.setOnClickListener {
                 captureWithCamera()
             }
@@ -86,6 +93,12 @@ class ImagePickerAdapter (
                 binding.imageForPicker.requestLayout()
             }
 
+            binding.relativePicker.post {
+                val width = binding.relativePicker.width
+                binding.relativePicker.layoutParams.height = width
+                binding.relativePicker.requestLayout()
+            }
+
             binding.imageForPicker.load(item.localUri)
 
             // 체크박스 선택
@@ -94,12 +107,12 @@ class ImagePickerAdapter (
                     // 선택 하려는데 최대 개수인 경우
                     if(isChecked && !isAllowSelectImages()) {
                         binding.checkboxPickImage.isChecked = false
-                        it[position].isSelect = false
+                        it[position - 1].isSelect = false
                         Toast.makeText(context, "이미지는 총 10개까지만 선택 가능합니다.", Toast.LENGTH_SHORT).show()
                     }
                     // 선택 하려는데 최대 개수인 경우를 제외하고 가능
                     else {
-                        it[position].isSelect = isChecked
+                        it[position - 1].isSelect = isChecked
                     }
                 }
             }
@@ -112,13 +125,13 @@ class ImagePickerAdapter (
                     // 선택 하려는데 최대 개수인 경우
                     if(isChecked && !isAllowSelectImages()) {
                         binding.checkboxPickImage.isChecked = false
-                        it[position].isSelect = false
+                        it[position - 1].isSelect = false
                         Toast.makeText(context, "이미지는 총 10개까지만 선택 가능합니다.", Toast.LENGTH_SHORT).show()
                     }
                     // 선택 하려는데 최대 개수인 경우를 제외하고 가능
                     else {
                         binding.checkboxPickImage.isChecked = isChecked
-                        it[position].isSelect = isChecked
+                        it[position - 1].isSelect = isChecked
                     }
                 }
             })
