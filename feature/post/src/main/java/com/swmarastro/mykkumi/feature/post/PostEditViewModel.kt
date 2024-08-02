@@ -1,7 +1,6 @@
 package com.swmarastro.mykkumi.feature.post
 
 import android.net.Uri
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,7 +25,6 @@ class PostEditViewModel  @Inject constructor(
         addPostImages?.add(uri)
         _postEditUiState.value = addPostImages!!
     }
-
 
     fun openImagePicker(navController: NavController?) {
         val imagePickerDeepLink = "mykkumi://image.picker"

@@ -43,6 +43,9 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                 for(image in images.selectImages) {
                     viewModel.selectPostImage(image)
                 }
+
+                // 리스트에 추가했다면 지우기 - view resume 될 때마다 추가되는 현상 제거
+                images.selectImages.clear()
             }
     }
 
