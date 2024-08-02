@@ -68,13 +68,6 @@ class ImagePickerAdapter (
         private val binding: ItemCameraBtnBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: CameraBtn) {
-            // 이미지를 1:1 비율로
-            binding.relativeCamera.post {
-                val width = binding.relativeCamera.width
-                binding.relativeCamera.layoutParams.height = width
-                binding.relativeCamera.requestLayout()
-            }
-
             binding.btnCamera.setOnClickListener {
                 captureWithCamera()
             }
@@ -86,19 +79,6 @@ class ImagePickerAdapter (
         private val binding: ItemImagePickerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ImagePickerData, position: Int) {
-            // 이미지를 1:1 비율로
-            binding.imageForPicker.post {
-                val width = binding.imageForPicker.width
-                binding.imageForPicker.layoutParams.height = width
-                binding.imageForPicker.requestLayout()
-            }
-
-            binding.relativePicker.post {
-                val width = binding.relativePicker.width
-                binding.relativePicker.layoutParams.height = width
-                binding.relativePicker.requestLayout()
-            }
-
             binding.imageForPicker.load(item.localUri)
 
             // 체크박스 선택

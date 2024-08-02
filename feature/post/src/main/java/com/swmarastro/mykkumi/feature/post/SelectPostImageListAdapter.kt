@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.feature.post
 
+import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.swmarastro.mykkumi.feature.post.databinding.ItemSelectPostImageBinding
 import com.swmarastro.mykkumi.feature.post.touchEvent.ItemTouchHelperListener
-import kotlin.math.max
-import kotlin.math.min
 
 class SelectPostImageListAdapter (
     private val onClickPostImage: (image: Uri) -> Unit
@@ -33,6 +32,8 @@ class SelectPostImageListAdapter (
         postImageList.removeAt(from)      // 드래그 되고 있는 아이템 제거
         postImageList.add(to, dragItem)   // 드래그 끝나는 지점에 추가
 
+        notifyItemMoved(from, to)
+
         // 드래그 된 것 중에 선택된 이미지가 있으면 그것도 체크
         if(selectImagePosition == to) {
             selectImagePosition = from
@@ -42,8 +43,6 @@ class SelectPostImageListAdapter (
             selectImagePosition = to
             notifyItemChanged(selectImagePosition)
         }
-
-        notifyItemMoved(from, to)
     }
 
     override fun onCreateViewHolder(
@@ -69,19 +68,20 @@ class SelectPostImageListAdapter (
         fun bind(item: Uri, position: Int) {
             binding.imagePostEditThumbnail.load(item)
 
+            // 편집할 이미지 선택
+            binding.imagePostEditThumbnail.setOnClickListener(View.OnClickListener {
+                selectImagePosition = position
+                notifyDataSetChanged()
+
+                onClickPostImage(item)
+            })
+
             if (position == selectImagePosition) {
                 binding.imagePostEditThumbnail.setBackgroundResource(R.drawable.shape_select_post_image)
             }
             else {
                 binding.imagePostEditThumbnail.background = null
             }
-
-            // 편집할 이미지 선택
-            binding.imagePostEditThumbnail.setOnClickListener(View.OnClickListener {
-                onClickPostImage(item)
-                selectImagePosition = position
-                notifyDataSetChanged()
-            })
         }
     }
 }

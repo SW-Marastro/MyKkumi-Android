@@ -57,7 +57,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             binding.scrollSelectPostImageList.isSmoothScrollingEnabled = true
             binding.scrollSelectPostImageList.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
 
-            if(it.size > 0) binding.imagePostEdit.load(it[it.size - 1]) // 추가된 이미지를 화면에 보여주기
+            if(it.size > 0)
+                binding.imagePostEdit.load(it[it.size - 1]) // 추가된 이미지를 화면에 보여주기
 
             // 이미지 10개 선택됐으면 추가 버튼 가리기
             if(selectPostImageListAdapter.postImageList.size == viewModel.MAX_IMAGE_COUNT) {
