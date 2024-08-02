@@ -18,10 +18,6 @@ class PostEditViewModel  @Inject constructor(
     private val _postEditUiState = MutableLiveData<MutableList<Uri>>(mutableListOf())
     val postEditUiState: LiveData<MutableList<Uri>> get() = _postEditUiState
 
-    // 카메라로 촬영할 이미지를 저장할 path
-    private val _cameraImagePath = MutableStateFlow<Uri?>(null)
-    val cameraImagePath : StateFlow<Uri?> get() = _cameraImagePath
-
     private val _checkCreateView = MutableStateFlow<Boolean>(true)
     val checkCreateView : StateFlow<Boolean> get() = _checkCreateView
 
@@ -29,19 +25,8 @@ class PostEditViewModel  @Inject constructor(
         val addPostImages = _postEditUiState.value
         addPostImages?.add(uri)
         _postEditUiState.value = addPostImages!!
-        postEditUiState.value?.let { Log.d("trst", it.joinToString()) }
-        resetCameraImagePath()
     }
 
-    // 카메라로 촬영한 이미지가 저장될 경로
-    fun setCameraImagePath(path: Uri) {
-        _cameraImagePath.value = path
-    }
-
-    // 경로 사용하면 리셋
-    fun resetCameraImagePath() {
-        _cameraImagePath.value = null
-    }
 
     fun openImagePicker(navController: NavController?) {
         val imagePickerDeepLink = "mykkumi://image.picker"
