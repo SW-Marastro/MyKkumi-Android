@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,6 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PostEditViewModel  @Inject constructor(
 ) : ViewModel() {
+    final val MAX_IMAGE_COUNT = 10
+
     private val _postEditUiState = MutableLiveData<MutableList<Uri>>(mutableListOf())
     val postEditUiState: LiveData<MutableList<Uri>> get() = _postEditUiState
 
@@ -27,7 +30,10 @@ class PostEditViewModel  @Inject constructor(
     }
 
     fun openImagePicker(navController: NavController?) {
-        val imagePickerDeepLink = "mykkumi://image.picker"
+        val maxImageCount: Int = MAX_IMAGE_COUNT - (_postEditUiState.value?.size ?: 0)
+
+        val imagePickerDeepLink = "mykkumi://image.picker?maxImageCount=${maxImageCount}"
+
         navController?.navigate(deepLink = imagePickerDeepLink.toUri())
     }
 

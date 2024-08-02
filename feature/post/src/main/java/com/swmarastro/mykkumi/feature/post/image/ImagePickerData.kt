@@ -19,5 +19,5 @@ data class CameraBtn(
 
 @Parcelize
 data class ImagePickerArgument(
-    var selectImages: MutableList<Uri>
+    var selectImages: MutableList<Uri>,
 ) : Parcelable

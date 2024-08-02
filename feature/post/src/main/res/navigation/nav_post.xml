@@ -32,8 +32,13 @@
             app:nullable="true"
             android:defaultValue="@null"/>
 
+        <argument
+            android:name="maxImageCount"
+            app:argType="integer"
+            android:defaultValue="1" />
+
         <deepLink
-            app:uri="mykkumi://image.picker?selectImages={selectImages}"/>
+            app:uri="mykkumi://image.picker?maxImageCount={maxImageCount}&amp;selectImages={selectImages}"/>
 
     </fragment>
 

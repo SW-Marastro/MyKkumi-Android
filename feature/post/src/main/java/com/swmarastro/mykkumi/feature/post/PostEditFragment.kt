@@ -24,9 +24,6 @@ import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
 import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
 
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit){
-
-    private final val MAX_IMAGE_COUNT = 10
-
     private val viewModel by viewModels<PostEditViewModel>()
 
     private lateinit var selectPostImageListAdapter: SelectPostImageListAdapter
@@ -40,12 +37,14 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         // image picker에서 선택한 이미지
         navController?.currentBackStackEntry?.savedStateHandle?.getLiveData<ImagePickerArgument>("selectImages")
             ?.observe(viewLifecycleOwner) { images ->
-                for(image in images.selectImages) {
-                    viewModel.selectPostImage(image)
-                }
+                if(!images.selectImages.isNullOrEmpty()) {
+                    for (image in images.selectImages!!) {
+                        viewModel.selectPostImage(image)
+                    }
 
-                // 리스트에 추가했다면 지우기 - view resume 될 때마다 추가되는 현상 제거
-                images.selectImages.clear()
+                    // 리스트에 추가했다면 지우기 - view resume 될 때마다 추가되는 현상 제거
+                    images.selectImages!!.clear()
+                }
             }
     }
 
@@ -66,7 +65,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             if(it.size > 0) binding.imagePostEdit.load(it[it.size - 1]) // 추가된 이미지를 화면에 보여주기
 
             // 이미지 10개 선택됐으면 추가 버튼 가리기
-            if(selectPostImageListAdapter.postImageList.size == MAX_IMAGE_COUNT) {
+            if(selectPostImageListAdapter.postImageList.size == viewModel.MAX_IMAGE_COUNT) {
                 binding.btnAddPostImage.visibility = View.GONE
             }
             else {
