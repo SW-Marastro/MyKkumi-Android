@@ -28,12 +28,12 @@
 
         <argument
             android:name="selectImages"
-            app:argType="stringArray"
+            app:argType="com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument"
             app:nullable="true"
             android:defaultValue="@null"/>
 
         <deepLink
-            app:uri="mykkumi://image.picker"/>
+            app:uri="mykkumi://image.picker?selectImages={selectImages}"/>
 
     </fragment>
 

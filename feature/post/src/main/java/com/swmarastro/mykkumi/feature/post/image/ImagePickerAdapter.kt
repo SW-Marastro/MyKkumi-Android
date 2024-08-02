@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumi.feature.post.image
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -47,6 +48,19 @@ class ImagePickerAdapter (
                     it[position].isSelect = isChecked
                 }
             }
+
+            binding.imageForPicker.setOnClickListener(View.OnClickListener {
+                viewModel.imagePickerUiState.value?.let {
+                    if(it[position].isSelect) {
+                        it[position].isSelect = false
+                        //binding.checkboxPickImage.
+                    }
+                    else {
+                        it[position].isSelect = true
+
+                    }
+                }
+            })
         }
     }
 }

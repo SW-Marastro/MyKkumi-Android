@@ -56,14 +56,14 @@ class ImagePickerViewModel @Inject constructor(
 
     fun doneSelectImages(navController: NavController?) {
         // 선택된 이미지
-        val selectImages = mutableListOf<String>()
+        val selectImages = mutableListOf<Uri>()
         imagePickerUiState.value.let {
             for (image in imagePickerUiState.value!!) {
-                if (image.isSelect) selectImages.add(image.localUri.toString())
+                if (image.isSelect) selectImages.add(image.localUri)
             }
         }
 
-        navController?.previousBackStackEntry?.savedStateHandle?.set("selectImages", selectImages.toTypedArray())
+        navController?.previousBackStackEntry?.savedStateHandle?.set("selectImages", ImagePickerArgument(selectImages))
         navController?.popBackStack()
     }
 }

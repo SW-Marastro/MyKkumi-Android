@@ -25,15 +25,15 @@ class ImagePickerFragment : BaseFragment<FragmentImagePickerBinding>(R.layout.fr
         navController = view.findNavController()
 
         // 이미지 선택 완료
-//        binding.btnDonePicker.setOnClickListener {
-//            // 선택한 이미지가 있는지 확인
-//            if(viewModel.imagePickerUiState.value.isNullOrEmpty()) {
-//                Toast.makeText(requireContext(), R.string.notice_not_select_image, Toast.LENGTH_SHORT).show()
-//            }
-//            else {
-//                viewModel.doneSelectImages(navController)
-//            }
-//        }
+        binding.btnDonePicker.setOnClickListener {
+            // 선택한 이미지가 있는지 확인
+            if(viewModel.imagePickerUiState.value.isNullOrEmpty()) {
+                Toast.makeText(requireContext(), R.string.notice_not_select_image, Toast.LENGTH_SHORT).show()
+            }
+            else {
+                viewModel.doneSelectImages(navController)
+            }
+        }
     }
 
     override suspend fun initView() {
@@ -42,14 +42,14 @@ class ImagePickerFragment : BaseFragment<FragmentImagePickerBinding>(R.layout.fr
         }
 
         initImagePickerRecyclerView()
-        viewModel.fetchImageItemList(requireContext())
-
     }
 
     private fun initImagePickerRecyclerView() {
         imagePickerAdapter = ImagePickerAdapter(viewModel)
         binding.recyclerviewImagePicker.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.recyclerviewImagePicker.adapter = imagePickerAdapter
+
+        viewModel.fetchImageItemList(requireContext())
 
         viewModel.imagePickerUiState.observe(viewLifecycleOwner) { imagePickerList ->
             imagePickerAdapter.imagePickerList = imagePickerList

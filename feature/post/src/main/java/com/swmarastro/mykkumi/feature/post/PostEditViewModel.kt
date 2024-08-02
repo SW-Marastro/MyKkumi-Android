@@ -22,10 +22,13 @@ class PostEditViewModel  @Inject constructor(
     private val _cameraImagePath = MutableStateFlow<Uri?>(null)
     val cameraImagePath : StateFlow<Uri?> get() = _cameraImagePath
 
+    private val _checkCreateView = MutableStateFlow<Boolean>(true)
+    val checkCreateView : StateFlow<Boolean> get() = _checkCreateView
+
     fun selectPostImage(uri: Uri) {
         val addPostImages = _postEditUiState.value
         addPostImages?.add(uri)
-        _postEditUiState.value = addPostImages
+        _postEditUiState.value = addPostImages!!
         postEditUiState.value?.let { Log.d("trst", it.joinToString()) }
         resetCameraImagePath()
     }
@@ -43,5 +46,9 @@ class PostEditViewModel  @Inject constructor(
     fun openImagePicker(navController: NavController?) {
         val imagePickerDeepLink = "mykkumi://image.picker"
         navController?.navigate(deepLink = imagePickerDeepLink.toUri())
+    }
+
+    fun createViewDone() {
+        _checkCreateView.value = false
     }
 }

@@ -1,10 +1,12 @@
 package com.swmarastro.mykkumi.feature.post
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.HorizontalScrollView
 import android.widget.Toast
@@ -19,6 +21,7 @@ import coil.load
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.common_ui.permission.ImagePermissionUtils
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
+import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
 
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit){
 
@@ -49,10 +52,11 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     override fun onResume() {
         super.onResume()
 
-        navController?.currentBackStackEntry?.savedStateHandle?.getLiveData<Array<String>>("selectImages")
+        // image picker에서 선택한 이미지
+        navController?.currentBackStackEntry?.savedStateHandle?.getLiveData<ImagePickerArgument>("selectImages")
             ?.observe(viewLifecycleOwner) { images ->
-                for(image in images) {
-                    viewModel.selectPostImage(image.toUri())
+                for(image in images.selectImages) {
+                    viewModel.selectPostImage(image)
                 }
             }
     }
@@ -84,16 +88,25 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
         // 이미지 추가
         binding.btnAddPostImage.setOnClickListener(View.OnClickListener {
-            //pickPostImage()
             viewModel.openImagePicker(navController)
         })
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        // 화면 최초 생성 시, 이미지 picker 띄워주기
+        if(viewModel.checkCreateView.value) {
+            viewModel.openImagePicker(navController)
+            viewModel.createViewDone() // 생성 끝
+        }
+
     }
 
     override suspend fun initView() {
         bind {
             vm = viewModel
         }
-        //pickPostImage()
+
         initSelectPostImagesRecyclerView()
     }
 
