@@ -68,6 +68,13 @@ class SelectPostImageListAdapter (
         fun bind(item: Uri, position: Int) {
             binding.imagePostEditThumbnail.load(item)
 
+            if (position == selectImagePosition) {
+                binding.imagePostEditThumbnail.setBackgroundResource(R.drawable.shape_select_post_image)
+            }
+            else {
+                binding.imagePostEditThumbnail.background = null
+            }
+
             // 편집할 이미지 선택
             binding.imagePostEditThumbnail.setOnClickListener(View.OnClickListener {
                 selectImagePosition = position
@@ -76,11 +83,15 @@ class SelectPostImageListAdapter (
                 onClickPostImage(item)
             })
 
-            if (position == selectImagePosition) {
-                binding.imagePostEditThumbnail.setBackgroundResource(R.drawable.shape_select_post_image)
-            }
-            else {
-                binding.imagePostEditThumbnail.background = null
+            // 이미지 삭제
+            binding.btnDeleteEditImage.setOnClickListener {
+                postImageList.removeAt(position)
+                notifyItemRemoved(position)
+
+                if(position >= postImageList.size) {
+                    selectImagePosition = postImageList.size - 1
+                    notifyItemChanged(selectImagePosition)
+                }
             }
         }
     }

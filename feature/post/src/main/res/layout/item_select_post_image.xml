@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ImageView
-        android:id="@+id/image_post_edit_thumbnail"
+    <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="80dp"
-        android:adjustViewBounds="true"
-        android:layout_margin="5dp"
-        android:padding="2dp"/>
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp">
+        
+        <ImageView
+            android:id="@+id/image_post_edit_thumbnail"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:adjustViewBounds="true"
+            android:layout_margin="4dp"
+            android:padding="2dp"/>
+        
+        <ImageButton
+            android:id="@+id/btn_delete_edit_image"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/ic_delete_x"
+            android:scaleType="fitXY"
+            android:background="@android:color/transparent" />
+
+    </FrameLayout>
 
 </layout>
