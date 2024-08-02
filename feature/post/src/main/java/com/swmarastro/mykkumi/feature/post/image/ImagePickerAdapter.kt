@@ -5,31 +5,72 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.swmarastro.mykkumi.feature.post.databinding.ItemCameraBtnBinding
 import com.swmarastro.mykkumi.feature.post.databinding.ItemImagePickerBinding
 
 class ImagePickerAdapter (
-    private val viewModel: ImagePickerViewModel
-) : RecyclerView.Adapter<ImagePickerAdapter.ImagePickerViewHolder>() {
+    private val viewModel: ImagePickerViewModel,
+    private val captureWithCamera: () -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var imagePickerList = mutableListOf<ImagePickerData>()
+    var imagePickerList = mutableListOf<ImagePickerItem>()
+
+    companion object {
+        private const val TYPE_BUTTON_CAMERA = 0    // 카메라 버튼
+        private const val TYPE_IMAGE = 1     // 이미지
+    }
+
+    override fun getItemViewType(position: Int): Int = when(imagePickerList[position]) {
+        is CameraBtn -> TYPE_BUTTON_CAMERA
+        is ImagePickerData -> TYPE_IMAGE
+        else -> throw IllegalStateException("Not Found ViewHolder Type")
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ImagePickerViewHolder {
-        val binding = ItemImagePickerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ImagePickerViewHolder(binding)
+    ) = when(viewType) {
+        TYPE_BUTTON_CAMERA -> {
+            val binding = ItemCameraBtnBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            CameraButtonViewHolder(binding)
+        }
+        TYPE_IMAGE -> {
+            val binding = ItemImagePickerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ImagePickerViewHolder(binding)
+        }
+        else -> {
+            throw IllegalStateException("Not Found ViewHolder Type $viewType")
+        }
     }
 
     override fun onBindViewHolder(
-        holder: ImagePickerViewHolder,
+        holder: RecyclerView.ViewHolder,
         position: Int
     ) {
-        holder.bind(imagePickerList[position], position)
+        when(holder) {
+            is CameraButtonViewHolder -> {
+                holder.bind(imagePickerList[position] as CameraBtn)
+            }
+            is ImagePickerViewHolder -> {
+                holder.bind(imagePickerList[position] as ImagePickerData, position)
+            }
+        }
     }
 
     override fun getItemCount(): Int = imagePickerList.size
 
+    // 카메라
+    inner class CameraButtonViewHolder (
+        private val binding: ItemCameraBtnBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: CameraBtn) {
+            binding.btnCamera.setOnClickListener {
+                captureWithCamera()
+            }
+        }
+    }
+
+    // 이미지
     inner class ImagePickerViewHolder (
         private val binding: ItemImagePickerBinding
     ) : RecyclerView.ViewHolder(binding.root) {

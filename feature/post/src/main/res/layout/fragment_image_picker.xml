@@ -31,7 +31,6 @@
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="3"
-            tools:listitem="@layout/item_image_picker"
             android:layout_below="@+id/text_title_image_picker"/>
 
         <Button

@@ -51,7 +51,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.floatingBtnAddPost.setOnClickListener {
             val intent = viewModel.navigateLogin()
             if(intent == null) { // 로그인 됨
-                Log.d("Test", "로그인 된 사용자")
                 // 이미지 권한 요청하기
                 checkPermissionsAndProceed()
             }
