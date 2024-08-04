@@ -47,6 +47,11 @@ class SelectPostImageListAdapter (
         }
     }
 
+    // 아이템 선택 해제될 때
+    override fun clearItemView() {
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -88,15 +93,16 @@ class SelectPostImageListAdapter (
             // 이미지 삭제
             binding.btnDeleteEditImage.setOnClickListener {
                 postImageList.removeAt(position)
-                notifyItemRemoved(position)
-                notifyItemChanged(position)
+//                notifyItemRemoved(position)
+//                notifyItemChanged(position)
 
                 if(position >= postImageList.size) {
                     selectImagePosition = postImageList.size - 1
-                    notifyItemChanged(selectImagePosition)
+//                    notifyItemChanged(selectImagePosition)
                 }
 
                 onClickPostImage(postImageList[selectImagePosition])
+                notifyDataSetChanged()
             }
         }
     }

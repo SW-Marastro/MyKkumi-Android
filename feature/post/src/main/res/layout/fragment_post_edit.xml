@@ -114,7 +114,25 @@
                 android:scaleType="fitCenter"
                 android:layout_centerVertical="true"/>
 
+            <View
+                android:id="@+id/test_pin"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_centerInParent="true"
+                android:background="@android:color/holo_blue_light"
+                android:visibility="gone"/>
+
         </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_add_pin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="핀 추가"
+            android:padding="2dp"
+            android:background="@color/gray_DD"
+            android:layout_below="@id/relative_select_post_image"
+            android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 

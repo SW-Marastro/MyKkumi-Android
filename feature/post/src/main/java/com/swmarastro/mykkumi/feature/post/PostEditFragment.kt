@@ -2,6 +2,7 @@ package com.swmarastro.mykkumi.feature.post
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.widget.HorizontalScrollView
 import androidx.fragment.app.viewModels
@@ -73,6 +74,33 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         binding.btnAddPostImage.setOnClickListener(View.OnClickListener {
             viewModel.openImagePicker(navController)
         })
+
+        var moveX = 50f
+        var moveY = 50f
+
+        // 핀 추가
+        binding.btnAddPin.setOnClickListener {
+            // test
+            binding.testPin.visibility = View.VISIBLE
+            binding.testPin.setOnTouchListener { v, event ->
+                when(event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        moveX = v.x - event.rawX
+                        moveY = v.y - event.rawY
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        v.animate()
+                            .x(event.rawX + moveX)
+                            .y(event.rawY + moveY)
+                            .setDuration(0)
+                            .start()
+                    }
+                }
+
+                true
+            }
+        }
 
         // 이전 버튼
         binding.btnBack.setOnClickListener {
