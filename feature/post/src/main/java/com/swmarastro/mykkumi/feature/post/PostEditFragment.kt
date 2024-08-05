@@ -34,12 +34,12 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         navController?.currentBackStackEntry?.savedStateHandle?.getLiveData<ImagePickerArgument>("selectImages")
             ?.observe(viewLifecycleOwner) { images ->
                 if(!images.selectImages.isNullOrEmpty()) {
-                    for (image in images.selectImages!!) {
+                    for (image in images.selectImages) {
                         viewModel.selectPostImage(image)
                     }
 
                     // 리스트에 추가했다면 지우기 - view resume 될 때마다 추가되는 현상 제거
-                    images.selectImages!!.clear()
+                    images.selectImages.clear()
                 }
             }
     }
@@ -59,7 +59,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             binding.scrollSelectPostImageList.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
 
             if(it.size > 0)
-                binding.imagePostEdit.load(it[it.size - 1]) // 추가된 이미지를 화면에 보여주기
+                binding.imagePostEdit.load(it[it.size - 1].localUri) // 추가된 이미지를 화면에 보여주기
 
             // 이미지 10개 선택됐으면 추가 버튼 가리기
             if(selectPostImageListAdapter.postImageList.size == viewModel.MAX_IMAGE_COUNT) {

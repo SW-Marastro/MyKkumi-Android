@@ -17,15 +17,15 @@ class PostEditViewModel  @Inject constructor(
 ) : ViewModel() {
     final val MAX_IMAGE_COUNT = 10
 
-    private val _postEditUiState = MutableLiveData<MutableList<Uri>>(mutableListOf())
-    val postEditUiState: LiveData<MutableList<Uri>> get() = _postEditUiState
+    private val _postEditUiState = MutableLiveData<MutableList<PostImageData>>(mutableListOf())
+    val postEditUiState: LiveData<MutableList<PostImageData>> get() = _postEditUiState
 
     private val _checkCreateView = MutableStateFlow<Boolean>(true)
     val checkCreateView : StateFlow<Boolean> get() = _checkCreateView
 
     fun selectPostImage(uri: Uri) {
         val addPostImages = _postEditUiState.value
-        addPostImages?.add(uri)
+        addPostImages?.add(PostImageData(localUri = uri))
         _postEditUiState.value = addPostImages!!
     }
 

@@ -47,6 +47,7 @@ class PostEditImageTouchCallback(private val listener: ItemTouchHelperListener):
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
         viewHolder.itemView.elevation = 0.0F
+        listener.clearItemView()
     }
 
 }
