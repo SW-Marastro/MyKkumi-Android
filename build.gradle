@@ -56,6 +56,9 @@ buildscript {
         coil_version = "2.4.0"
         coil_compose_version = "2.7.0"
 
+        // Gilde
+        glide_version = "4.16.0"
+
         // Kakao SDK
         kakao_sdk_version = "2.20.3"
 

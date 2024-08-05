@@ -2,19 +2,23 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/relative_camera"
+        android:layout_width="137dp"
+        android:layout_height="137dp">
 
         <ImageButton
             android:id="@+id/btn_camera"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:src="@drawable/img_camera_btn"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

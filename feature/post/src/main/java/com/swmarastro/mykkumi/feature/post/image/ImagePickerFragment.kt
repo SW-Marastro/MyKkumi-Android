@@ -53,6 +53,11 @@ class ImagePickerFragment : BaseFragment<FragmentImagePickerBinding>(R.layout.fr
                 viewModel.doneSelectImages(navController)
             }
         }
+
+        // 이전 버튼
+        binding.btnBack.setOnClickListener {
+            navController?.popBackStack()
+        }
     }
 
     override suspend fun initView() {
