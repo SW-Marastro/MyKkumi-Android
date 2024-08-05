@@ -57,7 +57,7 @@
 
         <HorizontalScrollView
             android:id="@+id/scroll_select_post_image_list"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollbars="none"
             android:fillViewport="true"
@@ -99,30 +99,29 @@
 
         </HorizontalScrollView>
 
-        <RelativeLayout
-            android:id="@+id/relative_select_post_image"
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/relative_select_post_image"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@+id/scroll_select_post_image_list"-->
+<!--            android:background="@color/gray_DD">-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/image_post_edit"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:adjustViewBounds="true"-->
+<!--                android:scaleType="fitCenter"-->
+<!--                android:layout_centerVertical="true"/>-->
+
+<!--        </RelativeLayout>-->
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager_post_edit_images"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/scroll_select_post_image_list"
-            android:background="@color/gray_DD">
-
-            <ImageView
-                android:id="@+id/image_post_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:layout_centerVertical="true"/>
-
-            <View
-                android:id="@+id/test_pin"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_centerInParent="true"
-                android:background="@android:color/holo_blue_light"
-                android:visibility="gone"/>
-
-        </RelativeLayout>
+            android:orientation="horizontal"/>
 
         <Button
             android:id="@+id/btn_add_pin"
@@ -131,7 +130,7 @@
             android:text="핀 추가"
             android:padding="2dp"
             android:background="@color/gray_DD"
-            android:layout_below="@id/relative_select_post_image"
+            android:layout_below="@id/viewpager_post_edit_images"
             android:layout_alignParentRight="true"/>
 
     </RelativeLayout>

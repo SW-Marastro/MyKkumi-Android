@@ -40,14 +40,16 @@ class SelectPostImageListAdapter (
 
         notifyItemMoved(from, to)
 
-        if(selectImagePosition == from) {
-            selectImagePosition = to
-        }
-        else if(to <= selectImagePosition && selectImagePosition < from) {
-            selectImagePosition++
-        }
-        else if (from < selectImagePosition && selectImagePosition <= to){
-            selectImagePosition--
+        when (selectImagePosition) {
+            from -> {
+                selectImagePosition = to
+            }
+            in to..<from -> {
+                selectImagePosition++
+            }
+            in (from + 1)..to -> {
+                selectImagePosition--
+            }
         }
     }
 

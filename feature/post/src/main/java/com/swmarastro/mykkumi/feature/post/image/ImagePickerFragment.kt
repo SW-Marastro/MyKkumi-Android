@@ -41,7 +41,6 @@ class ImagePickerFragment : BaseFragment<FragmentImagePickerBinding>(R.layout.fr
 
         navController = view.findNavController()
         maxImageCount = args.maxImageCount // 최대 선택 가능한 이미지 개수
-        Log.d("test max", maxImageCount.toString())
 
         // 이미지 선택 완료
         binding.btnDonePicker.setOnClickListener {

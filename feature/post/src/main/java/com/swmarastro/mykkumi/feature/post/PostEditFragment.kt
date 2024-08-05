@@ -2,7 +2,9 @@ package com.swmarastro.mykkumi.feature.post
 
 import android.net.Uri
 import android.os.Bundle
-import android.view.MotionEvent
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.HorizontalScrollView
 import androidx.fragment.app.viewModels
@@ -11,11 +13,11 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import coil.load
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
 import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
 import com.swmarastro.mykkumi.feature.post.touchEvent.PostEditImageTouchCallback
+
 
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit){
     private val viewModel by viewModels<PostEditViewModel>()
@@ -49,27 +51,6 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
         navController = view.findNavController()
 
-        // 추가된 이미지
-        viewModel.postEditUiState.observe(viewLifecycleOwner, Observer {
-            selectPostImageListAdapter.postImageList = it
-            selectPostImageListAdapter.notifyDataSetChanged()
-
-            // 스크롤을 맨 오른쪽으로 이동
-            binding.scrollSelectPostImageList.isSmoothScrollingEnabled = true
-            binding.scrollSelectPostImageList.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
-
-            if(it.size > 0)
-                binding.imagePostEdit.load(it[it.size - 1].localUri) // 추가된 이미지를 화면에 보여주기
-
-            // 이미지 10개 선택됐으면 추가 버튼 가리기
-            if(selectPostImageListAdapter.postImageList.size == viewModel.MAX_IMAGE_COUNT) {
-                binding.btnAddPostImage.visibility = View.GONE
-            }
-            else {
-                binding.btnAddPostImage.visibility = View.VISIBLE
-            }
-        })
-
         // 이미지 추가
         binding.btnAddPostImage.setOnClickListener(View.OnClickListener {
             viewModel.openImagePicker(navController)
@@ -79,28 +60,28 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         var moveY = 50f
 
         // 핀 추가
-        binding.btnAddPin.setOnClickListener {
-            // test
-            binding.testPin.visibility = View.VISIBLE
-            binding.testPin.setOnTouchListener { v, event ->
-                when(event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        moveX = v.x - event.rawX
-                        moveY = v.y - event.rawY
-                    }
-
-                    MotionEvent.ACTION_MOVE -> {
-                        v.animate()
-                            .x(event.rawX + moveX)
-                            .y(event.rawY + moveY)
-                            .setDuration(0)
-                            .start()
-                    }
-                }
-
-                true
-            }
-        }
+//        binding.btnAddPin.setOnClickListener {
+//            // test
+//            binding.testPin.visibility = View.VISIBLE
+//            binding.testPin.setOnTouchListener { v, event ->
+//                when(event.action) {
+//                    MotionEvent.ACTION_DOWN -> {
+//                        moveX = v.x - event.rawX
+//                        moveY = v.y - event.rawY
+//                    }
+//
+//                    MotionEvent.ACTION_MOVE -> {
+//                        v.animate()
+//                            .x(event.rawX + moveX)
+//                            .y(event.rawY + moveY)
+//                            .setDuration(0)
+//                            .start()
+//                    }
+//                }
+//
+//                true
+//            }
+//        }
 
         // 이전 버튼
         binding.btnBack.setOnClickListener {
@@ -124,6 +105,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         }
 
         initSelectPostImagesRecyclerView()
+        observePostImage()
     }
 
     // 선택된 이미지 리스트 Recyclerview
@@ -138,16 +120,47 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         postEditImageTouchHelper = ItemTouchHelper(PostEditImageTouchCallback(selectPostImageListAdapter))
         postEditImageTouchHelper.attachToRecyclerView(binding.recyclerviewSelectPostImage)
 
-        binding.recyclerviewSelectPostImage.layoutManager = LinearLayoutManager(
-            context,
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
-        binding.recyclerviewSelectPostImage.adapter = selectPostImageListAdapter
+        binding.recyclerviewSelectPostImage.apply {
+            layoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            adapter = selectPostImageListAdapter
+        }
         binding.recyclerviewSelectPostImage.isNestedScrollingEnabled = false
     }
 
+    private fun observePostImage() {
+        // 추가된 이미지
+        viewModel.postEditUiState.observe(viewLifecycleOwner, Observer {
+            selectPostImageListAdapter.postImageList = it
+            selectPostImageListAdapter.notifyDataSetChanged()
+
+            // 스크롤을 맨 오른쪽으로 이동
+            _binding?.let { binding ->
+                binding.scrollSelectPostImageList.isSmoothScrollingEnabled = true
+
+                binding.scrollSelectPostImageList.post {
+                    binding.scrollSelectPostImageList.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
+                }
+            } ?: run {
+                Log.e("PostEditFragment", "Binding is not initialized")
+            }
+
+            //if(it.size > 0)
+            //binding.imagePostEdit.load(it[it.size - 1].localUri) // 추가된 이미지를 화면에 보여주기
+
+            // 이미지 10개 선택됐으면 추가 버튼 가리기
+            if(selectPostImageListAdapter.postImageList.size == viewModel.MAX_IMAGE_COUNT) {
+                binding.btnAddPostImage.visibility = View.GONE
+            }
+            else {
+                binding.btnAddPostImage.visibility = View.VISIBLE
+            }
+        })
+    }
     private fun onClickPostImage(image: Uri) {
-        binding.imagePostEdit.load(image)
+        //binding.imagePostEdit.load(image)
     }
 }
