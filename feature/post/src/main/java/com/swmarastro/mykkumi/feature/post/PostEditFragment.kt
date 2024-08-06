@@ -1,9 +1,6 @@
 package com.swmarastro.mykkumi.feature.post
 
-import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.HorizontalScrollView
@@ -19,7 +16,6 @@ import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
 import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
 import com.swmarastro.mykkumi.feature.post.imageWithPin.EditImageWithPinAdapter
 import com.swmarastro.mykkumi.feature.post.touchEvent.PostEditImageTouchCallback
-
 
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit){
     private val viewModel by viewModels<PostEditViewModel>()
@@ -59,32 +55,10 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             viewModel.openImagePicker(navController)
         })
 
-        var moveX = 50f
-        var moveY = 50f
-
         // 핀 추가
-//        binding.btnAddPin.setOnClickListener {
-//            // test
-//            binding.testPin.visibility = View.VISIBLE
-//            binding.testPin.setOnTouchListener { v, event ->
-//                when(event.action) {
-//                    MotionEvent.ACTION_DOWN -> {
-//                        moveX = v.x - event.rawX
-//                        moveY = v.y - event.rawY
-//                    }
-//
-//                    MotionEvent.ACTION_MOVE -> {
-//                        v.animate()
-//                            .x(event.rawX + moveX)
-//                            .y(event.rawY + moveY)
-//                            .setDuration(0)
-//                            .start()
-//                    }
-//                }
-//
-//                true
-//            }
-//        }
+        binding.btnAddPin.setOnClickListener {
+            viewModel.addPinOfImage()
+        }
 
         // 이전 버튼
         binding.btnBack.setOnClickListener {
@@ -94,12 +68,12 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
+
         // 화면 최초 생성 시, 이미지 picker 띄워주기
         if(viewModel.checkCreateView.value) {
             viewModel.openImagePicker(navController)
             viewModel.createViewDone() // 생성 끝
         }
-
     }
 
     override suspend fun initView() {
@@ -141,7 +115,9 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
     // 선택된 이미지 편집 화면 viewpager init
     private fun initEditImageWithPinViewPager() {
-        editImageWithPinAdapter = EditImageWithPinAdapter()
+        editImageWithPinAdapter = EditImageWithPinAdapter(
+            viewModel
+        )
         binding.viewpagerPostEditImages.adapter = editImageWithPinAdapter
         binding.viewpagerPostEditImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
@@ -164,6 +140,17 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         viewModel.postEditUiState.observe(viewLifecycleOwner, Observer {
             selectPostImageListAdapter.postImageList = it
             editImageWithPinAdapter.imageWithPinList = it
+
+            if(!viewModel.postEditUiState.value.isNullOrEmpty()) {
+                val oldSelect = viewModel.selectImagePosition.value!!
+                viewModel.changeSelectImagePosition(viewModel.postEditUiState.value!!.size - 1)
+
+                if(oldSelect < viewModel.postEditUiState.value!!.size && oldSelect >= 0 && viewModel.selectImagePosition.value!! >= 0) {
+                    viewModel.postEditUiState.value!![oldSelect].isSelect = false
+                    viewModel.postEditUiState.value!![viewModel.selectImagePosition.value!!].isSelect = true
+                }
+            }
+
             selectPostImageListAdapter.notifyDataSetChanged()
             editImageWithPinAdapter.notifyDataSetChanged()
 
@@ -193,11 +180,11 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             }
         })
 
-        // 선택된 이미지 (편집 중)
-//        viewModel.selectImagePosition.observe(viewLifecycleOwner, Observer {
-//            // ViewPager에서 보여주고 있는 이미지 변경
-//            binding.viewpagerPostEditImages.setCurrentItem(viewModel.selectImagePosition.value!!, false)
-//        })
+        // 핀 추가
+        viewModel.currentPinList.observe(viewLifecycleOwner, Observer {
+            editImageWithPinAdapter.notifyItemChanged(viewModel.selectImagePosition.value!!)
+            Log.d("test observe", viewModel.selectImagePosition.value.toString())
+        })
     }
 
     // 이미지 순서 변경 시 ViewPager에 적용
@@ -211,4 +198,6 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         // ViewPager에서 보여주고 있는 이미지 변경
         binding.viewpagerPostEditImages.setCurrentItem(viewModel.selectImagePosition.value!!, false)
     }
+
+    // pin 이동 중일 때는 viewPager 전환 안 되게 막기
 }

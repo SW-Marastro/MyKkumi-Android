@@ -17,17 +17,19 @@ class SelectPostImageListAdapter (
     ItemTouchHelperListener {
 
     var postImageList = mutableListOf<PostImageData>()
-        set(value) { // 데이터 추가되면 마지막 데이터를 선택
-            field = value
-            val oldSelect = viewModel.selectImagePosition.value!!
-            viewModel.changeSelectImagePosition(field.size - 1)
-            if(oldSelect < field.size && oldSelect >= 0 && viewModel.selectImagePosition.value!! >= 0) {
-                field[oldSelect].isSelect = false
-                field[viewModel.selectImagePosition.value!!].isSelect = true
-            }
-            notifyItemChanged(oldSelect)
-            notifyItemChanged(viewModel.selectImagePosition.value!!)
-        }
+//        set(value) { // 데이터 추가되면 마지막 데이터를 선택
+//            field = value
+//            val oldSelect = viewModel.selectImagePosition.value!!
+//            viewModel.changeSelectImagePosition(field.size - 1)
+//
+//            if(oldSelect < field.size && oldSelect >= 0 && viewModel.selectImagePosition.value!! >= 0) {
+//                field[oldSelect].isSelect = false
+//                field[viewModel.selectImagePosition.value!!].isSelect = true
+//            }
+//
+//            notifyItemChanged(oldSelect)
+//            notifyItemChanged(viewModel.selectImagePosition.value!!)
+//        }
     //var selectImagePosition: Int = 0
 
     // 아이템 이동 - 드래그로 이동 시 호출됨

@@ -11,7 +11,7 @@ class FrameLayoutManager : RecyclerView.LayoutManager() {
         )
     }
 
-    override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State?) {
+    override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
         detachAndScrapAttachedViews(recycler)
 
         for (i in 0 until itemCount) {
@@ -21,7 +21,12 @@ class FrameLayoutManager : RecyclerView.LayoutManager() {
             val width = getDecoratedMeasuredWidth(view)
             val height = getDecoratedMeasuredHeight(view)
 
-            layoutDecorated(view, 50 * i, 50 * i, 50 * i + width, 50 * i + height)
+            val left = 50 * i
+            val top = 50 * i
+            val right = left + width
+            val bottom = top + height
+
+            layoutDecorated(view, left, top, right, bottom)
         }
     }
 

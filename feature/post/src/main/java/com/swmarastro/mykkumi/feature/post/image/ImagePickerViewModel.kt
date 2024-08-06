@@ -49,6 +49,8 @@ class ImagePickerViewModel @Inject constructor(
         val sortOrder = "$INDEX_DATE_ADDED DESC"
         val cursor = context.contentResolver.query(uri, projection, selection, null, sortOrder)
 
+        _imagePickerUiState.value = mutableListOf()
+
         cursor?.let {
             while(cursor.moveToNext()) {
                 val mediaPath = cursor.getString(cursor.getColumnIndex(INDEX_MEDIA_URI))

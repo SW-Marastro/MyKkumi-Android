@@ -1,10 +1,12 @@
 package com.swmarastro.mykkumi.feature.post.imageWithPin
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.swmarastro.mykkumi.common_ui.databinding.ItemPinOfPostImageBinding
 import com.swmarastro.mykkumi.domain.entity.PostEditPinVO
-import com.swmarastro.mykkumi.feature.post.databinding.ItemPinOfPostImageBinding
 
 class EditPinAdapter : RecyclerView.Adapter<EditPinAdapter.PinViewHolder>() {
 
@@ -28,10 +30,32 @@ class EditPinAdapter : RecyclerView.Adapter<EditPinAdapter.PinViewHolder>() {
     override fun getItemCount(): Int = pinList.size
 
     class PinViewHolder(
-        binding: ItemPinOfPostImageBinding
+        private val binding: ItemPinOfPostImageBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PostEditPinVO) {
+            Log.d("핀 adapter", item.toString())
 
+            var moveX = 50f
+            var moveY = 50f
+
+            binding.pinOfPostImage.setOnTouchListener { v, event ->
+                when(event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        moveX = v.x - event.rawX
+                        moveY = v.y - event.rawY
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        v.animate()
+                            .x(event.rawX + moveX)
+                            .y(event.rawY + moveY)
+                            .setDuration(0)
+                            .start()
+                    }
+                }
+
+                true
+            }
         }
     }
 }

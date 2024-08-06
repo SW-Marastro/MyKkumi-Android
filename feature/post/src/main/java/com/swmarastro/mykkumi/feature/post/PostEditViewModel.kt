@@ -1,11 +1,13 @@
 package com.swmarastro.mykkumi.feature.post
 
 import android.net.Uri
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.swmarastro.mykkumi.domain.entity.PostEditPinVO
 import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +28,9 @@ class PostEditViewModel  @Inject constructor(
     private val _selectImagePosition = MutableLiveData<Int>(0)
     val selectImagePosition : LiveData<Int> get() = _selectImagePosition
 
+    private val _currentPinList = MutableLiveData<MutableList<PostEditPinVO>>(mutableListOf())
+    val currentPinList : LiveData<MutableList<PostEditPinVO>> get() = _currentPinList
+
     fun selectPostImage(uri: Uri) {
         val addPostImages = _postEditUiState.value
         addPostImages?.add(PostImageData(localUri = uri))
@@ -45,6 +50,43 @@ class PostEditViewModel  @Inject constructor(
     }
 
     fun changeSelectImagePosition(position: Int) {
-        _selectImagePosition.value = position
+        Log.d("test", "viewmodel 왔다감")
+        if(position >= 0) {
+            Log.d("test22", "viewmodel 왔다감22")
+            selectImagePosition.value?.let {
+                _postEditUiState.value?.get(it)?.apply {
+                    pinList = currentPinList.value ?: mutableListOf()
+                }
+            }
+            _selectImagePosition.value = position
+
+            selectImagePosition.value?.let {
+                _currentPinList.value = _postEditUiState.value?.get(position)?.pinList ?: mutableListOf()
+            }
+        }
+        else {
+            _currentPinList.value = mutableListOf()
+        }
+    }
+
+    fun addPinOfImage() {
+        Log.d("Test-----", "pin 추가")
+        Log.d("Test-----", selectImagePosition.value.toString())
+
+        selectImagePosition.value?.let {
+            val addPinList = _currentPinList.value ?: mutableListOf()
+            addPinList.apply {
+                add(
+                    PostEditPinVO(
+                        null,
+                        50f,
+                        50f
+                    )
+                )
+            }
+            _currentPinList.value = addPinList
+        }
+
+        Log.d("Test-----", _currentPinList.value.toString())
     }
 }
