@@ -2,7 +2,6 @@ package com.swmarastro.mykkumi.feature.post.imageWithPin
 
 import android.content.Context
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
@@ -64,12 +63,16 @@ class EditImageWithPinAdapter(
                             parentWidth = parent.width
                             parentHeight = parent.height
 
-                            binding.relativePinsOfImages.layoutParams.height = parentHeight
+                            if(parentHeight != 0) {
+                                binding.relativePinsOfImages.layoutParams.height = parentHeight
+                                notifyDataSetChanged()
+                            }
 
                             parent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                         }
                     }
-                })
+                }
+            )
 
             for(pin in currentPinList) {
                 val pinView = LayoutInflater.from(context).inflate(R.layout.item_pin_of_post_image, binding.relativePinsOfImages, false)
