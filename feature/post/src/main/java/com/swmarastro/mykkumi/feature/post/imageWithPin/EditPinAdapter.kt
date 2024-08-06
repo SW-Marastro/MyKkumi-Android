@@ -33,8 +33,6 @@ class EditPinAdapter : RecyclerView.Adapter<EditPinAdapter.PinViewHolder>() {
         private val binding: ItemPinOfPostImageBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PostEditPinVO) {
-            Log.d("핀 adapter", item.toString())
-
             var moveX = 50f
             var moveY = 50f
 

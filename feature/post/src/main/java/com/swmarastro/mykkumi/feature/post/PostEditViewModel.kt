@@ -70,9 +70,6 @@ class PostEditViewModel  @Inject constructor(
     }
 
     fun addPinOfImage() {
-        Log.d("Test-----", "pin 추가")
-        Log.d("Test-----", selectImagePosition.value.toString())
-
         selectImagePosition.value?.let {
             val addPinList = _currentPinList.value ?: mutableListOf()
             addPinList.apply {
@@ -86,7 +83,5 @@ class PostEditViewModel  @Inject constructor(
             }
             _currentPinList.value = addPinList
         }
-
-        Log.d("Test-----", _currentPinList.value.toString())
     }
 }

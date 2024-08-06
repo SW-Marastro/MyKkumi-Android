@@ -166,10 +166,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             }
 
             if(it.size > 0) // 추가된 이미지를 화면에 보여주기
-                binding.viewpagerPostEditImages.post {
-                    binding.viewpagerPostEditImages.currentItem = it.size - 1
-                }
-            //binding.imagePostEdit.load(it[it.size - 1].localUri) // 추가된 이미지를 화면에 보여주기
+                binding.viewpagerPostEditImages.setCurrentItem(it.size - 1, false)
 
             // 이미지 10개 선택됐으면 추가 버튼 가리기
             if(selectPostImageListAdapter.postImageList.size == viewModel.MAX_IMAGE_COUNT) {
@@ -182,8 +179,11 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
         // 핀 추가
         viewModel.currentPinList.observe(viewLifecycleOwner, Observer {
-            editImageWithPinAdapter.notifyItemChanged(viewModel.selectImagePosition.value!!)
-            Log.d("test observe", viewModel.selectImagePosition.value.toString())
+            viewModel.selectImagePosition.value?.let {
+                editImageWithPinAdapter.notifyItemChanged(
+                    it
+                )
+            }
         })
     }
 
