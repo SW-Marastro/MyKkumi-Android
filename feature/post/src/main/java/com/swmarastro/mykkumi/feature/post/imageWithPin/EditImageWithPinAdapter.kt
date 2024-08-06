@@ -3,6 +3,7 @@ package com.swmarastro.mykkumi.feature.post.imageWithPin
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.swmarastro.mykkumi.common_ui.databinding.ItemPostImageViewpagerBinding
 import com.swmarastro.mykkumi.feature.post.PostImageData
 
@@ -27,7 +28,7 @@ class EditImageWithPinAdapter(
         private val binding: ItemPostImageViewpagerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PostImageData) {
-
+            binding.imagePost.load(item.localUri)
         }
     }
 }

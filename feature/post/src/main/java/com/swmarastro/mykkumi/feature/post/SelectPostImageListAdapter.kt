@@ -1,6 +1,5 @@
 package com.swmarastro.mykkumi.feature.post
 
-import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,23 +10,25 @@ import com.swmarastro.mykkumi.feature.post.databinding.ItemSelectPostImageBindin
 import com.swmarastro.mykkumi.feature.post.touchEvent.ItemTouchHelperListener
 
 class SelectPostImageListAdapter (
-    private val onClickPostImage: (image: Uri) -> Unit
+    private val viewModel: PostEditViewModel,
+    private val onClickPostImage: () -> Unit,
+    private val onChangeImageSort: () -> Unit,
 ) : RecyclerView.Adapter<SelectPostImageListAdapter.SelectPostImageListViewHolder>(),
     ItemTouchHelperListener {
 
     var postImageList = mutableListOf<PostImageData>()
         set(value) { // 데이터 추가되면 마지막 데이터를 선택
             field = value
-            val oldSelect = selectImagePosition
-            selectImagePosition = field.size - 1
-            if(oldSelect < field.size && oldSelect >= 0 && selectImagePosition >= 0) {
+            val oldSelect = viewModel.selectImagePosition.value!!
+            viewModel.changeSelectImagePosition(field.size - 1)
+            if(oldSelect < field.size && oldSelect >= 0 && viewModel.selectImagePosition.value!! >= 0) {
                 field[oldSelect].isSelect = false
-                field[selectImagePosition].isSelect = true
+                field[viewModel.selectImagePosition.value!!].isSelect = true
             }
             notifyItemChanged(oldSelect)
-            notifyItemChanged(selectImagePosition)
+            notifyItemChanged(viewModel.selectImagePosition.value!!)
         }
-    var selectImagePosition: Int = 0
+    //var selectImagePosition: Int = 0
 
     // 아이템 이동 - 드래그로 이동 시 호출됨
     // from: 드래그가 시작되는 위치
@@ -40,15 +41,15 @@ class SelectPostImageListAdapter (
 
         notifyItemMoved(from, to)
 
-        when (selectImagePosition) {
+        when (viewModel.selectImagePosition.value) {
             from -> {
-                selectImagePosition = to
+                viewModel.changeSelectImagePosition(to)
             }
             in to..<from -> {
-                selectImagePosition++
+                viewModel.changeSelectImagePosition(viewModel.selectImagePosition.value!! + 1)
             }
             in (from + 1)..to -> {
-                selectImagePosition--
+                viewModel.changeSelectImagePosition(viewModel.selectImagePosition.value!! - 1)
             }
         }
     }
@@ -56,6 +57,7 @@ class SelectPostImageListAdapter (
     // 아이템 선택 해제될 때- 전체 새로고침해서 index 재정리
     override fun clearItemView() {
         notifyDataSetChanged()
+        onChangeImageSort() // 순서 변경된 걸 ViewPager에도 반영
     }
 
     override fun onCreateViewHolder(
@@ -90,30 +92,31 @@ class SelectPostImageListAdapter (
 
             // 편집할 이미지 선택
             binding.imagePostEditThumbnail.setOnClickListener(View.OnClickListener {
-                postImageList[selectImagePosition].isSelect = false
+                postImageList[viewModel.selectImagePosition.value!!].isSelect = false
                 item.isSelect = true
 
-                Log.d("test position", selectImagePosition.toString() + " -> " + position.toString())
+                Log.d("test position", viewModel.selectImagePosition.value!!.toString() + " -> " + position.toString())
 
-                selectImagePosition = position
+                viewModel.changeSelectImagePosition(position)
                 notifyDataSetChanged()
 
-                onClickPostImage(item.localUri)
+                onClickPostImage()
             })
 
             // 이미지 삭제
             binding.btnDeleteEditImage.setOnClickListener {
                 postImageList.removeAt(position)
 
-                if(selectImagePosition >= postImageList.size) {
-                    selectImagePosition = postImageList.size - 1
-                    postImageList[selectImagePosition].isSelect = true
+                if(viewModel.selectImagePosition.value!! >= postImageList.size) {
+                    viewModel.changeSelectImagePosition(postImageList.size - 1)
+                    postImageList[viewModel.selectImagePosition.value!!].isSelect = true
                 }
-                else if(selectImagePosition == position) {
-                    postImageList[selectImagePosition].isSelect = true
+                else if(viewModel.selectImagePosition.value!! == position) {
+                    postImageList[viewModel.selectImagePosition.value!!].isSelect = true
                 }
 
-                onClickPostImage(postImageList[selectImagePosition].localUri)
+                onClickPostImage()
+                onChangeImageSort()
                 notifyDataSetChanged()
             }
         }

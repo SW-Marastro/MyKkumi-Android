@@ -13,16 +13,19 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
 import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
+import com.swmarastro.mykkumi.feature.post.imageWithPin.EditImageWithPinAdapter
 import com.swmarastro.mykkumi.feature.post.touchEvent.PostEditImageTouchCallback
 
 
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit){
     private val viewModel by viewModels<PostEditViewModel>()
 
-    private lateinit var selectPostImageListAdapter: SelectPostImageListAdapter
+    private lateinit var selectPostImageListAdapter: SelectPostImageListAdapter // 이미지들 썸네일 나열
+    private lateinit var editImageWithPinAdapter: EditImageWithPinAdapter // 이미지 편집 view (핀 추가할 수 있는)
 
     private var navController: NavController? = null
 
@@ -105,14 +108,19 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         }
 
         initSelectPostImagesRecyclerView()
+        initEditImageWithPinViewPager()
         observePostImage()
     }
 
     // 선택된 이미지 리스트 Recyclerview
     private fun initSelectPostImagesRecyclerView() {
         selectPostImageListAdapter = SelectPostImageListAdapter(
+            viewModel,
             onClickPostImage = {
-                onClickPostImage(it)
+                onClickPostImage()
+            },
+            onChangeImageSort = {
+                onChangeImageSort()
             }
         )
 
@@ -131,11 +139,33 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         binding.recyclerviewSelectPostImage.isNestedScrollingEnabled = false
     }
 
+    // 선택된 이미지 편집 화면 viewpager init
+    private fun initEditImageWithPinViewPager() {
+        editImageWithPinAdapter = EditImageWithPinAdapter()
+        binding.viewpagerPostEditImages.adapter = editImageWithPinAdapter
+        binding.viewpagerPostEditImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+
+        // ViewPager 넘겼을 때도 선택 이미지 변경되는 것
+        binding.viewpagerPostEditImages.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                viewModel.postEditUiState.value?.get(viewModel.selectImagePosition.value!!)!!.isSelect = false
+                viewModel.postEditUiState.value?.get(position)!!.isSelect = true
+                viewModel.changeSelectImagePosition(position)
+
+                selectPostImageListAdapter.notifyDataSetChanged()
+            }
+        })
+    }
+
+    // 이미지 추가되면 recyclerview adapter data 변경, 스크롤 이동 + 이미지 개수 확인
+    // edit viewPager data도 변경
     private fun observePostImage() {
         // 추가된 이미지
         viewModel.postEditUiState.observe(viewLifecycleOwner, Observer {
             selectPostImageListAdapter.postImageList = it
+            editImageWithPinAdapter.imageWithPinList = it
             selectPostImageListAdapter.notifyDataSetChanged()
+            editImageWithPinAdapter.notifyDataSetChanged()
 
             // 스크롤을 맨 오른쪽으로 이동
             _binding?.let { binding ->
@@ -148,7 +178,10 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                 Log.e("PostEditFragment", "Binding is not initialized")
             }
 
-            //if(it.size > 0)
+            if(it.size > 0) // 추가된 이미지를 화면에 보여주기
+                binding.viewpagerPostEditImages.post {
+                    binding.viewpagerPostEditImages.currentItem = it.size - 1
+                }
             //binding.imagePostEdit.load(it[it.size - 1].localUri) // 추가된 이미지를 화면에 보여주기
 
             // 이미지 10개 선택됐으면 추가 버튼 가리기
@@ -159,8 +192,23 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                 binding.btnAddPostImage.visibility = View.VISIBLE
             }
         })
+
+        // 선택된 이미지 (편집 중)
+//        viewModel.selectImagePosition.observe(viewLifecycleOwner, Observer {
+//            // ViewPager에서 보여주고 있는 이미지 변경
+//            binding.viewpagerPostEditImages.setCurrentItem(viewModel.selectImagePosition.value!!, false)
+//        })
     }
-    private fun onClickPostImage(image: Uri) {
-        //binding.imagePostEdit.load(image)
+
+    // 이미지 순서 변경 시 ViewPager에 적용
+    private fun onChangeImageSort() {
+        editImageWithPinAdapter.notifyDataSetChanged()
+        binding.viewpagerPostEditImages.setCurrentItem(viewModel.selectImagePosition.value!!, false)
+    }
+
+    // 선택된 이미지 (편집 중)
+    private fun onClickPostImage() {
+        // ViewPager에서 보여주고 있는 이미지 변경
+        binding.viewpagerPostEditImages.setCurrentItem(viewModel.selectImagePosition.value!!, false)
     }
 }

@@ -23,6 +23,9 @@ class PostEditViewModel  @Inject constructor(
     private val _checkCreateView = MutableStateFlow<Boolean>(true)
     val checkCreateView : StateFlow<Boolean> get() = _checkCreateView
 
+    private val _selectImagePosition = MutableLiveData<Int>(0)
+    val selectImagePosition : LiveData<Int> get() = _selectImagePosition
+
     fun selectPostImage(uri: Uri) {
         val addPostImages = _postEditUiState.value
         addPostImages?.add(PostImageData(localUri = uri))
@@ -39,5 +42,9 @@ class PostEditViewModel  @Inject constructor(
 
     fun createViewDone() {
         _checkCreateView.value = false
+    }
+
+    fun changeSelectImagePosition(position: Int) {
+        _selectImagePosition.value = position
     }
 }
