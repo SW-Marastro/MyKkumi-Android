@@ -2,9 +2,9 @@ package com.swmarastro.mykkumi.feature.post.imageWithPin
 
 import android.content.Context
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.RecyclerView
@@ -39,9 +39,10 @@ class EditImageWithPinAdapter(
     inner class EditImageWithPinViewHolder(
         private val binding: ItemPostImageViewpagerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: PostImageData, position: Int) {
-            Log.d("test", "parent created")
+        private var parentWidth = 0
+        private var parentHeight = 0
 
+        fun bind(item: PostImageData, position: Int) {
             binding.imagePost.load(item.localUri)
 
             val currentPinList = if(position == viewModel.selectImagePosition.value) { // 현재 선택된, 편집 중인 이미지
@@ -52,29 +53,36 @@ class EditImageWithPinAdapter(
             }
 
             binding.relativePinsOfImages.removeAllViews()
-            binding.relativePinsOfImages.layoutParams.height = (binding.imagePost as View).height
+            // pin이 이미지의 크기를 벗어나지 않도록 제한
+            val parent = binding.imagePost
+
+            parent.viewTreeObserver.addOnGlobalLayoutListener(
+                object : ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        if (parentHeight == 0) {
+                            Log.d("test", "width : ${parent.width} height : ${parent.height}")
+                            parentWidth = parent.width
+                            parentHeight = parent.height
+
+                            binding.relativePinsOfImages.layoutParams.height = parentHeight
+
+                            parent.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        }
+                    }
+                })
 
             for(pin in currentPinList) {
                 val pinView = LayoutInflater.from(context).inflate(R.layout.item_pin_of_post_image, binding.relativePinsOfImages, false)
                 binding.relativePinsOfImages.addView(pinView)
 
-                // pin이 이미지의 크기를 벗어나지 않도록 제한
-                val parent = binding.imagePost
-                Log.d("test", "parent created")
-                parent.viewTreeObserver.addOnGlobalLayoutListener(
-                    object : ViewTreeObserver.OnGlobalLayoutListener {
-                        override fun onGlobalLayout() {
-                            Log.d("test", "item : ${item.localUri}imageview width : ${parent.width} height : ${parent.height}")
-                        }
-                    })
-                val parentWidth = parent.width
-                val parentHeight = parent.height
-
-                // 핀의 크기를 고려
-                val pinWidth = pinView.width
-                val pinHeight = pinView.height
+                // 핀의 가운데를 기준으로
+                var pinWidth = 0
+                var pinHeight = 0
 
                 pinView.post {
+                    pinWidth = pinView.width
+                    pinHeight = pinView.height
+
                     pinView.x = pin.positionX * (parentWidth - pinWidth)
                     pinView.y = pin.positionY * (parentHeight - pinHeight)
                 }
@@ -114,6 +122,8 @@ class EditImageWithPinAdapter(
                     true
                 }
             }
+
+            binding.relativePinsOfImages.layoutParams.height = parentHeight
         }
     }
 }
