@@ -17,11 +17,13 @@
             android:scaleType="fitCenter"
             android:layout_centerVertical="true"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview_pins_of_images"
+        <RelativeLayout
+            android:id="@+id/relative_pins_of_images"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/item_pin_of_post_image"/>
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

@@ -15,22 +15,7 @@ class SelectPostImageListAdapter (
     private val onChangeImageSort: () -> Unit,
 ) : RecyclerView.Adapter<SelectPostImageListAdapter.SelectPostImageListViewHolder>(),
     ItemTouchHelperListener {
-
     var postImageList = mutableListOf<PostImageData>()
-//        set(value) { // 데이터 추가되면 마지막 데이터를 선택
-//            field = value
-//            val oldSelect = viewModel.selectImagePosition.value!!
-//            viewModel.changeSelectImagePosition(field.size - 1)
-//
-//            if(oldSelect < field.size && oldSelect >= 0 && viewModel.selectImagePosition.value!! >= 0) {
-//                field[oldSelect].isSelect = false
-//                field[viewModel.selectImagePosition.value!!].isSelect = true
-//            }
-//
-//            notifyItemChanged(oldSelect)
-//            notifyItemChanged(viewModel.selectImagePosition.value!!)
-//        }
-    //var selectImagePosition: Int = 0
 
     // 아이템 이동 - 드래그로 이동 시 호출됨
     // from: 드래그가 시작되는 위치
@@ -94,11 +79,6 @@ class SelectPostImageListAdapter (
 
             // 편집할 이미지 선택
             binding.imagePostEditThumbnail.setOnClickListener(View.OnClickListener {
-                postImageList[viewModel.selectImagePosition.value!!].isSelect = false
-                item.isSelect = true
-
-                Log.d("test position", viewModel.selectImagePosition.value!!.toString() + " -> " + position.toString())
-
                 viewModel.changeSelectImagePosition(position)
                 notifyDataSetChanged()
 
@@ -107,15 +87,7 @@ class SelectPostImageListAdapter (
 
             // 이미지 삭제
             binding.btnDeleteEditImage.setOnClickListener {
-                postImageList.removeAt(position)
-
-                if(viewModel.selectImagePosition.value!! >= postImageList.size) {
-                    viewModel.changeSelectImagePosition(postImageList.size - 1)
-                    postImageList[viewModel.selectImagePosition.value!!].isSelect = true
-                }
-                else if(viewModel.selectImagePosition.value!! == position) {
-                    postImageList[viewModel.selectImagePosition.value!!].isSelect = true
-                }
+                viewModel.removeImage(position)
 
                 onClickPostImage()
                 onChangeImageSort()

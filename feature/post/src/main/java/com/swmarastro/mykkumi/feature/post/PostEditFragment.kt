@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.HorizontalScrollView
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -57,7 +58,11 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
         // 핀 추가
         binding.btnAddPin.setOnClickListener {
-            viewModel.addPinOfImage()
+            viewModel.addPinOfImage(
+                showToast = {
+                    showToast(it)
+                }
+            )
         }
 
         // 이전 버튼
@@ -116,7 +121,14 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     // 선택된 이미지 편집 화면 viewpager init
     private fun initEditImageWithPinViewPager() {
         editImageWithPinAdapter = EditImageWithPinAdapter(
-            viewModel
+            requireContext(),
+            viewModel,
+            lockViewPagerMoving = {
+                lockViewPagerMoving()
+            },
+            unlockViewPagerMoving = {
+                unlockViewPagerMoving()
+            }
         )
         binding.viewpagerPostEditImages.adapter = editImageWithPinAdapter
         binding.viewpagerPostEditImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
@@ -124,10 +136,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         // ViewPager 넘겼을 때도 선택 이미지 변경되는 것
         binding.viewpagerPostEditImages.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                viewModel.postEditUiState.value?.get(viewModel.selectImagePosition.value!!)!!.isSelect = false
-                viewModel.postEditUiState.value?.get(position)!!.isSelect = true
                 viewModel.changeSelectImagePosition(position)
-
                 selectPostImageListAdapter.notifyDataSetChanged()
             }
         })
@@ -142,13 +151,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             editImageWithPinAdapter.imageWithPinList = it
 
             if(!viewModel.postEditUiState.value.isNullOrEmpty()) {
-                val oldSelect = viewModel.selectImagePosition.value!!
                 viewModel.changeSelectImagePosition(viewModel.postEditUiState.value!!.size - 1)
-
-                if(oldSelect < viewModel.postEditUiState.value!!.size && oldSelect >= 0 && viewModel.selectImagePosition.value!! >= 0) {
-                    viewModel.postEditUiState.value!![oldSelect].isSelect = false
-                    viewModel.postEditUiState.value!![viewModel.selectImagePosition.value!!].isSelect = true
-                }
             }
 
             selectPostImageListAdapter.notifyDataSetChanged()
@@ -200,4 +203,16 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     }
 
     // pin 이동 중일 때는 viewPager 전환 안 되게 막기
+    private fun lockViewPagerMoving() {
+        binding.viewpagerPostEditImages.isUserInputEnabled = false
+    }
+
+    // pin 이동 끝나면 viewPager 전환 가능하게 풀어주기
+    private fun unlockViewPagerMoving() {
+        binding.viewpagerPostEditImages.isUserInputEnabled = true
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
 }
