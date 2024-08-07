@@ -65,6 +65,7 @@ class PostEditViewModel  @Inject constructor(
             }
             _selectImagePosition.value = position
 
+            _currentPinList.value = mutableListOf()
             selectImagePosition.value?.let {
                 _currentPinList.postValue(
                     _postEditUiState.value?.get(position)?.pinList ?: mutableListOf()
@@ -94,6 +95,7 @@ class PostEditViewModel  @Inject constructor(
                         )
                     )
                 }
+                _currentPinList.value = mutableListOf()
                 _currentPinList.postValue( addPinList )
             }
         }
