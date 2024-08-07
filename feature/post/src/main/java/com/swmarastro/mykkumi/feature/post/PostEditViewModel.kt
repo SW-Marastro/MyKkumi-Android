@@ -36,7 +36,7 @@ class PostEditViewModel  @Inject constructor(
     fun selectPostImage(uri: Uri) {
         val addPostImages = _postEditUiState.value
         addPostImages?.add(PostImageData(localUri = uri))
-        _postEditUiState.value = addPostImages!!
+        _postEditUiState.postValue( addPostImages!! )
     }
 
     fun openImagePicker(navController: NavController?) {
@@ -66,14 +66,17 @@ class PostEditViewModel  @Inject constructor(
             _selectImagePosition.value = position
 
             selectImagePosition.value?.let {
-                _currentPinList.value = _postEditUiState.value?.get(position)?.pinList ?: mutableListOf()
+                _currentPinList.postValue(
+                    _postEditUiState.value?.get(position)?.pinList ?: mutableListOf()
+                )
             }
         }
         else {
-            _currentPinList.value = mutableListOf()
+            _currentPinList.postValue( mutableListOf() )
         }
     }
 
+    // 핀 추가
     fun addPinOfImage(showToast: (message: String) -> Unit) {
         // 핀 최대 개수
         if (currentPinList.value!!.size >= MAX_PIN_COUNT) {
@@ -91,14 +94,24 @@ class PostEditViewModel  @Inject constructor(
                         )
                     )
                 }
-                _currentPinList.value = addPinList
+                _currentPinList.postValue( addPinList )
             }
         }
     }
 
-    fun removeImage(position: Int) {
+    // 핀 삭제
+    fun deletePinOfImage(position: Int) {
+        var deletePinList = _currentPinList.value!!
+        deletePinList.removeAt(position)
+        _currentPinList.postValue(
+            deletePinList
+        )
+    }
+
+    // 이미지 삭제
+    fun deleteImage(position: Int) {
         if(selectImagePosition.value!! >= postEditUiState.value!!.size - 1) { // 마지막 이미지가 선택되어 있는 상태
-            _selectImagePosition.value = _selectImagePosition.value!! - 1
+            _selectImagePosition.postValue( _selectImagePosition.value!! - 1 )
             _postEditUiState.value!!.removeAt(position)
         }
         else if(selectImagePosition.value!! == position) { // 선택한 이미지를 삭제

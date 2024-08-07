@@ -86,7 +86,7 @@ class SelectPostImageListAdapter (
 
             // 이미지 삭제
             binding.btnDeleteEditImage.setOnClickListener {
-                viewModel.removeImage(position)
+                viewModel.deleteImage(position)
 
                 onClickPostImage()
                 onChangeImageSort()

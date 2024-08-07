@@ -182,11 +182,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
         // 핀 추가
         viewModel.currentPinList.observe(viewLifecycleOwner, Observer {
-            Log.d("test", "핀 추가 : position = ${viewModel.selectImagePosition.value}")
             viewModel.selectImagePosition.value?.let {
-//                editImageWithPinAdapter.notifyItemChanged(
-//                    it
-//                )
                 editImageWithPinAdapter.notifyDataSetChanged()
             }
         })

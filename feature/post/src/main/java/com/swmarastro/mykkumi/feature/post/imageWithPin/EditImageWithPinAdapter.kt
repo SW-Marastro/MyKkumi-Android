@@ -2,10 +2,15 @@ package com.swmarastro.mykkumi.feature.post.imageWithPin
 
 import android.content.Context
 import android.util.Log
+import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.PopupWindow
+import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.swmarastro.mykkumi.common_ui.R
@@ -74,7 +79,9 @@ class EditImageWithPinAdapter(
                 }
             )
 
-            for(pin in currentPinList) {
+            for(idx in 0..<currentPinList.size) {
+                val pin = currentPinList.get(idx)
+
                 val pinView = LayoutInflater.from(context).inflate(R.layout.item_pin_of_post_image, binding.relativePinsOfImages, false)
                 binding.relativePinsOfImages.addView(pinView)
 
@@ -93,7 +100,17 @@ class EditImageWithPinAdapter(
                 var moveX = 0f
                 var moveY = 0f
 
+                // 제품 정보 수정 / 삭제 tooltip을 위한 touchEvent 체크
+                val gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
+                    override fun onSingleTapUp(e: MotionEvent): Boolean {
+                        showTooltipOfPin(pinView, idx)
+                        return super.onSingleTapUp(e)
+                    }
+                })
+
                 pinView.setOnTouchListener { v, event ->
+                    gestureDetector.onTouchEvent(event)
+
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> { // Pin 선택하면 현재 위치 가져오기
                             moveX = v.x - event.rawX
@@ -129,4 +146,33 @@ class EditImageWithPinAdapter(
             binding.relativePinsOfImages.layoutParams.height = parentHeight
         }
     }
+
+    // 제품 정보 수정, 삭제 tooltip
+    private fun showTooltipOfPin(anchorView: View, pinIndex: Int) {
+        val tooltipView = LayoutInflater.from(anchorView.context).inflate(R.layout.tooltip_pin_of_image, null)
+
+        val popupWindow = PopupWindow(
+            tooltipView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        tooltipView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        val tooltipWidth = tooltipView.measuredWidth
+        val tooltipHeight = tooltipView.measuredHeight
+
+        val buttonAddProductInfo = tooltipView.findViewById<TextView>(R.id.btn_add_product_info)
+        val buttonDeletePin = tooltipView.findViewById<TextView>(R.id.btn_delete_pin)
+        buttonDeletePin.setOnClickListener(View.OnClickListener {
+            viewModel.deletePinOfImage(pinIndex)
+            popupWindow.dismiss()
+        })
+
+        val xOffset = (anchorView.width - tooltipWidth) / 2
+        val yOffset = -anchorView.height - tooltipHeight
+
+        popupWindow.showAsDropDown(anchorView, xOffset, yOffset)
+    }
+
 }
