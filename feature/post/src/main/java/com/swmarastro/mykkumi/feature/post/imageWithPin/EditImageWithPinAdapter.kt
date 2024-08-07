@@ -162,7 +162,7 @@ class EditImageWithPinAdapter(
         val tooltipWidth = tooltipView.measuredWidth
         val tooltipHeight = tooltipView.measuredHeight
 
-        val buttonAddProductInfo = tooltipView.findViewById<TextView>(R.id.btn_add_product_info)
+        val buttonEditProductInfo = tooltipView.findViewById<TextView>(R.id.btn_edit_product_info)
         val buttonDeletePin = tooltipView.findViewById<TextView>(R.id.btn_delete_pin)
         buttonDeletePin.setOnClickListener(View.OnClickListener {
             viewModel.deletePinOfImage(pinIndex)

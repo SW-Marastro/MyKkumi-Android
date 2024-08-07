@@ -33,5 +33,6 @@
 
     <!-- 포스트 작성 -->
     <string name="add_product_info_of_pin">제품 정보 등록</string>
+    <string name="edit_product_info_of_pin">제품 정보 수정</string>
     <string name="delete_pin_of_image">삭제</string>
 </resources>
