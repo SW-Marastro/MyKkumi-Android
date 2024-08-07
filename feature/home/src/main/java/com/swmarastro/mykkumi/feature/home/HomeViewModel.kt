@@ -51,13 +51,6 @@ class HomeViewModel @Inject constructor(
     // 포스트 끝 도달
     private var isPostEnd = false
 
-    private val _postImage = MutableStateFlow<Any>(com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default)
-    val postImage : StateFlow<Any> get() = _postImage
-
-    // 카메라로 촬영할 이미지를 저장할 path
-    private val _cameraImagePath = MutableStateFlow<Uri?>(null)
-    val cameraImagePath : StateFlow<Uri?> get() = _cameraImagePath
-
     // 홈 > 배너 캐러셀
     fun setHomeBanner() {
         viewModelScope.launch {
@@ -133,21 +126,4 @@ class HomeViewModel @Inject constructor(
         val navigateDeepLink = "mykkumi://post.edit"
         navController?.navigate(deepLink = navigateDeepLink.toUri())
     }
-
-    fun selectPostImage(uri: Any, navController: NavController?) {
-        _postImage.value = uri
-        resetCameraImagePath()
-        navigatePostEdit(navController)
-    }
-
-    // 카메라로 촬영한 이미지가 저장될 경로
-    fun setCameraImagePath(path: Uri) {
-        _cameraImagePath.value = path
-    }
-
-    // 경로 사용하면 리셋
-    fun resetCameraImagePath() {
-        _cameraImagePath.value = null
-    }
-
 }

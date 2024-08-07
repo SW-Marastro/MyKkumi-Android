@@ -55,84 +55,86 @@
 
         </RelativeLayout>
 
-        <HorizontalScrollView
-            android:id="@+id/scroll_select_post_image_list"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:fillViewport="true"
             android:layout_below="@id/header_post_edit">
 
-            <LinearLayout
-                android:id="@+id/linear_select_post_image_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <RelativeLayout
+                <HorizontalScrollView
+                    android:id="@+id/scroll_select_post_image_list"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:fillViewport="true">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerview_select_post_image"
+                    <LinearLayout
+                        android:id="@+id/linear_select_post_image_list"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/item_select_post_image"
-                        android:overScrollMode="never"
-                        android:nestedScrollingEnabled="false"/>
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerview_select_post_image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                tools:listitem="@layout/item_select_post_image"
+                                android:overScrollMode="never"
+                                android:nestedScrollingEnabled="false"/>
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/btn_add_post_image"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:text="추가"
+                            android:gravity="center"
+                            android:background="@color/gray_DD"
+                            android:layout_margin="5dp"/>
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+
+                <RelativeLayout
+                    android:id="@+id/relative_select_post_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/scroll_select_post_image_list"
+                    android:background="@color/gray_DD">
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/viewpager_post_edit_images"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"/>
 
                 </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/btn_add_post_image"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:text="추가"
-                    android:gravity="center"
+                <Button
+                    android:id="@+id/btn_add_pin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="핀 추가"
+                    android:padding="2dp"
                     android:background="@color/gray_DD"
-                    android:layout_margin="5dp"/>
+                    android:layout_below="@id/relative_select_post_image"
+                    android:layout_alignParentRight="true"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
-        </HorizontalScrollView>
-
-        <RelativeLayout
-            android:id="@+id/relative_select_post_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/scroll_select_post_image_list"
-            android:background="@color/gray_DD">
-
-            <ImageView
-                android:id="@+id/image_post_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:layout_centerVertical="true"/>
-
-            <View
-                android:id="@+id/test_pin"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_centerInParent="true"
-                android:background="@android:color/holo_blue_light"
-                android:visibility="gone"/>
-
-        </RelativeLayout>
-
-        <Button
-            android:id="@+id/btn_add_pin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="핀 추가"
-            android:padding="2dp"
-            android:background="@color/gray_DD"
-            android:layout_below="@id/relative_select_post_image"
-            android:layout_alignParentRight="true"/>
+        </ScrollView>
 
     </RelativeLayout>
 
