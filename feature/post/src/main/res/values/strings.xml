@@ -5,5 +5,6 @@
     <string name="done_image_picker">선택 완료</string>
     <string name="image_picker_title">이미지 선택</string>
     <string name="notice_not_select_image">이미지를 선택해주세요</string>
-    
+
+    <string name="confirm_delete_image_for_post_edit">이미지를 삭제하시면 제품 핀, 설명도 함께 삭제됩니다.\n사진을 삭제하시겠습니다?</string>
 </resources>

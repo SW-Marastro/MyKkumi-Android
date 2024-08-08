@@ -18,6 +18,10 @@
         <deepLink
             app:uri="mykkumi://post.edit?postId={postId}"/>
 
+        <action
+            android:id="@+id/action_open_confirm_bottom_sheet"
+            app:destination="@id/postConfirmBottomSheet"/>
+
     </fragment>
 
     <fragment
@@ -39,6 +43,26 @@
 
         <deepLink
             app:uri="mykkumi://image.picker?maxImageCount={maxImageCount}&amp;selectImages={selectImages}"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/postConfirmBottomSheet"
+        android:name="com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet"
+        android:label="bottom_sheet_post_confirm"
+        tools:layout="@layout/fragment_confirm_bottom_sheet">
+
+<!--        <argument-->
+<!--            android:name="message"-->
+<!--            app:argType="string"/>-->
+
+<!--        <argument-->
+<!--            android:name="callback"-->
+<!--            app:argType="boolean"-->
+<!--            android:defaultValue="false"/>-->
+
+<!--        <deepLink-->
+<!--            app:uri="mykkumi://post.confirm?message={message}&amp;callback={callback}" />-->
 
     </fragment>
 

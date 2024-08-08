@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.feature.post
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import com.swmarastro.mykkumi.feature.post.touchEvent.ItemTouchHelperListener
 
 class SelectPostImageListAdapter (
     private val viewModel: PostEditViewModel,
+    private val confirmDeleteImage: (position: Int) -> Unit,
     private val onClickPostImage: () -> Unit,
     private val onChangeImageSort: () -> Unit,
 ) : RecyclerView.Adapter<SelectPostImageListAdapter.SelectPostImageListViewHolder>(),
@@ -86,7 +88,8 @@ class SelectPostImageListAdapter (
 
             // 이미지 삭제
             binding.btnDeleteEditImage.setOnClickListener {
-                viewModel.deleteImage(position)
+                confirmDeleteImage(position)
+                //viewModel.deleteImage(position)
 
                 onClickPostImage()
                 onChangeImageSort()

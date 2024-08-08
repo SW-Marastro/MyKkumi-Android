@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumi.feature.post
 
 import android.net.Uri
+import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.core.net.toUri
@@ -33,6 +34,8 @@ class PostEditViewModel  @Inject constructor(
     private val _currentPinList = MutableLiveData<MutableList<PostEditPinVO>>(mutableListOf())
     val currentPinList : LiveData<MutableList<PostEditPinVO>> get() = _currentPinList
 
+    var deleteImagePosition: Int = -1
+
     fun selectPostImage(uri: Uri) {
         val addPostImages = _postEditUiState.value
         addPostImages?.add(PostImageData(localUri = uri))
@@ -52,7 +55,8 @@ class PostEditViewModel  @Inject constructor(
     }
 
     fun changeSelectImagePosition(position: Int) {
-        if(position >= 0) {
+
+        if(position >= 0 && _postEditUiState.value!!.size > position) {
             _postEditUiState.apply {
                 value!![selectImagePosition.value!!].isSelect = false // 이전 선택 해제
                 value!![position].isSelect = true // 새로운 선택
@@ -67,13 +71,13 @@ class PostEditViewModel  @Inject constructor(
 
             _currentPinList.value = mutableListOf()
             selectImagePosition.value?.let {
-                _currentPinList.postValue(
+                _currentPinList.setValue(
                     _postEditUiState.value?.get(position)?.pinList ?: mutableListOf()
                 )
             }
         }
         else {
-            _currentPinList.postValue( mutableListOf() )
+            _currentPinList.setValue( mutableListOf() )
         }
     }
 
@@ -110,22 +114,37 @@ class PostEditViewModel  @Inject constructor(
         )
     }
 
+    // 이미지 삭제를 위한 확인용 bottomSheet
+    fun confirmDeleteImage(navController: NavController?, message: String, position: Int) {
+//        val confirmDeleteImageDeepLink = "mykkumi://post.confirm?message=${"test"}"
+//        deleteImagePosition = position
+//
+//        navController?.navigate(deepLink = confirmDeleteImageDeepLink.toUri())
+
+        val bundle = Bundle()
+        //bundle.putString()
+    }
+
     // 이미지 삭제
-    fun deleteImage(position: Int) {
+    fun deleteImage() {
+        if(deleteImagePosition == -1) return
+
         if(selectImagePosition.value!! >= postEditUiState.value!!.size - 1) { // 마지막 이미지가 선택되어 있는 상태
-            _selectImagePosition.postValue( _selectImagePosition.value!! - 1 )
-            _postEditUiState.value!!.removeAt(position)
+            changeSelectImagePosition(selectImagePosition.value!! - 1)
+            _postEditUiState.value!!.removeAt(deleteImagePosition)
         }
-        else if(selectImagePosition.value!! == position) { // 선택한 이미지를 삭제
-            _postEditUiState.value!!.removeAt(position)
-            changeSelectImagePosition(position)
+        else if(selectImagePosition.value!! == deleteImagePosition) { // 선택한 이미지를 삭제
+            _postEditUiState.value!!.removeAt(deleteImagePosition)
+            changeSelectImagePosition(deleteImagePosition)
         }
-        else if(selectImagePosition.value!! > position){ // 선택한 이미지가 삭제 이미지보다 뒤에 있을 때
-            _postEditUiState.value!!.removeAt(position)
+        else if(selectImagePosition.value!! > deleteImagePosition){ // 선택한 이미지가 삭제 이미지보다 뒤에 있을 때
+            _postEditUiState.value!!.removeAt(deleteImagePosition)
             changeSelectImagePosition(selectImagePosition.value!! - 1)
         }
         else {
-            _postEditUiState.value!!.removeAt(position)
+            _postEditUiState.value!!.removeAt(deleteImagePosition)
         }
+
+        deleteImagePosition = -1
     }
 }
