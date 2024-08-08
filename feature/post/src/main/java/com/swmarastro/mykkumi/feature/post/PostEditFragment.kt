@@ -1,6 +1,9 @@
 package com.swmarastro.mykkumi.feature.post
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextUtils.concat
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.HorizontalScrollView
@@ -19,11 +22,15 @@ import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
 import com.swmarastro.mykkumi.feature.post.imageWithPin.EditImageWithPinAdapter
 import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import com.swmarastro.mykkumi.feature.post.touchEvent.PostEditImageTouchCallback
+import kotlin.math.max
 
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit),
     PostConfirmBottomSheet.PostConfirmListener,
     InputProductInfoBottomSheet.InputProductInfoListener {
     private val viewModel by viewModels<PostEditViewModel>()
+
+    private final val MAX_POST_CONTENT_LENGTH = 10      // 본문 글자 수
+    private final val MAX_POST_CONTENT_HASHTAG_COUNT = 2 // 본문 해시태그 수
 
     private lateinit var selectPostImageListAdapter: SelectPostImageListAdapter // 이미지들 썸네일 나열
     private lateinit var editImageWithPinAdapter: EditImageWithPinAdapter // 이미지 편집 view (핀 추가할 수 있는)
@@ -83,6 +90,41 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                 viewModel.requestProductInfoForPin(this@PostEditFragment, null)
             }
         }
+
+        // 본문 입력 글자 수 제한
+        binding.edittextInputContent.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!s.isNullOrEmpty()){
+                    Log.d("test", "onTextChanged - start: ${start}, before: ${before}, count: ${count}")
+                    // 본문 글자수
+                    if(s.length > MAX_POST_CONTENT_LENGTH) {
+                        if(before == 0) binding.edittextInputContent.setText(concat(s.subSequence(0, start), s.subSequence(start + count, s.length)))
+                        else binding.edittextInputContent.setText(concat(s.subSequence(0, before), s.subSequence(count, s.length)))
+
+                        binding.edittextInputContent.setSelection(max(start, before)) // 커서를 입력하고 있던 곳에
+                        showToast(getString(R.string.notice_post_content_max_length))
+                    }
+
+                    // 해시태그 개수
+                    if(s.count { it == '#' } > MAX_POST_CONTENT_HASHTAG_COUNT) {
+                        // 20개 넘어가는 건 자르기 = 방금 입력된 문자
+                        if(before == 0) binding.edittextInputContent.setText(concat(s.subSequence(0, start), s.subSequence(start + count, s.length)))
+                        else binding.edittextInputContent.setText(concat(s.subSequence(0, before), s.subSequence(count, s.length)))
+
+                        binding.edittextInputContent.setSelection(max(start, before)) // 커서를 입력하고 있던 곳에
+                        showToast(getString(R.string.notice_post_hashtag_max_count))
+                    }
+                }
+            }
+        })
 
         // 이전 버튼
         binding.btnBack.setOnClickListener {

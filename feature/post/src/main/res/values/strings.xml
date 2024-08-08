@@ -14,4 +14,7 @@
     <string name="placeholder_product_url_for_input_product_info">https://...</string>
     <string name="notice_product_name_not_null">제품명을 입력해주세요.</string>
     <string name="notice_product_name_max_length">제품명은 20자 이내로 입력해주세요.</string>
+    <string name="placeholder_input_post_content">내용을 작성해주세요.</string>
+    <string name="notice_post_content_max_length">내용은 2000자 이내로 입력해주세요.</string>
+    <string name="notice_post_hashtag_max_count">해시태그는 최대 20개까지 사용 가능합니다.</string>
 </resources>
