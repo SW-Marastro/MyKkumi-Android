@@ -2,16 +2,15 @@ package com.swmarastro.mykkumi.feature.post
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.swmarastro.mykkumi.domain.entity.PostEditPinProductVO
 import com.swmarastro.mykkumi.domain.entity.PostEditPinVO
 import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
-import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
+import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -82,33 +81,38 @@ class PostEditViewModel  @Inject constructor(
         }
     }
 
+    // 핀 추가를 위한 제품명 입력 요청
+    fun requestProductInfoForPin(fragment: PostEditFragment, productName: String?, productUrl: String?) {
+        val bundle = Bundle()
+        bundle.putString("productName", productName)
+        bundle.putString("productUrl", productUrl)
+        val bottomSheet = InputProductInfoBottomSheet().apply { setListener(fragment) }
+        bottomSheet.arguments = bundle
+        bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
+    }
+
     // 핀 추가
-    fun addPinOfImage(showToast: (message: String) -> Unit) {
-        // 핀 최대 개수
-        if (currentPinList.value!!.size >= MAX_PIN_COUNT) {
-            showToast("핀은 최대 ${MAX_PIN_COUNT}개까지 추가 가능합니다.")
-        }
-        else {
-            selectImagePosition.value?.let {
-                val addPinList = _currentPinList.value ?: mutableListOf()
-                addPinList.apply {
-                    add(
-                        PostEditPinVO(
-                            null,
-                            0.5f,
-                            0.5f
-                        )
+    fun addPinOfImage(productName: String, productUrl: String?) {
+        selectImagePosition.value?.let {
+            val addPinList = _currentPinList.value ?: mutableListOf()
+            addPinList.apply {
+                add(
+                    PostEditPinVO(
+                        null,
+                        0.5f,
+                        0.5f,
+                        PostEditPinProductVO(productName, productUrl)
                     )
-                }
-                _currentPinList.value = mutableListOf()
-                _currentPinList.postValue( addPinList )
+                )
             }
+            _currentPinList.value = mutableListOf()
+            _currentPinList.postValue( addPinList )
         }
     }
 
     // 핀 삭제
     fun deletePinOfImage(position: Int) {
-        var deletePinList = _currentPinList.value!!
+        val deletePinList = _currentPinList.value!!
         deletePinList.removeAt(position)
         _currentPinList.postValue(
             deletePinList

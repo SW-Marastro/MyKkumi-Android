@@ -17,9 +17,12 @@ import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
 import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
 import com.swmarastro.mykkumi.feature.post.imageWithPin.EditImageWithPinAdapter
+import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import com.swmarastro.mykkumi.feature.post.touchEvent.PostEditImageTouchCallback
 
-class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit), PostConfirmBottomSheet.PostConfirmListener{
+class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit),
+    PostConfirmBottomSheet.PostConfirmListener,
+    InputProductInfoBottomSheet.InputProductInfoListener {
     private val viewModel by viewModels<PostEditViewModel>()
 
     private lateinit var selectPostImageListAdapter: SelectPostImageListAdapter // 이미지들 썸네일 나열
@@ -72,11 +75,13 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
         // 핀 추가
         binding.btnAddPin.setOnClickListener {
-            viewModel.addPinOfImage(
-                showToast = {
-                    showToast(it)
-                }
-            )
+            // 핀 최대 개수
+            if (viewModel.currentPinList.value!!.size >= viewModel.MAX_PIN_COUNT) {
+                showToast("핀은 최대 ${viewModel.MAX_PIN_COUNT}개까지 추가 가능합니다.")
+            }
+            else {
+                viewModel.requestProductInfoForPin(this@PostEditFragment, null, null)
+            }
         }
 
         // 이전 버튼
@@ -238,6 +243,11 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     // 이미지 삭제 취소
     override fun confirmCancel() {
         viewModel.doneDeleteImage()
+    }
+
+    // 핀 추가
+    override fun submitProductInput(productName: String, productUrl: String?) {
+        viewModel.addPinOfImage(productName, productUrl)
     }
 
     // pin 이동 중일 때는 viewPager 전환 안 되게 막기
