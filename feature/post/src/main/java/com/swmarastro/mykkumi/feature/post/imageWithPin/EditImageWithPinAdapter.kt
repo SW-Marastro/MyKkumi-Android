@@ -24,6 +24,7 @@ class EditImageWithPinAdapter(
     private val viewModel: PostEditViewModel,
     private val lockViewPagerMoving: () -> Unit,
     private val unlockViewPagerMoving: () -> Unit,
+    private val updateProductInfo: (position: Int) -> Unit
 ) : RecyclerView.Adapter<EditImageWithPinAdapter.EditImageWithPinViewHolder>() {
 
     var imageWithPinList = mutableListOf<PostImageData>()
@@ -63,7 +64,6 @@ class EditImageWithPinAdapter(
                 object : ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
                         if (parentHeight == 0) {
-                            Log.d("test", "width : ${parent.width} height : ${parent.height}")
                             parentWidth = parent.width
                             parentHeight = parent.height
 
@@ -161,7 +161,11 @@ class EditImageWithPinAdapter(
         val tooltipWidth = tooltipView.measuredWidth
         val tooltipHeight = tooltipView.measuredHeight
 
-        val buttonAddProductInfo = tooltipView.findViewById<TextView>(R.id.btn_add_product_info)
+        val buttonUpdateProductInfo = tooltipView.findViewById<TextView>(R.id.btn_update_product_info)
+        buttonUpdateProductInfo.setOnClickListener(View.OnClickListener {
+            updateProductInfo(pinIndex)
+        })
+
         val buttonDeletePin = tooltipView.findViewById<TextView>(R.id.btn_delete_pin)
         buttonDeletePin.setOnClickListener(View.OnClickListener {
             viewModel.deletePinOfImage(pinIndex)

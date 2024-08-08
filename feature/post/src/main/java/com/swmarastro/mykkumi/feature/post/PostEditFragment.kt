@@ -80,7 +80,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                 showToast("핀은 최대 ${viewModel.MAX_PIN_COUNT}개까지 추가 가능합니다.")
             }
             else {
-                viewModel.requestProductInfoForPin(this@PostEditFragment, null, null)
+                viewModel.requestProductInfoForPin(this@PostEditFragment, null)
             }
         }
 
@@ -151,6 +151,9 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             unlockViewPagerMoving = {
                 unlockViewPagerMoving()
             },
+            updateProductInfo = {
+                requestUpdateProductInfo(it)
+            }
         )
         binding.viewpagerPostEditImages.adapter = editImageWithPinAdapter
         binding.viewpagerPostEditImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
@@ -248,6 +251,16 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     // 핀 추가
     override fun submitProductInput(productName: String, productUrl: String?) {
         viewModel.addPinOfImage(productName, productUrl)
+    }
+
+    // 핀 내용 수정을 위한 입력 요청
+    private fun requestUpdateProductInfo(position: Int) {
+        viewModel.requestProductInfoForPin(this@PostEditFragment, position)
+    }
+
+    // 핀 내용(제품 정보) 수정
+    override fun updateProductInput(position: Int, productName: String, productUrl: String?) {
+        viewModel.updateProductInfoForPin(position, productName, productUrl)
     }
 
     // pin 이동 중일 때는 viewPager 전환 안 되게 막기

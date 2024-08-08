@@ -72,9 +72,10 @@
                     android:textColor="@color/black"
                     android:inputType="text"
                     android:textColorHint="@color/gray_DD"
-                    android:nextFocusDown="@id/edittext_input_product_url"
+                    android:imeOptions="actionNext"
                     android:hint="@string/placeholder_product_name_for_input_product_info"
                     android:singleLine="true"
+                    android:privateImeOptions="defaultInputmode=korean"
                     android:layout_weight="1"/>
 
                 <EditText
@@ -83,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
                     android:textColor="@color/black"
-                    android:inputType="textWebEmailAddress"
+                    android:imeOptions="actionDone"
                     android:textColorHint="@color/gray_DD"
                     android:nextFocusDown="@id/btn_confirm_agree"
                     android:hint="@string/placeholder_product_url_for_input_product_info"

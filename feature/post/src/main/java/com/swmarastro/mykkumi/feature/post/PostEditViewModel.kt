@@ -82,10 +82,16 @@ class PostEditViewModel  @Inject constructor(
     }
 
     // 핀 추가를 위한 제품명 입력 요청
-    fun requestProductInfoForPin(fragment: PostEditFragment, productName: String?, productUrl: String?) {
+    fun requestProductInfoForPin(fragment: PostEditFragment, position: Int?) {
         val bundle = Bundle()
-        bundle.putString("productName", productName)
-        bundle.putString("productUrl", productUrl)
+        if (position != null) { // 핀 수정
+            bundle.putInt("position", position)
+            bundle.putString("productName", currentPinList.value?.get(position)?.product?.productName)
+            bundle.putString("productUrl", currentPinList.value?.get(position)?.product?.productUrl)
+        }
+        else {
+            bundle.putInt("position", -1)
+        }
         val bottomSheet = InputProductInfoBottomSheet().apply { setListener(fragment) }
         bottomSheet.arguments = bundle
         bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
@@ -108,6 +114,12 @@ class PostEditViewModel  @Inject constructor(
             _currentPinList.value = mutableListOf()
             _currentPinList.postValue( addPinList )
         }
+    }
+
+    // 핀 내용 수정
+    fun updateProductInfoForPin(position: Int, productName: String, productUrl: String?) {
+        _currentPinList.value?.get(position)?.product!!.productName = productName
+        _currentPinList.value?.get(position)?.product!!.productUrl = productUrl
     }
 
     // 핀 삭제
