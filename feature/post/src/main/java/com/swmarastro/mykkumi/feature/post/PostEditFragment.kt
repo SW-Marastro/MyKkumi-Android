@@ -103,23 +103,22 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!s.isNullOrEmpty()){
-                    Log.d("test", "onTextChanged - start: ${start}, before: ${before}, count: ${count}")
                     // 본문 글자수
                     if(s.length > MAX_POST_CONTENT_LENGTH) {
-                        if(before == 0) binding.edittextInputContent.setText(concat(s.subSequence(0, start), s.subSequence(start + count, s.length)))
-                        else binding.edittextInputContent.setText(concat(s.subSequence(0, before), s.subSequence(count, s.length)))
+                        val subLength = count - (s.length - MAX_POST_CONTENT_LENGTH) // 삭제하고 남겨야 할 길이
+                        binding.edittextInputContent.setText(concat(s.subSequence(0, start + subLength), s.subSequence(start + count, s.length)))
 
-                        binding.edittextInputContent.setSelection(max(start, before)) // 커서를 입력하고 있던 곳에
+                        binding.edittextInputContent.setSelection(start + subLength) // 커서를 입력하고 있던 곳에
                         showToast(getString(R.string.notice_post_content_max_length))
                     }
 
                     // 해시태그 개수
                     if(s.count { it == '#' } > MAX_POST_CONTENT_HASHTAG_COUNT) {
                         // 20개 넘어가는 건 자르기 = 방금 입력된 문자
-                        if(before == 0) binding.edittextInputContent.setText(concat(s.subSequence(0, start), s.subSequence(start + count, s.length)))
-                        else binding.edittextInputContent.setText(concat(s.subSequence(0, before), s.subSequence(count, s.length)))
+                        val hashTagIndex = s.indexOf('#', start)
+                        binding.edittextInputContent.setText(concat(s.subSequence(0, hashTagIndex), s.subSequence(start + count, s.length)))
 
-                        binding.edittextInputContent.setSelection(max(start, before)) // 커서를 입력하고 있던 곳에
+                        binding.edittextInputContent.setSelection(hashTagIndex) // 커서를 입력하고 있던 곳에
                         showToast(getString(R.string.notice_post_hashtag_max_count))
                     }
                 }

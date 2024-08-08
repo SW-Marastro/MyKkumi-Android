@@ -2,6 +2,8 @@ package com.swmarastro.mykkumi.feature.post
 
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils.concat
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
+import kotlin.math.max
 
 @HiltViewModel
 class PostEditViewModel  @Inject constructor(
