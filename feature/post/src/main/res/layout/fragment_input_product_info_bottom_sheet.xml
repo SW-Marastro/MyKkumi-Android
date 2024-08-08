@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".imageWithPin.InputProductInfoBottomSheet">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp">
+
+        <TextView
+            android:id="@+id/text_confirm_notice_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:text="@string/notice_input_product_info_for_pin"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:id="@+id/linear_input_product_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_input_product_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_product_name_for_input_product_info"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|end"/>
+
+                <TextView
+                    android:id="@+id/text_input_product_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_product_url_for_input_product_info"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|end"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/edittext_input_product_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:inputType="text"
+                    android:textColorHint="@color/gray_DD"
+                    android:imeOptions="actionNext"
+                    android:hint="@string/placeholder_product_name_for_input_product_info"
+                    android:singleLine="true"
+                    android:privateImeOptions="defaultInputmode=korean"
+                    android:layout_weight="1"/>
+
+                <EditText
+                    android:id="@+id/edittext_input_product_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:imeOptions="actionDone"
+                    android:textColorHint="@color/gray_DD"
+                    android:nextFocusDown="@id/btn_confirm_agree"
+                    android:hint="@string/placeholder_product_url_for_input_product_info"
+                    android:singleLine="true"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_confirm_btns"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+
+            <Button
+                android:id="@+id/btn_confirm_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/confirm_cancel"
+                android:background="@color/gray_DD"
+                android:layout_margin="5dp"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/btn_confirm_agree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/confirm_agree"
+                android:background="@android:color/holo_green_light"
+                android:layout_margin="5dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

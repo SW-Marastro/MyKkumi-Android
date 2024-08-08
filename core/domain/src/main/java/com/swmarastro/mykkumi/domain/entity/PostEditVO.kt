@@ -6,9 +6,10 @@ data class PostEditPinVO(
     var pinId: Long?,
     var positionX: Float,
     var positionY: Float,
-//    var product: PostEditPinProductVO?
+    var product: PostEditPinProductVO
 )
 
 data class PostEditPinProductVO(
     var productName: String,
+    var productUrl: String? = null,
 )

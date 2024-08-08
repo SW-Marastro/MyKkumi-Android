@@ -13,12 +13,16 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
+import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
 import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
 import com.swmarastro.mykkumi.feature.post.imageWithPin.EditImageWithPinAdapter
+import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import com.swmarastro.mykkumi.feature.post.touchEvent.PostEditImageTouchCallback
 
-class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit){
+class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit),
+    PostConfirmBottomSheet.PostConfirmListener,
+    InputProductInfoBottomSheet.InputProductInfoListener {
     private val viewModel by viewModels<PostEditViewModel>()
 
     private lateinit var selectPostImageListAdapter: SelectPostImageListAdapter // 이미지들 썸네일 나열
@@ -28,6 +32,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
     // 포스트 이미지 recyclerview 아이템 이동 콜백 변수 : 드래그 시 이동하는 거
     private lateinit var postEditImageTouchHelper: ItemTouchHelper
+
+    private var isRestoringState = false
 
     override fun onResume() {
         super.onResume()
@@ -44,6 +50,17 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                     images.selectImages.clear()
                 }
             }
+
+        // 상태 복원 중임을 표시
+        isRestoringState = true
+
+        // ViewPager2의 페이지를 ViewModel의 상태에 맞게 설정
+        viewModel.selectImagePosition.value?.let { position ->
+            binding.viewpagerPostEditImages.setCurrentItem(position, false)
+        }
+
+        // 상태 복원 완료
+        isRestoringState = false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,11 +75,13 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
         // 핀 추가
         binding.btnAddPin.setOnClickListener {
-            viewModel.addPinOfImage(
-                showToast = {
-                    showToast(it)
-                }
-            )
+            // 핀 최대 개수
+            if (viewModel.currentPinList.value!!.size >= viewModel.MAX_PIN_COUNT) {
+                showToast("핀은 최대 ${viewModel.MAX_PIN_COUNT}개까지 추가 가능합니다.")
+            }
+            else {
+                viewModel.requestProductInfoForPin(this@PostEditFragment, null)
+            }
         }
 
         // 이전 버튼
@@ -95,6 +114,9 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     private fun initSelectPostImagesRecyclerView() {
         selectPostImageListAdapter = SelectPostImageListAdapter(
             viewModel,
+            confirmDeleteImage ={
+                confirmDeleteImage(it)
+            },
             onClickPostImage = {
                 onClickPostImage()
             },
@@ -128,6 +150,9 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             },
             unlockViewPagerMoving = {
                 unlockViewPagerMoving()
+            },
+            updateProductInfo = {
+                requestUpdateProductInfo(it)
             }
         )
         binding.viewpagerPostEditImages.adapter = editImageWithPinAdapter
@@ -136,8 +161,10 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         // ViewPager 넘겼을 때도 선택 이미지 변경되는 것
         binding.viewpagerPostEditImages.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                viewModel.changeSelectImagePosition(position)
-                selectPostImageListAdapter.notifyDataSetChanged()
+                if (viewModel.isDeleteImageState.value != true) {
+                    viewModel.changeSelectImagePosition(position)
+                    selectPostImageListAdapter.notifyDataSetChanged()
+                }
             }
         })
     }
@@ -150,7 +177,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             selectPostImageListAdapter.postImageList = it
             editImageWithPinAdapter.imageWithPinList = it
 
-            if(!viewModel.postEditUiState.value.isNullOrEmpty()) {
+            if (!viewModel.postEditUiState.value.isNullOrEmpty()) { //  && !viewModel.isDeleteImageState && !isRestoringState
                 viewModel.changeSelectImagePosition(viewModel.postEditUiState.value!!.size - 1)
             }
 
@@ -168,14 +195,13 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                 Log.e("PostEditFragment", "Binding is not initialized")
             }
 
-            if(it.size > 0) // 추가된 이미지를 화면에 보여주기
+            if (it.size > 0) // 추가된 이미지를 화면에 보여주기
                 binding.viewpagerPostEditImages.setCurrentItem(it.size - 1, false)
 
             // 이미지 10개 선택됐으면 추가 버튼 가리기
-            if(selectPostImageListAdapter.postImageList.size == viewModel.MAX_IMAGE_COUNT) {
+            if (selectPostImageListAdapter.postImageList.size == viewModel.MAX_IMAGE_COUNT) {
                 binding.btnAddPostImage.visibility = View.GONE
-            }
-            else {
+            } else {
                 binding.btnAddPostImage.visibility = View.VISIBLE
             }
         })
@@ -185,6 +211,12 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             viewModel.selectImagePosition.value?.let {
                 editImageWithPinAdapter.notifyDataSetChanged()
             }
+        })
+
+        // 이미지 삭제 처리
+        viewModel.isDeleteImageState.observe(viewLifecycleOwner, Observer {
+            binding.viewpagerPostEditImages.setCurrentItem(viewModel.selectImagePosition.value!!, false)
+            selectPostImageListAdapter.notifyDataSetChanged()
         })
     }
 
@@ -198,6 +230,37 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     private fun onClickPostImage() {
         // ViewPager에서 보여주고 있는 이미지 변경
         binding.viewpagerPostEditImages.setCurrentItem(viewModel.selectImagePosition.value!!, false)
+    }
+
+    // 이미지 삭제 -> notice
+    private fun confirmDeleteImage(position: Int) {
+        viewModel.confirmDeleteImage(this@PostEditFragment, getString(R.string.confirm_delete_image_for_post_edit), position)
+    }
+
+    // 이미지 삭제
+    override fun confirmAgree(position: Int) {
+        viewModel.deleteImage(position)
+        viewModel.doneDeleteImage()
+    }
+
+    // 이미지 삭제 취소
+    override fun confirmCancel() {
+        viewModel.doneDeleteImage()
+    }
+
+    // 핀 추가
+    override fun submitProductInput(productName: String, productUrl: String?) {
+        viewModel.addPinOfImage(productName, productUrl)
+    }
+
+    // 핀 내용 수정을 위한 입력 요청
+    private fun requestUpdateProductInfo(position: Int) {
+        viewModel.requestProductInfoForPin(this@PostEditFragment, position)
+    }
+
+    // 핀 내용(제품 정보) 수정
+    override fun updateProductInput(position: Int, productName: String, productUrl: String?) {
+        viewModel.updateProductInfoForPin(position, productName, productUrl)
     }
 
     // pin 이동 중일 때는 viewPager 전환 안 되게 막기

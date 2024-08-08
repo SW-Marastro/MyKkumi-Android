@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-abstract class BaseFragment<T: ViewDataBinding>(
+abstract class BaseBottomSheetFragment<T: ViewDataBinding>(
     @LayoutRes private val layoutId: Int
-) : Fragment() {
+) : BottomSheetDialogFragment() {
     protected var _binding: T? = null
     protected val binding get() = _binding ?: throw IllegalStateException("Binding is not initialized")
 
@@ -26,7 +26,7 @@ abstract class BaseFragment<T: ViewDataBinding>(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.lifecycleOwner = this@BaseFragment
+        binding.lifecycleOwner = this@BaseBottomSheetFragment
         lifecycleScope.launchWhenCreated {
             initView()
         }

@@ -1,15 +1,16 @@
 package com.swmarastro.mykkumi.feature.post
 
 import android.net.Uri
-import android.util.Log
-import android.widget.Toast
+import android.os.Bundle
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.swmarastro.mykkumi.domain.entity.PostEditPinProductVO
 import com.swmarastro.mykkumi.domain.entity.PostEditPinVO
-import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
+import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
+import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,6 +34,9 @@ class PostEditViewModel  @Inject constructor(
     private val _currentPinList = MutableLiveData<MutableList<PostEditPinVO>>(mutableListOf())
     val currentPinList : LiveData<MutableList<PostEditPinVO>> get() = _currentPinList
 
+    private val _isDeleteImageState = MutableLiveData<Boolean>(false)
+    val isDeleteImageState : LiveData<Boolean> get() = _isDeleteImageState
+
     fun selectPostImage(uri: Uri) {
         val addPostImages = _postEditUiState.value
         addPostImages?.add(PostImageData(localUri = uri))
@@ -52,7 +56,7 @@ class PostEditViewModel  @Inject constructor(
     }
 
     fun changeSelectImagePosition(position: Int) {
-        if(position >= 0) {
+        if(position >= 0 && _postEditUiState.value!!.size > position) {
             _postEditUiState.apply {
                 value!![selectImagePosition.value!!].isSelect = false // 이전 선택 해제
                 value!![position].isSelect = true // 새로운 선택
@@ -67,65 +71,102 @@ class PostEditViewModel  @Inject constructor(
 
             _currentPinList.value = mutableListOf()
             selectImagePosition.value?.let {
-                _currentPinList.postValue(
+                _currentPinList.setValue(
                     _postEditUiState.value?.get(position)?.pinList ?: mutableListOf()
                 )
             }
         }
         else {
-            _currentPinList.postValue( mutableListOf() )
+            _currentPinList.setValue( mutableListOf() )
         }
     }
 
-    // 핀 추가
-    fun addPinOfImage(showToast: (message: String) -> Unit) {
-        // 핀 최대 개수
-        if (currentPinList.value!!.size >= MAX_PIN_COUNT) {
-            showToast("핀은 최대 ${MAX_PIN_COUNT}개까지 추가 가능합니다.")
+    // 핀 추가를 위한 제품명 입력 요청
+    fun requestProductInfoForPin(fragment: PostEditFragment, position: Int?) {
+        val bundle = Bundle()
+        if (position != null) { // 핀 수정
+            bundle.putInt("position", position)
+            bundle.putString("productName", currentPinList.value?.get(position)?.product?.productName)
+            bundle.putString("productUrl", currentPinList.value?.get(position)?.product?.productUrl)
         }
         else {
-            selectImagePosition.value?.let {
-                val addPinList = _currentPinList.value ?: mutableListOf()
-                addPinList.apply {
-                    add(
-                        PostEditPinVO(
-                            null,
-                            0.5f,
-                            0.5f
-                        )
-                    )
-                }
-                _currentPinList.value = mutableListOf()
-                _currentPinList.postValue( addPinList )
-            }
+            bundle.putInt("position", -1)
         }
+        val bottomSheet = InputProductInfoBottomSheet().apply { setListener(fragment) }
+        bottomSheet.arguments = bundle
+        bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
+    }
+
+    // 핀 추가
+    fun addPinOfImage(productName: String, productUrl: String?) {
+        selectImagePosition.value?.let {
+            val addPinList = _currentPinList.value ?: mutableListOf()
+            addPinList.apply {
+                add(
+                    PostEditPinVO(
+                        null,
+                        0.5f,
+                        0.5f,
+                        PostEditPinProductVO(productName, productUrl)
+                    )
+                )
+            }
+            _currentPinList.value = mutableListOf()
+            _currentPinList.postValue( addPinList )
+        }
+    }
+
+    // 핀 내용 수정
+    fun updateProductInfoForPin(position: Int, productName: String, productUrl: String?) {
+        _currentPinList.value?.get(position)?.product!!.productName = productName
+        _currentPinList.value?.get(position)?.product!!.productUrl = productUrl
     }
 
     // 핀 삭제
     fun deletePinOfImage(position: Int) {
-        var deletePinList = _currentPinList.value!!
+        val deletePinList = _currentPinList.value!!
         deletePinList.removeAt(position)
         _currentPinList.postValue(
             deletePinList
         )
     }
 
+    // 이미지 삭제를 위한 확인용 bottomSheet
+    fun confirmDeleteImage(fragment: PostEditFragment, message: String, position: Int) {
+        _isDeleteImageState.value = true
+
+        val bundle = Bundle()
+        bundle.putString("message", message)
+        bundle.putInt("position", position)
+        val bottomSheet = PostConfirmBottomSheet().apply { setListener(fragment) }
+        bottomSheet.arguments = bundle
+        bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
+    }
+
     // 이미지 삭제
-    fun deleteImage(position: Int) {
+    fun deleteImage(deleteImagePosition: Int) {
+        if(deleteImagePosition == -1) return
+
         if(selectImagePosition.value!! >= postEditUiState.value!!.size - 1) { // 마지막 이미지가 선택되어 있는 상태
-            _selectImagePosition.postValue( _selectImagePosition.value!! - 1 )
-            _postEditUiState.value!!.removeAt(position)
+            _selectImagePosition.value = selectImagePosition.value!! - 1
+            _postEditUiState.value!!.removeAt(deleteImagePosition)
+            changeSelectImagePosition(selectImagePosition.value!!)
         }
-        else if(selectImagePosition.value!! == position) { // 선택한 이미지를 삭제
-            _postEditUiState.value!!.removeAt(position)
-            changeSelectImagePosition(position)
+        else if(selectImagePosition.value!! == deleteImagePosition) { // 선택한 이미지를 삭제
+            _postEditUiState.value!!.removeAt(deleteImagePosition)
+            changeSelectImagePosition(deleteImagePosition)
         }
-        else if(selectImagePosition.value!! > position){ // 선택한 이미지가 삭제 이미지보다 뒤에 있을 때
-            _postEditUiState.value!!.removeAt(position)
+        else if(selectImagePosition.value!! > deleteImagePosition){ // 선택한 이미지가 삭제 이미지보다 뒤에 있을 때
+            _postEditUiState.value!!.removeAt(deleteImagePosition)
             changeSelectImagePosition(selectImagePosition.value!! - 1)
         }
         else {
-            _postEditUiState.value!!.removeAt(position)
+            _postEditUiState.value!!.removeAt(deleteImagePosition)
         }
+    }
+
+    // 이미지 삭제 취소
+    fun doneDeleteImage() {
+        _isDeleteImageState.value = false
     }
 }
