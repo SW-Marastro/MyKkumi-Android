@@ -18,10 +18,6 @@
         <deepLink
             app:uri="mykkumi://post.edit?postId={postId}"/>
 
-        <action
-            android:id="@+id/action_open_confirm_bottom_sheet"
-            app:destination="@id/postConfirmBottomSheet"/>
-
     </fragment>
 
     <fragment

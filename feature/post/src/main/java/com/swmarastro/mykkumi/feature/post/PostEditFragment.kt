@@ -13,13 +13,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
-import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheetArgs
+import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
 import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
 import com.swmarastro.mykkumi.feature.post.imageWithPin.EditImageWithPinAdapter
 import com.swmarastro.mykkumi.feature.post.touchEvent.PostEditImageTouchCallback
 
-class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit){
+class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit), PostConfirmBottomSheet.PostConfirmListener{
     private val viewModel by viewModels<PostEditViewModel>()
 
     private lateinit var selectPostImageListAdapter: SelectPostImageListAdapter // 이미지들 썸네일 나열
@@ -45,15 +45,6 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
                     // 리스트에 추가했다면 지우기 - view resume 될 때마다 추가되는 현상 제거
                     images.selectImages.clear()
-                }
-            }
-
-        // 이미지 삭제 확인에 대한 유저 응답
-        navController?.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("callback")
-            ?.observe(viewLifecycleOwner) { callback ->
-                if(callback && viewModel.deleteImagePosition != -1) { // 삭제 동의
-                    viewModel.deleteImage()
-                    viewModel.deleteImagePosition = -1
                 }
             }
 
@@ -162,7 +153,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         // ViewPager 넘겼을 때도 선택 이미지 변경되는 것
         binding.viewpagerPostEditImages.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                if(viewModel.deleteImagePosition == -1) {
+                if (viewModel.isDeleteImageState.value != true) {
                     viewModel.changeSelectImagePosition(position)
                     selectPostImageListAdapter.notifyDataSetChanged()
                 }
@@ -178,7 +169,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             selectPostImageListAdapter.postImageList = it
             editImageWithPinAdapter.imageWithPinList = it
 
-            if (!viewModel.postEditUiState.value.isNullOrEmpty() && viewModel.deleteImagePosition == -1 && !isRestoringState) {
+            if (!viewModel.postEditUiState.value.isNullOrEmpty()) { //  && !viewModel.isDeleteImageState && !isRestoringState
                 viewModel.changeSelectImagePosition(viewModel.postEditUiState.value!!.size - 1)
             }
 
@@ -213,6 +204,12 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                 editImageWithPinAdapter.notifyDataSetChanged()
             }
         })
+
+        // 이미지 삭제 처리
+        viewModel.isDeleteImageState.observe(viewLifecycleOwner, Observer {
+            binding.viewpagerPostEditImages.setCurrentItem(viewModel.selectImagePosition.value!!, false)
+            selectPostImageListAdapter.notifyDataSetChanged()
+        })
     }
 
     // 이미지 순서 변경 시 ViewPager에 적용
@@ -229,7 +226,18 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
     // 이미지 삭제 -> notice
     private fun confirmDeleteImage(position: Int) {
-        viewModel.confirmDeleteImage(navController, getString(R.string.confirm_delete_image_for_post_edit), position)
+        viewModel.confirmDeleteImage(this@PostEditFragment, getString(R.string.confirm_delete_image_for_post_edit), position)
+    }
+
+    // 이미지 삭제
+    override fun confirmAgree(position: Int) {
+        viewModel.deleteImage(position)
+        viewModel.doneDeleteImage()
+    }
+
+    // 이미지 삭제 취소
+    override fun confirmCancel() {
+        viewModel.doneDeleteImage()
     }
 
     // pin 이동 중일 때는 viewPager 전환 안 되게 막기

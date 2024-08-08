@@ -3,9 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <variable
-            name="vm"
-            type="com.swmarastro.mykkumi.feature.post.confirm.PostConfirmViewModel" />
     </data>
 
     <RelativeLayout

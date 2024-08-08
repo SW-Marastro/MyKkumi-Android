@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.entity.PostEditPinVO
+import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
 import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +35,8 @@ class PostEditViewModel  @Inject constructor(
     private val _currentPinList = MutableLiveData<MutableList<PostEditPinVO>>(mutableListOf())
     val currentPinList : LiveData<MutableList<PostEditPinVO>> get() = _currentPinList
 
-    var deleteImagePosition: Int = -1
+    private val _isDeleteImageState = MutableLiveData<Boolean>(false)
+    val isDeleteImageState : LiveData<Boolean> get() = _isDeleteImageState
 
     fun selectPostImage(uri: Uri) {
         val addPostImages = _postEditUiState.value
@@ -55,7 +57,6 @@ class PostEditViewModel  @Inject constructor(
     }
 
     fun changeSelectImagePosition(position: Int) {
-
         if(position >= 0 && _postEditUiState.value!!.size > position) {
             _postEditUiState.apply {
                 value!![selectImagePosition.value!!].isSelect = false // 이전 선택 해제
@@ -115,23 +116,25 @@ class PostEditViewModel  @Inject constructor(
     }
 
     // 이미지 삭제를 위한 확인용 bottomSheet
-    fun confirmDeleteImage(navController: NavController?, message: String, position: Int) {
-//        val confirmDeleteImageDeepLink = "mykkumi://post.confirm?message=${"test"}"
-//        deleteImagePosition = position
-//
-//        navController?.navigate(deepLink = confirmDeleteImageDeepLink.toUri())
+    fun confirmDeleteImage(fragment: PostEditFragment, message: String, position: Int) {
+        _isDeleteImageState.value = true
 
         val bundle = Bundle()
-        //bundle.putString()
+        bundle.putString("message", message)
+        bundle.putInt("position", position)
+        val bottomSheet = PostConfirmBottomSheet().apply { setListener(fragment) }
+        bottomSheet.arguments = bundle
+        bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
     }
 
     // 이미지 삭제
-    fun deleteImage() {
+    fun deleteImage(deleteImagePosition: Int) {
         if(deleteImagePosition == -1) return
 
         if(selectImagePosition.value!! >= postEditUiState.value!!.size - 1) { // 마지막 이미지가 선택되어 있는 상태
-            changeSelectImagePosition(selectImagePosition.value!! - 1)
+            _selectImagePosition.value = selectImagePosition.value!! - 1
             _postEditUiState.value!!.removeAt(deleteImagePosition)
+            changeSelectImagePosition(selectImagePosition.value!!)
         }
         else if(selectImagePosition.value!! == deleteImagePosition) { // 선택한 이미지를 삭제
             _postEditUiState.value!!.removeAt(deleteImagePosition)
@@ -144,7 +147,10 @@ class PostEditViewModel  @Inject constructor(
         else {
             _postEditUiState.value!!.removeAt(deleteImagePosition)
         }
+    }
 
-        deleteImagePosition = -1
+    // 이미지 삭제 취소
+    fun doneDeleteImage() {
+        _isDeleteImageState.value = false
     }
 }
