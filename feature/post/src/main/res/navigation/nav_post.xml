@@ -42,24 +42,4 @@
 
     </fragment>
 
-    <fragment
-        android:id="@+id/postConfirmBottomSheet"
-        android:name="com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet"
-        android:label="bottom_sheet_post_confirm"
-        tools:layout="@layout/fragment_confirm_bottom_sheet">
-
-<!--        <argument-->
-<!--            android:name="message"-->
-<!--            app:argType="string"/>-->
-
-<!--        <argument-->
-<!--            android:name="callback"-->
-<!--            app:argType="boolean"-->
-<!--            android:defaultValue="false"/>-->
-
-<!--        <deepLink-->
-<!--            app:uri="mykkumi://post.confirm?message={message}&amp;callback={callback}" />-->
-
-    </fragment>
-
 </navigation>
