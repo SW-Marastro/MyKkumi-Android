@@ -18,15 +18,18 @@ import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
-import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
+import com.swmarastro.mykkumi.feature.post.hobbyCategory.SelectHobbyOfPostBottomSheet
+import com.swmarastro.mykkumi.feature.post.imagePicker.ImagePickerArgument
 import com.swmarastro.mykkumi.feature.post.imageWithPin.EditImageWithPinAdapter
 import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import com.swmarastro.mykkumi.feature.post.touchEvent.PostEditImageTouchCallback
-import kotlin.math.max
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit),
     PostConfirmBottomSheet.PostConfirmListener,
-    InputProductInfoBottomSheet.InputProductInfoListener {
+    InputProductInfoBottomSheet.InputProductInfoListener,
+    SelectHobbyOfPostBottomSheet.SelectHobbyOfPostListener {
     private val viewModel by viewModels<PostEditViewModel>()
 
     private final val MAX_POST_CONTENT_LENGTH = 10      // 본문 글자 수
@@ -129,6 +132,16 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         binding.btnBack.setOnClickListener {
             navController?.popBackStack()
         }
+
+        // 포스트 등록 버튼
+        binding.textUploadPost.setOnClickListener(View.OnClickListener {
+            viewModel.doneEditPost(
+                this,
+                showToast = {
+                    showToast(it)
+                }
+            )
+        })
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -305,13 +318,22 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     }
 
     // pin 이동 중일 때는 viewPager 전환 안 되게 막기
+    // 수직 스크롤도 막기
     private fun lockViewPagerMoving() {
         binding.viewpagerPostEditImages.isUserInputEnabled = false
+        binding.scrollEditPost.isEnabled = false
     }
 
     // pin 이동 끝나면 viewPager 전환 가능하게 풀어주기
+    // 수직 스크롤도 풀어주기
     private fun unlockViewPagerMoving() {
         binding.viewpagerPostEditImages.isUserInputEnabled = true
+        binding.scrollEditPost.isEnabled = true
+    }
+
+    // 카테고리 선택 완료 -> 포스트 작성
+    override fun doneSelectHobby(categoryId: Long) {
+        Toast.makeText(context, "포스트 등록: ${categoryId}", Toast.LENGTH_SHORT).show()
     }
 
     private fun showToast(message: String) {

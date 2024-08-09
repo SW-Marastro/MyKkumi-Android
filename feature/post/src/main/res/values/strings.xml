@@ -3,6 +3,7 @@
     <string name="post_edit_title">상품 태그 입력</string>
     <string name="upload_post">등록</string>
     <string name="done_image_picker">선택 완료</string>
+    <string name="done_select_hobby_category">완료</string>
     <string name="image_picker_title">이미지 선택</string>
     <string name="notice_not_select_image">이미지를 선택해주세요</string>
 
@@ -17,4 +18,5 @@
     <string name="placeholder_input_post_content">내용을 작성해주세요.</string>
     <string name="notice_post_content_max_length">내용은 2000자 이내로 입력해주세요.</string>
     <string name="notice_post_hashtag_max_count">해시태그는 최대 20개까지 사용 가능합니다.</string>
+    <string name="notice_select_hobby_category_of_post">취미 카테고리를 선택해주세요.</string>
 </resources>

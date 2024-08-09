@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeBannerDetailFragment : BaseFragment<FragmentHomeBannerDetailBinding>(R.layout.fragment_home_banner_detail) {
 
-    private val viewModel by viewModels<HomeBannerDetailViewModel>({ requireActivity() })
+    private val viewModel by viewModels<HomeBannerDetailViewModel>()
     private val args: HomeBannerDetailFragmentArgs by navArgs()
 
     override suspend fun initView() {
