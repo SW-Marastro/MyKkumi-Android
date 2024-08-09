@@ -18,6 +18,8 @@ import java.io.FileOutputStream
 import java.io.InputStream
 
 object FormDataUtil {
+    private val MAX_IMAGE_SIZE = 1024
+
     // Uri를 Multipart/form-data로 변환
     fun convertUriToMultipart(context: Context, image: Any?): MultipartBody.Part? {
         val imageUri = anyToUri(image)
@@ -42,12 +44,13 @@ object FormDataUtil {
 
         try {
             val inputStream: InputStream? = contentResolver.openInputStream(uri)
-            val bitmap = BitmapFactory.decodeStream(inputStream)
+            // 최대 width, height를 1024px로
+            val bitmap = resizeImage(inputStream)
             inputStream?.close()
 
             val outputStream = FileOutputStream(tempFile)
-            // 압축 품질 0~100 - 낮을수록 더 많이 압축됨
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
+            // 압축 품질 0~100 - 낮을수록 더 많이 압축됨 -> 압축 X
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
             outputStream.close()
         } catch (e: Exception) {
             Log.e("FormDataUtil", "Error converting URI to File: ${e.message}")
@@ -55,6 +58,29 @@ object FormDataUtil {
         }
 
         return tempFile
+    }
+
+    // 이미지 크기 조정 함수 (비율 유지)
+    fun resizeImage(inputStream: InputStream?): Bitmap? {
+        val originalBitmap = BitmapFactory.decodeStream(inputStream) ?: return null
+
+        val width = originalBitmap.width
+        val height = originalBitmap.height
+
+        val aspectRatio: Float = width.toFloat() / height.toFloat()
+
+        val newWidth: Int
+        val newHeight: Int
+
+        if (width > height) {
+            newWidth = MAX_IMAGE_SIZE
+            newHeight = (MAX_IMAGE_SIZE / aspectRatio).toInt()
+        } else {
+            newWidth = (MAX_IMAGE_SIZE * aspectRatio).toInt()
+            newHeight = MAX_IMAGE_SIZE
+        }
+
+        return Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true)
     }
 
     // 파일 이름을 얻는 함수
