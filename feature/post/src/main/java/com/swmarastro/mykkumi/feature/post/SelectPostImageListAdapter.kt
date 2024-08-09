@@ -1,11 +1,12 @@
 package com.swmarastro.mykkumi.feature.post
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.swmarastro.mykkumi.domain.entity.PostImageVO
 import com.swmarastro.mykkumi.feature.post.databinding.ItemSelectPostImageBinding
 import com.swmarastro.mykkumi.feature.post.touchEvent.ItemTouchHelperListener
 
@@ -16,14 +17,14 @@ class SelectPostImageListAdapter (
     private val onChangeImageSort: () -> Unit,
 ) : RecyclerView.Adapter<SelectPostImageListAdapter.SelectPostImageListViewHolder>(),
     ItemTouchHelperListener {
-    var postImageList = mutableListOf<PostImageData>()
+    var postImageList = mutableListOf<PostImageVO>()
 
     // 아이템 이동 - 드래그로 이동 시 호출됨
     // from: 드래그가 시작되는 위치
     // to: 이동되는 위치
     override fun onItemMove(from: Int, to: Int) {
         // 드래그 되고있는 아이템을 변수로 지정 (dragItem)
-        val dragItem: PostImageData = postImageList[from]
+        val dragItem: PostImageVO = postImageList[from]
         postImageList.removeAt(from)      // 드래그 되고 있는 아이템 제거
         postImageList.add(to, dragItem)   // 드래그 끝나는 지점에 추가
 
@@ -68,8 +69,8 @@ class SelectPostImageListAdapter (
     inner class SelectPostImageListViewHolder(
         private val binding: ItemSelectPostImageBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: PostImageData, position: Int) {
-            binding.imagePostEditThumbnail.load(item.imageUri)
+        fun bind(item: PostImageVO, position: Int) {
+            binding.imagePostEditThumbnail.load(item.imageUri.toUri())
 
             if (item.isSelect) {
                 binding.imagePostEditThumbnail.setBackgroundResource(R.drawable.shape_select_post_image)
