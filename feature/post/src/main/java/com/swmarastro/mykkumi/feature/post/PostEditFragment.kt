@@ -152,6 +152,11 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             viewModel.openImagePicker(navController)
             viewModel.createViewDone() // 생성 끝
         }
+
+        // 포스트 작성 시작 후 이미지를 하나도 선택 안 한 상태로 뒤로가기 눌렀을 때 -> 이전으로 돌아가기
+        if(navController?.currentDestination?.id == R.id.postEditFragment && viewModel.selectImagePosition.value == -1) {
+            navController?.popBackStack()
+        }
     }
 
     override suspend fun initView() {

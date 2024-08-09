@@ -9,7 +9,7 @@ data class UserInfoVO (
 
 data class UpdateUserInfoRequestVO(
     val nickname: String?,
-    val profileImage: Any?, // Uri
+    val profileImage: String?,
     val introduction: String?,
     val categoryIds: List<Long>?
 )

@@ -2,26 +2,27 @@ package com.swmarastro.mykkumi.feature.post
 
 import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils.concat
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.entity.PostEditPinProductVO
 import com.swmarastro.mykkumi.domain.entity.PostEditPinVO
+import com.swmarastro.mykkumi.domain.repository.PreSignedUrlRepository
 import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
 import com.swmarastro.mykkumi.feature.post.hobbyCategory.SelectHobbyOfPostBottomSheet
 import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.max
 
 @HiltViewModel
 class PostEditViewModel  @Inject constructor(
+    private val preSignedUrlRepository: PreSignedUrlRepository
 ) : ViewModel() {
     final val MAX_IMAGE_COUNT = 10
     final val MAX_PIN_COUNT = 10
@@ -32,7 +33,7 @@ class PostEditViewModel  @Inject constructor(
     private val _checkCreateView = MutableStateFlow<Boolean>(true)
     val checkCreateView : StateFlow<Boolean> get() = _checkCreateView
 
-    private val _selectImagePosition = MutableLiveData<Int>(0)
+    private val _selectImagePosition = MutableLiveData<Int>(-1)
     val selectImagePosition : LiveData<Int> get() = _selectImagePosition
 
     private val _currentPinList = MutableLiveData<MutableList<PostEditPinVO>>(mutableListOf())
@@ -42,9 +43,20 @@ class PostEditViewModel  @Inject constructor(
     val isDeleteImageState : LiveData<Boolean> get() = _isDeleteImageState
 
     fun selectPostImage(uri: Uri) {
-        val addPostImages = _postEditUiState.value
-        addPostImages?.add(PostImageData(localUri = uri))
-        _postEditUiState.postValue( addPostImages!! )
+        viewModelScope.launch {
+            try {
+                val imageUrl = preSignedUrlRepository.getPreSignedUrl(uri)
+
+                if(imageUrl != null) {
+                    val addPostImages = _postEditUiState.value
+                    addPostImages?.add(PostImageData(imageUri = imageUrl.toUri()))
+                    _postEditUiState.postValue( addPostImages!! )
+                }
+
+            } catch (e: Exception) {
+
+            }
+        }
     }
 
     fun openImagePicker(navController: NavController?) {
@@ -62,12 +74,12 @@ class PostEditViewModel  @Inject constructor(
     fun changeSelectImagePosition(position: Int) {
         if(position >= 0 && _postEditUiState.value!!.size > position) {
             _postEditUiState.apply {
-                value!![selectImagePosition.value!!].isSelect = false // 이전 선택 해제
+                if(selectImagePosition.value!! >= 0) value!![selectImagePosition.value!!].isSelect = false // 이전 선택 해제
                 value!![position].isSelect = true // 새로운 선택
             }
 
-            selectImagePosition.value?.let {
-                _postEditUiState.value?.get(it)?.apply {
+            if(selectImagePosition.value!! >= 0) {
+                _postEditUiState.value?.get(selectImagePosition.value!!)?.apply {
                     pinList = currentPinList.value ?: mutableListOf()
                 }
             }

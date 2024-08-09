@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.data.repository
 
+import android.util.Log
 import com.google.gson.Gson
 import com.swmarastro.mykkumi.data.datasource.ReAccessTokenDataSource
 import com.swmarastro.mykkumi.data.dto.request.ReAccessTokenRequestDTO
@@ -45,6 +46,7 @@ class ReAccessTokenRepositoryImpl @Inject constructor(
 
         when (errorResponse.errorCode) {
             INVALID_TOKEN -> { // 토큰 삭제 - 로그아웃
+                Log.d("test", "delete token ------------------")
                 authTokenDataSource.deleteToken()
                 throw ApiException.InvalidRefreshTokenException()
             }

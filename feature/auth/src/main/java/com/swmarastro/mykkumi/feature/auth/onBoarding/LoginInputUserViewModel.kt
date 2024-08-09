@@ -1,12 +1,14 @@
 package com.swmarastro.mykkumi.feature.auth.onBoarding
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swmarastro.mykkumi.domain.exception.ApiException
 import com.swmarastro.mykkumi.domain.entity.UpdateUserInfoRequestVO
+import com.swmarastro.mykkumi.domain.repository.PreSignedUrlRepository
 import com.swmarastro.mykkumi.domain.usecase.auth.UpdateUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginInputUserViewModel @Inject constructor(
     private val updateUserInfoUseCase: UpdateUserInfoUseCase,
+    private val preSignedUrlRepository: PreSignedUrlRepository,
 ): ViewModel() {
     private val _finishLoginUiState = MutableLiveData<Unit>()
     val finishLoginUiState: LiveData<Unit> get() = _finishLoginUiState
@@ -30,8 +33,8 @@ class LoginInputUserViewModel @Inject constructor(
     private val _nickname = MutableStateFlow("")
     val nickname: StateFlow<String> get() = _nickname
 
-    private val _profileImage = MutableStateFlow<Any>(com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default)
-    val profileImage : StateFlow<Any> get() = _profileImage
+    private val _profileImage = MutableStateFlow<Any?>(null)
+    val profileImage : StateFlow<Any?> get() = _profileImage
 
     // 카메라로 촬영할 이미지를 저장할 path
     private val _cameraImagePath = MutableStateFlow<Uri?>(null)
@@ -62,27 +65,37 @@ class LoginInputUserViewModel @Inject constructor(
     }
 
     // 사용자 정보 업데이트 후 가입 완료
-    fun updateUserInfo(showToast : (message: String) -> Unit, retries: Int = 0) {
-        val userInfo = UpdateUserInfoRequestVO(
-            nickname = nickname.value,
-            profileImage = profileImage.value,
-            introduction = null,
-            categoryIds = null
-        )
-
+    fun updateUserInfo(showToast : (message: String) -> Unit) {
         viewModelScope.launch {
-            try { // 회원가입 완료
-                val response = updateUserInfoUseCase(userInfo)
-                finishLogin()
-            } catch (e: ApiException.DuplicateValueException) { // 중복된 닉네임
-                e.message?.let { showToast(it) }
-            } catch (e: ApiException.InvalidNickNameValue) { // 형식에 맞지 않는 닉네임
-                e.message?.let { showToast(it) }
-            } catch (e: ApiException.InvalidRefreshTokenException) { // RefreshToken 만료
-                e.message?.let { showToast(it) }
-            } catch (e: ApiException.UnknownApiException) {
-                showToast("서비스 오류가 발생했습니다.")
-            }  catch (e: Exception) {
+            try {
+                var imageUrl: String? = null
+                if(profileImage.value != null)
+                    imageUrl = preSignedUrlRepository.getPreSignedUrl(profileImage.value as Uri)
+
+                val userInfo = UpdateUserInfoRequestVO(
+                    nickname = nickname.value,
+                    profileImage = imageUrl,
+                    introduction = null,
+                    categoryIds = null
+                )
+
+                viewModelScope.launch {
+                    try { // 회원가입 완료
+                        val response = updateUserInfoUseCase(userInfo)
+                        finishLogin()
+                    } catch (e: ApiException.DuplicateValueException) { // 중복된 닉네임
+                        e.message?.let { showToast(it) }
+                    } catch (e: ApiException.InvalidNickNameValue) { // 형식에 맞지 않는 닉네임
+                        e.message?.let { showToast(it) }
+                    } catch (e: ApiException.InvalidRefreshTokenException) { // RefreshToken 만료
+                        e.message?.let { showToast(it) }
+                    } catch (e: ApiException.UnknownApiException) {
+                        showToast("서비스 오류가 발생했습니다.")
+                    }  catch (e: Exception) {
+                        showToast("서비스 오류가 발생했습니다.")
+                    }
+                }
+            } catch (e: Exception) {
                 showToast("서비스 오류가 발생했습니다.")
             }
         }

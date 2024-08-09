@@ -19,6 +19,7 @@ class KakaoLoginRepositoryImpl @Inject constructor(
             refreshToken = kakaoLoginToken.refreshToken,
             accessToken = kakaoLoginToken.accessToken
         )
+
         val mykkumiLoginResponse : MykkumiLoginResponseDTO = kakaoLoginDataSource.signInKakao(kakaoLoginTokenRequest)
 
         // 로그인 완료 후 token 값 받기 성공

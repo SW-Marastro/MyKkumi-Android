@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.data.interceptor
 
+import android.util.Log
 import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.swmarastro.mykkumi.domain.repository.ReAccessTokenRepository
 import kotlinx.coroutines.runBlocking
@@ -29,7 +30,7 @@ class TokenAuthenticator @Inject constructor(
 
         // 연속 호출 횟수 제한 - RefreshToken까지 만료되었을 경우 무한 호출에 빠질 가능성이 있음
         if (responseCount(response) >= MAX_RETRY_COUNT) {
-            return null
+            authTokenDataSource.deleteToken()
         }
 
         return runBlocking {

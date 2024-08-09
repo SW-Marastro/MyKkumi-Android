@@ -4,12 +4,14 @@ import com.swmarastro.mykkumi.data.repository.BannerRepositoryImpl
 import com.swmarastro.mykkumi.data.repository.HobbyCategoryRepositoryImpl
 import com.swmarastro.mykkumi.data.repository.KakaoLoginRepositoryImpl
 import com.swmarastro.mykkumi.data.repository.PostRepositoryImpl
+import com.swmarastro.mykkumi.data.repository.PreSignedUrlRepositoryImpl
 import com.swmarastro.mykkumi.data.repository.ReAccessTokenRepositoryImpl
 import com.swmarastro.mykkumi.data.repository.UserInfoRepositoryImpl
 import com.swmarastro.mykkumi.domain.repository.BannerRepository
 import com.swmarastro.mykkumi.domain.repository.HobbyCategoryRepository
 import com.swmarastro.mykkumi.domain.repository.KakaoLoginRepository
 import com.swmarastro.mykkumi.domain.repository.PostRepository
+import com.swmarastro.mykkumi.domain.repository.PreSignedUrlRepository
 import com.swmarastro.mykkumi.domain.repository.ReAccessTokenRepository
 import com.swmarastro.mykkumi.domain.repository.UserInfoRepository
 import dagger.Binds
@@ -44,7 +46,6 @@ interface RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsUserInfoRepository(
-//        @ApplicationContext context: Context,
         userInfoRepositoryImpl: UserInfoRepositoryImpl
     ): UserInfoRepository
 
@@ -59,4 +60,10 @@ interface RepositoryModule {
     abstract fun bindsHobbyCategoryRepository(
         hobbyCategoryRepositoryImpl: HobbyCategoryRepositoryImpl
     ): HobbyCategoryRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsPreSignedUrlRepository(
+        preSignedUrlRepositoryImpl: PreSignedUrlRepositoryImpl
+    ): PreSignedUrlRepository
 }

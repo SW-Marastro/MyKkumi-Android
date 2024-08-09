@@ -38,6 +38,7 @@ class SelectHobbyOfPostBottomSheet : BaseBottomSheetFragment<FragmentSelectHobby
 
         // 선택 완료
         binding.btnDoneSelectHobbyCategory.setOnClickListener {
+            binding.btnDoneSelectHobbyCategory.isEnabled = false // 버튼 선택 막기 -> 연속 요청 방지
             if (viewModel.selectedHobby.value == -1L)
                 Toast.makeText(context, "select_hobby_category_of_post", Toast.LENGTH_SHORT).show()
 
@@ -49,6 +50,7 @@ class SelectHobbyOfPostBottomSheet : BaseBottomSheetFragment<FragmentSelectHobby
                 }
                 dismiss()
             }
+            binding.btnDoneSelectHobbyCategory.isEnabled = true // 버튼 선택 풀기
         }
     }
 
