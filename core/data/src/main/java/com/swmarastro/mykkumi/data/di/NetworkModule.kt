@@ -15,6 +15,8 @@ import com.swmarastro.mykkumi.data.datasource.BannerDataSource
 import com.swmarastro.mykkumi.data.datasource.HobbyCategoryDataSource
 import com.swmarastro.mykkumi.data.datasource.KakaoLoginDataSource
 import com.swmarastro.mykkumi.data.datasource.PostDataSource
+import com.swmarastro.mykkumi.data.datasource.PreSignedUrlDataSource
+import com.swmarastro.mykkumi.data.datasource.PutImageS3DataSource
 import com.swmarastro.mykkumi.data.datasource.ReAccessTokenDataSource
 import com.swmarastro.mykkumi.data.datasource.UserInfoDataSource
 import com.swmarastro.mykkumi.data.interceptor.TokenAuthenticator
@@ -23,6 +25,7 @@ import com.swmarastro.mykkumi.data.util.KakaoInitializer
 import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.swmarastro.mykkumi.domain.repository.ReAccessTokenRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Named
 import javax.inject.Provider
 
 /*
@@ -79,6 +82,17 @@ object NetworkModule {
             .build()
     }
 
+    @Provides
+    @Singleton
+    @Named("S3Retrofit")
+    fun provideS3Retrofit(okHttpClient: OkHttpClient) : Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("")
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
     // 카카오 sdk init을 위한
     @Provides
     @Singleton
@@ -120,5 +134,17 @@ object NetworkModule {
     @Singleton
     fun provideHobbyCategoryDataSource(retrofit: Retrofit): HobbyCategoryDataSource {
         return retrofit.create(HobbyCategoryDataSource::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun preSignedUrlDataSource(retrofit: Retrofit): PreSignedUrlDataSource {
+        return retrofit.create(PreSignedUrlDataSource::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun putImageS3DataSource(@Named("S3Retrofit") retrofit: Retrofit): PutImageS3DataSource {
+        return retrofit.create(PutImageS3DataSource::class.java)
     }
 }

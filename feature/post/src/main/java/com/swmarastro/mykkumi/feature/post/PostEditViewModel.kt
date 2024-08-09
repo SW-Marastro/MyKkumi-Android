@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.entity.PostEditPinProductVO
 import com.swmarastro.mykkumi.domain.entity.PostEditPinVO
+import com.swmarastro.mykkumi.domain.repository.PreSignedUrlRepository
 import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
 import com.swmarastro.mykkumi.feature.post.hobbyCategory.SelectHobbyOfPostBottomSheet
 import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
@@ -22,6 +23,7 @@ import kotlin.math.max
 
 @HiltViewModel
 class PostEditViewModel  @Inject constructor(
+    private val preSignedUrlRepository: PreSignedUrlRepository
 ) : ViewModel() {
     final val MAX_IMAGE_COUNT = 10
     final val MAX_PIN_COUNT = 10
@@ -45,6 +47,11 @@ class PostEditViewModel  @Inject constructor(
         val addPostImages = _postEditUiState.value
         addPostImages?.add(PostImageData(localUri = uri))
         _postEditUiState.postValue( addPostImages!! )
+    }
+
+    suspend fun getPresignedUrl() {
+        Log.d("test","-------------------")
+        Log.d("test", preSignedUrlRepository.getPreSignedUrl())
     }
 
     fun openImagePicker(navController: NavController?) {

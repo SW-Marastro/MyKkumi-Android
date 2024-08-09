@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumi.data.datastore
 
 import android.content.Context
+import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
@@ -40,9 +41,13 @@ class AuthTokenDataStoreImpl @Inject constructor(
         return sharedPreferences.getString(REFRESH_TOKEN, null)
     }
 
+    override fun deleteAccessToken() {
+        sharedPreferences.edit().remove(ACCESS_TOKEN).apply()
+    }
+
     override fun deleteToken() {
-        sharedPreferences.edit().remove(ACCESS_TOKEN)
-        sharedPreferences.edit().remove(REFRESH_TOKEN)
+        sharedPreferences.edit().remove(ACCESS_TOKEN).apply()
+        sharedPreferences.edit().remove(REFRESH_TOKEN).apply()
     }
 
     override fun isLogin(): Boolean { // 로그인 유무 = Token 존재 유무
