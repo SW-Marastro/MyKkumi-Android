@@ -29,7 +29,7 @@ import java.util.TimerTask
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
-    private val viewModel by viewModels<HomeViewModel>({ requireActivity() })
+    private val viewModel by viewModels<HomeViewModel>()
 
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
     private lateinit var postListAdapter: PostListAdapter

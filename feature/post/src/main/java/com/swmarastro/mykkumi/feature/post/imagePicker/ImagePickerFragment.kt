@@ -1,11 +1,7 @@
-package com.swmarastro.mykkumi.feature.post.image
+package com.swmarastro.mykkumi.feature.post.imagePicker
 
 import android.app.Activity
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,7 +12,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.common_ui.permission.ImagePermissionUtils
-import com.swmarastro.mykkumi.feature.post.PostEditFragmentArgs
 import com.swmarastro.mykkumi.feature.post.R
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentImagePickerBinding
 

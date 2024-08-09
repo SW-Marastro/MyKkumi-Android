@@ -1,12 +1,10 @@
-package com.swmarastro.mykkumi.feature.post.image
+package com.swmarastro.mykkumi.feature.post.imagePicker
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
-import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

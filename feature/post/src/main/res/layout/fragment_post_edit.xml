@@ -56,6 +56,7 @@
         </RelativeLayout>
 
         <ScrollView
+            android:id="@+id/scroll_edit_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/header_post_edit">
@@ -131,6 +132,21 @@
                     android:background="@color/gray_DD"
                     android:layout_below="@id/relative_select_post_image"
                     android:layout_alignParentRight="true"/>
+
+                <EditText
+                    android:id="@+id/edittext_input_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="200dp"
+                    android:hint="@string/placeholder_input_post_content"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray_86"
+                    android:textSize="15sp"
+                    android:gravity="top"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:layout_below="@id/btn_add_pin"
+                    android:background="@color/gray_DD"/>
 
             </RelativeLayout>
 

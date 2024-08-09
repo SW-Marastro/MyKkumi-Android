@@ -2,6 +2,8 @@ package com.swmarastro.mykkumi.feature.post
 
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils.concat
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,11 +12,13 @@ import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.entity.PostEditPinProductVO
 import com.swmarastro.mykkumi.domain.entity.PostEditPinVO
 import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
+import com.swmarastro.mykkumi.feature.post.hobbyCategory.SelectHobbyOfPostBottomSheet
 import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
+import kotlin.math.max
 
 @HiltViewModel
 class PostEditViewModel  @Inject constructor(
@@ -168,5 +172,25 @@ class PostEditViewModel  @Inject constructor(
     // 이미지 삭제 취소
     fun doneDeleteImage() {
         _isDeleteImageState.value = false
+    }
+
+    // 포스트 등록 시도
+    fun doneEditPost(
+        fragment: PostEditFragment,
+        showToast: (message: String) -> Unit
+    ) {
+        // 이미지가 하나 이상인지 확인
+        if (!postEditUiState.value.isNullOrEmpty()) {
+            selectHobbyCategory(fragment)
+        }
+        else {
+            showToast("포스트를 등록하려면 하나 이상의 이미지가 필요합니다.")
+        }
+    }
+
+    // 카테고리 선택 BottomSheet
+    fun selectHobbyCategory(fragment: PostEditFragment) {
+        val bottomSheet = SelectHobbyOfPostBottomSheet().apply { setListener(fragment) }
+        bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
     }
 }

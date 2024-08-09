@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeBannerAllFragment : BaseFragment<FragmentHomeBannerAllBinding>(R.layout.fragment_home_banner_all) {
 
-    private val viewModel by viewModels<HomeBannerAllViewModel>({ requireActivity() })
+    private val viewModel by viewModels<HomeBannerAllViewModel>()
     private lateinit var bannerAllAdapter: HomeBannerAllAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

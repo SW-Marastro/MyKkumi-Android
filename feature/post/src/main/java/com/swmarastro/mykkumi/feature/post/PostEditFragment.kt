@@ -1,6 +1,9 @@
 package com.swmarastro.mykkumi.feature.post
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextUtils.concat
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.HorizontalScrollView
@@ -15,15 +18,22 @@ import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
-import com.swmarastro.mykkumi.feature.post.image.ImagePickerArgument
+import com.swmarastro.mykkumi.feature.post.hobbyCategory.SelectHobbyOfPostBottomSheet
+import com.swmarastro.mykkumi.feature.post.imagePicker.ImagePickerArgument
 import com.swmarastro.mykkumi.feature.post.imageWithPin.EditImageWithPinAdapter
 import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import com.swmarastro.mykkumi.feature.post.touchEvent.PostEditImageTouchCallback
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit),
     PostConfirmBottomSheet.PostConfirmListener,
-    InputProductInfoBottomSheet.InputProductInfoListener {
+    InputProductInfoBottomSheet.InputProductInfoListener,
+    SelectHobbyOfPostBottomSheet.SelectHobbyOfPostListener {
     private val viewModel by viewModels<PostEditViewModel>()
+
+    private final val MAX_POST_CONTENT_LENGTH = 10      // 본문 글자 수
+    private final val MAX_POST_CONTENT_HASHTAG_COUNT = 2 // 본문 해시태그 수
 
     private lateinit var selectPostImageListAdapter: SelectPostImageListAdapter // 이미지들 썸네일 나열
     private lateinit var editImageWithPinAdapter: EditImageWithPinAdapter // 이미지 편집 view (핀 추가할 수 있는)
@@ -84,10 +94,54 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             }
         }
 
+        // 본문 입력 글자 수 제한
+        binding.edittextInputContent.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!s.isNullOrEmpty()){
+                    // 본문 글자수
+                    if(s.length > MAX_POST_CONTENT_LENGTH) {
+                        val subLength = count - (s.length - MAX_POST_CONTENT_LENGTH) // 삭제하고 남겨야 할 길이
+                        binding.edittextInputContent.setText(concat(s.subSequence(0, start + subLength), s.subSequence(start + count, s.length)))
+
+                        binding.edittextInputContent.setSelection(start + subLength) // 커서를 입력하고 있던 곳에
+                        showToast(getString(R.string.notice_post_content_max_length))
+                    }
+
+                    // 해시태그 개수
+                    if(s.count { it == '#' } > MAX_POST_CONTENT_HASHTAG_COUNT) {
+                        // 20개 넘어가는 건 자르기 = 방금 입력된 문자
+                        val hashTagIndex = s.indexOf('#', start)
+                        binding.edittextInputContent.setText(concat(s.subSequence(0, hashTagIndex), s.subSequence(start + count, s.length)))
+
+                        binding.edittextInputContent.setSelection(hashTagIndex) // 커서를 입력하고 있던 곳에
+                        showToast(getString(R.string.notice_post_hashtag_max_count))
+                    }
+                }
+            }
+        })
+
         // 이전 버튼
         binding.btnBack.setOnClickListener {
             navController?.popBackStack()
         }
+
+        // 포스트 등록 버튼
+        binding.textUploadPost.setOnClickListener(View.OnClickListener {
+            viewModel.doneEditPost(
+                this,
+                showToast = {
+                    showToast(it)
+                }
+            )
+        })
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -264,13 +318,22 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     }
 
     // pin 이동 중일 때는 viewPager 전환 안 되게 막기
+    // 수직 스크롤도 막기
     private fun lockViewPagerMoving() {
         binding.viewpagerPostEditImages.isUserInputEnabled = false
+        binding.scrollEditPost.isEnabled = false
     }
 
     // pin 이동 끝나면 viewPager 전환 가능하게 풀어주기
+    // 수직 스크롤도 풀어주기
     private fun unlockViewPagerMoving() {
         binding.viewpagerPostEditImages.isUserInputEnabled = true
+        binding.scrollEditPost.isEnabled = true
+    }
+
+    // 카테고리 선택 완료 -> 포스트 작성
+    override fun doneSelectHobby(categoryId: Long) {
+        Toast.makeText(context, "포스트 등록: ${categoryId}", Toast.LENGTH_SHORT).show()
     }
 
     private fun showToast(message: String) {

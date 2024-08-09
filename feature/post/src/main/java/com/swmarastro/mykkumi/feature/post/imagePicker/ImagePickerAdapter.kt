@@ -1,4 +1,4 @@
-package com.swmarastro.mykkumi.feature.post.image
+package com.swmarastro.mykkumi.feature.post.imagePicker
 
 import android.content.Context
 import android.view.LayoutInflater

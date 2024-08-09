@@ -2,6 +2,7 @@ package com.swmarastro.mykkumi.feature.post.imageWithPin
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextUtils.concat
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
@@ -9,11 +10,12 @@ import android.widget.Toast
 import com.swmarastro.mykkumi.common_ui.base.BaseBottomSheetFragment
 import com.swmarastro.mykkumi.feature.post.R
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentInputProductInfoBottomSheetBinding
+import kotlin.math.max
 
 
 class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProductInfoBottomSheetBinding>(R.layout.fragment_input_product_info_bottom_sheet) {
 
-    final val MAX_PRODUCT_NAME_LENGTH = 20
+    private final val MAX_PRODUCT_NAME_LENGTH = 20
 
     private var inputProductInfoListener: InputProductInfoListener? = null
     private var position: Int? = null
@@ -35,17 +37,18 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
         // 제품명 글자 수 제한
         binding.edittextInputProductName.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if(!s.isNullOrEmpty() && s.length > MAX_PRODUCT_NAME_LENGTH) {
-                    binding.edittextInputProductName.setText(s.subSequence(0, MAX_PRODUCT_NAME_LENGTH)) // 20자 넘어가는 건 자르기
-                    binding.edittextInputProductName.setSelection(MAX_PRODUCT_NAME_LENGTH) // 커서를 맨 뒤로
+                    // 20자 넘어가는 건 자르기 = 방금 입력된 문자
+                    if(before == 0) binding.edittextInputProductName.setText(concat(s.subSequence(0, start), s.subSequence(start + count, s.length)))
+                    else binding.edittextInputProductName.setText(concat(s.subSequence(0, before), s.subSequence(count, s.length)))
+
+                    binding.edittextInputProductName.setSelection(max(start, before)) // 커서를 입력하고 있던 곳에
                     Toast.makeText(requireContext(), getString(R.string.notice_product_name_max_length), Toast.LENGTH_SHORT).show()
                 }
             }
