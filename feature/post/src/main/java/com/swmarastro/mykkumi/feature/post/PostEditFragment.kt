@@ -162,8 +162,6 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         initSelectPostImagesRecyclerView()
         initEditImageWithPinViewPager()
         observePostImage()
-
-        viewModel.getPresignedUrl()
     }
 
     // 선택된 이미지 리스트 Recyclerview

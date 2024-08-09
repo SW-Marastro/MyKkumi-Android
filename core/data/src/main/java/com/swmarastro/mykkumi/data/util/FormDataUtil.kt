@@ -21,19 +21,15 @@ object FormDataUtil {
     private val MAX_IMAGE_SIZE = 1024
 
     // Uri를 Multipart/form-data로 변환
-    fun convertUriToMultipart(context: Context, image: Any?): MultipartBody.Part? {
-        val imageUri = anyToUri(image)
-
-        Log.d("test url", imageUri.toString())
-
-        if(imageUri == null) return null
+    fun convertUriToMultipart(context: Context, imageUri: Any?): MultipartBody.Part? {
+        val imageUri = imageUri as Uri
 
         val file = uriToFile(context, imageUri)
 
         if(file == null || !file.exists()) return null
 
         val requestFile = file.asRequestBody("image/*".toMediaType())
-        return MultipartBody.Part.createFormData("profileImage", file.name, requestFile)
+        return MultipartBody.Part.createFormData("file", file.name, requestFile)
     }
 
     // Content URI를 파일로 변환하는 함수
@@ -96,23 +92,6 @@ object FormDataUtil {
             }
         }
         return name
-    }
-
-    fun getBody(value: String?): RequestBody? {
-        return value?.toRequestBody("text/plain".toMediaType())
-    }
-
-    fun getListLongBody(value: List<Long>?): RequestBody? {
-        val json = Gson().toJson(value)
-        return json.toRequestBody("application/json; charset=utf-8".toMediaType())
-    }
-
-    fun anyToUri(imageUri: Any?): Uri? {
-        return if(imageUri is Uri) {
-            imageUri
-        } else {
-            null
-        }
     }
 }
 

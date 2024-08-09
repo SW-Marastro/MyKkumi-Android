@@ -87,7 +87,7 @@ object NetworkModule {
     @Named("S3Retrofit")
     fun provideS3Retrofit(okHttpClient: OkHttpClient) : Retrofit {
         return Retrofit.Builder()
-            .baseUrl("")
+            .baseUrl("https://dummy.base.url/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

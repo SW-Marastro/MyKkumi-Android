@@ -1,22 +1,18 @@
 package com.swmarastro.mykkumi.data.repository
 
-import android.content.Context
 import com.google.gson.Gson
 import com.swmarastro.mykkumi.data.datasource.UserInfoDataSource
 import com.swmarastro.mykkumi.data.dto.request.UpdateUserInfoRequestDTO
 import com.swmarastro.mykkumi.domain.exception.ApiException
-import com.swmarastro.mykkumi.data.util.FormDataUtil
 import com.swmarastro.mykkumi.domain.exception.ErrorResponse
 import com.swmarastro.mykkumi.domain.entity.UpdateUserInfoRequestVO
 import com.swmarastro.mykkumi.domain.entity.UpdateUserInfoResponseVO
 import com.swmarastro.mykkumi.domain.entity.UserInfoVO
 import com.swmarastro.mykkumi.domain.repository.UserInfoRepository
-import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.HttpException
 import javax.inject.Inject
 
 class UserInfoRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val userInfoDataSource: UserInfoDataSource,
 ) :UserInfoRepository {
 
@@ -25,8 +21,6 @@ class UserInfoRepositoryImpl @Inject constructor(
         private const val DUPLICATE_VALUE = "DUPLICATE_VALUE"
         private const val INVALID_VALUE = "INVALID_VALUE"
     }
-
-    //private var authorization = authTokenDataSource.getAccessToken()
 
     override suspend fun getUserInfo(): UserInfoVO {
         return try {

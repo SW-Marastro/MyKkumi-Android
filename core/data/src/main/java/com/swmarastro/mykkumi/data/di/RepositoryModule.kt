@@ -46,7 +46,6 @@ interface RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsUserInfoRepository(
-//        @ApplicationContext context: Context,
         userInfoRepositoryImpl: UserInfoRepositoryImpl
     ): UserInfoRepository
 

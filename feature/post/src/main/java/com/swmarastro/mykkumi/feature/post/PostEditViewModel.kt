@@ -8,6 +8,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.entity.PostEditPinProductVO
 import com.swmarastro.mykkumi.domain.entity.PostEditPinVO
@@ -18,6 +19,7 @@ import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSh
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.max
 
@@ -44,14 +46,20 @@ class PostEditViewModel  @Inject constructor(
     val isDeleteImageState : LiveData<Boolean> get() = _isDeleteImageState
 
     fun selectPostImage(uri: Uri) {
-        val addPostImages = _postEditUiState.value
-        addPostImages?.add(PostImageData(localUri = uri))
-        _postEditUiState.postValue( addPostImages!! )
-    }
+        viewModelScope.launch {
+            try {
+                val imageUrl = preSignedUrlRepository.getPreSignedUrl(uri)
 
-    suspend fun getPresignedUrl() {
-        Log.d("test","-------------------")
-        Log.d("test", preSignedUrlRepository.getPreSignedUrl())
+                if(imageUrl != null) {
+                    val addPostImages = _postEditUiState.value
+                    addPostImages?.add(PostImageData(localUri = imageUrl.toUri()))
+                    _postEditUiState.postValue( addPostImages!! )
+                }
+
+            } catch (e: Exception) {
+
+            }
+        }
     }
 
     fun openImagePicker(navController: NavController?) {
