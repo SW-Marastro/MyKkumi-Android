@@ -33,7 +33,7 @@ class PostEditViewModel  @Inject constructor(
     private val _checkCreateView = MutableStateFlow<Boolean>(true)
     val checkCreateView : StateFlow<Boolean> get() = _checkCreateView
 
-    private val _selectImagePosition = MutableLiveData<Int>(0)
+    private val _selectImagePosition = MutableLiveData<Int>(-1)
     val selectImagePosition : LiveData<Int> get() = _selectImagePosition
 
     private val _currentPinList = MutableLiveData<MutableList<PostEditPinVO>>(mutableListOf())
@@ -74,12 +74,12 @@ class PostEditViewModel  @Inject constructor(
     fun changeSelectImagePosition(position: Int) {
         if(position >= 0 && _postEditUiState.value!!.size > position) {
             _postEditUiState.apply {
-                value!![selectImagePosition.value!!].isSelect = false // 이전 선택 해제
+                if(selectImagePosition.value!! >= 0) value!![selectImagePosition.value!!].isSelect = false // 이전 선택 해제
                 value!![position].isSelect = true // 새로운 선택
             }
 
-            selectImagePosition.value?.let {
-                _postEditUiState.value?.get(it)?.apply {
+            if(selectImagePosition.value!! >= 0) {
+                _postEditUiState.value?.get(selectImagePosition.value!!)?.apply {
                     pinList = currentPinList.value ?: mutableListOf()
                 }
             }
