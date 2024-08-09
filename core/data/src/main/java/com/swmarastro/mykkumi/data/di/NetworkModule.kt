@@ -73,6 +73,17 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @Named("S3Retrofit")
+    fun provideS3OkHttpClient(
+        httpLoggingInterceptor: HttpLoggingInterceptor,
+    ) : OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .build()
+    }
+
+    @Provides
+    @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient) : Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -85,7 +96,7 @@ object NetworkModule {
     @Provides
     @Singleton
     @Named("S3Retrofit")
-    fun provideS3Retrofit(okHttpClient: OkHttpClient) : Retrofit {
+    fun provideS3Retrofit(@Named("S3Retrofit") okHttpClient: OkHttpClient) : Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://dummy.base.url/")
             .client(okHttpClient)

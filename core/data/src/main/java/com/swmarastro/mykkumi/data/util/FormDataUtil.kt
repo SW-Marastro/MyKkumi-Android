@@ -63,25 +63,26 @@ object FormDataUtil {
         val width = originalBitmap.width
         val height = originalBitmap.height
 
-        val aspectRatio: Float = width.toFloat() / height.toFloat()
-
         val newWidth: Int
         val newHeight: Int
 
         if (width > height) {
             newWidth = MAX_IMAGE_SIZE
-            newHeight = (MAX_IMAGE_SIZE / aspectRatio).toInt()
+            newHeight = (MAX_IMAGE_SIZE / (width.toFloat() / height.toFloat())).toInt()
         } else {
-            newWidth = (MAX_IMAGE_SIZE * aspectRatio).toInt()
+            newWidth = (MAX_IMAGE_SIZE / (height.toFloat() / width.toFloat())).toInt()
             newHeight = MAX_IMAGE_SIZE
         }
+
+        Log.d("test", "image width: ${width}, height: ${height}")
+        Log.d("test", "image width: ${newWidth}, height: ${newHeight}")
 
         return Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true)
     }
 
     // 파일 이름을 얻는 함수
     private fun getFileName(contentResolver: ContentResolver, uri: Uri): String {
-        var name = "temp_file"
+        var name = "file"
         val cursor = contentResolver.query(uri, null, null, null, null)
         cursor?.use {
             if (cursor.moveToFirst()) {
