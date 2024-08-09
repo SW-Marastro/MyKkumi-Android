@@ -21,7 +21,7 @@ object FormDataUtil {
     private val MAX_IMAGE_SIZE = 1024
 
     // Uri를 Multipart/form-data로 변환
-    fun convertUriToMultipart(context: Context, imageUri: Any?): MultipartBody.Part? {
+    fun convertUriToRequestBody(context: Context, imageUri: Any?): RequestBody? {
         val imageUri = imageUri as Uri
 
         val file = uriToFile(context, imageUri)
@@ -29,7 +29,7 @@ object FormDataUtil {
         if(file == null || !file.exists()) return null
 
         val requestFile = file.asRequestBody("image/*".toMediaType())
-        return MultipartBody.Part.createFormData("file", file.name, requestFile)
+        return requestFile
     }
 
     // Content URI를 파일로 변환하는 함수
@@ -45,8 +45,8 @@ object FormDataUtil {
             inputStream?.close()
 
             val outputStream = FileOutputStream(tempFile)
-            // 압축 품질 0~100 - 낮을수록 더 많이 압축됨 -> 압축 X
-            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            // 압축 품질 0~100 - 낮을수록 더 많이 압축됨
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
             outputStream.close()
         } catch (e: Exception) {
             Log.e("FormDataUtil", "Error converting URI to File: ${e.message}")
@@ -82,7 +82,7 @@ object FormDataUtil {
 
     // 파일 이름을 얻는 함수
     private fun getFileName(contentResolver: ContentResolver, uri: Uri): String {
-        var name = "file"
+        var name = "image"
         val cursor = contentResolver.query(uri, null, null, null, null)
         cursor?.use {
             if (cursor.moveToFirst()) {

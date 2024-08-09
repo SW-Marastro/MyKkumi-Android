@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumi.data.datasource
 
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -11,10 +12,9 @@ import retrofit2.http.Url
 
 interface PutImageS3DataSource {
 
-    @Multipart
     @PUT
     suspend fun putImageForS3(
         @Url url: String, // preSigned url
-        @Part file: MultipartBody.Part
+        @Body image: RequestBody
     )
 }

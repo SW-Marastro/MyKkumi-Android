@@ -21,7 +21,7 @@ class PreSignedUrlRepositoryImpl @Inject constructor(
         try {
             val preSignedUrlResponse = preSignedUrlDataSource.getPreSignedUrl()
 
-            val imageFile = FormDataUtil.convertUriToMultipart(context, imageLocalUri)
+            val imageFile = FormDataUtil.convertUriToRequestBody(context, imageLocalUri)
 
             if (imageFile == null) {
                 Toast.makeText(context, "손상된 이미지입니다.", Toast.LENGTH_SHORT).show()
