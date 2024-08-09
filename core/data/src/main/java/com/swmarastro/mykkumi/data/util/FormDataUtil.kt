@@ -89,9 +89,6 @@ object FormDataUtil {
             newHeight = MAX_IMAGE_SIZE
         }
 
-        Log.d("test", "image width: ${width}, height: ${height}")
-        Log.d("test", "image width: ${newWidth}, height: ${newHeight}")
-
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
     }
 

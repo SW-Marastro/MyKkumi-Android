@@ -47,7 +47,7 @@ class EditImageWithPinAdapter(
         private var parentHeight = 0
 
         fun bind(item: PostImageData, position: Int) {
-            binding.imagePost.load(item.localUri)
+            binding.imagePost.load(item.imageUri)
 
             val currentPinList = if(position == viewModel.selectImagePosition.value) { // 현재 선택된, 편집 중인 이미지
                 viewModel.currentPinList.value ?: mutableListOf<PostEditPinVO>()

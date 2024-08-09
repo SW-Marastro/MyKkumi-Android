@@ -2,8 +2,6 @@ package com.swmarastro.mykkumi.feature.post
 
 import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils.concat
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,7 +19,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.max
 
 @HiltViewModel
 class PostEditViewModel  @Inject constructor(
@@ -52,7 +49,7 @@ class PostEditViewModel  @Inject constructor(
 
                 if(imageUrl != null) {
                     val addPostImages = _postEditUiState.value
-                    addPostImages?.add(PostImageData(localUri = imageUrl.toUri()))
+                    addPostImages?.add(PostImageData(imageUri = imageUrl.toUri()))
                     _postEditUiState.postValue( addPostImages!! )
                 }
 
