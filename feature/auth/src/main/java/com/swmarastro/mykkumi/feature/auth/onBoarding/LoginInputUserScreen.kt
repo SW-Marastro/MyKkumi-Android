@@ -53,6 +53,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -144,8 +145,14 @@ fun LoginInputUserScreen(
             )
             Image(
                 painter = when(loginViewModel.profileImage.collectAsState().value) {
-                    is String -> rememberImagePainter(
-                        data = loginViewModel.profileImage.collectAsState().value
+                    is String -> rememberAsyncImagePainter(
+                        model = loginViewModel.profileImage.collectAsState().value
+                    )
+                    is Int -> painterResource(
+                        id = loginViewModel.profileImage.collectAsState().value as Int
+                    )
+                    is Uri -> rememberAsyncImagePainter(
+                        model = loginViewModel.profileImage.collectAsState().value
                     )
                     else -> painterResource(
                         id = com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default
