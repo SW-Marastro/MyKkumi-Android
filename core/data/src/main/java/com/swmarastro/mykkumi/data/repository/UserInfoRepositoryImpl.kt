@@ -3,6 +3,7 @@ package com.swmarastro.mykkumi.data.repository
 import android.content.Context
 import com.google.gson.Gson
 import com.swmarastro.mykkumi.data.datasource.UserInfoDataSource
+import com.swmarastro.mykkumi.data.dto.request.UpdateUserInfoRequestDTO
 import com.swmarastro.mykkumi.domain.exception.ApiException
 import com.swmarastro.mykkumi.data.util.FormDataUtil
 import com.swmarastro.mykkumi.domain.exception.ErrorResponse
@@ -36,25 +37,16 @@ class UserInfoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateUserInfo(userInfo: UpdateUserInfoRequestVO): UpdateUserInfoResponseVO {
-//        val userInfoDTO = UpdateUserInfoRequestDTO(
-//            nickname = userInfo.nickname,
-//            profileImage = FormDataUtil.convertUriToMultipart(context, userInfo.profileImage), // Uri를 Multipart/form-data로 변환
-//            introduction = userInfo.introduction,
-//            categoryIds = userInfo.categoryIds
-//        )
-//
-//        Log.d("repository", userInfoDTO.toString())
-
-//        val imageMultipart = FormDataUtil.convertUriToMultipart(context, userInfo.profileImage)
-//        Log.d("imager multipart", imageMultipart.toString())
+        val userInfoDTO = UpdateUserInfoRequestDTO(
+            nickname = userInfo.nickname,
+            profileImage = userInfo.profileImage,
+            introduction = userInfo.introduction,
+            categoryIds = userInfo.categoryIds
+        )
 
         return try {
             userInfoDataSource.updateUserInfo(
-//            params = userInfoDTO
-                nickname = FormDataUtil.getBody(userInfo.nickname),
-                profileImage = FormDataUtil.convertUriToMultipart(context, userInfo.profileImage),
-                introduction = FormDataUtil.getBody(userInfo.introduction),
-                categoryIds = null //FormDataUtil.getListLongBody(listOf<Long>(1, 2))
+                params = userInfoDTO
             ).toEntity()
         } catch (e: HttpException) {
             handleApiException(e)

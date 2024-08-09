@@ -7,6 +7,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.ScrollView
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -57,6 +58,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             else { // 로그인 안 됨
                 startActivity(intent)
             }
+        }
+
+        // 로그아웃 테스트
+        binding.btnShoppingCart.setOnClickListener {
+            viewModel.logout()
+            Toast.makeText(context, "개발용 로그아웃", Toast.LENGTH_SHORT).show()
         }
     }
 

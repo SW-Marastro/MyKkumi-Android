@@ -126,4 +126,9 @@ class HomeViewModel @Inject constructor(
         val navigateDeepLink = "mykkumi://post.edit"
         navController?.navigate(deepLink = navigateDeepLink.toUri())
     }
+
+    // 로그아웃 테스트
+    fun logout() {
+        authTokenDataStore.deleteToken()
+    }
 }

@@ -144,10 +144,9 @@ fun LoginInputUserScreen(
             )
             Image(
                 painter = when(loginViewModel.profileImage.collectAsState().value) {
-                    is Int -> painterResource(
-                        id = loginViewModel.profileImage.collectAsState().value as Int
+                    is String -> rememberImagePainter(
+                        data = loginViewModel.profileImage.collectAsState().value
                     )
-                    is Uri -> rememberImagePainter(data = loginViewModel.profileImage.collectAsState().value)
                     else -> painterResource(
                         id = com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default
                     )

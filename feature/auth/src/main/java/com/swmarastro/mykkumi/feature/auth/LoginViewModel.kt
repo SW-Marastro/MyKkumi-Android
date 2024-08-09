@@ -155,17 +155,20 @@ class LoginViewModel @Inject constructor(
                 val userInfo = getUserInfoUseCase()
                 _userInfoUiState.value = userInfo
 
-                setDoneLoginProcess()
+                viewModelScope.launch {
+                    userInfoUiState.collect { userInfo ->
+                        setDoneLoginProcess()
 
-                // 최초 가입자 -> 추가 정보 입력 페이지로
-                if(_userInfoUiState.value.nickname == null) {
-                    navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
-                }
-                // 기존 가입자 -> 홈 화면으로
-                else {
-                    // 테스트용
-                    //navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
-                    finishLogin()
+                        // 최초 가입자 -> 추가 정보 입력 페이지로
+                        if(userInfo.nickname == null) {
+                            navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
+                        }
+                        // 기존 가입자 -> 홈 화면으로
+                        else {
+                            finishLogin()
+                        }
+
+                    }
                 }
             }
             catch (e: ApiException.UnknownApiException) {
