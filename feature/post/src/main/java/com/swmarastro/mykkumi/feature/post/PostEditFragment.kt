@@ -32,8 +32,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     SelectHobbyOfPostBottomSheet.SelectHobbyOfPostListener {
     private val viewModel by viewModels<PostEditViewModel>()
 
-    private final val MAX_POST_CONTENT_LENGTH = 10      // 본문 글자 수
-    private final val MAX_POST_CONTENT_HASHTAG_COUNT = 2 // 본문 해시태그 수
+    private final val MAX_POST_CONTENT_LENGTH = 2000      // 본문 글자 수
+    private final val MAX_POST_CONTENT_HASHTAG_COUNT = 20 // 본문 해시태그 수
 
     private lateinit var selectPostImageListAdapter: SelectPostImageListAdapter // 이미지들 썸네일 나열
     private lateinit var editImageWithPinAdapter: EditImageWithPinAdapter // 이미지 편집 view (핀 추가할 수 있는)
@@ -44,6 +44,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     private lateinit var postEditImageTouchHelper: ItemTouchHelper
 
     private var isRestoringState = false
+    private var isStartPosting = false
 
     override fun onResume() {
         super.onResume()
@@ -52,6 +53,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         navController?.currentBackStackEntry?.savedStateHandle?.getLiveData<ImagePickerArgument>("selectImages")
             ?.observe(viewLifecycleOwner) { images ->
                 if(!images.selectImages.isNullOrEmpty()) {
+                    isStartPosting = true
                     for (image in images.selectImages) {
                         viewModel.selectPostImage(image)
                     }
@@ -69,8 +71,14 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             binding.viewpagerPostEditImages.setCurrentItem(position, false)
         }
 
+        // 포스트 작성 시작 후 이미지를 하나도 선택 안 한 상태로 뒤로가기 눌렀을 때 -> 이전으로 돌아가기
+        if(navController?.currentDestination?.id == R.id.postEditFragment && !isStartPosting) {
+            navController?.popBackStack()
+        }
         // 상태 복원 완료
         isRestoringState = false
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -151,11 +159,6 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         if(viewModel.checkCreateView.value) {
             viewModel.openImagePicker(navController)
             viewModel.createViewDone() // 생성 끝
-        }
-
-        // 포스트 작성 시작 후 이미지를 하나도 선택 안 한 상태로 뒤로가기 눌렀을 때 -> 이전으로 돌아가기
-        if(navController?.currentDestination?.id == R.id.postEditFragment && viewModel.selectImagePosition.value == -1) {
-            navController?.popBackStack()
         }
     }
 
@@ -338,7 +341,15 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
     // 카테고리 선택 완료 -> 포스트 작성
     override fun doneSelectHobby(categoryId: Long) {
-        Toast.makeText(context, "포스트 등록: ${categoryId}", Toast.LENGTH_SHORT).show()
+        val content = binding.edittextInputContent.text.toString()
+        viewModel.uploadPost(
+            categoryId,
+            content,
+            showToast = {
+                showToast(it)
+            },
+            navController
+        )
     }
 
     private fun showToast(message: String) {

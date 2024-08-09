@@ -1,7 +1,6 @@
 package com.swmarastro.mykkumi.feature.post.imageWithPin
 
 import android.content.Context
-import android.util.Log
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -10,13 +9,14 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.swmarastro.mykkumi.common_ui.R
 import com.swmarastro.mykkumi.common_ui.databinding.ItemPostImageViewpagerBinding
 import com.swmarastro.mykkumi.domain.entity.PostEditPinVO
+import com.swmarastro.mykkumi.domain.entity.PostImageVO
 import com.swmarastro.mykkumi.feature.post.PostEditViewModel
-import com.swmarastro.mykkumi.feature.post.PostImageData
 
 // ViewPager
 class EditImageWithPinAdapter(
@@ -27,7 +27,7 @@ class EditImageWithPinAdapter(
     private val updateProductInfo: (position: Int) -> Unit
 ) : RecyclerView.Adapter<EditImageWithPinAdapter.EditImageWithPinViewHolder>() {
 
-    var imageWithPinList = mutableListOf<PostImageData>()
+    var imageWithPinList = mutableListOf<PostImageVO>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditImageWithPinViewHolder {
         val binding = ItemPostImageViewpagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -46,8 +46,8 @@ class EditImageWithPinAdapter(
         private var parentWidth = 0
         private var parentHeight = 0
 
-        fun bind(item: PostImageData, position: Int) {
-            binding.imagePost.load(item.imageUri)
+        fun bind(item: PostImageVO, position: Int) {
+            binding.imagePost.load(item.imageUri.toUri())
 
             val currentPinList = if(position == viewModel.selectImagePosition.value) { // 현재 선택된, 편집 중인 이미지
                 viewModel.currentPinList.value ?: mutableListOf<PostEditPinVO>()

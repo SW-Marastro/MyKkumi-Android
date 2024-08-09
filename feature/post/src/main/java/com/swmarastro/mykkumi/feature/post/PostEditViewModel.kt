@@ -2,6 +2,7 @@ package com.swmarastro.mykkumi.feature.post
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +11,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.entity.PostEditPinProductVO
 import com.swmarastro.mykkumi.domain.entity.PostEditPinVO
+import com.swmarastro.mykkumi.domain.entity.PostImageVO
 import com.swmarastro.mykkumi.domain.repository.PreSignedUrlRepository
+import com.swmarastro.mykkumi.domain.usecase.post.UploadPostUseCase
 import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
 import com.swmarastro.mykkumi.feature.post.hobbyCategory.SelectHobbyOfPostBottomSheet
 import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
@@ -22,13 +25,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostEditViewModel  @Inject constructor(
-    private val preSignedUrlRepository: PreSignedUrlRepository
+    private val preSignedUrlRepository: PreSignedUrlRepository,
+    private val uploadPostUseCase: UploadPostUseCase,
 ) : ViewModel() {
     final val MAX_IMAGE_COUNT = 10
     final val MAX_PIN_COUNT = 10
 
-    private val _postEditUiState = MutableLiveData<MutableList<PostImageData>>(mutableListOf())
-    val postEditUiState: LiveData<MutableList<PostImageData>> get() = _postEditUiState
+    private val _postEditUiState = MutableLiveData<MutableList<PostImageVO>>(mutableListOf())
+    val postEditUiState: LiveData<MutableList<PostImageVO>> get() = _postEditUiState
 
     private val _checkCreateView = MutableStateFlow<Boolean>(true)
     val checkCreateView : StateFlow<Boolean> get() = _checkCreateView
@@ -49,7 +53,7 @@ class PostEditViewModel  @Inject constructor(
 
                 if(imageUrl != null) {
                     val addPostImages = _postEditUiState.value
-                    addPostImages?.add(PostImageData(imageUri = imageUrl.toUri()))
+                    addPostImages?.add(PostImageVO(imageUri = imageUrl))
                     _postEditUiState.postValue( addPostImages!! )
                 }
 
@@ -204,5 +208,28 @@ class PostEditViewModel  @Inject constructor(
     fun selectHobbyCategory(fragment: PostEditFragment) {
         val bottomSheet = SelectHobbyOfPostBottomSheet().apply { setListener(fragment) }
         bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
+    }
+
+    // 포스트 등록
+    fun uploadPost(
+        subCategoryId: Long,
+        content: String,
+        showToast: (message: String) -> Unit,
+        navController: NavController?
+    ) {
+        viewModelScope.launch {
+            try {
+                val uploadPostId = uploadPostUseCase(
+                    subCategory = subCategoryId,
+                    content = content,
+                    postImages = postEditUiState.value!! // 애초에 이미지가 하나 이상이어야 카테고리 선택이 가능
+                )
+//                Log.d("test", "upload post: ${uploadPostId.postId}")
+                navController?.popBackStack()
+                showToast("포스트가 등록되었습니다!")
+            } catch (e: Exception) {
+                showToast("포스트 등록에 실패했습니다.")
+            }
+        }
     }
 }

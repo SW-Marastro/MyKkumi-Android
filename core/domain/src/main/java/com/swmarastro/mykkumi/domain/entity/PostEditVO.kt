@@ -1,6 +1,17 @@
 package com.swmarastro.mykkumi.domain.entity
 
-//data class PostEditVO ()
+// 포스트 등록
+data class PostImageVO(
+    var imageId: Long? = null,     // 이미지 id
+    var imageUri: String, // S3에 업로드된 경로
+    var isSelect: Boolean = false, // 선택 유무
+    var pinList: MutableList<PostEditPinVO> = mutableListOf() // pin
+)
+data class PostEditResponseVO(
+    val postId: Int
+)
+
+// ----------------------------------
 
 data class PostEditPinVO(
     var pinId: Long?,
