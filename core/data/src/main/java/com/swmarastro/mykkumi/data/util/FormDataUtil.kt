@@ -4,6 +4,8 @@ import android.content.ContentResolver
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
@@ -40,13 +42,28 @@ object FormDataUtil {
 
         try {
             val inputStream: InputStream? = contentResolver.openInputStream(uri)
+
+            val exif = ExifInterface(inputStream!!)
+            val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+
+            // 이미지 로드
+            var bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
+
+            // 이미지 회전
+            bitmap = when (orientation) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap, 90f)
+                ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap, 180f)
+                ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap, 270f)
+                else -> bitmap
+            }
+
             // 최대 width, height를 1024px로
-            val bitmap = resizeImage(inputStream)
-            inputStream?.close()
+            bitmap = resizeImage(bitmap)
+            inputStream.close()
 
             val outputStream = FileOutputStream(tempFile)
             // 압축 품질 0~100 - 낮을수록 더 많이 압축됨
-            bitmap?.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
             outputStream.close()
         } catch (e: Exception) {
             Log.e("FormDataUtil", "Error converting URI to File: ${e.message}")
@@ -57,27 +74,32 @@ object FormDataUtil {
     }
 
     // 이미지 크기 조정 함수 (비율 유지)
-    fun resizeImage(inputStream: InputStream?): Bitmap? {
-        val originalBitmap = BitmapFactory.decodeStream(inputStream) ?: return null
-
-        val width = originalBitmap.width
-        val height = originalBitmap.height
+    fun resizeImage(bitmap: Bitmap): Bitmap {
+        val width = bitmap.width
+        val height = bitmap.height
 
         val newWidth: Int
         val newHeight: Int
 
         if (width > height) {
             newWidth = MAX_IMAGE_SIZE
-            newHeight = (MAX_IMAGE_SIZE / (width.toFloat() / height.toFloat())).toInt()
+            newHeight = (MAX_IMAGE_SIZE * height.toFloat() / width.toFloat()).toInt()
         } else {
-            newWidth = (MAX_IMAGE_SIZE / (height.toFloat() / width.toFloat())).toInt()
+            newWidth = (MAX_IMAGE_SIZE * width.toFloat() / height.toFloat()).toInt()
             newHeight = MAX_IMAGE_SIZE
         }
 
         Log.d("test", "image width: ${width}, height: ${height}")
         Log.d("test", "image width: ${newWidth}, height: ${newHeight}")
 
-        return Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true)
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+    }
+
+    // 이미지 회전
+    fun rotateImage(bitmap: Bitmap, degrees: Float): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(degrees)
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 
     // 파일 이름을 얻는 함수
