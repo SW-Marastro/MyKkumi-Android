@@ -72,7 +72,9 @@ class PostEditViewModel  @Inject constructor(
     }
 
     fun createViewDone() {
-        _checkCreateView.value = false
+        viewModelScope.launch {
+            _checkCreateView.emit(false)
+        }
     }
 
     fun changeSelectImagePosition(position: Int) {
@@ -224,7 +226,6 @@ class PostEditViewModel  @Inject constructor(
                     content = content,
                     postImages = postEditUiState.value!! // 애초에 이미지가 하나 이상이어야 카테고리 선택이 가능
                 )
-//                Log.d("test", "upload post: ${uploadPostId.postId}")
                 navController?.popBackStack()
                 showToast("포스트가 등록되었습니다!")
             } catch (e: Exception) {

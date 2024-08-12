@@ -170,31 +170,27 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 포스트 내용 세팅
     private fun setPostList() {
-        lifecycleScope.launch {
-            viewModel.setPostList(false)
-            viewModel.postListUiState
+        viewModel.setPostList(false)
+        viewModel.postListUiState
             .onEach {
                 initPostRecyclerView(it)
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
-        }
     }
 
     // 포스트 무한 스크롤 -> 스크롤 최하단 도달 시 다음 데이터 요청
     private fun setNextPostList() {
-        lifecycleScope.launch {
-            viewModel.setPostList(true)
-            viewModel.postListUiState
-                .onEach {
-                    postListAdapter.postList = it
-                    isPostListLoading = false
+        viewModel.setPostList(true)
+        viewModel.postListUiState
+            .onEach {
+                postListAdapter.postList = it
+                isPostListLoading = false
 
-                    if (viewModel.getIsPostEnd()) {
-                        binding.includeListLoading.visibility = View.GONE
-                    }
+                if (viewModel.getIsPostEnd()) {
+                    binding.includeListLoading.visibility = View.GONE
                 }
-                .launchIn(viewLifecycleOwner.lifecycleScope)
-        }
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun checkPermissionsAndProceed() {

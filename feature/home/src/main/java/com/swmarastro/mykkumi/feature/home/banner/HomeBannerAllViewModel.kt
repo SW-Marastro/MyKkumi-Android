@@ -36,9 +36,9 @@ class HomeBannerAllViewModel @Inject constructor(
                 val homeBanner = withContext(Dispatchers.IO) {
                     getBannerListUseCase()
                 }
-                _bannerListUiState.value = homeBanner
+                _bannerListUiState.emit( homeBanner )
             } catch (e: Exception) {
-                _bannerListUiState.value = BannerListVO()
+                _bannerListUiState.emit( BannerListVO() )
             }
         }
     }

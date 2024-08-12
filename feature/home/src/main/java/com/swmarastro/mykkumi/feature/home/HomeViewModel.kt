@@ -1,21 +1,21 @@
 package com.swmarastro.mykkumi.feature.home
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
-import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.swmarastro.mykkumi.common_ui.UiState
 import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerListUseCase
 import com.swmarastro.mykkumi.domain.usecase.post.GetHomePostListUseCase
+import com.swmarastro.mykkumi.feature.home.post.PostUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +35,9 @@ class HomeViewModel @Inject constructor(
     // 홈 > 배너 캐러셀
     private val _bannerListUiState = MutableStateFlow<BannerListVO>(BannerListVO())
     val bannerListUiState: StateFlow<BannerListVO> get() = _bannerListUiState
+
+//    private val _postUiState = MutableStateFlow<UiState<PostUiState>>(UiState.Loading)
+//    val postUiState: StateFlow<UiState<PostUiState>> get() = _postUiState
 
     // 포스트 리스트
     private val _postListUiState = MutableStateFlow<MutableList<HomePostItemVO>>(mutableListOf())
@@ -58,9 +61,9 @@ class HomeViewModel @Inject constructor(
                 val homeBanner = withContext(Dispatchers.IO) {
                     getBannerListUseCase()
                 }
-                _bannerListUiState.value = homeBanner
+                _bannerListUiState.emit( homeBanner )
             } catch (e: Exception) {
-                _bannerListUiState.value = BannerListVO()
+                _bannerListUiState.emit( BannerListVO() )
             }
         }
     }
@@ -72,22 +75,24 @@ class HomeViewModel @Inject constructor(
 
     // 포스트 리스트
     // isCursor의 역할: 처음으로 데이터를 조회해오는 것인지, cursor가 있는 상태로 다음 데이터를 불러오는 것인지
-    suspend fun setPostList(isCursor: Boolean) {
-        try {
-            val homePostList = withContext(Dispatchers.IO) {
-                getHomePostListUseCase(postCursor, postLimit)
-            }
-            if(homePostList.posts.isEmpty()) isPostEnd = true
-            else {
-                if (isCursor) _postListUiState.value.addAll(homePostList.posts)
-                else _postListUiState.value = homePostList.posts.toMutableList()
+    fun setPostList(isCursor: Boolean) {
+        viewModelScope.launch {
+            try {
+                val homePostList = withContext(Dispatchers.IO) {
+                    getHomePostListUseCase(postCursor, postLimit)
+                }
+                if (homePostList.posts.isEmpty()) isPostEnd = true
+                else {
+                    if (isCursor) _postListUiState.value.addAll(homePostList.posts)
+                    else _postListUiState.emit(homePostList.posts.toMutableList())
 
-                // 마지막인지
-                if(homePostList.cursor.isEmpty()) isPostEnd = true
-                else postCursor = homePostList.cursor
+                    // 마지막인지
+                    if (homePostList.cursor.isEmpty()) isPostEnd = true
+                    else postCursor = homePostList.cursor
+                }
+            } catch (e: Exception) {
+                _postListUiState.emit(mutableListOf())
             }
-        } catch (e: Exception) {
-            _postListUiState.value = mutableListOf()
         }
     }
 
