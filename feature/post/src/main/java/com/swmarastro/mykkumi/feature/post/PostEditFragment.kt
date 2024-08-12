@@ -329,14 +329,14 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     // 수직 스크롤도 막기
     private fun lockViewPagerMoving() {
         binding.viewpagerPostEditImages.isUserInputEnabled = false
-        binding.scrollEditPost.isEnabled = false
+        binding.scrollEditPost.setScrollingEnabled(false)
     }
 
     // pin 이동 끝나면 viewPager 전환 가능하게 풀어주기
     // 수직 스크롤도 풀어주기
     private fun unlockViewPagerMoving() {
         binding.viewpagerPostEditImages.isUserInputEnabled = true
-        binding.scrollEditPost.isEnabled = true
+        binding.scrollEditPost.setScrollingEnabled(true)
     }
 
     // 카테고리 선택 완료 -> 포스트 작성
