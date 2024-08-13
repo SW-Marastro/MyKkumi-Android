@@ -2,6 +2,7 @@ package com.swmarastro.mykkumi.feature.home
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,6 +14,7 @@ import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerListUseCase
 import com.swmarastro.mykkumi.domain.usecase.post.GetHomePostListUseCase
+import com.swmarastro.mykkumi.feature.home.post.PostListAdapter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -68,7 +70,6 @@ class HomeViewModel @Inject constructor(
         _selectBannerId.value = bannerId
     }
 
-
     // 포스트 리스트
     // isCursor의 역할: 처음으로 데이터를 조회해오는 것인지, cursor가 있는 상태로 다음 데이터를 불러오는 것인지
     fun setPostList(isCursor: Boolean) {
@@ -80,12 +81,14 @@ class HomeViewModel @Inject constructor(
                 val homePostList = withContext(Dispatchers.IO) {
                     getHomePostListUseCase(postCursor.value, postLimit)
                 }
+//                _postListUiState.em
 
                 if (isCursor) _postListUiState.value.addAll(homePostList.posts)
                 else _postListUiState.emit(homePostList.posts.toMutableList())
 
                 // 다음 커서
                 _postCursor.emit( homePostList.cursor )
+
                 _isPostListLoading.emit(false) // 스크롤 이벤트가 연속적으로 호출되는 것을 방지
             } catch (e: Exception) {
                 _postListUiState.emit(mutableListOf())

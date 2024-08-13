@@ -22,6 +22,7 @@ import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBinding
 import com.swmarastro.mykkumi.feature.home.post.PostListAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -142,6 +143,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     // 포스트 리스트 recyclerview
     private fun initPostRecyclerView(posts: MutableList<HomePostItemVO>) {
         postListAdapter = PostListAdapter(
+            requireContext(),
             navController
         )
         binding.recyclerviewPostList.layoutManager = LinearLayoutManager(
@@ -181,9 +183,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     // 포스트 무한 스크롤 -> 스크롤 최하단 도달 시 다음 데이터 요청
     private fun setNextPostList() {
         viewModel.setPostList(true)
+//        viewModel.postListUiState.collect {
+//
+//        }
         viewModel.postListUiState
             .onEach {
+                Log.d("test", "test1")
                 postListAdapter.postList = it
+                Log.d("test", "test2")
 
                 if (viewModel.postCursor.value.isNullOrEmpty()) {
                     binding.includeListLoading.visibility = View.GONE
@@ -211,7 +218,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             )
         } else {
             ImagePermissionUtils.requestPermissions(requireActivity())
-            //checkPermissionsAndProceed()
         }
     }
 

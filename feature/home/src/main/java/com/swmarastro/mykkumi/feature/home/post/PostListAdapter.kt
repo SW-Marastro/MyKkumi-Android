@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.feature.home.post
 
+import android.content.Context
 import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -22,13 +23,11 @@ import com.swmarastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProv
 import com.swmarastro.mykkumi.feature.home.databinding.ItemPostRecyclerviewBinding
 
 class PostListAdapter (
+    private val context: Context,
     private val navController: NavController?
 ) : RecyclerView.Adapter<PostListAdapter.PostListViewHolder>(){
 
     var postList = mutableListOf<HomePostItemVO>()
-
-    private val postContentMaxLine = 2
-    private val postContentShowMoreText = "...더보기"
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
@@ -62,6 +61,7 @@ class PostListAdapter (
 
             // 포스트 이미지 viewpager
             var postItemImageAdapter: PostImagesAdapter = PostImagesAdapter(
+                context,
                 item.images.toMutableList()
             )
             binding.viewpagerPostImages.adapter = postItemImageAdapter
