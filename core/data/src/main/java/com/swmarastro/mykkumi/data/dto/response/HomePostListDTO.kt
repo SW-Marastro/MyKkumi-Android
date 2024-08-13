@@ -14,7 +14,7 @@ data class HomePostListDTO(
     val posts: List<HomePostItemDTO>,
 
     @SerializedName("cursor")
-    val cursor: String,
+    val cursor: String?,
 ){
     fun toEntity(): HomePostListVO = HomePostListVO(
         posts = posts.map { it.toEntity() },
@@ -51,10 +51,10 @@ data class HomePostListDTO(
 
         data class HomePostWriterDTO(
             @SerializedName("profileImage")
-            val profileImage: String,
+            val profileImage: String?,
 
             @SerializedName("nickname")
-            val nickname: String,
+            val nickname: String?,
         ) {
             fun toEntity(): HomePostWriterVO = HomePostWriterVO(
                 profileImage = profileImage,
@@ -95,7 +95,7 @@ data class HomePostListDTO(
                     val name: String,
 
                     @SerializedName("url")
-                    val url: String,
+                    val url: String?,
                 ) {
                     fun toEntity(): HomePostProductVO = HomePostProductVO(
                         name = name,

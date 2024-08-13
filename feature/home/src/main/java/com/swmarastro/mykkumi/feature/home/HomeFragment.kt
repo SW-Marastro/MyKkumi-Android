@@ -142,7 +142,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     // 포스트 리스트 recyclerview
     private fun initPostRecyclerView(posts: MutableList<HomePostItemVO>) {
         //postList = posts
-        postListAdapter = PostListAdapter()
+        postListAdapter = PostListAdapter(
+            navController
+        )
         binding.recyclerviewPostList.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.VERTICAL,

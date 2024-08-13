@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.swmarastro.mykkumi.common_ui.databinding.ItemPostImageViewpagerBinding
+import com.swmarastro.mykkumi.domain.entity.HomePostImageVO
 
 
 class PostImagesAdapter(
-    private var postImageList: MutableList<String>
+    private var postImageList: MutableList<HomePostImageVO>
 ) : RecyclerView.Adapter<PostImagesAdapter.PostItemImageViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -27,10 +28,10 @@ class PostImagesAdapter(
     inner class PostItemImageViewHolder(
         private val binding: ItemPostImageViewpagerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: String) {
+        fun bind(item: HomePostImageVO) {
             // 포스트 이미지 세팅
             // 페이지 넘길 때 이미지 로드
-            binding.imagePost.load(item)
+            binding.imagePost.load(item.url)
 
 
             // 이미지 세로 사이즈를 가로 사이즈와 동일하게 설정

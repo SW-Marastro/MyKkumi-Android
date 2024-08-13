@@ -2,6 +2,7 @@ package com.swmarastro.mykkumi.feature.home
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -87,11 +88,15 @@ class HomeViewModel @Inject constructor(
                     else _postListUiState.emit(homePostList.posts.toMutableList())
 
                     // 마지막인지
-                    if (homePostList.cursor.isEmpty()) isPostEnd = true
+                    if (homePostList.cursor?.isEmpty() == true) isPostEnd = true
                     else postCursor = homePostList.cursor
                 }
+
+                Log.d("test1", "postlist: ${postListUiState.value.joinToString()}")
             } catch (e: Exception) {
                 _postListUiState.emit(mutableListOf())
+                Log.d("test2", "${e}")
+                Log.d("test2", "postlist: ${postListUiState.value.joinToString()}")
             }
         }
     }

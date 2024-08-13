@@ -2,7 +2,7 @@ package com.swmarastro.mykkumi.domain.entity
 
 data class HomePostListVO(
     val posts: List<HomePostItemVO> = listOf(),
-    val cursor: String = ""
+    val cursor: String? = ""
 )
 
 data class HomePostItemVO(
@@ -15,8 +15,8 @@ data class HomePostItemVO(
 )
 
 data class HomePostWriterVO(
-    val profileImage: String = "",
-    val nickname: String = "",
+    val profileImage: String? = "",
+    val nickname: String? = "",
 )
 
 // 본문 RichText
@@ -40,5 +40,5 @@ data class HomePostPinVO(
 
 data class HomePostProductVO(
     val name: String,
-    val url: String,
+    val url: String?,
 )
