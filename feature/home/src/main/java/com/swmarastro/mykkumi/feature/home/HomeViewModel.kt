@@ -46,6 +46,9 @@ class HomeViewModel @Inject constructor(
     private var _postCursor = MutableStateFlow<String?>(null)
     val postCursor: StateFlow<String?> get() = _postCursor
 
+    private var _isPostListLoading = MutableStateFlow<Boolean>(false)
+    val isPostListLoading: StateFlow<Boolean> get() = _isPostListLoading
+
     // 홈 > 배너 캐러셀
     fun setHomeBanner() {
         viewModelScope.launch {
@@ -65,11 +68,15 @@ class HomeViewModel @Inject constructor(
         _selectBannerId.value = bannerId
     }
 
+
     // 포스트 리스트
     // isCursor의 역할: 처음으로 데이터를 조회해오는 것인지, cursor가 있는 상태로 다음 데이터를 불러오는 것인지
     fun setPostList(isCursor: Boolean) {
         viewModelScope.launch {
             try {
+                _isPostListLoading.emit(true) // 스크롤 이벤트가 연속적으로 호출되는 것을 방지
+                if(!isCursor) _postCursor.emit(null)
+
                 val homePostList = withContext(Dispatchers.IO) {
                     getHomePostListUseCase(postCursor.value, postLimit)
                 }
@@ -79,6 +86,7 @@ class HomeViewModel @Inject constructor(
 
                 // 다음 커서
                 _postCursor.emit( homePostList.cursor )
+                _isPostListLoading.emit(false) // 스크롤 이벤트가 연속적으로 호출되는 것을 방지
             } catch (e: Exception) {
                 _postListUiState.emit(mutableListOf())
             }

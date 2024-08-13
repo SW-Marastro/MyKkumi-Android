@@ -36,7 +36,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var postListAdapter: PostListAdapter
 
     private lateinit var timer: Timer
-    private var isPostListLoading = false
+
 
     private var navController: NavController? = null
 
@@ -141,7 +141,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 포스트 리스트 recyclerview
     private fun initPostRecyclerView(posts: MutableList<HomePostItemVO>) {
-        //postList = posts
         postListAdapter = PostListAdapter(
             navController
         )
@@ -162,9 +161,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 if(viewModel.postCursor.value.isNullOrEmpty()) {
                     binding.includeListLoading.visibility = View.GONE
                 }
-                else if (diff == 0 && !isPostListLoading) {
-                    Log.d("test", "스크롤이 최하단에")
-                    isPostListLoading = true // 스크롤 이벤트가 연속적으로 호출되는 것을 방지
+                else if (diff == 0 && !viewModel.isPostListLoading.value) {
                     setNextPostList()
                 }
             }
@@ -183,12 +180,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 포스트 무한 스크롤 -> 스크롤 최하단 도달 시 다음 데이터 요청
     private fun setNextPostList() {
-        Log.d("test", "test111")
         viewModel.setPostList(true)
         viewModel.postListUiState
             .onEach {
                 postListAdapter.postList = it
-                isPostListLoading = false
 
                 if (viewModel.postCursor.value.isNullOrEmpty()) {
                     binding.includeListLoading.visibility = View.GONE
