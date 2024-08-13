@@ -60,23 +60,17 @@ class EditImageWithPinAdapter(
             // pin이 이미지의 크기를 벗어나지 않도록 제한
             val parent = binding.imagePost
 
-            parent.viewTreeObserver.addOnGlobalLayoutListener(
-                object : ViewTreeObserver.OnGlobalLayoutListener {
-                    override fun onGlobalLayout() {
-                        if (parentHeight == 0) {
-                            parentWidth = parent.width
-                            parentHeight = parent.height
+            parent.viewTreeObserver.addOnGlobalLayoutListener{
+                if (parentHeight == 0) {
+                    parentWidth = parent.width
+                    parentHeight = parent.height
 
-                            if(parentHeight != 0) {
-                                binding.relativePinsOfImages.layoutParams.height = parentHeight
-                                notifyDataSetChanged()
-                            }
-
-                            parent.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                        }
+                    if(parentHeight != 0) {
+                        binding.relativePinsOfImages.layoutParams.height = parentHeight
+                        notifyDataSetChanged()
                     }
                 }
-            )
+            }
 
             for(idx in 0..<currentPinList.size) {
                 val pin = currentPinList.get(idx)

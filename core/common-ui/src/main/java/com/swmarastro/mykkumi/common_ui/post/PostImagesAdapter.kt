@@ -40,6 +40,8 @@ class PostImagesAdapter(
                 binding.imagePost.layoutParams.height = width
                 binding.imagePost.requestLayout()
             }
+
+
         }
     }
 }

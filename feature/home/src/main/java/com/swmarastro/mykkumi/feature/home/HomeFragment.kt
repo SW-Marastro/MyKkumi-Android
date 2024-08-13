@@ -159,10 +159,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 // 스크롤이 최하단까지 내려갔는지 확인
                 val scroll = v.getChildAt(v.childCount - 1)
                 val diff = scroll.bottom - (v.height + v.scrollY)
-                if(viewModel.getIsPostEnd()) {
+                if(viewModel.postCursor.value.isNullOrEmpty()) {
                     binding.includeListLoading.visibility = View.GONE
                 }
-                else if (diff == 0 && !viewModel.getIsPostEnd() && !isPostListLoading) {
+                else if (diff == 0 && !isPostListLoading) {
+                    Log.d("test", "스크롤이 최하단에")
                     isPostListLoading = true // 스크롤 이벤트가 연속적으로 호출되는 것을 방지
                     setNextPostList()
                 }
@@ -182,13 +183,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 포스트 무한 스크롤 -> 스크롤 최하단 도달 시 다음 데이터 요청
     private fun setNextPostList() {
+        Log.d("test", "test111")
         viewModel.setPostList(true)
         viewModel.postListUiState
             .onEach {
                 postListAdapter.postList = it
                 isPostListLoading = false
 
-                if (viewModel.getIsPostEnd()) {
+                if (viewModel.postCursor.value.isNullOrEmpty()) {
                     binding.includeListLoading.visibility = View.GONE
                 }
             }

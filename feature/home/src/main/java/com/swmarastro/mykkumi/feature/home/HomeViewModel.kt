@@ -2,21 +2,17 @@ package com.swmarastro.mykkumi.feature.home
 
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.swmarastro.mykkumi.common_ui.UiState
 import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerListUseCase
 import com.swmarastro.mykkumi.domain.usecase.post.GetHomePostListUseCase
-import com.swmarastro.mykkumi.feature.home.post.PostUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,9 +33,6 @@ class HomeViewModel @Inject constructor(
     private val _bannerListUiState = MutableStateFlow<BannerListVO>(BannerListVO())
     val bannerListUiState: StateFlow<BannerListVO> get() = _bannerListUiState
 
-//    private val _postUiState = MutableStateFlow<UiState<PostUiState>>(UiState.Loading)
-//    val postUiState: StateFlow<UiState<PostUiState>> get() = _postUiState
-
     // 포스트 리스트
     private val _postListUiState = MutableStateFlow<MutableList<HomePostItemVO>>(mutableListOf())
     val postListUiState: StateFlow<MutableList<HomePostItemVO>> get() = _postListUiState
@@ -50,10 +43,8 @@ class HomeViewModel @Inject constructor(
 
     // 포스트 리스트 cursor, limit
     private val postLimit: Int? = null
-    private var postCursor: String? = null
-
-    // 포스트 끝 도달
-    private var isPostEnd = false
+    private var _postCursor = MutableStateFlow<String?>(null)
+    val postCursor: StateFlow<String?> get() = _postCursor
 
     // 홈 > 배너 캐러셀
     fun setHomeBanner() {
@@ -80,30 +71,18 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val homePostList = withContext(Dispatchers.IO) {
-                    getHomePostListUseCase(postCursor, postLimit)
-                }
-                if (homePostList.posts.isEmpty()) isPostEnd = true
-                else {
-                    if (isCursor) _postListUiState.value.addAll(homePostList.posts)
-                    else _postListUiState.emit(homePostList.posts.toMutableList())
-
-                    // 마지막인지
-                    if (homePostList.cursor?.isEmpty() == true) isPostEnd = true
-                    else postCursor = homePostList.cursor
+                    getHomePostListUseCase(postCursor.value, postLimit)
                 }
 
-                Log.d("test1", "postlist: ${postListUiState.value.joinToString()}")
+                if (isCursor) _postListUiState.value.addAll(homePostList.posts)
+                else _postListUiState.emit(homePostList.posts.toMutableList())
+
+                // 다음 커서
+                _postCursor.emit( homePostList.cursor )
             } catch (e: Exception) {
                 _postListUiState.emit(mutableListOf())
-                Log.d("test2", "${e}")
-                Log.d("test2", "postlist: ${postListUiState.value.joinToString()}")
             }
         }
-    }
-
-    // 더 조회할 포스트가 있는지
-    fun getIsPostEnd() : Boolean {
-        return isPostEnd
     }
 
     // 배너 전체 리스트 페이지로 이동
