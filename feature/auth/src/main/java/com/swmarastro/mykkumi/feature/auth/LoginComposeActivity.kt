@@ -12,20 +12,36 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -35,13 +51,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.gson.Gson
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.swmarastro.mykkumi.feature.auth.onBoarding.LoginInputUserScreen
-import com.swmarastro.mykkumi.feature.auth.onBoarding.LoginInputUserViewModel
 import com.swmarastro.mykkumi.feature.auth.onBoarding.LoginSelectHobbyScreen
-import com.swmarastro.mykkumi.feature.auth.onBoarding.LoginSelectHobbyViewModel
 import com.swmarastro.mykkumi.feature.auth.ui.theme.MyKkumi_AOSTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filter
@@ -113,15 +128,16 @@ class LoginComposeActivity : ComponentActivity() {
                 route = LoginScreens.LoginInputUserScreen.name + "/{selectedHobbies}",
                 arguments = listOf(
                     navArgument("selectedHobbies") {
-//                        type = NavType.LongArrayType
                         type = NavType.StringType
                     }
                 )
             ) { backstackEntry ->
+                val selectedHobbiesJson = backstackEntry.arguments?.getString("selectedHobbies")
+                val selectedHobbies: List<Long>? = Gson().fromJson(selectedHobbiesJson, List::class.java) as? List<Long>
+
                 LoginInputUserScreen(
                     activity = activity,
-                    //selectedHobbies = backstackEntry.arguments?.getLongArray("selectedHobbies"),
-                    selectedHobbies = backstackEntry.arguments?.getString("selectedHobbies"),
+                    selectedHobbies = selectedHobbies,
                 )
             }
         }
@@ -144,26 +160,83 @@ class LoginComposeActivity : ComponentActivity() {
             }
             .launchIn(lifecycleScope)
 
-        Box(
+        Column(
+            verticalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.white))
         ) {
+            Text(
+                text = getString(R.string.notice_login_page),
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center,
+                fontFamily = FontFamily(Font(com.swmarastro.mykkumi.common_ui.R.font.gmarket_sans_bold)),
+                color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.primary_color),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+            )
+            Spacer(
+                modifier = Modifier.height(12.dp)
+            )
+            Image(
+                painter = painterResource(id = R.drawable.ic_mykkumi_character_login),
+                contentDescription = "mykkumi logo",
+                modifier = Modifier
+                    .width(160.dp)
+                    .align(Alignment.CenterHorizontally),
+                contentScale = ContentScale.Fit
+            )
 
             Image(
-                painter = painterResource(id = R.drawable.kakao_login_large_wide_kor),
-                contentDescription = "kakao login btn",
+                painter = painterResource(id = R.drawable.img_mykkumi_typo),
+                contentDescription = "mykkumi logo typo",
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(30.dp)
-                    .align(Alignment.Center)
+                    .width(128.dp)
+                    .align(Alignment.CenterHorizontally),
+                contentScale = ContentScale.Fit
+            )
+
+            Spacer(
+                modifier = Modifier.height(80.dp)
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.kakao_background))
                     .pointerInteropFilter {
                         when (it.action) {
                             MotionEvent.ACTION_DOWN -> handleKakaoLogin()
                             else -> false
                         }
                         true
-                    }
+                    },
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_kakao_logo),
+                    contentDescription = "kakao login btn",
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 15.dp, bottom = 15.dp)
+                        .size(24.dp),
+                    contentScale = ContentScale.Fit
+                )
+                
+                Text(
+                    text = getString(R.string.btn_kakao_login),
+                    fontSize = 15.sp,
+                    textAlign = TextAlign.Center,
+                    fontFamily = FontFamily(Font(com.swmarastro.mykkumi.common_ui.R.font.pretendard_semibold)),
+                    color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_900),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                )
+            }
+
+            Spacer(
+                modifier = Modifier.height(52.dp)
             )
         }
     }
