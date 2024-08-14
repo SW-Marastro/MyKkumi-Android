@@ -193,23 +193,6 @@
 
         </RelativeLayout>
 
-        <!-- 작성 버튼 -->
-        <RelativeLayout
-            android:id="@+id/floating_btn_add_post"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="right|bottom"
-            android:background="@color/gray_DD"
-            android:layout_margin="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="작성"
-                android:layout_centerInParent="true"/>
-
-        </RelativeLayout>
-
     </FrameLayout>
 
 </layout>

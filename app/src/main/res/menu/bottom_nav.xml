@@ -12,6 +12,11 @@
         android:icon="@drawable/selector_menu_around"/>
 
     <item
+        android:id="@+id/btn_add_post"
+        android:title="@string/btn_add_post"
+        android:icon="@drawable/ic_add_post"/>
+
+    <item
         android:id="@id/nav_shopping"
         android:title="@string/menu_shopping"
         android:icon="@drawable/selector_menu_shopping"/>

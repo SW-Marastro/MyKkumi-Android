@@ -108,25 +108,6 @@ class HomeViewModel @Inject constructor(
         navController?.navigate(deepLink = navigateDeepLink.toUri())
     }
 
-    // 로그인 페이지 이동
-    fun navigateLogin() : Intent? {
-        if(authTokenDataStore.isLogin()) return null
-
-        val loginDeepLink = "mykkumi://mykkumi.signin"
-
-        val intent = Intent()
-        intent.setAction(Intent.ACTION_VIEW)
-        intent.setData(Uri.parse(loginDeepLink))
-
-        return intent
-    }
-
-    // 포스트 작성 페이지로 이동
-    fun navigatePostEdit(navController: NavController?) {
-        val navigateDeepLink = "mykkumi://post.edit"
-        navController?.navigate(deepLink = navigateDeepLink.toUri())
-    }
-
     // 로그아웃 테스트
     fun logout() {
         authTokenDataStore.deleteToken()

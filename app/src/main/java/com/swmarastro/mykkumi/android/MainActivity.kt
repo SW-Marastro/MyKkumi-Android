@@ -1,14 +1,20 @@
 package com.swmarastro.mykkumi.android
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.swmarastro.mykkumi.android.databinding.ActivityMainBinding
+import com.swmarastro.mykkumi.common_ui.permission.ImagePermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 /*
@@ -17,6 +23,8 @@ import dagger.hilt.android.AndroidEntryPoint
 */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private val viewModel by viewModels<MainViewModel>()
+
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
 
@@ -39,6 +47,27 @@ class MainActivity : AppCompatActivity() {
 
         // 최상위 화면을 제외하고는 BottomNavigation Bar 없애기
         setBottomNavigation()
+
+        // 포스트 작성 버튼
+        binding.bottomNav.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.btn_add_post -> {
+                    val intent = viewModel.navigateLogin()
+                    if(intent == null) { // 로그인 됨
+                        // 이미지 권한 요청하기
+                        checkPermissionsAndProceed()
+                    }
+                    else { // 로그인 안 됨
+                        startActivity(intent)
+                    }
+                    true
+                }
+                else -> {
+                    NavigationUI.onNavDestinationSelected(item, navController)
+                    true
+                }
+            }
+        }
     }
 
     private fun setBottomNavigation() {
@@ -71,6 +100,28 @@ class MainActivity : AppCompatActivity() {
         }
         else {
             super.onBackPressed()
+        }
+    }
+
+    private fun checkPermissionsAndProceed() {
+        if (ImagePermissionUtils.allPermissionsGranted(this)) {
+            // 포스트 작성 페이지로 이동
+            viewModel.navigatePostEdit(navController)
+        } else if (ImagePermissionUtils.shouldShowRationale(this)) {
+            val intent = Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.parse("package:${this.packageName}")
+            ).apply {
+                addCategory(Intent.CATEGORY_DEFAULT)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+
+            ImagePermissionUtils.showSettingsSnackbar(
+                this, binding.root,
+                intent
+            )
+        } else {
+            ImagePermissionUtils.requestPermissions(this)
         }
     }
 

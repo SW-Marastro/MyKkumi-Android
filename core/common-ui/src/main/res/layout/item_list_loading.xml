@@ -9,6 +9,7 @@
         android:layout_gravity="center_horizontal"
         android:indeterminate="true"
         android:paddingLeft="8dp"
-        android:paddingRight="8dp" />
+        android:paddingRight="8dp"
+        android:paddingBottom="60dp"/>
 
 </layout>
