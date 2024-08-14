@@ -49,9 +49,24 @@ class PostImagesAdapter(
             parent.viewTreeObserver.addOnGlobalLayoutListener (
                 object : ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
-                        if (parentWidth != parent.width || parentHeight != parent.height) {
-                            parentWidth = parent.width
-                            parentHeight = parent.height
+                        if (parent.width != 0 && parent.height != 0 && parentWidth == 0) {
+                            Log.d("test", "width: ${parent.width}, height: ${parent.height}")
+                            Log.d("test", "${binding.relativePostImage.width}")
+                            if(parent.width > parent.height) {
+                                parentWidth = binding.relativePostImage.width
+                                parentHeight = parent.height * (binding.relativePostImage.width / parent.width)
+                            }
+                            else {
+                                parentWidth = parent.width * (binding.relativePostImage.width / parent.height)
+                                parentHeight = binding.relativePostImage.width
+                            }
+
+                            binding.imagePost.layoutParams.width = parentWidth
+                            binding.imagePost.layoutParams.height = parentHeight
+                            binding.imagePost.requestLayout()
+
+                            Log.d("test", "------ width: ${parent.width}, height: ${parent.height}")
+                            Log.d("test", "------22 width: ${parentWidth}, height: ${parentHeight}")
 
                             binding.relativePinsOfImages.layoutParams.width = parentWidth
                             binding.relativePinsOfImages.layoutParams.height = parentHeight

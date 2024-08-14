@@ -186,8 +186,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 //        viewModel.postListUiState.collect {
 //
 //        }
-        viewModel.postListUiState
-            .onEach {
+
+        lifecycleScope.launch {
+            viewModel.postListUiState.collect {
                 Log.d("test", "test1")
                 postListAdapter.postList = it
                 Log.d("test", "test2")
@@ -196,7 +197,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     binding.includeListLoading.visibility = View.GONE
                 }
             }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+        }
+
+//        viewModel.postListUiState
+//            .onEach {
+//                Log.d("test", "test1")
+//                postListAdapter.postList = it
+//                Log.d("test", "test2")
+//
+//                if (viewModel.postCursor.value.isNullOrEmpty()) {
+//                    binding.includeListLoading.visibility = View.GONE
+//                }
+//            }
+//            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun checkPermissionsAndProceed() {
