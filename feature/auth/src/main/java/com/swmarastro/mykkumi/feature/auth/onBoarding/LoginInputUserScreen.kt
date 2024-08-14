@@ -301,7 +301,7 @@ fun LoginInputUserScreen(
                     .border(
                         width = 1.dp,
                         color = (
-                                if (viewModel.nickname.value.length < MIN_NICKNAME_LENGTH)
+                                if (viewModel.nickname.value.isEmpty())
                                     colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_200)
                                 else
                                     colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_800)
