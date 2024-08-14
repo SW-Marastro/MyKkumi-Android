@@ -38,7 +38,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -179,7 +178,7 @@ class LoginComposeActivity : ComponentActivity() {
                 modifier = Modifier.height(12.dp)
             )
             Image(
-                painter = painterResource(id = R.drawable.ic_mykkumi_character_login),
+                painter = painterResource(id = com.swmarastro.mykkumi.common_ui.R.drawable.ic_mykkumi_character_notice),
                 contentDescription = "mykkumi logo",
                 modifier = Modifier
                     .width(160.dp)

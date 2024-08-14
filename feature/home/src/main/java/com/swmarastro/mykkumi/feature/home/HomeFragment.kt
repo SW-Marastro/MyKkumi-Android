@@ -40,12 +40,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         startAutoScroll()
         onClickBannerAll() // 배너 > + 버튼 선택 시 전체 리스트 페이지로 이동
-
-        // 로그아웃 테스트
-        binding.btnShoppingCart.setOnClickListener {
-            viewModel.logout()
-            Toast.makeText(context, "개발용 로그아웃", Toast.LENGTH_SHORT).show()
-        }
     }
 
     override suspend fun initView() {

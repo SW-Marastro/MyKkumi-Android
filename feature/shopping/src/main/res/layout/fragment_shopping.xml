@@ -13,13 +13,25 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="60dp">
+        android:paddingBottom="60dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/img_logo"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:src="@drawable/ic_mykkumi_character_notice"
+            android:layout_centerHorizontal="true"/>
 
         <TextView
-            android:id="@+id/text"
+            android:id="@+id/text_test"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="쇼핑"/>
+            android:layout_below="@id/img_logo"
+            android:layout_centerHorizontal="true"
+            android:textSize="15sp"
+            android:textColor="@color/neutral_800"
+            android:fontFamily="@font/pretendard_bold"/>
 
     </RelativeLayout>
 

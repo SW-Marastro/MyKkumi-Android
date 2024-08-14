@@ -15,6 +15,8 @@ class AroundFragment : BaseFragment<FragmentAroundBinding>(R.layout.fragment_aro
         bind {
             vm = viewModel
         }
+
+        binding.textTest.text = "${String(Character.toChars(0x1F525))} 열심히 준비 중입니다 ${String(Character.toChars(0x1F525))}"
     }
 
 }
