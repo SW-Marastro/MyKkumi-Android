@@ -11,4 +11,11 @@
 
     <string name="notice_login_page">취미생활 꿀템이 궁금하다면\n마이꾸미에서!</string>
     <string name="btn_kakao_login">카카오로 로그인</string>
+    <string name="title_login_user_info">마이꾸미에 사용하실\n닉네임을 작성해주세요</string>
+    <string name="label_login_user_info_profile">프로필 사진</string>
+    <string name="btn_login_user_info_profile">프로필 이미지 변경</string>
+    <string name="label_login_user_info_nickname">닉네임</string>
+    <string name="placeholder_user_nickname">닉네임을 작성해주세요</string>
+    <string name="notice_user_nickname_input_string1">한글/영문/숫자/특수문자(.-_) 모두 가능해요</string>
+    <string name="notice_user_nickname_input_string2">최소 3자 ~ 최대 16자로 적어주세요</string>
 </resources>

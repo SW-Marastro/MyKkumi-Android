@@ -17,19 +17,27 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarResult
+import androidx.compose.material.Surface
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -42,10 +50,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
@@ -76,6 +89,7 @@ private val NICKNAME_REGEX = Regex("^[a-zA-Z0-9._\\-ㄱ-ㅎ가-힣ㅏ-ㅣ]*$")
 private const val RC_CROP_IMAGE = 101
 private lateinit var localContext: Context
 // 사용자 정보 입력 페이지 - 프로필 이미지, 닉네임
+@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalPermissionsApi
 @Composable
 fun LoginInputUserScreen(
@@ -133,16 +147,36 @@ fun LoginInputUserScreen(
 
     Scaffold(
         scaffoldState = scaffoldState
-    ) { innerPadding ->
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
-                .padding(innerPadding),
+                .background(Color.White),
         ) {
-            Spacer(
-                modifier = Modifier.height(30.dp)
+            Text(
+                text = stringResource(id = R.string.title_login_user_info),
+                fontSize = 20.sp,
+                fontFamily = FontFamily(Font(com.swmarastro.mykkumi.common_ui.R.font.pretendard_bold)),
+                color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_900),
+                modifier = Modifier
+                    .padding(top = 40.dp, start = 20.dp)
             )
+
+            Spacer(
+                modifier = Modifier.height(40.dp)
+            )
+            Text(
+                text = stringResource(id = R.string.label_login_user_info_profile),
+                fontSize = 15.sp,
+                fontFamily = FontFamily(Font(com.swmarastro.mykkumi.common_ui.R.font.pretendard_semibold)),
+                color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_900),
+                modifier = Modifier
+                    .padding(start = 20.dp)
+            )
+            Spacer(
+                modifier = Modifier.height(12.dp)
+            )
+
             Image(
                 painter = when(loginViewModel.profileImage.collectAsState().value) {
                     is String -> rememberAsyncImagePainter(
@@ -161,113 +195,196 @@ fun LoginInputUserScreen(
                 contentDescription = "default profile image",
                 contentScale = ContentScale.Crop, // CenterCrop
                 modifier = Modifier
-                    .size(160.dp)
+                    .size(88.dp)
                     .align(Alignment.CenterHorizontally)
-                    .padding(3.dp)
                     .clip(CircleShape)
-                    .clickable {
-                        // 갤러리, 카메라 접근 권한 허용 요청
-                        // 권한 허용됨
-                        if (multiplePermissionsState.allPermissionsGranted) {
-                            // 이미지 가져오기
-                            ImagePermissionUtils.chooserImageIntent(
-                                localContext,
-                                imagePickerLauncher,
-                            ) { uri -> // 카메라에서 선택했을 경우
-                                loginViewModel.setCameraImagePath(uri)
-                            }
+            )
+
+            Spacer(
+                modifier = Modifier.height(24.dp)
+            )
+
+            Surface(
+                onClick = {
+                    // 갤러리, 카메라 접근 권한 허용 요청
+                    // 권한 허용됨
+                    if (multiplePermissionsState.allPermissionsGranted) {
+                        // 이미지 가져오기
+                        ImagePermissionUtils.chooserImageIntent(
+                            localContext,
+                            imagePickerLauncher,
+                        ) { uri -> // 카메라에서 선택했을 경우
+                            loginViewModel.setCameraImagePath(uri)
                         }
-
-                        // 권한을 요청한 적이 있지만 허용되지 않음
-                        else if (multiplePermissionsState.shouldShowRationale) {
-                            // 권한 허용을 위해 앱 디테일 설정 페이지로 이동시키기 위함
-                            val intent = Intent(
-                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                Uri.parse("package:${localContext.packageName}")
-                            ).apply {
-                                addCategory(Intent.CATEGORY_DEFAULT)
-                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            }
-
-                            // 앱 디테일 설정 페이지로 이동할지 물어보는 Snackbar
-                            coroutineScope.launch {
-                                val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
-                                    message = permissioSnackbarMessage,
-                                    actionLabel = permissioSnackbarAction
-                                )
-                                when (snackbarResult) {
-                                    SnackbarResult.ActionPerformed -> localContext.startActivity(
-                                        intent
-                                    )
-
-                                    SnackbarResult.Dismissed -> null
-                                }
-                            }
-                        }
-
-                        // 권한을 요청한 적이 없음
-                        else multiplePermissionsState.launchMultiplePermissionRequest()
                     }
-            )
-    
-            Spacer(
-                modifier = Modifier.height(30.dp)
-            )
-    
-            BasicTextField(
-                value = loginViewModel.nickname.collectAsState().value,
-                onValueChange = {
-                    loginViewModel.onNicknameChange(it)
+
+                    // 권한을 요청한 적이 있지만 허용되지 않음
+                    else if (multiplePermissionsState.shouldShowRationale) {
+                        // 권한 허용을 위해 앱 디테일 설정 페이지로 이동시키기 위함
+                        val intent = Intent(
+                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.parse("package:${localContext.packageName}")
+                        ).apply {
+                            addCategory(Intent.CATEGORY_DEFAULT)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        }
+
+                        // 앱 디테일 설정 페이지로 이동할지 물어보는 Snackbar
+                        coroutineScope.launch {
+                            val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+                                message = permissioSnackbarMessage,
+                                actionLabel = permissioSnackbarAction
+                            )
+                            when (snackbarResult) {
+                                SnackbarResult.ActionPerformed -> localContext.startActivity(
+                                    intent
+                                )
+
+                                SnackbarResult.Dismissed -> null
+                            }
+                        }
+                    }
+
+                    // 권한을 요청한 적이 없음
+                    else multiplePermissionsState.launchMultiplePermissionRequest()
                 },
+                color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.secondary_color),
                 modifier = Modifier
-                    .height(20.dp)
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = 40.dp,
-                    )
-                    .drawWithContent { // underline
-                        drawContent()
-                        drawLine(
-                            color = Color.Gray,
-                            start = Offset(
-                                x = 0f,
-                                y = size.height + 1.dp.toPx(),
-                            ),
-                            end = Offset(
-                                x = size.width,
-                                y = size.height + 1.dp.toPx(),
-                            ),
-                            strokeWidth = 1.dp.toPx(),
-                        )
-                    },
-            )
+                    .align(Alignment.CenterHorizontally)
+                    .clip(RoundedCornerShape(12.dp))
+            ) {
+                Text(
+                    fontSize = 13.sp,
+                    fontFamily = FontFamily(Font(com.swmarastro.mykkumi.common_ui.R.font.pretendard_semibold)),
+                    text = stringResource(id = R.string.btn_login_user_info_profile),
+                    color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_900),
+                    modifier = Modifier
+                        .padding(vertical = 12.dp, horizontal = 19.5.dp)
+                )
+            }
     
             Spacer(
-                modifier = Modifier.height(10.dp)
+                modifier = Modifier.height(40.dp)
             )
-    
-            // 최소글자수 미충족 경고
-            if (loginViewModel.nickname.value.length < MIN_NICKNAME_LENGTH) {
-                Text(
-                    text = stringResource(id = R.string.notice_nickname_min_length),
-                    color = Color.Red,
-                    fontSize = 12.sp,
+
+            Text(
+                text = stringResource(id = R.string.label_login_user_info_nickname),
+                fontSize = 15.sp,
+                fontFamily = FontFamily(Font(com.swmarastro.mykkumi.common_ui.R.font.pretendard_semibold)),
+                color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_900),
+                modifier = Modifier
+                    .padding(start = 20.dp)
+            )
+
+            Spacer(
+                modifier = Modifier.height(12.dp)
+            )
+
+            Box(
+                modifier = Modifier
+                    .padding(
+                        horizontal = 20.dp,
+                    )
+                    .border(
+                        1.dp,
+                        colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_200),
+                        RoundedCornerShape(12.dp),
+                    )
+                    .padding(horizontal = 16.dp, vertical = 14.dp)
+            ) {
+                BasicTextField(
+                    value = loginViewModel.nickname.collectAsState().value,
+                    onValueChange = {
+                        loginViewModel.onNicknameChange(it)
+                    },
+                    textStyle = TextStyle(
+                        color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_800),
+                        fontFamily = FontFamily(Font(com.swmarastro.mykkumi.common_ui.R.font.pretendard_semibold)),
+                        fontSize = 16.sp
+                    ),
                     modifier = Modifier
-                        .padding(
-                            horizontal = 40.dp,
-                        )
+                        .fillMaxWidth()
                 )
+                if (loginViewModel.nickname.value.isEmpty()) {
+                    Text(
+                        text = stringResource(id = R.string.placeholder_user_nickname),
+                        style = TextStyle(
+                            color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_400),
+                            fontFamily = FontFamily(Font(com.swmarastro.mykkumi.common_ui.R.font.pretendard_semibold)),
+                            fontSize = 16.sp
+                        )
+                    )
+                }
+            }
+    
+            Spacer(
+                modifier = Modifier.height(12.dp),
+            )
+
+            Column(
+                modifier = Modifier
+                    .padding(start = 36.dp)
+            ) {
+                Row {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_dot),
+                        contentDescription = "notice dot",
+                        modifier = Modifier
+                            .width(4.dp)
+                            .align(Alignment.CenterVertically),
+                        contentScale = ContentScale.Fit,
+                    )
+                    Text(
+                        text = stringResource(id = R.string.notice_user_nickname_input_string1),
+                        color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_400),
+                        fontFamily = FontFamily(Font(com.swmarastro.mykkumi.common_ui.R.font.pretendard_medium)),
+                        fontSize = 12.sp,
+                        modifier = Modifier
+                            .padding(start = 6.dp)
+                    )
+                }
+
+                Row {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_dot),
+                        contentDescription = "notice dot",
+                        modifier = Modifier
+                            .width(4.dp)
+                            .align(Alignment.CenterVertically),
+                        contentScale = ContentScale.Fit,
+                    )
+                    Text(
+                        text = stringResource(id = R.string.notice_user_nickname_input_string2),
+                        color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_400),
+                        fontFamily = FontFamily(Font(com.swmarastro.mykkumi.common_ui.R.font.pretendard_medium)),
+                        fontSize = 12.sp,
+                        modifier = Modifier
+                            .padding(start = 6.dp)
+                    )
+                }
             }
 
             // Spacer로 중간 공간을 채움
             Spacer(modifier = Modifier.weight(1f))
 
-            Button(
+            Surface(
                 onClick = { loginViewModel.confirmNickname { showToast(it) } },
+                contentColor = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_300),
+                color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_50),
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 10.dp)
+                    .clip(RoundedCornerShape(12.dp))
             ) {
-                Text(text = stringResource(id = R.string.clear_login_all_btn))
+                Text(
+                    text = stringResource(id = R.string.clear_login_all_btn),
+                    fontSize = 15.sp,
+                    fontFamily = FontFamily(Font(com.swmarastro.mykkumi.common_ui.R.font.pretendard_semibold)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 15.5.dp)
+                        .wrapContentWidth()
+                )
             }
         }
     }
