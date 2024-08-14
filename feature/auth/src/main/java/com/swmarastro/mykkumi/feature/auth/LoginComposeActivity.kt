@@ -187,7 +187,7 @@ class LoginComposeActivity : ComponentActivity() {
             )
 
             Image(
-                painter = painterResource(id = R.drawable.img_mykkumi_typo),
+                painter = painterResource(id = com.swmarastro.mykkumi.common_ui.R.drawable.img_mykkumi_typo),
                 contentDescription = "mykkumi logo typo",
                 modifier = Modifier
                     .width(128.dp)

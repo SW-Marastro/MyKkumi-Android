@@ -109,9 +109,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 배너 > + 버튼 클릭 -> 배너 전체 리스트 페이지로 이동
     private fun onClickBannerAll() {
-        binding.btnBannerMore.setOnClickListener {
-            viewModel.navigateBannerAll(navController)
-        }
+//        binding.btnBannerMore.setOnClickListener {
+//            viewModel.navigateBannerAll(navController)
+//        }
     }
 
     // 포스트 리스트 recyclerview
