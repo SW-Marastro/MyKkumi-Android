@@ -95,7 +95,7 @@ class LoginInputUserViewModel @Inject constructor(
             try {
                 var imageUrl: String? = null
                 if(profileImage.value != null)
-                    imageUrl = preSignedUrlRepository.getPreSignedUrl(profileImage.value as Uri)
+                    imageUrl = preSignedUrlRepository.getPreSignedProfileUrl(profileImage.value as Uri)
 
                 val userInfo = UpdateUserInfoRequestVO(
                     nickname = nickname.value,
