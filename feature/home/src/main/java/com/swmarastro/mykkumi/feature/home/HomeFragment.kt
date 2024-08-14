@@ -22,6 +22,7 @@ import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBinding
 import com.swmarastro.mykkumi.feature.home.post.PostListAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -36,7 +37,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var postListAdapter: PostListAdapter
 
     private lateinit var timer: Timer
-    private var isPostListLoading = false
+
 
     private var navController: NavController? = null
 
@@ -141,8 +142,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 포스트 리스트 recyclerview
     private fun initPostRecyclerView(posts: MutableList<HomePostItemVO>) {
-        //postList = posts
-        postListAdapter = PostListAdapter()
+        postListAdapter = PostListAdapter(
+            requireContext(),
+            navController
+        )
         binding.recyclerviewPostList.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.VERTICAL,
@@ -157,11 +160,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 // 스크롤이 최하단까지 내려갔는지 확인
                 val scroll = v.getChildAt(v.childCount - 1)
                 val diff = scroll.bottom - (v.height + v.scrollY)
-                if(viewModel.getIsPostEnd()) {
+                if(viewModel.postCursor.value.isNullOrEmpty()) {
                     binding.includeListLoading.visibility = View.GONE
                 }
-                else if (diff == 0 && !viewModel.getIsPostEnd() && !isPostListLoading) {
-                    isPostListLoading = true // 스크롤 이벤트가 연속적으로 호출되는 것을 방지
+                else if (diff == 0 && !viewModel.isPostListLoading.value) {
                     setNextPostList()
                 }
             }
@@ -170,31 +172,44 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 포스트 내용 세팅
     private fun setPostList() {
-        lifecycleScope.launch {
-            viewModel.setPostList(false)
-            viewModel.postListUiState
+        viewModel.setPostList(false)
+        viewModel.postListUiState
             .onEach {
                 initPostRecyclerView(it)
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
-        }
     }
 
     // 포스트 무한 스크롤 -> 스크롤 최하단 도달 시 다음 데이터 요청
     private fun setNextPostList() {
-        lifecycleScope.launch {
-            viewModel.setPostList(true)
-            viewModel.postListUiState
-                .onEach {
-                    postListAdapter.postList = it
-                    isPostListLoading = false
+        viewModel.setPostList(true)
+//        viewModel.postListUiState.collect {
+//
+//        }
 
-                    if (viewModel.getIsPostEnd()) {
-                        binding.includeListLoading.visibility = View.GONE
-                    }
+        lifecycleScope.launch {
+            viewModel.postListUiState.collect {
+                Log.d("test", "test1")
+                postListAdapter.postList = it
+                Log.d("test", "test2")
+
+                if (viewModel.postCursor.value.isNullOrEmpty()) {
+                    binding.includeListLoading.visibility = View.GONE
                 }
-                .launchIn(viewLifecycleOwner.lifecycleScope)
+            }
         }
+
+//        viewModel.postListUiState
+//            .onEach {
+//                Log.d("test", "test1")
+//                postListAdapter.postList = it
+//                Log.d("test", "test2")
+//
+//                if (viewModel.postCursor.value.isNullOrEmpty()) {
+//                    binding.includeListLoading.visibility = View.GONE
+//                }
+//            }
+//            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun checkPermissionsAndProceed() {
@@ -216,7 +231,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             )
         } else {
             ImagePermissionUtils.requestPermissions(requireActivity())
-            //checkPermissionsAndProceed()
         }
     }
 

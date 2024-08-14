@@ -8,10 +8,12 @@ import android.provider.MediaStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
@@ -23,14 +25,11 @@ private const val INDEX_DATE_ADDED = MediaStore.MediaColumns.DATE_ADDED
 @HiltViewModel
 class ImagePickerViewModel @Inject constructor(
 ) : ViewModel() {
-    private val _imagePickerUiState = MutableLiveData<MutableList<ImagePickerData>>(
-        mutableListOf()
-    )
+    private val _imagePickerUiState = MutableLiveData<MutableList<ImagePickerData>>(mutableListOf())
     val imagePickerUiState : LiveData<MutableList<ImagePickerData>> get() = _imagePickerUiState
 
     // 카메라로 촬영할 이미지를 저장할 path
-    private val _cameraImagePath = MutableStateFlow<Uri?>(null)
-    val cameraImagePath : StateFlow<Uri?> get() = _cameraImagePath
+    private var cameraImagePath : Uri? = null
 
     @SuppressLint("Range")
     fun fetchImageItemList(context: Context) {
@@ -66,12 +65,12 @@ class ImagePickerViewModel @Inject constructor(
 
     // 카메라로 촬영한 이미지가 저장될 경로
     fun setCameraImagePath(path: Uri) {
-        _cameraImagePath.value = path
+        cameraImagePath = path
     }
 
     // 카메라로 촬영한 이미지 선택
     fun doneSetCameraImage(navController: NavController?) {
-        val selectImages = mutableListOf<Uri>(cameraImagePath.value!!)
+        val selectImages = mutableListOf<Uri>(cameraImagePath!!)
         navController?.previousBackStackEntry?.savedStateHandle?.set("selectImages", ImagePickerArgument(selectImages))
         navController?.popBackStack()
     }

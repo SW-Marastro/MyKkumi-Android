@@ -53,33 +53,34 @@ class EditImageWithPinAdapter(
                 viewModel.currentPinList.value ?: mutableListOf<PostEditPinVO>()
             }
             else { // 안 보이지만 ViewPager의 다른 페이지로 존재하는 다른 이미지들
-                item.pinList ?: mutableListOf<PostEditPinVO>()
+                item.pinList
             }
 
             binding.relativePinsOfImages.removeAllViews()
             // pin이 이미지의 크기를 벗어나지 않도록 제한
             val parent = binding.imagePost
 
-            parent.viewTreeObserver.addOnGlobalLayoutListener(
+            parent.viewTreeObserver.addOnGlobalLayoutListener (
                 object : ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
-                        if (parentHeight == 0) {
+                        if (parentHeight != parent.height) {
                             parentWidth = parent.width
                             parentHeight = parent.height
 
-                            if(parentHeight != 0) {
+                            if (parentHeight != 0) {
                                 binding.relativePinsOfImages.layoutParams.height = parentHeight
+                                binding.relativePinsOfImages.requestLayout()
                                 notifyDataSetChanged()
                             }
-
-                            parent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                         }
+
+                        parent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
                 }
             )
 
             for(idx in 0..<currentPinList.size) {
-                val pin = currentPinList.get(idx)
+                val pin = currentPinList[idx]
 
                 val pinView = LayoutInflater.from(context).inflate(R.layout.item_pin_of_post_image, binding.relativePinsOfImages, false)
                 binding.relativePinsOfImages.addView(pinView)

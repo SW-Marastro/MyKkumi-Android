@@ -25,10 +25,8 @@ class HomeBannerDetailFragment : BaseFragment<FragmentHomeBannerDetailBinding>(R
 
     private suspend fun setBannerDetail() {
         viewModel.setBannerDetail(args.bannerId)
-        lifecycleScope.launchWhenStarted {
-            viewModel.bannerDetailUiState.collect { response ->
-                binding.imageBannerDetail.load(response.imageUrl)
-            }
+        viewModel.bannerDetailUiState.collect { response ->
+            binding.imageBannerDetail.load(response.imageUrl)
         }
     }
 }

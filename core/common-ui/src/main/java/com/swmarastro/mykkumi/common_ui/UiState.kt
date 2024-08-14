@@ -1,4 +1,4 @@
-package com.swmarastro.mykkumi.feature.home
+package com.swmarastro.mykkumi.common_ui
 
 sealed class UiState<out T : Any> {
     data object Loading : UiState<Nothing>()

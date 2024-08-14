@@ -9,30 +9,24 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.google.gson.Gson
-import com.swmarastro.mykkumi.domain.exception.ErrorResponse
 import com.swmarastro.mykkumi.domain.entity.KakaoToken
 import com.swmarastro.mykkumi.domain.entity.UserInfoVO
 import com.swmarastro.mykkumi.domain.exception.ApiException
-import com.swmarastro.mykkumi.domain.repository.ReAccessTokenRepository
 import com.swmarastro.mykkumi.domain.usecase.auth.GetUserInfoUseCase
 import com.swmarastro.mykkumi.domain.usecase.auth.KakaoLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val kakaoLoginUseCase: KakaoLoginUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val reAccessTokenRepository: ReAccessTokenRepository,
 ): ViewModel() {
 
     private val INVALID_TOKEN = "INVALID_TOKEN"
-
     private val MAX_RETRIES = 1
 
     private val _finishLoginUiState = MutableLiveData<Unit>()
@@ -114,7 +108,7 @@ class LoginViewModel @Inject constructor(
                 Log.e(TAG, "카카오계정으로 로그인 실패", error)
                 kakaoLoginFail()
             } else if (token != null) { // 토큰을 받아온 경우
-                //Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
+//                Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken} / ${token.refreshToken} / ${token.idToken}")
                 kakaoLoginSuccess()
                 setKakaoToken(token.accessToken, token.refreshToken)
             }
@@ -153,7 +147,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val userInfo = getUserInfoUseCase()
-                _userInfoUiState.value = userInfo
+                _userInfoUiState.emit(userInfo)
 
                 viewModelScope.launch {
                     userInfoUiState.collect { userInfo ->
@@ -167,7 +161,6 @@ class LoginViewModel @Inject constructor(
                         else {
                             finishLogin()
                         }
-
                     }
                 }
             }
