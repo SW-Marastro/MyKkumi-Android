@@ -207,7 +207,7 @@ class LoginComposeActivity : ComponentActivity() {
                     .background(colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.kakao_background))
                     .pointerInteropFilter {
                         when (it.action) {
-                            MotionEvent.ACTION_DOWN -> handleKakaoLogin()
+                            MotionEvent.ACTION_DOWN -> navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)//handleKakaoLogin()
                             else -> false
                         }
                         true
