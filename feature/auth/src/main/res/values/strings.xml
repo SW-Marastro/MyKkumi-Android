@@ -8,4 +8,7 @@
     <string name="action_permission_revoke_go_setting">허용하러 가기</string>
     <string name="choose_way_for_profile_image">프로필 이미지를 가져올 방법을 선택해주세요.</string>
     <string name="clear_login_all_btn">완료</string>
+
+    <string name="notice_login_page">취미생활 꿀템이 궁금하다면\n마이꾸미에서!</string>
+    <string name="btn_kakao_login">카카오로 로그인</string>
 </resources>

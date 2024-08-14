@@ -26,4 +26,6 @@
     <color name="caution">#FF961A</color>
     <color name="negative">#FF2517</color>
     <color name="information">#1355FF</color>
+
+    <color name="kakao_background">#FEE500</color>
 </resources>
