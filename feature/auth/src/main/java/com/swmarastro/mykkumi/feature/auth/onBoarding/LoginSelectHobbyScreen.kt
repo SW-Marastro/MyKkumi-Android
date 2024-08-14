@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -189,7 +190,7 @@ fun HobbySubCategoryItem(
         if (viewModel.isHobbySelected(subCategory)) {
             Color.Green
         } else {
-            Color.LightGray
+            Color.Transparent
         }
     )}
 
@@ -202,19 +203,19 @@ fun HobbySubCategoryItem(
                 if (viewModel.isHobbySelected(subCategory)) {
                     backgroundColor.value = Color.Green
                 } else {
-                    backgroundColor.value = Color.LightGray
+                    backgroundColor.value = Color.Transparent
                 }
             }
     ) {
         Image(
             painter = painterResource(
-                id = com.swmarastro.mykkumi.common_ui.R.drawable.img_profile_default),
+                id = R.drawable.img_hobby_category_default),
             contentDescription = "default image",
             modifier = Modifier
                 .size(60.dp)
                 .align(Alignment.CenterHorizontally)
-                .padding(bottom = 6.dp)
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(16.dp)),
+            contentScale = ContentScale.Fit,
         )
         Text(
             text = subCategory.subCategoryName,
@@ -223,6 +224,7 @@ fun HobbySubCategoryItem(
             color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_900),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
+                .padding(top = 6.dp)
         )
     }
 }

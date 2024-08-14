@@ -40,12 +40,27 @@ class LoginInputUserViewModel @Inject constructor(
     private val _cameraImagePath = MutableStateFlow<Uri?>(null)
     val cameraImagePath : StateFlow<Uri?> get() = _cameraImagePath
 
-    fun onNicknameChange(newNickname: String) {
-        // 입력 문자 제한 - 한글, 영문자, 숫자, _, -, .
-        if(newNickname.matches(NICKNAME_REGEX)) {
-            // 닉네임 최대 길이 제한
-            if (newNickname.length <= MAX_NICKNAME_LENGTH) _nickname.value = newNickname
-            else _nickname.value = newNickname.substring(0, MAX_NICKNAME_LENGTH)
+    fun onNicknameChange(
+        newNickname: String,
+        showToast : (message: String) -> Unit
+    ) {
+        viewModelScope.launch {
+            // 입력 문자 제한 - 한글, 영문자, 숫자, _, -, .
+            if (newNickname.matches(NICKNAME_REGEX)) {
+                // 닉네임 최대 길이 제한
+                if (newNickname.length <= MAX_NICKNAME_LENGTH)
+                    _nickname.emit(newNickname)
+                else {
+                    _nickname.emit(newNickname.substring(0, MAX_NICKNAME_LENGTH))
+                    showToast("닉네임은 최대 ${MAX_NICKNAME_LENGTH}자까지 입력 가능합니다.")
+                }
+            }
+        }
+    }
+
+    fun deleteNickname() {
+        viewModelScope.launch {
+            _nickname.emit("")
         }
     }
 
