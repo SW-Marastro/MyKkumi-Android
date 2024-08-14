@@ -17,9 +17,36 @@ class PreSignedUrlRepositoryImpl @Inject constructor(
     private val preSignedUrlDataSource: PreSignedUrlDataSource,
     private val putImageS3DataSource: PutImageS3DataSource,
 ) : PreSignedUrlRepository {
-    override suspend fun getPreSignedUrl(imageLocalUri: Any): String? {
+    override suspend fun getPreSignedPostUrl(imageLocalUri: Any): String? {
         try {
-            val preSignedUrlResponse = preSignedUrlDataSource.getPreSignedUrl()
+            val preSignedUrlResponse = preSignedUrlDataSource.getPreSignedPostUrl()
+
+            val imageFile = FormDataUtil.convertUriToRequestBody(context, imageLocalUri)
+
+            if (imageFile == null) {
+                Toast.makeText(context, "손상된 이미지입니다.", Toast.LENGTH_SHORT).show()
+                return null
+            } else {
+                try {
+                    putImageS3DataSource.putImageForS3(
+                        preSignedUrlResponse.url,
+                        imageFile
+                    )
+
+                    val imageUrl: String = preSignedUrlResponse.url.split("?")[0]
+                    return imageUrl
+                } catch (e: Exception) {
+                    return null
+                }
+            }
+        } catch (e: Exception) {
+            return null
+        }
+    }
+
+    override suspend fun getPreSignedProfileUrl(imageLocalUri: Any): String? {
+        try {
+            val preSignedUrlResponse = preSignedUrlDataSource.getPreSignedProfileUrl()
 
             val imageFile = FormDataUtil.convertUriToRequestBody(context, imageLocalUri)
 

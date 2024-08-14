@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.domain.repository
 
 interface PreSignedUrlRepository {
-    suspend fun getPreSignedUrl(imageLocalUri: Any): String?
+    suspend fun getPreSignedPostUrl(imageLocalUri: Any): String?
+    suspend fun getPreSignedProfileUrl(imageLocalUri: Any): String?
 }

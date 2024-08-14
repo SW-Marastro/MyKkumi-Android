@@ -49,7 +49,7 @@ class PostEditViewModel  @Inject constructor(
     fun selectPostImage(uri: Uri) {
         viewModelScope.launch {
             try {
-                val imageUrl = preSignedUrlRepository.getPreSignedUrl(uri)
+                val imageUrl = preSignedUrlRepository.getPreSignedPostUrl(uri)
 
                 if(imageUrl != null) {
                     val addPostImages = _postEditUiState.value
