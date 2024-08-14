@@ -34,6 +34,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNav.setupWithNavController(navController)
 
+        // 아이콘에 색상 입히지 않고 아이콘 이미지 그대로 보여주기
+        binding.bottomNav.itemIconTintList = null
+
         // 최상위 화면을 제외하고는 BottomNavigation Bar 없애기
         setBottomNavigation()
     }

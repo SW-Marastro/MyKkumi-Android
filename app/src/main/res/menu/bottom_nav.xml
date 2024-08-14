@@ -3,18 +3,22 @@
 
     <item
         android:id="@id/nav_home"
-        android:title="@string/menu_home" />
+        android:title="@string/menu_home"
+        android:icon="@drawable/selector_menu_home"/>
 
     <item
         android:id="@id/nav_around"
-        android:title="@string/menu_around" />
+        android:title="@string/menu_around"
+        android:icon="@drawable/selector_menu_around"/>
 
     <item
         android:id="@id/nav_shopping"
-        android:title="@string/menu_shopping" />
+        android:title="@string/menu_shopping"
+        android:icon="@drawable/selector_menu_shopping"/>
 
     <item
         android:id="@id/nav_mypage"
-        android:title="@string/menu_mypage" />
+        android:title="@string/menu_mypage"
+        android:icon="@drawable/selector_menu_mypage"/>
 
 </menu>
