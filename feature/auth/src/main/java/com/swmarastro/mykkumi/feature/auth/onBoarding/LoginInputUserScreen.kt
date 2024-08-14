@@ -90,8 +90,7 @@ private lateinit var localContext: Context
 @Composable
 fun LoginInputUserScreen(
     activity: ComponentActivity,
-    selectedHobbies: String?
-//    selectedHobbies: LongArray?
+    selectedHobbies: List<Long>?
 ) {
     localContext = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -99,6 +98,7 @@ fun LoginInputUserScreen(
     val viewModel: LoginInputUserViewModel = ViewModelProvider(
         LocalContext.current as ComponentActivity
     ).get(LoginInputUserViewModel::class.java)
+    viewModel.setHobbyCategory(selectedHobbies)
 
     var isKeyboardVisible by remember { mutableStateOf(false) }
 

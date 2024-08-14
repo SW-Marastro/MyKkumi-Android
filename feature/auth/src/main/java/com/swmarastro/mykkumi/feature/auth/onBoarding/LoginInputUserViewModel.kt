@@ -28,13 +28,14 @@ class LoginInputUserViewModel @Inject constructor(
     private val MIN_NICKNAME_LENGTH = 3
     private val NICKNAME_REGEX = Regex("^[a-zA-Z0-9._\\-ㄱ-ㅎ가-힣ㅏ-ㅣ]*$")
 
-    private val MAX_RETRIES = 1
-
     private val _nickname = MutableStateFlow("")
     val nickname: StateFlow<String> get() = _nickname
 
     private val _profileImage = MutableStateFlow<Any?>(null)
     val profileImage : StateFlow<Any?> get() = _profileImage
+
+    private val _hobbyCategory = MutableStateFlow<List<Long>>(listOf())
+    val hobbyCategory : StateFlow<List<Long>> get() = _hobbyCategory
 
     // 카메라로 촬영할 이미지를 저장할 path
     private val _cameraImagePath = MutableStateFlow<Uri?>(null)
@@ -79,6 +80,15 @@ class LoginInputUserViewModel @Inject constructor(
         _cameraImagePath.value = null
     }
 
+    // 선택된 취미
+    fun setHobbyCategory(selectHobbies: List<Long>?) {
+        viewModelScope.launch {
+            if (selectHobbies != null) {
+                _hobbyCategory.emit(selectHobbies)
+            }
+        }
+    }
+
     // 사용자 정보 업데이트 후 가입 완료
     fun updateUserInfo(showToast : (message: String) -> Unit) {
         viewModelScope.launch {
@@ -91,7 +101,7 @@ class LoginInputUserViewModel @Inject constructor(
                     nickname = nickname.value,
                     profileImage = imageUrl,
                     introduction = null,
-                    categoryIds = null
+                    categoryIds = hobbyCategory.value
                 )
 
                 viewModelScope.launch {

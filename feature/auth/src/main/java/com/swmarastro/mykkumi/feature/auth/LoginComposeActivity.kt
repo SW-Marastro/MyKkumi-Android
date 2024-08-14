@@ -51,6 +51,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.gson.Gson
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
@@ -127,15 +128,16 @@ class LoginComposeActivity : ComponentActivity() {
                 route = LoginScreens.LoginInputUserScreen.name + "/{selectedHobbies}",
                 arguments = listOf(
                     navArgument("selectedHobbies") {
-//                        type = NavType.LongArrayType
                         type = NavType.StringType
                     }
                 )
             ) { backstackEntry ->
+                val selectedHobbiesJson = backstackEntry.arguments?.getString("selectedHobbies")
+                val selectedHobbies: List<Long>? = Gson().fromJson(selectedHobbiesJson, List::class.java) as? List<Long>
+
                 LoginInputUserScreen(
                     activity = activity,
-                    //selectedHobbies = backstackEntry.arguments?.getLongArray("selectedHobbies"),
-                    selectedHobbies = backstackEntry.arguments?.getString("selectedHobbies"),
+                    selectedHobbies = selectedHobbies,
                 )
             }
         }
@@ -207,7 +209,7 @@ class LoginComposeActivity : ComponentActivity() {
                     .background(colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.kakao_background))
                     .pointerInteropFilter {
                         when (it.action) {
-                            MotionEvent.ACTION_DOWN -> navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)//handleKakaoLogin()
+                            MotionEvent.ACTION_DOWN -> handleKakaoLogin()
                             else -> false
                         }
                         true

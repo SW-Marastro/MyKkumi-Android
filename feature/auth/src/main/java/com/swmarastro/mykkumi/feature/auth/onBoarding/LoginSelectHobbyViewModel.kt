@@ -1,9 +1,11 @@
 package com.swmarastro.mykkumi.feature.auth.onBoarding
 
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.google.gson.Gson
 import com.swmarastro.mykkumi.domain.entity.HobbyCategoryItemVO
 import com.swmarastro.mykkumi.domain.entity.HobbySubCategoryItemVO
 import com.swmarastro.mykkumi.domain.usecase.post.GetHobbyCategoryListUseCase
@@ -40,7 +42,6 @@ class LoginSelectHobbyViewModel @Inject constructor(
                 _hobbyCategoryUiState.value.clear()
             }
         }
-        //_hobbyCategoryUiState.emit()
     }
 
     // 관심 취미 선택
@@ -61,10 +62,9 @@ class LoginSelectHobbyViewModel @Inject constructor(
 
     // 다음 화면으로 네비게이션 처리
     fun navigateToInputUserInfoScreen(navController: NavController) {
-        Log.d("test", selectedHobbies.value.toLongArray().contentToString())
-        //val argument: LongArray = selectedHobbies.value.toLongArray()
-        val argument: String = selectedHobbies.value.toLongArray().toString()
-        navController.navigate(route = LoginScreens.LoginInputUserScreen.name + "/${argument}")
+        val argument: List<Long> = selectedHobbies.value.toList()
+        val argumentJson = Gson().toJson(argument)
+        navController.navigate(route = LoginScreens.LoginInputUserScreen.name + "/${argumentJson}")
     }
 
     // 취미 선택 상태 확인
