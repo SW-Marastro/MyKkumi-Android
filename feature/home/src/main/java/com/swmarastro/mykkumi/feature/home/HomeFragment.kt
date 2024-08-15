@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -40,6 +41,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
 
         navController = view.findNavController()
+        binding.scrollHomeBannerNPost.isSmoothScrollingEnabled = true
+        binding.scrollHomeBannerNPost.post {
+            binding.scrollHomeBannerNPost.fullScroll(ScrollView.FOCUS_UP)
+        }
 
         startAutoScroll()
 
@@ -49,6 +54,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.btnNotice.setOnClickListener {
             waitNotice()
         }
+
+        // 포스트 리스트 추가
+        viewModel.postCursor.observe(viewLifecycleOwner, Observer {
+            postListAdapter.postList = viewModel.postListUiState.value
+            val rangeEnd = viewModel.postListUiState.value.size
+            if(rangeEnd != 0) {
+                var count = rangeEnd % viewModel.postLimit.value
+                if (count == 0) count = viewModel.postLimit.value
+                postListAdapter.notifyItemRangeInserted(rangeEnd - count, rangeEnd)
+            }
+        })
     }
 
     override suspend fun initView() {
@@ -166,31 +182,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     // 포스트 무한 스크롤 -> 스크롤 최하단 도달 시 다음 데이터 요청
     private fun setNextPostList() {
         viewModel.setPostList(true)
-//        viewModel.postListUiState.collect {
-//
-//        }
-
-//        lifecycleScope.launch {
-//            viewModel.postListUiState.collect {
-//                Log.d("test", "test1")
-//                postListAdapter.postList = it
-//                Log.d("test", "test2")
-//
-//                if (viewModel.postCursor.value.isNullOrEmpty()) {
-//                    binding.includeListLoading.visibility = View.GONE
-//                }
-//            }
-//        }
-
-        viewModel.postListUiState
-            .onEach {
-                postListAdapter.postList = it
-
-                if (viewModel.postCursor.value.isNullOrEmpty()) {
-                    binding.includeListLoading.visibility = View.GONE
-                }
-            }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     // 배너 전체 리스트 페이지로 이동

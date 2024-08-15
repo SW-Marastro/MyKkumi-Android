@@ -45,9 +45,10 @@ class HomeViewModel @Inject constructor(
     val selectBannerId: LiveData<Int> get() = _selectBannerId
 
     // 포스트 리스트 cursor, limit
-    private val postLimit: Int? = null
-    private var _postCursor = MutableStateFlow<String?>(null)
-    val postCursor: StateFlow<String?> get() = _postCursor
+    private val _postLimit = MutableStateFlow<Int>(5)
+    val postLimit: StateFlow<Int> get() = _postLimit
+    private var _postCursor = MutableLiveData<String?>(null)
+    val postCursor: LiveData<String?> get() = _postCursor
 
     private var _isPostListLoading = MutableStateFlow<Boolean>(false)
     val isPostListLoading: StateFlow<Boolean> get() = _isPostListLoading
@@ -79,18 +80,17 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _isPostListLoading.emit(true) // 스크롤 이벤트가 연속적으로 호출되는 것을 방지
-                if(!isCursor) _postCursor.emit(null)
+                if(!isCursor) _postCursor.setValue(null)
 
                 val homePostList = withContext(Dispatchers.IO) {
-                    getHomePostListUseCase(postCursor.value, postLimit)
+                    getHomePostListUseCase(postCursor.value, postLimit.value)
                 }
-//                _postListUiState.em
 
                 if (isCursor) _postListUiState.value.addAll(homePostList.posts)
                 else _postListUiState.emit(homePostList.posts.toMutableList())
 
                 // 다음 커서
-                _postCursor.emit( homePostList.cursor )
+                _postCursor.setValue( homePostList.cursor )
 
                 _isPostListLoading.emit(false) // 스크롤 이벤트가 연속적으로 호출되는 것을 방지
             } catch (e: Exception) {
