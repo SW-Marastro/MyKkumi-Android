@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumi.feature.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
@@ -37,21 +38,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val waitingNotice = "${String(Character.toChars(0x1F525))} 준비 중입니다 ${String(Character.toChars(0x1F525))}"
 
-    override fun onResume() {
-        super.onResume()
-
-//        if(viewModel != null) {
-//            setHomeBanner() // 배너
-//            setPostList() // 포스트
-//        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         navController = view.findNavController()
+        binding.includeListLoading.visibility = View.VISIBLE
+
         binding.scrollHomeBannerNPost.isSmoothScrollingEnabled = true
         binding.scrollHomeBannerNPost.post {
+            postListAdapter.postList.clear()
             binding.scrollHomeBannerNPost.fullScroll(ScrollView.FOCUS_UP)
         }
 
@@ -172,12 +168,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 // 스크롤이 최하단까지 내려갔는지 확인
                 val scroll = v.getChildAt(v.childCount - 1)
                 val diff = scroll.bottom - (v.height + v.scrollY)
+
+                // includeListLoading이 보이기 시작하는 시점 확인
+                val loadingViewTop = binding.includeListLoading.top
+
+                val scrollYPosition = v.scrollY + v.height
                 if(viewModel.postCursor.value.isNullOrEmpty()) {
                     binding.includeListLoading.visibility = View.GONE
                 }
-                else if (diff == 0 && !viewModel.isPostListLoading.value) {
-                    setNextPostList()
+                else if (scrollYPosition >= loadingViewTop + 1 && !viewModel.isPostListLoading.value) {
+                    viewModel.setPostList(true)
                 }
+//                else if (diff == 0 && !viewModel.isPostListLoading.value) {
+//                    setNextPostList()
+//                }
             }
         }
     }
@@ -186,11 +190,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun setPostList() {
         viewModel.setPostList(false)
         initPostRecyclerView()
-    }
-
-    // 포스트 무한 스크롤 -> 스크롤 최하단 도달 시 다음 데이터 요청
-    private fun setNextPostList() {
-        viewModel.setPostList(true)
     }
 
     // 배너 전체 리스트 페이지로 이동
