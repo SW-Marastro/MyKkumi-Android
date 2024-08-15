@@ -95,7 +95,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         binding.btnAddPin.setOnClickListener {
             // 핀 최대 개수
             if (viewModel.currentPinList.value!!.size >= viewModel.MAX_PIN_COUNT) {
-                showToast("핀은 최대 ${viewModel.MAX_PIN_COUNT}개까지 추가 가능합니다.")
+                showToast("핀은 최대 ${viewModel.MAX_PIN_COUNT}개까지 추가할 수 있어요.")
             }
             else {
                 viewModel.requestProductInfoForPin(this@PostEditFragment, null)

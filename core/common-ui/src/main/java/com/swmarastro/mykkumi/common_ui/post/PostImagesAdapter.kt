@@ -47,26 +47,31 @@ class PostImagesAdapter(
 
             // 이미지 세로 사이즈를 가로 사이즈와 동일하게 설정
             parent.viewTreeObserver.addOnGlobalLayoutListener {
-                val width = parent.width
-                parent.layoutParams.height = width
-                parent.requestLayout()
+                if(parentWidth == 0 || parentHeight == 0) {
+                    if(parent.width != 0 && parent.height != 0) {
+                        Log.d("test", "${item.pins.size}: image > width : ${parent.width}, height: ${parent.height}")
+                        if(parent.width > parent.height) {
+                            parentWidth = parent.width
+                            parentHeight = parent.height
+                        }
+                        else {
+                            parentWidth = (parent.width.toDouble() * (parent.width.toDouble() / parent.height.toDouble())).toInt()
+                            parentHeight = parent.width
+                        }
 
-                parentWidth = parent.width
-                parentHeight = parent.height
+                        binding.relativePinsOfImages.layoutParams.width = parentWidth
+                        binding.relativePinsOfImages.layoutParams.height = parentHeight
+                        binding.relativePinsOfImages.requestLayout()
 
-//                if(parent.width > parent.height) {
-//                    parentWidth = binding.relativePostImage.width
-//                    parentHeight = parent.height * (binding.relativePostImage.width / parent.width)
-//                }
-//                else {
-//                    parentWidth = parent.width * (binding.relativePostImage.width / parent.height)
-//                    parentHeight = binding.relativePostImage.width
-//                }
+                        Log.d("test", "${item.pins.size}: relative > width: ${parentWidth}, height: ${parentHeight}")
 
-                binding.relativePinsOfImages.layoutParams.width = parentWidth
-                binding.relativePinsOfImages.layoutParams.height = parentHeight
-                binding.relativePinsOfImages.requestLayout()
-                notifyItemChanged(position)
+                        val width = parent.width
+                        parent.layoutParams.height = width
+                        parent.requestLayout()
+
+                        notifyItemChanged(position)
+                    }
+                }
             }
 
 //            // pin이 이미지의 크기를 벗어나지 않도록 제한
