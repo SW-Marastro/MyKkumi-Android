@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
+import com.swmarastro.mykkumi.domain.entity.BannerItemVO
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerListUseCase
@@ -32,8 +33,8 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     // 홈 > 배너 캐러셀
-    private val _bannerListUiState = MutableStateFlow<BannerListVO>(BannerListVO())
-    val bannerListUiState: StateFlow<BannerListVO> get() = _bannerListUiState
+    private val _bannerListUiState = MutableStateFlow<MutableList<BannerItemVO>>(mutableListOf())
+    val bannerListUiState: StateFlow<MutableList<BannerItemVO>> get() = _bannerListUiState
 
     // 포스트 리스트
     private val _postListUiState = MutableStateFlow<MutableList<HomePostItemVO>>(mutableListOf())
@@ -58,9 +59,11 @@ class HomeViewModel @Inject constructor(
                 val homeBanner = withContext(Dispatchers.IO) {
                     getBannerListUseCase()
                 }
-                _bannerListUiState.emit( homeBanner )
+                val bannerList = homeBanner.banners.toMutableList()
+                bannerList.add(BannerItemVO())
+                _bannerListUiState.emit( bannerList )
             } catch (e: Exception) {
-                _bannerListUiState.emit( BannerListVO() )
+                _bannerListUiState.emit( mutableListOf() )
             }
         }
     }

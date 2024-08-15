@@ -11,6 +11,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
+import com.swmarastro.mykkumi.domain.entity.BannerItemVO
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
@@ -41,7 +42,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         navController = view.findNavController()
 
         startAutoScroll()
-        onClickBannerAll() // 배너 > + 버튼 선택 시 전체 리스트 페이지로 이동
 
         binding.btnSearch.setOnClickListener {
             waitNotice()
@@ -60,20 +60,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     // 배너 viewpager
-    private fun initBannerViewPager(banners: BannerListVO) {
+    private fun initBannerViewPager(banners: MutableList<BannerItemVO>) {
         bannerAdapter = HomeBannerViewPagerAdapter(
-            banners.banners.toMutableList(),
+            banners,
             onClickBannerItem = {
                 onClickBannerItem(it)
+            },
+            navigateBannerAll = {
+                navigateBannerAll()
             }
         )
         binding.viewpagerBanner.adapter = bannerAdapter
         binding.viewpagerBanner.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.viewpagerBanner.setCurrentItem(1000, false) // 좌측으로도 배너 전환 가능하도록
+        if(banners.size != 0) binding.viewpagerBanner.setCurrentItem(1000 / banners.size * banners.size, false) // 좌측으로도 배너 전환 가능하도록
 
         // 배너 페이지 표시
-        binding.textBannerTotalPage.text = "/" + banners.banners.size
-        if(!banners.banners.isEmpty()) binding.textBannerCurrentPage.text = "1"
+        binding.textBannerTotalPage.text = "/" + banners.size
+        if(!banners.isEmpty()) binding.textBannerCurrentPage.text = "1"
 
         // 배너가 수동으로 변경되면, 자동 전환되는 타이머를 리셋 - 변경된 시점부터 3초 카운트
         binding.viewpagerBanner.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -82,8 +85,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 startAutoScroll() // 타이머 리셋
 
                 // 현재 배너 페이지 표시
-                if(banners.banners.size != 0)
-                    binding.textBannerCurrentPage.text = (binding.viewpagerBanner.currentItem % banners.banners.size + 1).toString()
+                if(banners.size != 0)
+                    binding.textBannerCurrentPage.text = (binding.viewpagerBanner.currentItem % banners.size + 1).toString()
             }
         })
     }
@@ -115,13 +118,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun onClickBannerItem(bannerId: Int) {
         viewModel.selectHomeBanner(bannerId)
         viewModel.navigateBannerDetail(navController)
-    }
-
-    // 배너 > + 버튼 클릭 -> 배너 전체 리스트 페이지로 이동
-    private fun onClickBannerAll() {
-//        binding.btnBannerMore.setOnClickListener {
-//            viewModel.navigateBannerAll(navController)
-//        }
     }
 
     // 포스트 리스트 recyclerview
@@ -195,6 +191,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 }
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    // 배너 전체 리스트 페이지로 이동
+    private fun navigateBannerAll() {
+        viewModel.navigateBannerAll(navController)
     }
 
     private fun showToast(message: String) {
