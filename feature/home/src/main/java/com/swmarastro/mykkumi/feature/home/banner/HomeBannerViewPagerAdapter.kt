@@ -25,7 +25,7 @@ class HomeBannerViewPagerAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if(bannerList[position % bannerList.size].id == -1) TYPE_LAST_BANNER
+        return if(position % bannerList.size == bannerList.size - 1) TYPE_LAST_BANNER
         else TYPE_BANNER
     }
 
@@ -54,11 +54,12 @@ class HomeBannerViewPagerAdapter(
             is HomeLastBannerViewHolder -> {
                 holder.bind(item)
             }
+            else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
     override fun getItemCount(): Int {
-        if(bannerList.size == 0) return 0
+        if(bannerList.isEmpty()) return 0
         else return Int.MAX_VALUE // 무한 페이지 뷰를 위한
     }
 

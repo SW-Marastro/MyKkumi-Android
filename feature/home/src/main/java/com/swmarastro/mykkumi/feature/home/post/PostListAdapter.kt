@@ -39,7 +39,9 @@ class PostListAdapter (
     }
 
     override fun onBindViewHolder(holder: PostListViewHolder, position: Int) {
-        holder.bind(postList[position], position)
+        if (position >= 0 && position < postList.size) {
+            holder.bind(postList[position], position)
+        }
     }
 
     override fun getItemCount(): Int = postList.size

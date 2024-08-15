@@ -37,6 +37,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val waitingNotice = "${String(Character.toChars(0x1F525))} 준비 중입니다 ${String(Character.toChars(0x1F525))}"
 
+    override fun onResume() {
+        super.onResume()
+
+//        if(viewModel != null) {
+//            setHomeBanner() // 배너
+//            setPostList() // 포스트
+//        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -57,12 +66,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         // 포스트 리스트 추가
         viewModel.postCursor.observe(viewLifecycleOwner, Observer {
-            postListAdapter.postList = viewModel.postListUiState.value
-            val rangeEnd = viewModel.postListUiState.value.size
-            if(rangeEnd != 0) {
-                var count = rangeEnd % viewModel.postLimit.value
-                if (count == 0) count = viewModel.postLimit.value
-                postListAdapter.notifyItemRangeInserted(rangeEnd - count, rangeEnd)
+            if(postListAdapter.postList.size != viewModel.postListUiState.value.size) {
+                val postList = viewModel.postListUiState.value ?: mutableListOf()
+                postListAdapter.postList.clear()
+                postListAdapter.postList.addAll(postList)
+                val rangeEnd = postList.size
+                if (rangeEnd != 0) {
+                    var count = rangeEnd % (viewModel.postLimit.value ?: 1)
+                    if (count == 0) count = viewModel.postLimit.value ?: rangeEnd
+                    postListAdapter.notifyItemRangeInserted(rangeEnd - count, rangeEnd)
+                }
             }
         })
     }
@@ -71,6 +84,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         bind {
             vm = viewModel
         }
+
         setHomeBanner() // 배너
         setPostList() // 포스트
     }
@@ -137,7 +151,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     // 포스트 리스트 recyclerview
-    private fun initPostRecyclerView(posts: MutableList<HomePostItemVO>) {
+    private fun initPostRecyclerView() {
         postListAdapter = PostListAdapter(
             requireContext(),
             navController,
@@ -151,7 +165,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             false
         )
         binding.recyclerviewPostList.adapter = postListAdapter
-        postListAdapter.postList = posts
 
         // 스크롤 다 내려가면 다음 데이터 받아오기
         binding.scrollHomeBannerNPost.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
@@ -172,11 +185,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     // 포스트 내용 세팅
     private fun setPostList() {
         viewModel.setPostList(false)
-        viewModel.postListUiState
-            .onEach {
-                initPostRecyclerView(it)
-            }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+        initPostRecyclerView()
     }
 
     // 포스트 무한 스크롤 -> 스크롤 최하단 도달 시 다음 데이터 요청
