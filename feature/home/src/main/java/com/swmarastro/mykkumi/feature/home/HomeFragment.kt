@@ -94,6 +94,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         viewModel.bannerListUiState
             .onEach {
                 initBannerViewPager(it)
+                binding.skeletonBanner.visibility = View.GONE
             }
             .launchIn(lifecycleScope)
     }
