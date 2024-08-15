@@ -128,7 +128,8 @@
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:listitem="@layout/item_post_recyclerview"
                         android:layout_below="@id/relative_banner"
-                        android:nestedScrollingEnabled="false"/>
+                        android:nestedScrollingEnabled="false"
+                        android:layout_marginTop="24dp"/>
 
                     <!-- 로딩 -->
                     <LinearLayout

@@ -41,7 +41,7 @@
             android:textSize="16sp"
             android:textColor="@color/white"
             android:fontFamily="@font/pretendard_bold"
-            android:background="@drawable/shape_btn_round"
+            android:background="@drawable/shape_btn_round6_primary"
             android:layout_below="@id/text_test"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"/>
@@ -54,7 +54,7 @@
             android:textSize="16sp"
             android:textColor="@color/white"
             android:fontFamily="@font/pretendard_bold"
-            android:background="@drawable/shape_btn_round"
+            android:background="@drawable/shape_btn_round6_primary"
             android:layout_below="@id/btn_logout"
             android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"/>

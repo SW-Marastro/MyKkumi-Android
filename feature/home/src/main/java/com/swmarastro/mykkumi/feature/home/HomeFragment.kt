@@ -33,6 +33,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private var navController: NavController? = null
 
+    private val waitingNotice = "${String(Character.toChars(0x1F525))} 준비 중입니다 ${String(Character.toChars(0x1F525))}"
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -40,6 +42,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         startAutoScroll()
         onClickBannerAll() // 배너 > + 버튼 선택 시 전체 리스트 페이지로 이동
+
+        binding.btnSearch.setOnClickListener {
+            waitNotice()
+        }
+        binding.btnNotice.setOnClickListener {
+            waitNotice()
+        }
     }
 
     override suspend fun initView() {
@@ -118,7 +127,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun initPostRecyclerView(posts: MutableList<HomePostItemVO>) {
         postListAdapter = PostListAdapter(
             requireContext(),
-            navController
+            navController,
+            waitNotice = {
+                waitNotice()
+            }
         )
         binding.recyclerviewPostList.layoutManager = LinearLayoutManager(
             context,
@@ -182,6 +194,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 }
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun waitNotice() {
+        showToast(waitingNotice)
     }
 
     override fun onDestroyView() {

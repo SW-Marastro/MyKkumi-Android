@@ -29,6 +29,8 @@
     <!-- 홈 -->
     <string name="home_banner_all_title">이벤트</string>
     <string name="user_complaint">신고하기</string>
+    <string name="btn_follow">팔로우</string>
+    <string name="btn_add_comment">댓글 작성</string>
 
     <!-- 포스트 작성 -->
     <string name="update_product_info_of_pin">제품 정보 수정</string>
