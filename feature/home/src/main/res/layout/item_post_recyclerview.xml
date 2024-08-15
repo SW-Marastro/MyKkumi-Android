@@ -173,7 +173,19 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/text_bnt_add_comment"
+            android:id="@+id/text_btn_more_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_more_content"
+            android:textSize="13sp"
+            android:textColor="@color/neutral_800"
+            android:fontFamily="@font/pretendard_medium"
+            android:layout_marginRight="16dp"
+            android:layout_below="@id/relative_post_content"
+            android:layout_alignParentEnd="true"/>
+
+        <TextView
+            android:id="@+id/text_btn_add_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_add_comment"
@@ -185,15 +197,15 @@
             android:paddingVertical="5dp"
             android:layout_margin="16dp"
             android:layout_below="@id/relative_post_content"/>
-        
+
         <View
             android:id="@+id/view_bottom_line"
             android:layout_width="match_parent"
             android:layout_height="8dp"
-            android:background="@color/neutral_50"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="32dp"
-            android:layout_below="@+id/text_bnt_add_comment"/>
+            android:background="@color/neutral_50"
+            android:layout_below="@id/text_btn_add_comment"/>
 
     </RelativeLayout>
 

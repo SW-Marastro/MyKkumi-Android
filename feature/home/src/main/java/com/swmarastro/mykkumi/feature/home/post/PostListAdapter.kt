@@ -27,6 +27,7 @@ class PostListAdapter (
     private val navController: NavController?,
     private val waitNotice: () -> Unit
 ) : RecyclerView.Adapter<PostListAdapter.PostListViewHolder>(){
+    private final val MAX_CONTENT_LENGTH = 50
 
     var postList = mutableListOf<HomePostItemVO>()
 
@@ -116,18 +117,52 @@ class PostListAdapter (
                 waitNotice()
             })
             // 댓글 작성 버튼 - 아직 안 됨
-            binding.textBntAddComment.setOnClickListener(View.OnClickListener {
+            binding.textBtnAddComment.setOnClickListener(View.OnClickListener {
                 waitNotice()
             })
 
             // 글 내용 --------------------------------------------------------------------------------------
-            binding.textPostContent.text = item.content?.let { content ->
+            val allContent = item.content?.let { content ->
                 SpannableStringBuilderProvider
                     .getSpannableStringBuilder(
                         content,
                         navController
                     )
             }
+            binding.textBtnMoreContent.visibility = View.GONE
+            var hideContent = allContent
+            // 본문 길이가 MAX_CONTENT_LENGTH를 넘는 경우
+            if (hideContent != null && hideContent.length > MAX_CONTENT_LENGTH) {
+                val truncatedString = hideContent.subSequence(0, MAX_CONTENT_LENGTH) as SpannableStringBuilder
+
+                // 단어 기준으로 자르기 위해 공백, 줄바꿈 위치 찾기
+                val lastSpaceIndex = truncatedString.lastIndexOf(' ')
+                val lastNewLineIndex = truncatedString.lastIndexOf('\n')
+
+                // 공백과 줄바꿈 중 더 뒤에 있는 것 or 둘다 없다면 MAX length
+                val finalCutIndex = when {
+                    lastSpaceIndex != -1 && lastSpaceIndex > lastNewLineIndex -> lastSpaceIndex
+                    lastNewLineIndex != -1 -> lastNewLineIndex
+                    else -> MAX_CONTENT_LENGTH
+                }
+
+                hideContent = SpannableStringBuilder(truncatedString.subSequence(0, finalCutIndex))
+
+                if(hideContent.length != allContent!!.length) {
+                    hideContent.apply {
+                        append("...")
+                    }
+
+                    binding.textBtnMoreContent.visibility = View.VISIBLE
+                }
+            }
+            binding.textPostContent.text = hideContent
+
+            // 더보기 버튼
+            binding.textBtnMoreContent.setOnClickListener(View.OnClickListener {
+                binding.textBtnMoreContent.visibility = View.GONE
+                binding.textPostContent.text = allContent
+            })
 
             // 마지막 아이템은 선 지우기
             if(postList.size - 1 == position) {
