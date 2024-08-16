@@ -1,16 +1,20 @@
 package com.swmarastro.mykkumi.feature.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
+import com.swmarastro.mykkumi.common_ui.report.PostReportConfirmDialog
+import com.swmarastro.mykkumi.domain.entity.BannerItemVO
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
@@ -33,44 +37,73 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private var navController: NavController? = null
 
+    private val waitingNotice = "${String(Character.toChars(0x1F525))} 준비 중입니다 ${String(Character.toChars(0x1F525))}"
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         navController = view.findNavController()
+        binding.includeListLoading.visibility = View.VISIBLE
+
+        binding.scrollHomeBannerNPost.isSmoothScrollingEnabled = true
+        binding.scrollHomeBannerNPost.post {
+            postListAdapter.postList.clear()
+            binding.scrollHomeBannerNPost.fullScroll(ScrollView.FOCUS_UP)
+        }
 
         startAutoScroll()
-        onClickBannerAll() // 배너 > + 버튼 선택 시 전체 리스트 페이지로 이동
 
-        // 로그아웃 테스트
-        binding.btnShoppingCart.setOnClickListener {
-            viewModel.logout()
-            Toast.makeText(context, "개발용 로그아웃", Toast.LENGTH_SHORT).show()
+        binding.btnSearch.setOnClickListener {
+            waitNotice()
         }
+        binding.btnNotice.setOnClickListener {
+            waitNotice()
+        }
+
+        // 포스트 리스트 추가
+        viewModel.postCursor.observe(viewLifecycleOwner, Observer {
+            if(postListAdapter.postList.size != viewModel.postListUiState.value.size) {
+                val postList = viewModel.postListUiState.value ?: mutableListOf()
+                postListAdapter.postList.clear()
+                postListAdapter.postList.addAll(postList)
+                val rangeEnd = postList.size
+                if (rangeEnd != 0) {
+                    var count = rangeEnd % (viewModel.postLimit.value ?: 1)
+                    if (count == 0) count = viewModel.postLimit.value ?: rangeEnd
+                    postListAdapter.notifyItemRangeInserted(rangeEnd - count, rangeEnd)
+                }
+            }
+        })
     }
 
     override suspend fun initView() {
         bind {
             vm = viewModel
         }
+
         setHomeBanner() // 배너
         setPostList() // 포스트
     }
 
     // 배너 viewpager
-    private fun initBannerViewPager(banners: BannerListVO) {
+    private fun initBannerViewPager(banners: MutableList<BannerItemVO>) {
         bannerAdapter = HomeBannerViewPagerAdapter(
-            banners.banners.toMutableList(),
+            banners,
             onClickBannerItem = {
                 onClickBannerItem(it)
+            },
+            navigateBannerAll = {
+                navigateBannerAll()
             }
         )
         binding.viewpagerBanner.adapter = bannerAdapter
         binding.viewpagerBanner.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.viewpagerBanner.setCurrentItem(1000, false) // 좌측으로도 배너 전환 가능하도록
+        if(banners.size != 0) binding.viewpagerBanner.setCurrentItem(1000 / banners.size * banners.size, false) // 좌측으로도 배너 전환 가능하도록
 
         // 배너 페이지 표시
-        binding.textBannerTotalPage.text = "/" + banners.banners.size
-        if(!banners.banners.isEmpty()) binding.textBannerCurrentPage.text = "1"
+        binding.textBannerTotalPage.text = "/" + banners.size
+        if(!banners.isEmpty()) binding.textBannerCurrentPage.text = "1"
 
         // 배너가 수동으로 변경되면, 자동 전환되는 타이머를 리셋 - 변경된 시점부터 3초 카운트
         binding.viewpagerBanner.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -79,8 +112,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 startAutoScroll() // 타이머 리셋
 
                 // 현재 배너 페이지 표시
-                if(banners.banners.size != 0)
-                    binding.textBannerCurrentPage.text = (binding.viewpagerBanner.currentItem % banners.banners.size + 1).toString()
+                if(banners.size != 0)
+                    binding.textBannerCurrentPage.text = (binding.viewpagerBanner.currentItem % banners.size + 1).toString()
             }
         })
     }
@@ -91,6 +124,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         viewModel.bannerListUiState
             .onEach {
                 initBannerViewPager(it)
+                binding.skeletonBanner.visibility = View.GONE
             }
             .launchIn(lifecycleScope)
     }
@@ -104,7 +138,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     binding.viewpagerBanner.currentItem = (binding.viewpagerBanner.currentItem + 1) % Int.MAX_VALUE
                 }
             }
-        }, 3000, 3000) // 3초마다 전환 -> 너무 빠른가?
+        }, 5000, 3000) // 5초마다 전환
     }
 
     // 배너 클릭 -> 배너 상세 페이지 이동
@@ -113,18 +147,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         viewModel.navigateBannerDetail(navController)
     }
 
-    // 배너 > + 버튼 클릭 -> 배너 전체 리스트 페이지로 이동
-    private fun onClickBannerAll() {
-        binding.btnBannerMore.setOnClickListener {
-            viewModel.navigateBannerAll(navController)
-        }
-    }
-
     // 포스트 리스트 recyclerview
-    private fun initPostRecyclerView(posts: MutableList<HomePostItemVO>) {
+    private fun initPostRecyclerView() {
         postListAdapter = PostListAdapter(
             requireContext(),
-            navController
+            navController,
+            waitNotice = {
+                waitNotice()
+            },
+            reportPost = {
+                postReportConfirm(it)
+            }
         )
         binding.recyclerviewPostList.layoutManager = LinearLayoutManager(
             context,
@@ -132,7 +165,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             false
         )
         binding.recyclerviewPostList.adapter = postListAdapter
-        postListAdapter.postList = posts
 
         // 스크롤 다 내려가면 다음 데이터 받아오기
         binding.scrollHomeBannerNPost.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
@@ -140,12 +172,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 // 스크롤이 최하단까지 내려갔는지 확인
                 val scroll = v.getChildAt(v.childCount - 1)
                 val diff = scroll.bottom - (v.height + v.scrollY)
+
+                // includeListLoading이 보이기 시작하는 시점 확인
+                val loadingViewTop = binding.includeListLoading.top
+
+                val scrollYPosition = v.scrollY + v.height
                 if(viewModel.postCursor.value.isNullOrEmpty()) {
                     binding.includeListLoading.visibility = View.GONE
                 }
-                else if (diff == 0 && !viewModel.isPostListLoading.value) {
-                    setNextPostList()
+                else if (scrollYPosition >= loadingViewTop + 1 && !viewModel.isPostListLoading.value) {
+                    viewModel.setPostList(true)
                 }
+//                else if (diff == 0 && !viewModel.isPostListLoading.value) {
+//                    setNextPostList()
+//                }
             }
         }
     }
@@ -153,41 +193,31 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     // 포스트 내용 세팅
     private fun setPostList() {
         viewModel.setPostList(false)
-        viewModel.postListUiState
-            .onEach {
-                initPostRecyclerView(it)
-            }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+        initPostRecyclerView()
     }
 
-    // 포스트 무한 스크롤 -> 스크롤 최하단 도달 시 다음 데이터 요청
-    private fun setNextPostList() {
-        viewModel.setPostList(true)
-//        viewModel.postListUiState.collect {
-//
-//        }
+    // 배너 전체 리스트 페이지로 이동
+    private fun navigateBannerAll() {
+        viewModel.navigateBannerAll(navController)
+    }
 
-//        lifecycleScope.launch {
-//            viewModel.postListUiState.collect {
-//                Log.d("test", "test1")
-//                postListAdapter.postList = it
-//                Log.d("test", "test2")
-//
-//                if (viewModel.postCursor.value.isNullOrEmpty()) {
-//                    binding.includeListLoading.visibility = View.GONE
-//                }
-//            }
-//        }
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
 
-        viewModel.postListUiState
-            .onEach {
-                postListAdapter.postList = it
+    private fun waitNotice() {
+        showToast(waitingNotice)
+    }
 
-                if (viewModel.postCursor.value.isNullOrEmpty()) {
-                    binding.includeListLoading.visibility = View.GONE
-                }
-            }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+    // 포스트 신고 확인 Dialog
+    private fun postReportConfirm(postId: Int) {
+        val dialog = PostReportConfirmDialog(this)
+        dialog.setOnClickListener { postId ->
+            Toast.makeText(context, getString(com.swmarastro.mykkumi.common_ui.R.string.post_report_confirm_clear_toast), Toast.LENGTH_SHORT).show()
+            Log.d("test", "신고 포스트: ${postId}")
+        }
+
+        dialog.show(postId)
     }
 
     override fun onDestroyView() {

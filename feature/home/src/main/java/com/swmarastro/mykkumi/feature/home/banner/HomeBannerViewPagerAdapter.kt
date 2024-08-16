@@ -11,26 +11,55 @@ import com.swmarastro.mykkumi.domain.entity.BannerItemVO
 import java.util.TimerTask
 import coil.load
 import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerViewpagerBinding
+import com.swmarastro.mykkumi.feature.home.databinding.ItemLastBannerViewpagerBinding
 
 class HomeBannerViewPagerAdapter(
     private var bannerList: MutableList<BannerItemVO>,
-    private val onClickBannerItem: (bannerId: Int) -> Unit
-) : RecyclerView.Adapter<HomeBannerViewPagerAdapter.HomeBannerViewHolder>() {
-    override fun onCreateViewHolder(
-        parent: ViewGroup, viewType: Int
-    ): HomeBannerViewHolder {
-        val binding = ItemBannerViewpagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return HomeBannerViewHolder(binding)
+    private val onClickBannerItem: (bannerId: Int) -> Unit,
+    private val navigateBannerAll: () -> Unit,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        private const val TYPE_BANNER = 0
+        private const val TYPE_LAST_BANNER = 1
     }
 
-    override fun onBindViewHolder(holder: HomeBannerViewHolder, position: Int) {
+    override fun getItemViewType(position: Int): Int {
+        return if(position % bannerList.size == bannerList.size - 1) TYPE_LAST_BANNER
+        else TYPE_BANNER
+    }
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup, viewType: Int
+    ) = when (viewType) {
+        TYPE_BANNER -> {
+            val binding = ItemBannerViewpagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            HomeBannerViewHolder(binding)
+        }
+        TYPE_LAST_BANNER -> {
+            val binding = ItemLastBannerViewpagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            HomeLastBannerViewHolder(binding)
+        }
+        else -> throw IllegalArgumentException("Invalid view type")
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val index = position % bannerList.size
         val item = bannerList[index]
-        holder.bind(item)
+
+        when(holder) {
+            is HomeBannerViewHolder -> {
+                holder.bind(item)
+            }
+            is HomeLastBannerViewHolder -> {
+                holder.bind(item)
+            }
+            else -> throw IllegalArgumentException("Invalid view type")
+        }
     }
 
     override fun getItemCount(): Int {
-        if(bannerList.size == 0) return 0
+        if(bannerList.isEmpty()) return 0
         else return Int.MAX_VALUE // 무한 페이지 뷰를 위한
     }
 
@@ -43,6 +72,16 @@ class HomeBannerViewPagerAdapter(
             // 배너 클릭
             binding.imageHomeBanner.setOnClickListener(View.OnClickListener {
                 onClickBannerItem(item.id)
+            })
+        }
+    }
+
+    inner class HomeLastBannerViewHolder(
+        private val binding: ItemLastBannerViewpagerBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: BannerItemVO) {
+            binding.textBtnMoreBanner.setOnClickListener(View.OnClickListener {
+                navigateBannerAll()
             })
         }
     }

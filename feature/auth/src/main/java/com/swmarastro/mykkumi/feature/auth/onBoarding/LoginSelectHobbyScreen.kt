@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumi.feature.auth.onBoarding
 
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -194,16 +195,30 @@ fun HobbySubCategoryItem(
         }
     )}
 
+    val primaryColor = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.primary_color)
+    var borderModifier = remember { mutableStateOf(
+        if (viewModel.isHobbySelected(subCategory)) {
+        Modifier.border(
+            BorderStroke(1.dp, primaryColor),
+            shape = RoundedCornerShape(16.dp)
+        )
+        } else {
+            Modifier // 조건이 만족되지 않으면 빈 Modifier
+        }
+    )}
+
     Column(
         modifier = Modifier
             .padding(end = 16.dp)
-            .background(backgroundColor.value)
             .clickable {
                 viewModel.setHobbySelected(subCategory)
-                if (viewModel.isHobbySelected(subCategory)) {
-                    backgroundColor.value = Color.Green
+                if(viewModel.isHobbySelected(subCategory)) {
+                    borderModifier.value = Modifier.border(
+                        BorderStroke(3.dp, primaryColor),
+                        shape = RoundedCornerShape(16.dp)
+                    )
                 } else {
-                    backgroundColor.value = Color.Transparent
+                    borderModifier.value  = Modifier
                 }
             }
     ) {
@@ -214,7 +229,8 @@ fun HobbySubCategoryItem(
             modifier = Modifier
                 .size(60.dp)
                 .align(Alignment.CenterHorizontally)
-                .clip(RoundedCornerShape(16.dp)),
+                .clip(RoundedCornerShape(16.dp))
+                .then(borderModifier.value),
             contentScale = ContentScale.Fit,
         )
         Text(

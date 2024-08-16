@@ -51,4 +51,7 @@ dependencies {
 
     // Coil
     implementation("io.coil-kt:coil:$coil_version")
+
+    // Skeleton - facebook shimmer
+    implementation("com.facebook.shimmer:shimmer:$facebook_shimer_version")
 }

@@ -15,6 +15,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,7 +39,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -179,7 +179,7 @@ class LoginComposeActivity : ComponentActivity() {
                 modifier = Modifier.height(12.dp)
             )
             Image(
-                painter = painterResource(id = R.drawable.ic_mykkumi_character_login),
+                painter = painterResource(id = com.swmarastro.mykkumi.common_ui.R.drawable.ic_mykkumi_character_notice),
                 contentDescription = "mykkumi logo",
                 modifier = Modifier
                     .width(160.dp)
@@ -188,7 +188,7 @@ class LoginComposeActivity : ComponentActivity() {
             )
 
             Image(
-                painter = painterResource(id = R.drawable.img_mykkumi_typo),
+                painter = painterResource(id = com.swmarastro.mykkumi.common_ui.R.drawable.img_mykkumi_typo),
                 contentDescription = "mykkumi logo typo",
                 modifier = Modifier
                     .width(128.dp)
@@ -200,7 +200,7 @@ class LoginComposeActivity : ComponentActivity() {
                 modifier = Modifier.height(80.dp)
             )
 
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
@@ -213,14 +213,15 @@ class LoginComposeActivity : ComponentActivity() {
                             else -> false
                         }
                         true
-                    },
+                    }
+                    .padding(vertical = 17.dp),
+                horizontalArrangement = Arrangement.Center
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_kakao_logo),
                     contentDescription = "kakao login btn",
                     modifier = Modifier
-                        .padding(start = 16.dp, top = 15.dp, bottom = 15.dp)
-                        .size(24.dp),
+                        .size(20.dp),
                     contentScale = ContentScale.Fit
                 )
                 
@@ -231,7 +232,8 @@ class LoginComposeActivity : ComponentActivity() {
                     fontFamily = FontFamily(Font(com.swmarastro.mykkumi.common_ui.R.font.pretendard_semibold)),
                     color = colorResource(id = com.swmarastro.mykkumi.common_ui.R.color.neutral_900),
                     modifier = Modifier
-                        .align(Alignment.Center)
+                        .align(Alignment.CenterVertically)
+                        .padding(start = 8.dp)
                 )
             }
 

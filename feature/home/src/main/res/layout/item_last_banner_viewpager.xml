@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:id="@+id/relative_banner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/shape_last_banner_background"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/text_notice_more_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/notice_more_banner"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/pretendard_semibold"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/text_btn_more_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:text="@string/btn_open_more_banner"
+            android:textSize="14sp"
+            android:textColor="@color/neutral_900"
+            android:fontFamily="@font/pretendard_semibold"
+            android:background="@drawable/shape_btn_round999_secondary"
+            android:layout_marginTop="6dp"
+            android:layout_below="@id/text_notice_more_banner"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+</layout>

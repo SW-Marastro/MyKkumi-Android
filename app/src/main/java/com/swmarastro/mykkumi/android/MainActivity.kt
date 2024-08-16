@@ -60,9 +60,12 @@ class MainActivity : AppCompatActivity() {
                     else { // 로그인 안 됨
                         startActivity(intent)
                     }
-                    true
+
+                    if(viewModel.currentMenu.value != null) binding.bottomNav.selectedItemId = viewModel.currentMenu.value!!
+                    false
                 }
                 else -> {
+                    viewModel.selectMenu(item.itemId)
                     NavigationUI.onNavDestinationSelected(item, navController)
                     true
                 }
