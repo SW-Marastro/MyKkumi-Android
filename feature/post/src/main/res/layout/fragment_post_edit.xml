@@ -19,39 +19,30 @@
             android:id="@+id/header_post_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingVertical="14dp"
             android:layout_alignParentTop="true">
 
             <ImageButton
                 android:id="@+id/btn_back"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:src="@drawable/ic_back_btn"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_close"
                 android:scaleType="fitXY"
-                android:layout_margin="10dp"
+                android:layout_marginLeft="20dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:background="@android:color/transparent"/>
+                android:background="@android:color/transparent"
+                android:layout_centerVertical="true"/>
 
             <TextView
                 android:id="@+id/text_post_edit_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/post_edit_title"
-                android:layout_centerHorizontal="true"
-                android:textSize="15sp"
-                android:textColor="@color/black"
-                android:layout_marginTop="10dp"/>
-
-            <TextView
-                android:id="@+id/text_upload_post"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/upload_post"
-                android:textSize="15sp"
-                android:textColor="@color/black"
-                android:layout_margin="10dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"/>
+                android:textSize="18sp"
+                android:textColor="@color/neutral_900"
+                android:fontFamily="@font/pretendard_semibold"
+                android:layout_centerInParent="true"/>
 
         </RelativeLayout>
 
@@ -65,10 +56,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+
+                <RelativeLayout
+                    android:id="@+id/relative_select_post_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/gray_DD"
+                    android:layout_alignParentTop="true">
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/viewpager_post_edit_images"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"/>
+
+                </RelativeLayout>
+
                 <HorizontalScrollView
                     android:id="@+id/scroll_select_post_image_list"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/relative_select_post_image"
                     android:scrollbars="none"
                     android:fillViewport="true">
 
@@ -108,21 +116,6 @@
 
                 </HorizontalScrollView>
 
-                <RelativeLayout
-                    android:id="@+id/relative_select_post_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/scroll_select_post_image_list"
-                    android:background="@color/gray_DD">
-
-                    <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/viewpager_post_edit_images"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"/>
-
-                </RelativeLayout>
-
                 <Button
                     android:id="@+id/btn_add_pin"
                     android:layout_width="wrap_content"
@@ -130,8 +123,8 @@
                     android:text="핀 추가"
                     android:padding="2dp"
                     android:background="@color/gray_DD"
-                    android:layout_below="@id/relative_select_post_image"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_below="@id/scroll_select_post_image_list"
+                    android:layout_alignParentLeft="true"/>
 
                 <EditText
                     android:id="@+id/edittext_input_content"
@@ -151,6 +144,16 @@
             </RelativeLayout>
 
         </com.swmarastro.mykkumi.common_ui.custom.CustomScrollView>
+
+        <TextView
+            android:id="@+id/text_upload_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/upload_post"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:layout_margin="10dp"
+            android:layout_alignParentBottom="true"/>
 
     </RelativeLayout>
 

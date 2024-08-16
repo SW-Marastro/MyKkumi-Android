@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="post_edit_title">상품 태그 입력</string>
+    <string name="post_edit_title">새 게시물</string>
     <string name="upload_post">등록</string>
     <string name="done_image_picker">선택 완료</string>
     <string name="done_select_hobby_category">완료</string>
