@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
+import com.swmarastro.mykkumi.common_ui.report.PostReportConfirmDialog
 import com.swmarastro.mykkumi.domain.entity.BannerItemVO
 import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
@@ -153,6 +154,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             navController,
             waitNotice = {
                 waitNotice()
+            },
+            reportPost = {
+                postReportConfirm(it)
             }
         )
         binding.recyclerviewPostList.layoutManager = LinearLayoutManager(
@@ -203,6 +207,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun waitNotice() {
         showToast(waitingNotice)
+    }
+
+    // 포스트 신고 확인 Dialog
+    private fun postReportConfirm(postId: Int) {
+        val dialog = PostReportConfirmDialog(this)
+        dialog.setOnClickListener { postId ->
+            Toast.makeText(context, getString(com.swmarastro.mykkumi.common_ui.R.string.post_report_confirm_clear_toast), Toast.LENGTH_SHORT).show()
+            Log.d("test", "신고 포스트: ${postId}")
+        }
+
+        dialog.show(postId)
     }
 
     override fun onDestroyView() {

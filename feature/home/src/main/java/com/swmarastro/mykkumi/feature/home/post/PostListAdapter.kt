@@ -19,13 +19,15 @@ import coil.load
 import com.swmarastro.mykkumi.common_ui.post.PostImagesAdapter
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.common_ui.R
+import com.swmarastro.mykkumi.common_ui.report.PostReportConfirmDialog
 import com.swmarastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProvider
 import com.swmarastro.mykkumi.feature.home.databinding.ItemPostRecyclerviewBinding
 
 class PostListAdapter (
     private val context: Context,
     private val navController: NavController?,
-    private val waitNotice: () -> Unit
+    private val waitNotice: () -> Unit,
+    private val reportPost: (postId: Int) -> Unit
 ) : RecyclerView.Adapter<PostListAdapter.PostListViewHolder>(){
     private final val MAX_CONTENT_LENGTH = 50
 
@@ -121,6 +123,11 @@ class PostListAdapter (
             // 댓글 작성 버튼 - 아직 안 됨
             binding.textBtnAddComment.setOnClickListener(View.OnClickListener {
                 waitNotice()
+            })
+
+            // 신고하기
+            binding.textBtnPostReport.setOnClickListener(View.OnClickListener {
+                reportPost(item.id)
             })
 
             // 글 내용 --------------------------------------------------------------------------------------
