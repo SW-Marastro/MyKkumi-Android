@@ -1,8 +1,5 @@
 package com.swmarastro.mykkumi.feature.home
 
-import android.content.Intent
-import android.net.Uri
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,11 +8,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.swmarastro.mykkumi.domain.entity.BannerItemVO
-import com.swmarastro.mykkumi.domain.entity.BannerListVO
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerListUseCase
 import com.swmarastro.mykkumi.domain.usecase.post.GetHomePostListUseCase
-import com.swmarastro.mykkumi.feature.home.post.PostListAdapter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,6 +48,9 @@ class HomeViewModel @Inject constructor(
     private var _isPostListLoading = MutableStateFlow<Boolean>(false)
     val isPostListLoading: StateFlow<Boolean> get() = _isPostListLoading
 
+    private var _isLogined = MutableStateFlow<Boolean>(false)
+    val isLogined: StateFlow<Boolean> get() = _isLogined
+
     // 홈 > 배너 캐러셀
     fun setHomeBanner() {
         viewModelScope.launch {
@@ -60,6 +58,10 @@ class HomeViewModel @Inject constructor(
                 val homeBanner = withContext(Dispatchers.IO) {
                     getBannerListUseCase()
                 }
+
+                // 로그인 유무
+                _isLogined.emit(authTokenDataStore.isLogin())
+
                 val bannerList = homeBanner.banners.toMutableList()
                 bannerList.add(BannerItemVO())
                 _bannerListUiState.emit( bannerList )
@@ -109,10 +111,5 @@ class HomeViewModel @Inject constructor(
         val navigateDeepLink = "mykkumi://banner.detail?bannerId=${selectBannerId.value}"
         //val action = HomeFragmentDirections.actionNavigateFragmentToHomeBannerDetail(bannerId = selectBannerId)
         navController?.navigate(deepLink = navigateDeepLink.toUri())
-    }
-
-    // 로그아웃 테스트
-    fun logout() {
-        authTokenDataStore.deleteToken()
     }
 }

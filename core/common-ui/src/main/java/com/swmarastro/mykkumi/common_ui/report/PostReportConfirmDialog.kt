@@ -1,6 +1,8 @@
 package com.swmarastro.mykkumi.common_ui.report
 
 import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.view.Window
 import android.widget.Toast
@@ -28,6 +30,7 @@ class PostReportConfirmDialog(private val context: Fragment) {
 
     fun show(postId: Int) {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE) // 타이틀바 제거
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 배경 투명하게
         dialog.setContentView(binding.root)
 
         binding.textBtnPostReportConfirm.setOnClickListener(View.OnClickListener {

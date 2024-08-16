@@ -39,6 +39,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val waitingNotice = "${String(Character.toChars(0x1F525))} 준비 중입니다 ${String(Character.toChars(0x1F525))}"
 
+    override fun onResume() {
+        super.onResume()
+
+        setHomeBanner() // 배너
+        setPostList() // 포스트
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -157,7 +163,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             },
             reportPost = {
                 postReportConfirm(it)
-            }
+            },
+            viewModel
         )
         binding.recyclerviewPostList.layoutManager = LinearLayoutManager(
             context,

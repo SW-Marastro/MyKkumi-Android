@@ -21,13 +21,15 @@ import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.common_ui.R
 import com.swmarastro.mykkumi.common_ui.report.PostReportConfirmDialog
 import com.swmarastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProvider
+import com.swmarastro.mykkumi.feature.home.HomeViewModel
 import com.swmarastro.mykkumi.feature.home.databinding.ItemPostRecyclerviewBinding
 
 class PostListAdapter (
     private val context: Context,
     private val navController: NavController?,
     private val waitNotice: () -> Unit,
-    private val reportPost: (postId: Int) -> Unit
+    private val reportPost: (postId: Int) -> Unit,
+    private val viewModel: HomeViewModel
 ) : RecyclerView.Adapter<PostListAdapter.PostListViewHolder>(){
     private final val MAX_CONTENT_LENGTH = 50
 
@@ -56,15 +58,6 @@ class PostListAdapter (
             binding.includePostWriter.textWriterNickname.text = item.writer.nickname // 닉네임
             binding.textContentWriterNickname.text = item.writer.nickname
             binding.includePostWriter.textPostCategory.text = item.category + " - " + item.subCategory // 포스트 카테고리
-
-            // 사용자 정보 우측 점3개 선택 -> 신고하기 버튼 보여주기
-//            binding.frameUserComplaint.visibility = View.GONE
-////            binding.includePostWriter.btnPostMoreMenu.setOnClickListener {
-////                if(binding.frameUserComplaint.visibility == View.GONE)
-////                    binding.frameUserComplaint.visibility = View.VISIBLE
-////                else
-////                    binding.frameUserComplaint.visibility = View.GONE
-////            }
 
             // 포스트 이미지 viewpager
             var postItemImageAdapter: PostImagesAdapter = PostImagesAdapter(
@@ -116,18 +109,30 @@ class PostListAdapter (
             binding.btnPostShare.setOnClickListener {
                 waitNotice()
             }
-            // 팔로우 버튼 - 아직 안 됨
-            binding.includePostWriter.btnFollow.setOnClickListener(View.OnClickListener {
-                waitNotice()
-            })
+
+            // 로그인 된 유저한테만 보여줄 것 - 팔로우, 신고하기 버튼
+            if(viewModel.isLogined.value) {
+                binding.includePostWriter.btnFollow.visibility = View.VISIBLE // 팔로우
+                binding.textBtnPostReport.visibility = View.VISIBLE // 신고하기
+
+                // 팔로우 버튼 - 아직 안 됨
+                binding.includePostWriter.btnFollow.setOnClickListener(View.OnClickListener {
+                    waitNotice()
+                })
+
+                // 포스트 신고하기
+                binding.textBtnPostReport.setOnClickListener(View.OnClickListener {
+                    reportPost(item.id)
+                })
+            }
+            else {
+                binding.includePostWriter.btnFollow.visibility = View.GONE // 팔로우
+                binding.textBtnPostReport.visibility = View.GONE // 신고하기
+            }
+
             // 댓글 작성 버튼 - 아직 안 됨
             binding.textBtnAddComment.setOnClickListener(View.OnClickListener {
                 waitNotice()
-            })
-
-            // 신고하기
-            binding.textBtnPostReport.setOnClickListener(View.OnClickListener {
-                reportPost(item.id)
             })
 
             // 글 내용 --------------------------------------------------------------------------------------
