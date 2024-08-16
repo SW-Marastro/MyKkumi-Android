@@ -137,7 +137,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     binding.viewpagerBanner.currentItem = (binding.viewpagerBanner.currentItem + 1) % Int.MAX_VALUE
                 }
             }
-        }, 3000, 3000) // 3초마다 전환 -> 너무 빠른가?
+        }, 5000, 3000) // 5초마다 전환
     }
 
     // 배너 클릭 -> 배너 상세 페이지 이동

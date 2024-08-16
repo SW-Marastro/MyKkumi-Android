@@ -130,10 +130,10 @@
                 android:layout_centerVertical="true"/>
 
             <TextView
-                android:id="@+id/text_btn_post_complaint"
+                android:id="@+id/text_btn_post_report"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/user_complaint"
+                android:text="@string/user_report"
                 android:textSize="13sp"
                 android:textColor="@color/neutral_400"
                 android:fontFamily="@font/pretendard_semibold"
