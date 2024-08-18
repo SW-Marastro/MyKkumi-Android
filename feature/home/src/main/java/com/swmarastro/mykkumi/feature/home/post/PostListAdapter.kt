@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -54,7 +55,14 @@ class PostListAdapter (
         private val binding: ItemPostRecyclerviewBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: HomePostItemVO, position: Int) {
-            binding.includePostWriter.imageWriterProfile.load(item.writer.profileImage) // 사용자 프로필
+            // 사용자 프로필
+            if(item.writer.profileImage == null) {
+                binding.includePostWriter.imageWriterProfile.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.img_profile_default))
+            }
+            else {
+                binding.includePostWriter.imageWriterProfile.load(item.writer.profileImage)
+            }
+
             binding.includePostWriter.textWriterNickname.text = item.writer.nickname // 닉네임
             binding.textContentWriterNickname.text = item.writer.nickname
             binding.includePostWriter.textPostCategory.text = item.category + " - " + item.subCategory // 포스트 카테고리
