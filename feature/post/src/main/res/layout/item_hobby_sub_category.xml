@@ -7,22 +7,18 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:layout_margin="3dp"
-        android:padding="2dp">
-        
-        <ImageView
-            android:id="@+id/image_hobby_sub_category"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:src="@drawable/img_profile_default"
-            android:scaleType="fitXY"/>
+        android:layout_marginRight="3dp"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="12dp"
+        android:background="@drawable/shape_sub_category_unselected">
 
         <TextView
             android:id="@+id/text_hobby_sub_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/neutral_700"
+            android:fontFamily="@font/pretendard_medium"/>
         
     </LinearLayout>
 

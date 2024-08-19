@@ -14,7 +14,6 @@ import com.swmarastro.mykkumi.domain.entity.PostEditPinVO
 import com.swmarastro.mykkumi.domain.entity.PostImageVO
 import com.swmarastro.mykkumi.domain.repository.PreSignedUrlRepository
 import com.swmarastro.mykkumi.domain.usecase.post.UploadPostUseCase
-import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
 import com.swmarastro.mykkumi.feature.post.hobbyCategory.SelectHobbyOfPostBottomSheet
 import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,6 +44,9 @@ class PostEditViewModel  @Inject constructor(
 
     private val _isDeleteImageState = MutableLiveData<Boolean>(false)
     val isDeleteImageState : LiveData<Boolean> get() = _isDeleteImageState
+
+    private val _selectHobbyCategory = MutableStateFlow<Long>(-1L)
+    val selectHobbyCategory : StateFlow<Long> get() = _selectHobbyCategory
 
     fun selectPostImage(uris: MutableList<Uri>) {
         viewModelScope.launch {
@@ -162,18 +164,6 @@ class PostEditViewModel  @Inject constructor(
         )
     }
 
-    // 이미지 삭제를 위한 확인용 bottomSheet
-    fun confirmDeleteImage(fragment: PostEditFragment, message: String, position: Int) {
-        _isDeleteImageState.value = true
-
-        val bundle = Bundle()
-        bundle.putString("message", message)
-        bundle.putInt("position", position)
-        val bottomSheet = PostConfirmBottomSheet().apply { setListener(fragment) }
-        bottomSheet.arguments = bundle
-        bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
-    }
-
     // 이미지 삭제
     fun deleteImage(deleteImagePosition: Int) {
         if(deleteImagePosition == -1) return
@@ -203,27 +193,33 @@ class PostEditViewModel  @Inject constructor(
 
     // 포스트 등록 시도
     fun doneEditPost(
-        fragment: PostEditFragment,
-        showToast: (message: String) -> Unit
+        content: String,
+        noticeEmptyImage: String,
+        noticeEmptyCategory: String,
+        showToast: (message: String) -> Unit,
+        navController: NavController?
     ) {
         // 이미지가 하나 이상인지 확인
-        if (!postEditUiState.value.isNullOrEmpty()) {
-            selectHobbyCategory(fragment)
+        if (postEditUiState.value.isNullOrEmpty()) {
+            showToast(noticeEmptyImage)
+        }
+        // 카테고리가 선택된 상태인지 확인
+        else if(selectHobbyCategory.value == -1L) {
+            showToast(noticeEmptyCategory)
         }
         else {
-            showToast("포스트를 등록하려면 하나 이상의 이미지가 필요합니다.")
+            uploadPost(
+                content,
+                showToast = {
+                    showToast(it)
+                },
+                navController
+            )
         }
-    }
-
-    // 카테고리 선택 BottomSheet
-    fun selectHobbyCategory(fragment: PostEditFragment) {
-        val bottomSheet = SelectHobbyOfPostBottomSheet().apply { setListener(fragment) }
-        bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
     }
 
     // 포스트 등록
     fun uploadPost(
-        subCategoryId: Long,
         content: String,
         showToast: (message: String) -> Unit,
         navController: NavController?
@@ -231,9 +227,9 @@ class PostEditViewModel  @Inject constructor(
         viewModelScope.launch {
             try {
                 val uploadPostId = uploadPostUseCase(
-                    subCategory = subCategoryId,
+                    subCategory = selectHobbyCategory.value,
                     content = content,
-                    postImages = postEditUiState.value!! // 애초에 이미지가 하나 이상이어야 카테고리 선택이 가능
+                    postImages = postEditUiState.value!!
                 )
                 navController?.popBackStack()
                 showToast("포스트가 등록되었습니다!")

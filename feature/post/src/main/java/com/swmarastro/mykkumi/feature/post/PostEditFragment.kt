@@ -16,9 +16,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
-import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
+import com.swmarastro.mykkumi.feature.post.confirm.PostDeleteImageConfirmDialog
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
-import com.swmarastro.mykkumi.feature.post.hobbyCategory.SelectHobbyOfPostBottomSheet
 import com.swmarastro.mykkumi.feature.post.imagePicker.ImagePickerArgument
 import com.swmarastro.mykkumi.feature.post.imageWithPin.EditImageWithPinAdapter
 import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
@@ -27,9 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit),
-    PostConfirmBottomSheet.PostConfirmListener,
-    InputProductInfoBottomSheet.InputProductInfoListener,
-    SelectHobbyOfPostBottomSheet.SelectHobbyOfPostListener {
+    InputProductInfoBottomSheet.InputProductInfoListener {
     private val viewModel by viewModels<PostEditViewModel>()
 
     private final val MAX_POST_CONTENT_LENGTH = 2000      // 본문 글자 수
@@ -76,8 +73,6 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         }
         // 상태 복원 완료
         isRestoringState = false
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -152,11 +147,15 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
         // 포스트 등록 버튼
         binding.textBtnUploadPost.setOnClickListener(View.OnClickListener {
+            val content = binding.edittextInputContent.text.toString()
             viewModel.doneEditPost(
-                this,
+                content = content,
+                noticeEmptyImage = getString(R.string.notice_not_select_image),
+                noticeEmptyCategory = getString(R.string.notice_select_hobby_category_of_post),
                 showToast = {
                     showToast(it)
-                }
+                },
+                navController = navController
             )
         })
     }
@@ -316,14 +315,21 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     }
 
     // 이미지 삭제 -> notice
-    private fun confirmDeleteImage(position: Int) {
-        viewModel.confirmDeleteImage(this@PostEditFragment, getString(R.string.confirm_delete_image_for_post_edit), position)
+    private fun confirmDeleteImage(imageIndex: Int) {
+        val dialog = PostDeleteImageConfirmDialog(this)
+        dialog.confirmPostReportListener { postId ->
+            confirmAgree(postId)
+        }
+        dialog.cancelPostReportListener { confirmCancel() }
+
+        dialog.show(imageIndex)
     }
 
     // 이미지 삭제
-    override fun confirmAgree(position: Int) {
+    fun confirmAgree(position: Int) {
         viewModel.deleteImage(position)
         viewModel.doneDeleteImage()
+        showToast(getString(R.string.toast_done_delete))
 
         // 이미지 전체 삭제된 경우
         if(viewModel.postEditUiState.value.isNullOrEmpty()) {
@@ -331,13 +337,11 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             binding.viewLineSelectImages.visibility = View.GONE
 
             binding.relativeEmptyImage.visibility = View.VISIBLE
-
-
         }
     }
 
     // 이미지 삭제 취소
-    override fun confirmCancel() {
+    fun confirmCancel() {
         viewModel.doneDeleteImage()
     }
 
@@ -371,17 +375,17 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     }
 
     // 카테고리 선택 완료 -> 포스트 작성
-    override fun doneSelectHobby(categoryId: Long) {
-        val content = binding.edittextInputContent.text.toString()
-        viewModel.uploadPost(
-            categoryId,
-            content,
-            showToast = {
-                showToast(it)
-            },
-            navController
-        )
-    }
+//    override fun doneSelectHobby(categoryId: Long) {
+//        val content = binding.edittextInputContent.text.toString()
+//        viewModel.uploadPost(
+//            categoryId,
+//            content,
+//            showToast = {
+//                showToast(it)
+//            },
+//            navController
+//        )
+//    }
 
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

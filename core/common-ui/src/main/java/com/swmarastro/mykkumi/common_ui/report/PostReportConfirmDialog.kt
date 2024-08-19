@@ -5,9 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.view.Window
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.swmarastro.mykkumi.common_ui.R
 import com.swmarastro.mykkumi.common_ui.databinding.DialogPostReportConfirmBinding
 
 class PostReportConfirmDialog(private val context: Fragment) {

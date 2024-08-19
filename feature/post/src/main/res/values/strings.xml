@@ -12,7 +12,10 @@
     <string name="title_input_content">내용 입력</string>
 
     <string name="confirm_delete_image_for_post_edit">사진을 삭제할까요?</string>
-    <string name="confirm_delete_image_for_post_edit_description">사진을 삭제하시면 제품 핀도 함께 삭제됩니다.</string>
+    <string name="confirm_delete_image_for_post_edit_description">사진을 삭제하시면 사진에 포함된\n제품 핀도 함께 삭제됩니다.</string>
+    <string name="btn_cancel">취소</string>
+    <string name="btn_agree_delete">삭제</string>
+    <string name="toast_done_delete">삭제되었습니다.</string>
     <string name="notice_input_product_info_for_pin">핀에 보여줄 제품 정보를 입력해주세요.\n(제품명은 필수입니다)</string>
     <string name="label_product_name_for_input_product_info">제품명</string>
     <string name="label_product_url_for_input_product_info">구매처 URL</string>
