@@ -139,7 +139,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         }
 
         // 포스트 등록 버튼
-        binding.textUploadPost.setOnClickListener(View.OnClickListener {
+        binding.textBtnUploadPost.setOnClickListener(View.OnClickListener {
             viewModel.doneEditPost(
                 this,
                 showToast = {
@@ -237,6 +237,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             editImageWithPinAdapter.imageWithPinList = it
 
             if (!viewModel.postEditUiState.value.isNullOrEmpty()) { //  && !viewModel.isDeleteImageState && !isRestoringState
+                binding.relativeSelectPostImageList.visibility = View.VISIBLE
+                binding.viewLineSelectImages.visibility = View.VISIBLE
                 viewModel.changeSelectImagePosition(viewModel.postEditUiState.value!!.size - 1)
             }
 
@@ -300,6 +302,12 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     override fun confirmAgree(position: Int) {
         viewModel.deleteImage(position)
         viewModel.doneDeleteImage()
+
+        // 이미지 전체 삭제된 경우
+        if(viewModel.postEditUiState.value.isNullOrEmpty()) {
+            binding.relativeSelectPostImageList.visibility = View.GONE
+            binding.viewLineSelectImages.visibility = View.GONE
+        }
     }
 
     // 이미지 삭제 취소

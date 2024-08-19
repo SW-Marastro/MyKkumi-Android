@@ -56,7 +56,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-
                 <RelativeLayout
                     android:id="@+id/relative_select_post_image"
                     android:layout_width="match_parent"
@@ -80,41 +79,45 @@
                     android:scrollbars="none"
                     android:fillViewport="true">
 
-                    <LinearLayout
-                        android:id="@+id/linear_select_post_image_list"
+                    <RelativeLayout
+                        android:id="@+id/relative_select_post_image_list"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:orientation="horizontal">
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginBottom="24dp">
 
-                        <RelativeLayout
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerview_select_post_image"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/item_select_post_image"
+                            android:overScrollMode="never"
+                            android:nestedScrollingEnabled="false"/>
 
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/recyclerview_select_post_image"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                                tools:listitem="@layout/item_select_post_image"
-                                android:overScrollMode="never"
-                                android:nestedScrollingEnabled="false"/>
-
-                        </RelativeLayout>
-
-                        <TextView
+                        <ImageButton
                             android:id="@+id/btn_add_post_image"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:text="추가"
-                            android:gravity="center"
-                            android:background="@color/gray_DD"
-                            android:layout_margin="5dp"/>
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:src="@drawable/ic_add_image"
+                            android:scaleType="fitXY"
+                            android:background="@android:color/transparent"
+                            android:layout_toRightOf="@id/recyclerview_select_post_image"
+                            android:layout_alignParentBottom="true"/>
 
-                    </LinearLayout>
+                    </RelativeLayout>
 
                 </HorizontalScrollView>
+                
+                <View
+                    android:id="@+id/view_line_select_images"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:background="@drawable/shape_btn_round12_neutral50"
+                    android:layout_marginBottom="4dp"
+                    android:layout_below="@id/scroll_select_post_image_list"/>
 
                 <Button
                     android:id="@+id/btn_add_pin"
@@ -122,8 +125,9 @@
                     android:layout_height="wrap_content"
                     android:text="핀 추가"
                     android:padding="2dp"
+                    android:layout_marginTop="20dp"
                     android:background="@color/gray_DD"
-                    android:layout_below="@id/scroll_select_post_image_list"
+                    android:layout_below="@id/view_line_select_images"
                     android:layout_alignParentLeft="true"/>
 
                 <EditText
@@ -145,15 +149,29 @@
 
         </com.swmarastro.mykkumi.common_ui.custom.CustomScrollView>
 
-        <TextView
-            android:id="@+id/text_upload_post"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/relative_upload_post"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/upload_post"
-            android:textSize="15sp"
-            android:textColor="@color/black"
-            android:layout_margin="10dp"
-            android:layout_alignParentBottom="true"/>
+            android:background="@color/white"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="10dp"
+            android:layout_alignParentBottom="true"
+            android:elevation="5dp">
+
+            <TextView
+                android:id="@+id/text_btn_upload_post"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/upload_post"
+                android:textSize="15sp"
+                android:textColor="@color/neutral_300"
+                android:fontFamily="@font/pretendard_semibold"
+                android:background="@drawable/shape_btn_round12_neutral50"
+                android:paddingVertical="15.5dp"
+                android:gravity="center"/>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
