@@ -83,7 +83,7 @@ class EditImageWithPinAdapter(
             for(idx in 0..<currentPinList.size) {
                 val pin = currentPinList[idx]
 
-                val pinView = LayoutInflater.from(context).inflate(R.layout.item_pin_of_post_image, binding.relativePinsOfImages, false)
+                val pinView = LayoutInflater.from(context).inflate(R.layout.item_pin_of_post_edit, binding.relativePinsOfImages, false)
                 binding.relativePinsOfImages.addView(pinView)
 
                 // 핀의 가운데를 기준으로
@@ -104,7 +104,7 @@ class EditImageWithPinAdapter(
                 // 제품 정보 수정 / 삭제 tooltip을 위한 touchEvent 체크
                 val gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
                     override fun onSingleTapUp(e: MotionEvent): Boolean {
-                        showTooltipOfPin(pinView, idx)
+                        showTooltipOfPin(pinView, idx, pin.product.productName)
                         return super.onSingleTapUp(e)
                     }
                 })
@@ -149,8 +149,11 @@ class EditImageWithPinAdapter(
     }
 
     // 제품 정보 수정, 삭제 tooltip
-    private fun showTooltipOfPin(anchorView: View, pinIndex: Int) {
+    private fun showTooltipOfPin(anchorView: View, pinIndex: Int, productName: String) {
         val tooltipView = LayoutInflater.from(anchorView.context).inflate(R.layout.tooltip_pin_of_image, null)
+
+        val textProductName = tooltipView.findViewById<TextView>(R.id.text_product_name)
+        textProductName.text = productName
 
         val popupWindow = PopupWindow(
             tooltipView,
