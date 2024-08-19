@@ -70,7 +70,7 @@ class PostEditViewModel  @Inject constructor(
                         addPostImages.add(
                             PostImageVO(
                                 imageUri = imageUrl,
-                                imageLocalUri = uri.toString()
+//                                imageLocalUri = uri.toString()
                             )
                         )
                         _postEditUiState.value = addPostImages

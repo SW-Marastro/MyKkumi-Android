@@ -9,12 +9,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.swmarastro.mykkumi.common_ui.R
 
 abstract class BaseBottomSheetFragment<T: ViewDataBinding>(
     @LayoutRes private val layoutId: Int
 ) : BottomSheetDialogFragment() {
     protected var _binding: T? = null
     protected val binding get() = _binding ?: throw IllegalStateException("Binding is not initialized")
+
+    override fun getTheme(): Int {
+        return R.style.CustomBottomSheetDialogTheme
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

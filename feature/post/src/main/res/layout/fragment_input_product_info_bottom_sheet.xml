@@ -8,8 +8,8 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingTop="10dp"
-        android:paddingBottom="5dp">
+        android:paddingTop="20dp"
+        android:paddingHorizontal="20dp">
 
         <TextView
             android:id="@+id/text_confirm_notice_message"
@@ -100,25 +100,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp">
 
-            <Button
+            <TextView
                 android:id="@+id/btn_confirm_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/confirm_cancel"
-                android:background="@color/gray_DD"
-                android:layout_margin="5dp"
+                android:textColor="@color/neutral_700"
+                android:textSize="15sp"
+                android:fontFamily="@font/pretendard_semibold"
+                android:background="@drawable/shape_btn_round12_neutral50"
+                android:gravity="center"
+                android:paddingVertical="15.5dp"
+                android:layout_marginRight="5.5dp"
                 android:layout_weight="1"/>
 
-            <Button
+            <TextView
                 android:id="@+id/btn_confirm_agree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/confirm_agree"
-                android:background="@android:color/holo_green_light"
-                android:layout_margin="5dp"
-                android:layout_weight="1"/>
+                android:text="@string/done_input_product_info"
+                android:textColor="@color/neutral_300"
+                android:textSize="15sp"
+                android:fontFamily="@font/pretendard_semibold"
+                android:background="@drawable/shape_btn_round12_neutral50"
+                android:gravity="center"
+                android:paddingVertical="15.5dp"
+                android:layout_marginLeft="5.5dp"
+                android:layout_weight="2"/>
 
         </LinearLayout>
 

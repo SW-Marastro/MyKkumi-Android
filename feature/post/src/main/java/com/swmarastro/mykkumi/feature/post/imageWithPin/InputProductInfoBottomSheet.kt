@@ -64,12 +64,12 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
         }
 
         // 입력 취소
-        binding.btnConfirmCancel.setOnClickListener {
+        binding.btnConfirmCancel.setOnClickListener(View.OnClickListener {
             dismiss()
-        }
+        })
 
         // 입력 완료
-        binding.btnConfirmAgree.setOnClickListener {
+        binding.btnConfirmAgree.setOnClickListener(View.OnClickListener {
             val inputProductName: String = binding.edittextInputProductName.text.toString()
             var inputProductUrl: String? = binding.edittextInputProductUrl.text.toString()
 
@@ -78,7 +78,6 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
             else {
                 // 핀 내용 수정
                 if(position != null) {
-                    Log.d("test", "test")
                     inputProductInfoListener?.updateProductInput(position!!, inputProductName, inputProductUrl)
                     dismiss()
                 }
@@ -89,7 +88,7 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
                     dismiss()
                 }
             }
-        }
+        })
     }
 
     override suspend fun initView() {

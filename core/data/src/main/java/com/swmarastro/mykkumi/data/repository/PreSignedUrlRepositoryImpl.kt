@@ -29,11 +29,11 @@ class PreSignedUrlRepositoryImpl @Inject constructor(
             } else {
                 try {
                     putImageS3DataSource.putImageForS3(
-                        preSignedUrlResponse.url,
+                        preSignedUrlResponse.presignedUrl,
                         imageFile
                     )
 
-                    val imageUrl: String = preSignedUrlResponse.url.split("?")[0]
+                    val imageUrl: String = preSignedUrlResponse.cdnUrl
                     return imageUrl
                 } catch (e: Exception) {
                     return null
@@ -56,11 +56,11 @@ class PreSignedUrlRepositoryImpl @Inject constructor(
             } else {
                 try {
                     putImageS3DataSource.putImageForS3(
-                        preSignedUrlResponse.url,
+                        preSignedUrlResponse.presignedUrl,
                         imageFile
                     )
 
-                    val imageUrl: String = preSignedUrlResponse.url.split("?")[0]
+                    val imageUrl: String = preSignedUrlResponse.cdnUrl
                     return imageUrl
                 } catch (e: Exception) {
                     return null

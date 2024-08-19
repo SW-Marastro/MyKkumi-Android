@@ -70,8 +70,8 @@ class SelectPostImageListAdapter (
         private val binding: ItemSelectPostImageBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PostImageVO, position: Int) {
-            // binding.imagePostEditThumbnail.load(item.imageUri.toUri())
-            binding.imagePostEditThumbnail.load(item.imageLocalUri.toUri())
+            binding.imagePostEditThumbnail.load(item.imageUri.toUri())
+            //binding.imagePostEditThumbnail.load(item.imageLocalUri.toUri())
 
             if (item.isSelect) {
                 binding.relativePostEditThumbnail.setBackgroundResource(R.drawable.shape_post_image_thumbnail_selected)
