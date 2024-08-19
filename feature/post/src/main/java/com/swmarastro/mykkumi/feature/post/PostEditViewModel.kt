@@ -230,12 +230,15 @@ class PostEditViewModel  @Inject constructor(
         showToast: (message: String) -> Unit,
         navController: NavController?
     ) {
-        // 포스트 등록 가능한지 확인 -> 가능하면 등록
-        if(isPossibleUploadPost(
-            noticeEmptyImage,
-            noticeEmptyCategory,
-            showToast
-        )) {
+        // 이미지가 하나 이상인지 확인
+        if (postEditUiState.value.isNullOrEmpty()) {
+            showToast(noticeEmptyImage)
+        }
+        // 카테고리가 선택된 상태인지 확인
+        else if(selectHobbyCategory.value == -1L) {
+            showToast(noticeEmptyCategory)
+        }
+        else {
             uploadPost(
                 content,
                 showToast = {
@@ -247,19 +250,13 @@ class PostEditViewModel  @Inject constructor(
     }
 
     // 포스트 등록 가능한지 확인
-    fun isPossibleUploadPost(
-        noticeEmptyImage: String,
-        noticeEmptyCategory: String,
-        showToast: (message: String) -> Unit,
-    ): Boolean {
+    fun isPossibleUploadPost(): Boolean {
         // 이미지가 하나 이상인지 확인
         if (postEditUiState.value.isNullOrEmpty()) {
-            showToast(noticeEmptyImage)
             return false
         }
         // 카테고리가 선택된 상태인지 확인
         else if(selectHobbyCategory.value == -1L) {
-            showToast(noticeEmptyCategory)
             return false
         }
         else return true

@@ -282,7 +282,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             selectPostImageListAdapter.postImageList = it
             editImageWithPinAdapter.imageWithPinList = it
 
-            if (isRestoringState && !viewModel.postEditUiState.value.isNullOrEmpty()) { //  && !viewModel.isDeleteImageState && !isRestoringState
+            if (!viewModel.postEditUiState.value.isNullOrEmpty()) { //  && !viewModel.isDeleteImageState && !isRestoringState
                 binding.relativeSelectPostImageList.visibility = View.VISIBLE
                 binding.viewLineSelectImages.visibility = View.VISIBLE
                 binding.relativeEmptyImage.visibility = View.GONE
@@ -290,13 +290,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                 viewModel.changeSelectImagePosition(viewModel.postEditUiState.value!!.size - 1)
 
                 // 이미지 있음 -> 카테고리까지 있는지 확인하고 포스트 작성 버튼 활성화
-                if(viewModel.isPossibleUploadPost(
-                    noticeEmptyImage = getString(R.string.notice_not_select_image),
-                    noticeEmptyCategory = getString(R.string.notice_select_hobby_category_of_post),
-                    showToast = {
-                        showToast(it)
-                    }
-                )) {
+                if(viewModel.isPossibleUploadPost()) {
                     binding.textBtnUploadPost.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_primary)
                     binding.textBtnUploadPost.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.white))
                 }
@@ -349,14 +343,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         // 카테고리 선택
         viewModel.selectHobbyCategory.observe(viewLifecycleOwner, Observer {
             // 카테고리 선택됨 -> 이미지까지 있는지 확인하고 포스트 작성 버튼 활성화
-            if(viewModel.selectHobbyCategory.value != 1L &&
-                viewModel.isPossibleUploadPost(
-                    noticeEmptyImage = getString(R.string.notice_not_select_image),
-                    noticeEmptyCategory = getString(R.string.notice_select_hobby_category_of_post),
-                    showToast = {
-                        showToast(it)
-                    }
-                )) {
+            if(viewModel.isPossibleUploadPost()) {
                 binding.textBtnUploadPost.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_primary)
                 binding.textBtnUploadPost.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.white))
             }

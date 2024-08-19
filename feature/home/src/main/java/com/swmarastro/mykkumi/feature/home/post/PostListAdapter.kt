@@ -75,6 +75,12 @@ class PostListAdapter (
             binding.viewpagerPostImages.adapter = postItemImageAdapter
             binding.viewpagerPostImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
+            val viewPager = binding.viewpagerPostImages
+            viewPager.viewTreeObserver.addOnGlobalLayoutListener {
+                viewPager.layoutParams.height = viewPager.width
+                viewPager.requestLayout()
+            }
+
             // 이미지 indicator
             if(item.images.size > 1)
                 binding.indicatorPostImage.createIndicator(item.images.size, 0)
