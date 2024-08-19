@@ -21,8 +21,8 @@
     <string name="notice_input_product_info_for_pin">핀에 보여줄 제품 정보를 입력해주세요.\n(제품명은 필수입니다)</string>
     <string name="label_product_name_for_input_product_info">제품명</string>
     <string name="label_product_url_for_input_product_info">구매처 URL</string>
-    <string name="placeholder_product_name_for_input_product_info">제품명을 20자 이내로 입력해주세요.</string>
-    <string name="placeholder_product_url_for_input_product_info">https://...</string>
+    <string name="placeholder_product_name_for_input_product_info">최대 20자까지 작성할 수 있어요.</string>
+    <string name="placeholder_product_url_for_input_product_info">구매한 사이트의 URL을 작성해주세요. (예: https://www.shop.com)</string>
     <string name="notice_product_name_not_null">제품명을 입력해주세요.</string>
     <string name="notice_product_name_max_length">제품명은 20자 이내로 입력해주세요.</string>
     <string name="placeholder_input_post_content">최대 2000자까지 작성할 수 있어요.\n해시태그는 20개까지 추가할 수 있어요.</string>

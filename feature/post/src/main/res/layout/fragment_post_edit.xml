@@ -210,7 +210,7 @@
                     android:paddingVertical="14dp"
                     android:paddingHorizontal="16dp"
                     android:layout_below="@id/text_title_input_content"
-                    android:background="@drawable/shape_input_content_border"/>
+                    android:background="@drawable/shape_input_border12_neutral200"/>
 
                 <LinearLayout
                     android:id="@+id/linear_hobby_category"
