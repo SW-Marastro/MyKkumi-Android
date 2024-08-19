@@ -46,24 +46,28 @@ class PostEditViewModel  @Inject constructor(
     private val _isDeleteImageState = MutableLiveData<Boolean>(false)
     val isDeleteImageState : LiveData<Boolean> get() = _isDeleteImageState
 
-    fun selectPostImage(uri: Uri) {
+    fun selectPostImage(uris: MutableList<Uri>) {
         viewModelScope.launch {
-            try {
-                val imageUrl = preSignedUrlRepository.getPreSignedPostUrl(uri)
+            val urisCopy = uris.toList()
 
-                if(imageUrl != null) {
-                    val addPostImages = _postEditUiState.value
-                    addPostImages?.add(
-                        PostImageVO(
-                            imageUri = imageUrl,
-                            imageLocalUri = uri.toString()
+            for (uri in urisCopy) {
+                try {
+                    val imageUrl = preSignedUrlRepository.getPreSignedPostUrl(uri)
+
+                    if (imageUrl != null) {
+                        // `_postEditUiState` 리스트를 안전하게 업데이트
+                        val addPostImages = _postEditUiState.value?.toMutableList() ?: mutableListOf()
+                        addPostImages.add(
+                            PostImageVO(
+                                imageUri = imageUrl,
+                                imageLocalUri = uri.toString()
+                            )
                         )
-                    )
-                    _postEditUiState.setValue( addPostImages!! )
+                        _postEditUiState.value = addPostImages
+                    }
+                } catch (e: Exception) {
+                    // 예외 처리
                 }
-
-            } catch (e: Exception) {
-
             }
         }
     }

@@ -93,6 +93,13 @@ class ImagePickerAdapter (
                     // 선택 하려는데 최대 개수인 경우를 제외하고 가능
                     else {
                         viewModel.toggleImageSelection(position - 1, isChecked)
+
+                        if(isChecked) {
+                            binding.textNumImagePicker.text = item.selectNum.toString()
+                        }
+                        else {
+                            binding.textNumImagePicker.text = ""
+                        }
                     }
                 }
             }
@@ -112,6 +119,13 @@ class ImagePickerAdapter (
                     else {
                         binding.checkboxPickImage.isChecked = isChecked
                         viewModel.toggleImageSelection(position - 1, isChecked)
+
+                        if(isChecked) {
+                            binding.textNumImagePicker.text = item.selectNum.toString()
+                        }
+                        else {
+                            binding.textNumImagePicker.text = ""
+                        }
                     }
                 }
             })

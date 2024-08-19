@@ -80,27 +80,16 @@ class ImagePickerViewModel @Inject constructor(
         navController?.popBackStack()
     }
 
-//    fun doneSelectImages(navController: NavController?) {
-//        // 선택된 이미지
-//        val selectImages = mutableListOf<Uri>()
-//        imagePickerUiState.value.let {
-//            for (image in imagePickerUiState.value!!) {
-//                if (image.isSelect) selectImages.add(image.localUri)
-//            }
-//        }
-//
-//        navController?.previousBackStackEntry?.savedStateHandle?.set("selectImages", ImagePickerArgument(selectImages))
-//        navController?.popBackStack()
-//    }
-
 
     // 이미지 선택 상태를 업데이트하고 선택된 이미지 개수를 관리
     fun toggleImageSelection(position: Int, isSelected: Boolean) {
         _imagePickerUiState.value?.let { list ->
             list[position].isSelect = isSelected
             if (isSelected) {
-                if(_selectImages.value?.contains(list[position].localUri) != true)
+                if(_selectImages.value?.contains(list[position].localUri) != true) {
                     _selectImages.value?.add(list[position].localUri)
+                    list[position].selectNum = selectImage.value?.size ?: -1
+                }
                 else {}
             } else {
                 _selectImages.value?.remove(list[position].localUri)
@@ -110,7 +99,6 @@ class ImagePickerViewModel @Inject constructor(
 
     // 이미지 선택 완료
     fun doneSelectImages(navController: NavController?) {
-        Log.d("test", "select Images: ${selectImage.value!!.joinToString()}")
         selectImage.value.let { images ->
             if (images != null) {
                 navController?.previousBackStackEntry?.savedStateHandle?.set("selectImages", ImagePickerArgument(images))

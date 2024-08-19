@@ -54,12 +54,9 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             ?.observe(viewLifecycleOwner) { images ->
                 if(!images.selectImages.isNullOrEmpty()) {
                     isStartPosting = true
-                    for (image in images.selectImages) {
-                        viewModel.selectPostImage(image)
-                    }
+                    viewModel.selectPostImage(images.selectImages)
 
-                    // 리스트에 추가했다면 지우기 - view resume 될 때마다 추가되는 현상 제거
-                    images.selectImages.clear()
+                    images.selectImages.clear() // 리스트에 추가했다면 지우기 - view resume 될 때마다 추가되는 현상 제거
                 }
             }
 
