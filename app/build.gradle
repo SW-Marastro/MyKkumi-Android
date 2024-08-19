@@ -38,16 +38,20 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [
-                    appName : "@string/app_name"
+                    appName : "@string/app_name",
+                    appIcon: "@drawable/ic_mykkumi_logo",
+                    providerAuthority: "com.swmarastro.mykkumi.android.provider"
             ]
 //            signingConfig signingConfigs.config
         }
-//        debug {
-//            applicationIdSuffix '.dev'
-//            manifestPlaceholders = [
-//                    appName : "@string/app_name_dev"
-//            ]
-//        }
+        debug {
+            applicationIdSuffix '.dev'
+            manifestPlaceholders = [
+                    appName : "@string/app_name_dev",
+                    appIcon: "@drawable/ic_mykkumi_logo_dev",
+                    providerAuthority: "com.swmarastro.mykkumi.android.dev.provider"
+            ]
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
