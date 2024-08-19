@@ -53,7 +53,12 @@ class PostEditViewModel  @Inject constructor(
 
                 if(imageUrl != null) {
                     val addPostImages = _postEditUiState.value
-                    addPostImages?.add(PostImageVO(imageUri = imageUrl))
+                    addPostImages?.add(
+                        PostImageVO(
+                            imageUri = imageUrl,
+                            imageLocalUri = uri.toString()
+                        )
+                    )
                     _postEditUiState.postValue( addPostImages!! )
                 }
 
