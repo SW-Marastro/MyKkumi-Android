@@ -9,29 +9,37 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.swmarastro.mykkumi.domain.entity.HobbyCategoryItemVO
+import com.swmarastro.mykkumi.domain.entity.HobbySubCategoryItemVO
 import com.swmarastro.mykkumi.domain.entity.PostEditPinProductVO
 import com.swmarastro.mykkumi.domain.entity.PostEditPinVO
 import com.swmarastro.mykkumi.domain.entity.PostImageVO
 import com.swmarastro.mykkumi.domain.repository.PreSignedUrlRepository
+import com.swmarastro.mykkumi.domain.usecase.post.GetHobbyCategoryListUseCase
 import com.swmarastro.mykkumi.domain.usecase.post.UploadPostUseCase
-import com.swmarastro.mykkumi.feature.post.hobbyCategory.SelectHobbyOfPostBottomSheet
 import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class PostEditViewModel  @Inject constructor(
     private val preSignedUrlRepository: PreSignedUrlRepository,
     private val uploadPostUseCase: UploadPostUseCase,
+    private val getHobbyCategoryListUseCase: GetHobbyCategoryListUseCase,
 ) : ViewModel() {
     final val MAX_IMAGE_COUNT = 10
     final val MAX_PIN_COUNT = 10
 
     private val _postEditUiState = MutableLiveData<MutableList<PostImageVO>>(mutableListOf())
     val postEditUiState: LiveData<MutableList<PostImageVO>> get() = _postEditUiState
+
+    private val _hobbyCategoryUiState = MutableLiveData<MutableList<HobbySubCategoryItemVO>>(mutableListOf())
+    val hobbyCategoryUiState: LiveData<MutableList<HobbySubCategoryItemVO>> get() = _hobbyCategoryUiState
 
     private val _checkCreateView = MutableStateFlow<Boolean>(true)
     val checkCreateView : StateFlow<Boolean> get() = _checkCreateView
@@ -45,8 +53,8 @@ class PostEditViewModel  @Inject constructor(
     private val _isDeleteImageState = MutableLiveData<Boolean>(false)
     val isDeleteImageState : LiveData<Boolean> get() = _isDeleteImageState
 
-    private val _selectHobbyCategory = MutableStateFlow<Long>(-1L)
-    val selectHobbyCategory : StateFlow<Long> get() = _selectHobbyCategory
+    private val _selectHobbyCategory = MutableLiveData<Long>(-1L)
+    val selectHobbyCategory : LiveData<Long> get() = _selectHobbyCategory
 
     fun selectPostImage(uris: MutableList<Uri>) {
         viewModelScope.launch {
@@ -191,6 +199,29 @@ class PostEditViewModel  @Inject constructor(
         _isDeleteImageState.value = false
     }
 
+    // 관심 취미 데이터 세팅
+    fun getHobbyCategoryList() {
+        viewModelScope.launch {
+            try {
+                val hobbyCategories = withContext(Dispatchers.IO) {
+                    getHobbyCategoryListUseCase()
+                }
+                val currentHobbyList = mutableListOf<HobbySubCategoryItemVO>()
+                for(category in hobbyCategories.categories) {
+                    currentHobbyList.addAll(category.subCategories)
+                }
+                _hobbyCategoryUiState.setValue(currentHobbyList)
+            } catch (e: java.lang.Exception) {
+                _hobbyCategoryUiState.value?.clear()
+            }
+        }
+    }
+
+    // 관심 취미 선택
+    fun setHobbySelected(selectHobbyId: Long) {
+        _selectHobbyCategory.value = selectHobbyId
+    }
+
     // 포스트 등록 시도
     fun doneEditPost(
         content: String,
@@ -199,15 +230,12 @@ class PostEditViewModel  @Inject constructor(
         showToast: (message: String) -> Unit,
         navController: NavController?
     ) {
-        // 이미지가 하나 이상인지 확인
-        if (postEditUiState.value.isNullOrEmpty()) {
-            showToast(noticeEmptyImage)
-        }
-        // 카테고리가 선택된 상태인지 확인
-        else if(selectHobbyCategory.value == -1L) {
-            showToast(noticeEmptyCategory)
-        }
-        else {
+        // 포스트 등록 가능한지 확인 -> 가능하면 등록
+        if(isPossibleUploadPost(
+            noticeEmptyImage,
+            noticeEmptyCategory,
+            showToast
+        )) {
             uploadPost(
                 content,
                 showToast = {
@@ -216,6 +244,25 @@ class PostEditViewModel  @Inject constructor(
                 navController
             )
         }
+    }
+
+    // 포스트 등록 가능한지 확인
+    fun isPossibleUploadPost(
+        noticeEmptyImage: String,
+        noticeEmptyCategory: String,
+        showToast: (message: String) -> Unit,
+    ): Boolean {
+        // 이미지가 하나 이상인지 확인
+        if (postEditUiState.value.isNullOrEmpty()) {
+            showToast(noticeEmptyImage)
+            return false
+        }
+        // 카테고리가 선택된 상태인지 확인
+        else if(selectHobbyCategory.value == -1L) {
+            showToast(noticeEmptyCategory)
+            return false
+        }
+        else return true
     }
 
     // 포스트 등록
@@ -227,9 +274,9 @@ class PostEditViewModel  @Inject constructor(
         viewModelScope.launch {
             try {
                 val uploadPostId = uploadPostUseCase(
-                    subCategory = selectHobbyCategory.value,
+                    subCategory = selectHobbyCategory.value!!, // 카테고리 선택됐는지 확인하고 넘어옴
                     content = content,
-                    postImages = postEditUiState.value!!
+                    postImages = postEditUiState.value!! // 이미지 존재하는지 확인하고 넘어옴
                 )
                 navController?.popBackStack()
                 showToast("포스트가 등록되었습니다!")

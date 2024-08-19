@@ -1,16 +1,19 @@
 package com.swmarastro.mykkumi.feature.post.hobbyCategory
 
-import android.graphics.Color
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.swmarastro.mykkumi.domain.entity.HobbySubCategoryItemVO
+import com.swmarastro.mykkumi.feature.post.PostEditViewModel
+import com.swmarastro.mykkumi.feature.post.R
 import com.swmarastro.mykkumi.feature.post.databinding.ItemHobbySubCategoryBinding
 
 class HobbySubCategoryAdapter (
-    private val viewModel: SelectHobbyOfPostViewModel,
-    private val updateAllCategory: () -> Unit
+    private val context: Context,
+    private val viewModel: PostEditViewModel
 ) : RecyclerView.Adapter<HobbySubCategoryAdapter.HobbySubCategoryViewHolder>(){
     var hobbySubCategoryList = mutableListOf<HobbySubCategoryItemVO>()
 
@@ -37,16 +40,18 @@ class HobbySubCategoryAdapter (
         fun bind(item: HobbySubCategoryItemVO) {
             binding.textHobbySubCategory.text = item.subCategoryName
 
-            if(item.subCategoryId == viewModel.selectedHobby.value) {
-                binding.linearSubHobbyCategory.setBackgroundColor(Color.GREEN)
+            if(item.subCategoryId == viewModel.selectHobbyCategory.value) {
+                binding.linearSubHobbyCategory.setBackgroundResource(R.drawable.shape_sub_category_selected)
+                binding.textHobbySubCategory.setTextColor(ContextCompat.getColor(context, com.swmarastro.mykkumi.common_ui.R.color.white))
             }
             else {
-                binding.linearSubHobbyCategory.background = null
+                binding.linearSubHobbyCategory.setBackgroundResource(R.drawable.shape_sub_category_unselected)
+                binding.textHobbySubCategory.setTextColor(ContextCompat.getColor(context, com.swmarastro.mykkumi.common_ui.R.color.neutral_700))
             }
 
             binding.linearSubHobbyCategory.setOnClickListener(View.OnClickListener {
                 viewModel.setHobbySelected(item.subCategoryId)
-                updateAllCategory()
+                notifyDataSetChanged()
             })
         }
     }

@@ -212,6 +212,35 @@
                     android:layout_below="@id/text_title_input_content"
                     android:background="@drawable/shape_input_content_border"/>
 
+                <LinearLayout
+                    android:id="@+id/linear_hobby_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical"
+                    android:layout_below="@id/edittext_input_content">
+
+                    <TextView
+                        android:id="@+id/text_title_select_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_select_category"
+                        android:textSize="16sp"
+                        android:textColor="@color/neutral_900"
+                        android:fontFamily="@font/pretendard_bold"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerview_hobby_sub_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:overScrollMode="never"
+                        tools:listitem="@layout/item_hobby_sub_category" />
+
+                </LinearLayout>
+
             </RelativeLayout>
 
         </com.swmarastro.mykkumi.common_ui.custom.CustomScrollView>

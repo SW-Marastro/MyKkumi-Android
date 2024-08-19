@@ -10,6 +10,7 @@
     <string name="btn_add_pin">핀 추가</string>
     <string name="btn_auto_add_pin">핀 자동 생성</string>
     <string name="title_input_content">내용 입력</string>
+    <string name="title_select_category">카테고리 선택</string>
 
     <string name="confirm_delete_image_for_post_edit">사진을 삭제할까요?</string>
     <string name="confirm_delete_image_for_post_edit_description">사진을 삭제하시면 사진에 포함된\n제품 핀도 함께 삭제됩니다.</string>
