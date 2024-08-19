@@ -144,47 +144,57 @@ class PostListAdapter (
             })
 
             // 글 내용 --------------------------------------------------------------------------------------
-            val allContent = item.content?.let { content ->
-                SpannableStringBuilderProvider
-                    .getSpannableStringBuilder(
-                        content,
-                        navController
-                    )
-            }
             binding.textBtnMoreContent.visibility = View.GONE
-            var hideContent = allContent
-            // 본문 길이가 MAX_CONTENT_LENGTH를 넘는 경우
-            if (hideContent != null && hideContent.length > MAX_CONTENT_LENGTH) {
-                val truncatedString = hideContent.subSequence(0, MAX_CONTENT_LENGTH) as SpannableStringBuilder
+            if(item.content.isNullOrEmpty()) {
+                binding.textPostContent.visibility = View.GONE
+            }
+            else {
+                binding.textPostContent.visibility = View.VISIBLE
 
-                // 단어 기준으로 자르기 위해 공백, 줄바꿈 위치 찾기
-                val lastSpaceIndex = truncatedString.lastIndexOf(' ')
-                val lastNewLineIndex = truncatedString.lastIndexOf('\n')
-
-                // 공백과 줄바꿈 중 더 뒤에 있는 것 or 둘다 없다면 MAX length
-                val finalCutIndex = when {
-                    lastSpaceIndex != -1 && lastSpaceIndex > lastNewLineIndex -> lastSpaceIndex
-                    lastNewLineIndex != -1 -> lastNewLineIndex
-                    else -> MAX_CONTENT_LENGTH
+                val allContent = item.content?.let { content ->
+                    SpannableStringBuilderProvider
+                        .getSpannableStringBuilder(
+                            content,
+                            navController
+                        )
                 }
 
-                hideContent = SpannableStringBuilder(truncatedString.subSequence(0, finalCutIndex))
+                var hideContent = allContent
+                // 본문 길이가 MAX_CONTENT_LENGTH를 넘는 경우
+                if (hideContent != null && hideContent.length > MAX_CONTENT_LENGTH) {
+                    val truncatedString =
+                        hideContent.subSequence(0, MAX_CONTENT_LENGTH) as SpannableStringBuilder
 
-                if(hideContent.length != allContent!!.length) {
-                    hideContent.apply {
-                        append("...")
+                    // 단어 기준으로 자르기 위해 공백, 줄바꿈 위치 찾기
+                    val lastSpaceIndex = truncatedString.lastIndexOf(' ')
+                    val lastNewLineIndex = truncatedString.lastIndexOf('\n')
+
+                    // 공백과 줄바꿈 중 더 뒤에 있는 것 or 둘다 없다면 MAX length
+                    val finalCutIndex = when {
+                        lastSpaceIndex != -1 && lastSpaceIndex > lastNewLineIndex -> lastSpaceIndex
+                        lastNewLineIndex != -1 -> lastNewLineIndex
+                        else -> MAX_CONTENT_LENGTH
                     }
 
-                    binding.textBtnMoreContent.visibility = View.VISIBLE
-                }
-            }
-            binding.textPostContent.text = hideContent
+                    hideContent =
+                        SpannableStringBuilder(truncatedString.subSequence(0, finalCutIndex))
 
-            // 더보기 버튼
-            binding.textBtnMoreContent.setOnClickListener(View.OnClickListener {
-                binding.textBtnMoreContent.visibility = View.GONE
-                binding.textPostContent.text = allContent
-            })
+                    if (hideContent.length != allContent!!.length) {
+                        hideContent.apply {
+                            append("...")
+                        }
+
+                        binding.textBtnMoreContent.visibility = View.VISIBLE
+                    }
+                }
+                binding.textPostContent.text = hideContent
+
+                // 더보기 버튼
+                binding.textBtnMoreContent.setOnClickListener(View.OnClickListener {
+                    binding.textBtnMoreContent.visibility = View.GONE
+                    binding.textPostContent.text = allContent
+                })
+            }
 
             // 마지막 아이템은 선 지우기
             if(postList.size - 1 == position) {
