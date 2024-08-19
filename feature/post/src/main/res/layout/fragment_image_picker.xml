@@ -13,28 +13,44 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/neutral_900">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_close_white"
+            android:scaleType="fitXY"
+            android:layout_marginLeft="20dp"
+            android:layout_marginVertical="14dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:background="@android:color/transparent"/>
 
         <TextView
             android:id="@+id/text_title_image_picker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/image_picker_title"
+            android:text="@string/post_edit_title"
             android:textSize="18sp"
-            android:textColor="@color/black"
-            android:padding="10dp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/pretendard_semibold"
+            android:paddingTop="14dp"
+            android:paddingBottom="22dp"
             android:gravity="center"/>
 
-        <ImageButton
-            android:id="@+id/btn_back"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:src="@drawable/ic_back_btn"
-            android:scaleType="fitXY"
-            android:layout_margin="10dp"
+        <TextView
+            android:id="@+id/btn_done_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginVertical="14dp"
+            android:text="@string/done_image_picker"
+            android:textColor="@color/primary_color"
+            android:textSize="18sp"
+            android:fontFamily="@font/pretendard_semibold"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:background="@android:color/transparent"/>
+            android:layout_alignParentRight="true" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_image_picker"
@@ -43,17 +59,6 @@
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="3"
             android:layout_below="@+id/text_title_image_picker"/>
-
-        <Button
-            android:id="@+id/btn_done_picker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/done_image_picker"
-            android:textColor="@color/black"
-            android:textSize="15dp"
-            android:backgroundTint="#00FF00"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="10dp" />
 
     </RelativeLayout>
 

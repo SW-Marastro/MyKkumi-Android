@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="post_edit_title">상품 태그 입력</string>
+    <string name="post_edit_title">새 게시물</string>
     <string name="upload_post">등록</string>
-    <string name="done_image_picker">선택 완료</string>
+    <string name="done_image_picker">다음</string>
     <string name="done_select_hobby_category">완료</string>
     <string name="image_picker_title">이미지 선택</string>
+    <string name="add_new_image">이미지 올리기</string>
     <string name="notice_not_select_image">이미지를 하나 이상 첨부해주세요.</string>
+    <string name="btn_add_pin">핀 추가</string>
+    <string name="btn_auto_add_pin">핀 자동 생성</string>
+    <string name="title_input_content">내용 입력</string>
+    <string name="title_select_category">카테고리 선택</string>
+    <string name="done_input_product_info">저장하기</string>
 
-    <string name="confirm_delete_image_for_post_edit">이미지를 삭제하시면 제품 핀, 설명도 함께 삭제됩니다.\n사진을 삭제하시겠습니다?</string>
+    <string name="confirm_delete_image_for_post_edit">사진을 삭제할까요?</string>
+    <string name="confirm_delete_image_for_post_edit_description">사진을 삭제하시면 사진에 포함된\n제품 핀도 함께 삭제됩니다.</string>
+    <string name="btn_cancel">취소</string>
+    <string name="btn_agree_delete">삭제</string>
+    <string name="toast_done_delete">삭제되었습니다.</string>
     <string name="notice_input_product_info_for_pin">핀에 보여줄 제품 정보를 입력해주세요.\n(제품명은 필수입니다)</string>
     <string name="label_product_name_for_input_product_info">제품명</string>
     <string name="label_product_url_for_input_product_info">구매처 URL</string>
-    <string name="placeholder_product_name_for_input_product_info">제품명을 20자 이내로 입력해주세요.</string>
-    <string name="placeholder_product_url_for_input_product_info">https://...</string>
+    <string name="placeholder_product_name_for_input_product_info">최대 20자까지 작성할 수 있어요.</string>
+    <string name="placeholder_product_url_for_input_product_info">구매한 사이트의 URL을 작성해주세요. (예: https://www.shop.com)</string>
     <string name="notice_product_name_not_null">제품명을 입력해주세요.</string>
     <string name="notice_product_name_max_length">제품명은 20자 이내로 입력해주세요.</string>
-    <string name="placeholder_input_post_content">내용을 작성해주세요.</string>
+    <string name="placeholder_input_post_content">최대 2000자까지 작성할 수 있어요.\n해시태그는 20개까지 추가할 수 있어요.</string>
     <string name="notice_post_content_max_length">내용은 2000자 이내로 입력해주세요.</string>
     <string name="notice_post_hashtag_max_count">해시태그는 최대 20개까지 추가할 수 있어요.</string>
     <string name="notice_select_hobby_category_of_post">취미 카테고리를 선택해주세요.</string>

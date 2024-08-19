@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -21,13 +22,15 @@ import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.common_ui.R
 import com.swmarastro.mykkumi.common_ui.report.PostReportConfirmDialog
 import com.swmarastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProvider
+import com.swmarastro.mykkumi.feature.home.HomeViewModel
 import com.swmarastro.mykkumi.feature.home.databinding.ItemPostRecyclerviewBinding
 
 class PostListAdapter (
     private val context: Context,
     private val navController: NavController?,
     private val waitNotice: () -> Unit,
-    private val reportPost: (postId: Int) -> Unit
+    private val reportPost: (postId: Int) -> Unit,
+    private val viewModel: HomeViewModel
 ) : RecyclerView.Adapter<PostListAdapter.PostListViewHolder>(){
     private final val MAX_CONTENT_LENGTH = 50
 
@@ -52,19 +55,17 @@ class PostListAdapter (
         private val binding: ItemPostRecyclerviewBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: HomePostItemVO, position: Int) {
-            binding.includePostWriter.imageWriterProfile.load(item.writer.profileImage) // 사용자 프로필
+            // 사용자 프로필
+            if(item.writer.profileImage == null) {
+                binding.includePostWriter.imageWriterProfile.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.img_profile_default))
+            }
+            else {
+                binding.includePostWriter.imageWriterProfile.load(item.writer.profileImage)
+            }
+
             binding.includePostWriter.textWriterNickname.text = item.writer.nickname // 닉네임
             binding.textContentWriterNickname.text = item.writer.nickname
             binding.includePostWriter.textPostCategory.text = item.category + " - " + item.subCategory // 포스트 카테고리
-
-            // 사용자 정보 우측 점3개 선택 -> 신고하기 버튼 보여주기
-//            binding.frameUserComplaint.visibility = View.GONE
-////            binding.includePostWriter.btnPostMoreMenu.setOnClickListener {
-////                if(binding.frameUserComplaint.visibility == View.GONE)
-////                    binding.frameUserComplaint.visibility = View.VISIBLE
-////                else
-////                    binding.frameUserComplaint.visibility = View.GONE
-////            }
 
             // 포스트 이미지 viewpager
             var postItemImageAdapter: PostImagesAdapter = PostImagesAdapter(
@@ -73,6 +74,12 @@ class PostListAdapter (
             )
             binding.viewpagerPostImages.adapter = postItemImageAdapter
             binding.viewpagerPostImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+
+            val viewPager = binding.viewpagerPostImages
+            viewPager.viewTreeObserver.addOnGlobalLayoutListener {
+                viewPager.layoutParams.height = viewPager.width
+                viewPager.requestLayout()
+            }
 
             // 이미지 indicator
             if(item.images.size > 1)
@@ -116,62 +123,84 @@ class PostListAdapter (
             binding.btnPostShare.setOnClickListener {
                 waitNotice()
             }
-            // 팔로우 버튼 - 아직 안 됨
-            binding.includePostWriter.btnFollow.setOnClickListener(View.OnClickListener {
-                waitNotice()
-            })
+
+            // 로그인 된 유저한테만 보여줄 것 - 팔로우, 신고하기 버튼
+            if(viewModel.isLogined.value) {
+                binding.includePostWriter.btnFollow.visibility = View.VISIBLE // 팔로우
+                binding.textBtnPostReport.visibility = View.VISIBLE // 신고하기
+
+                // 팔로우 버튼 - 아직 안 됨
+                binding.includePostWriter.btnFollow.setOnClickListener(View.OnClickListener {
+                    waitNotice()
+                })
+
+                // 포스트 신고하기
+                binding.textBtnPostReport.setOnClickListener(View.OnClickListener {
+                    reportPost(item.id)
+                })
+            }
+            else {
+                binding.includePostWriter.btnFollow.visibility = View.GONE // 팔로우
+                binding.textBtnPostReport.visibility = View.GONE // 신고하기
+            }
+
             // 댓글 작성 버튼 - 아직 안 됨
             binding.textBtnAddComment.setOnClickListener(View.OnClickListener {
                 waitNotice()
             })
 
-            // 신고하기
-            binding.textBtnPostReport.setOnClickListener(View.OnClickListener {
-                reportPost(item.id)
-            })
-
             // 글 내용 --------------------------------------------------------------------------------------
-            val allContent = item.content?.let { content ->
-                SpannableStringBuilderProvider
-                    .getSpannableStringBuilder(
-                        content,
-                        navController
-                    )
-            }
             binding.textBtnMoreContent.visibility = View.GONE
-            var hideContent = allContent
-            // 본문 길이가 MAX_CONTENT_LENGTH를 넘는 경우
-            if (hideContent != null && hideContent.length > MAX_CONTENT_LENGTH) {
-                val truncatedString = hideContent.subSequence(0, MAX_CONTENT_LENGTH) as SpannableStringBuilder
+            if(item.content.isNullOrEmpty()) {
+                binding.textPostContent.visibility = View.GONE
+            }
+            else {
+                binding.textPostContent.visibility = View.VISIBLE
 
-                // 단어 기준으로 자르기 위해 공백, 줄바꿈 위치 찾기
-                val lastSpaceIndex = truncatedString.lastIndexOf(' ')
-                val lastNewLineIndex = truncatedString.lastIndexOf('\n')
-
-                // 공백과 줄바꿈 중 더 뒤에 있는 것 or 둘다 없다면 MAX length
-                val finalCutIndex = when {
-                    lastSpaceIndex != -1 && lastSpaceIndex > lastNewLineIndex -> lastSpaceIndex
-                    lastNewLineIndex != -1 -> lastNewLineIndex
-                    else -> MAX_CONTENT_LENGTH
+                val allContent = item.content?.let { content ->
+                    SpannableStringBuilderProvider
+                        .getSpannableStringBuilder(
+                            content,
+                            navController
+                        )
                 }
 
-                hideContent = SpannableStringBuilder(truncatedString.subSequence(0, finalCutIndex))
+                var hideContent = allContent
+                // 본문 길이가 MAX_CONTENT_LENGTH를 넘는 경우
+                if (hideContent != null && hideContent.length > MAX_CONTENT_LENGTH) {
+                    val truncatedString =
+                        hideContent.subSequence(0, MAX_CONTENT_LENGTH) as SpannableStringBuilder
 
-                if(hideContent.length != allContent!!.length) {
-                    hideContent.apply {
-                        append("...")
+                    // 단어 기준으로 자르기 위해 공백, 줄바꿈 위치 찾기
+                    val lastSpaceIndex = truncatedString.lastIndexOf(' ')
+                    val lastNewLineIndex = truncatedString.lastIndexOf('\n')
+
+                    // 공백과 줄바꿈 중 더 뒤에 있는 것 or 둘다 없다면 MAX length
+                    val finalCutIndex = when {
+                        lastSpaceIndex != -1 && lastSpaceIndex > lastNewLineIndex -> lastSpaceIndex
+                        lastNewLineIndex != -1 -> lastNewLineIndex
+                        else -> MAX_CONTENT_LENGTH
                     }
 
-                    binding.textBtnMoreContent.visibility = View.VISIBLE
-                }
-            }
-            binding.textPostContent.text = hideContent
+                    hideContent =
+                        SpannableStringBuilder(truncatedString.subSequence(0, finalCutIndex))
 
-            // 더보기 버튼
-            binding.textBtnMoreContent.setOnClickListener(View.OnClickListener {
-                binding.textBtnMoreContent.visibility = View.GONE
-                binding.textPostContent.text = allContent
-            })
+                    if (hideContent.length != allContent!!.length) {
+                        hideContent.apply {
+                            append("...")
+                        }
+
+                        binding.textBtnMoreContent.visibility = View.VISIBLE
+                    }
+                }
+                binding.textPostContent.text = hideContent
+
+                // 더보기 버튼
+                binding.textBtnMoreContent.setOnClickListener(View.OnClickListener {
+                    binding.textBtnMoreContent.visibility = View.GONE
+                    binding.textPostContent.text = allContent
+                })
+            }
 
             // 마지막 아이템은 선 지우기
             if(postList.size - 1 == position) {

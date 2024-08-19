@@ -71,12 +71,13 @@ class SelectPostImageListAdapter (
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PostImageVO, position: Int) {
             binding.imagePostEditThumbnail.load(item.imageUri.toUri())
+            //binding.imagePostEditThumbnail.load(item.imageLocalUri.toUri())
 
             if (item.isSelect) {
-                binding.imagePostEditThumbnail.setBackgroundResource(R.drawable.shape_select_post_image)
+                binding.relativePostEditThumbnail.setBackgroundResource(R.drawable.shape_post_image_thumbnail_selected)
             }
             else {
-                binding.imagePostEditThumbnail.background = null
+                binding.relativePostEditThumbnail.background = null
             }
 
             // 편집할 이미지 선택

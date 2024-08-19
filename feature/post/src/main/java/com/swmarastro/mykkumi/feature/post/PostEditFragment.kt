@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.HorizontalScrollView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -15,10 +16,14 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
-import com.swmarastro.mykkumi.feature.post.confirm.PostConfirmBottomSheet
+import com.swmarastro.mykkumi.feature.post.confirm.PostDeleteImageConfirmDialog
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
-import com.swmarastro.mykkumi.feature.post.hobbyCategory.SelectHobbyOfPostBottomSheet
+import com.swmarastro.mykkumi.feature.post.hobbyCategory.HobbySubCategoryAdapter
 import com.swmarastro.mykkumi.feature.post.imagePicker.ImagePickerArgument
 import com.swmarastro.mykkumi.feature.post.imageWithPin.EditImageWithPinAdapter
 import com.swmarastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
@@ -27,9 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit),
-    PostConfirmBottomSheet.PostConfirmListener,
-    InputProductInfoBottomSheet.InputProductInfoListener,
-    SelectHobbyOfPostBottomSheet.SelectHobbyOfPostListener {
+    InputProductInfoBottomSheet.InputProductInfoListener {
     private val viewModel by viewModels<PostEditViewModel>()
 
     private final val MAX_POST_CONTENT_LENGTH = 2000      // 본문 글자 수
@@ -37,6 +40,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
     private lateinit var selectPostImageListAdapter: SelectPostImageListAdapter // 이미지들 썸네일 나열
     private lateinit var editImageWithPinAdapter: EditImageWithPinAdapter // 이미지 편집 view (핀 추가할 수 있는)
+    private lateinit var hobbySubCategoryAdapter: HobbySubCategoryAdapter // 카테고리
 
     private var navController: NavController? = null
 
@@ -46,6 +50,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     private var isRestoringState = false
     private var isStartPosting = false
 
+    private val waitingNotice = "${String(Character.toChars(0x1F525))} 준비 중입니다 ${String(Character.toChars(0x1F525))}"
+
     override fun onResume() {
         super.onResume()
 
@@ -54,12 +60,9 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             ?.observe(viewLifecycleOwner) { images ->
                 if(!images.selectImages.isNullOrEmpty()) {
                     isStartPosting = true
-                    for (image in images.selectImages) {
-                        viewModel.selectPostImage(image)
-                    }
+                    viewModel.selectPostImage(images.selectImages)
 
-                    // 리스트에 추가했다면 지우기 - view resume 될 때마다 추가되는 현상 제거
-                    images.selectImages.clear()
+                    images.selectImages.clear() // 리스트에 추가했다면 지우기 - view resume 될 때마다 추가되는 현상 제거
                 }
             }
 
@@ -77,8 +80,6 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         }
         // 상태 복원 완료
         isRestoringState = false
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -86,13 +87,20 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
         navController = view.findNavController()
 
+        binding.relativeEmptyImage.visibility = View.GONE
+        binding.textBtnUploadPost.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_neutral50)
+        binding.textBtnUploadPost.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.neutral_700))
+
         // 이미지 추가
         binding.btnAddPostImage.setOnClickListener(View.OnClickListener {
             viewModel.openImagePicker(navController)
         })
+        binding.textBtnAddNewImage.setOnClickListener(View.OnClickListener {
+            viewModel.openImagePicker(navController)
+        })
 
         // 핀 추가
-        binding.btnAddPin.setOnClickListener {
+        binding.btnAddPin.setOnClickListener(View.OnClickListener {
             // 핀 최대 개수
             if (viewModel.currentPinList.value!!.size >= viewModel.MAX_PIN_COUNT) {
                 showToast("핀은 최대 ${viewModel.MAX_PIN_COUNT}개까지 추가할 수 있어요.")
@@ -100,7 +108,12 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             else {
                 viewModel.requestProductInfoForPin(this@PostEditFragment, null)
             }
-        }
+        })
+
+        // 핀 자동 생성
+        binding.btnAutoAddPin.setOnClickListener(View.OnClickListener {
+            showToast(waitingNotice)
+        })
 
         // 본문 입력 글자 수 제한
         binding.edittextInputContent.addTextChangedListener(object: TextWatcher {
@@ -142,12 +155,16 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         }
 
         // 포스트 등록 버튼
-        binding.textUploadPost.setOnClickListener(View.OnClickListener {
+        binding.textBtnUploadPost.setOnClickListener(View.OnClickListener {
+            val content = binding.edittextInputContent.text.toString()
             viewModel.doneEditPost(
-                this,
+                content = content,
+                noticeEmptyImage = getString(R.string.notice_not_select_image),
+                noticeEmptyCategory = getString(R.string.notice_select_hobby_category_of_post),
                 showToast = {
                     showToast(it)
-                }
+                },
+                navController = navController
             )
         })
     }
@@ -167,9 +184,20 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             vm = viewModel
         }
 
+        if(_binding != null) {
+            val emptyImage = binding.relativeEmptyImage
+            emptyImage.viewTreeObserver.addOnGlobalLayoutListener {
+                emptyImage.layoutParams.height = emptyImage.width
+                emptyImage.requestLayout()
+            }
+        }
+
         initSelectPostImagesRecyclerView()
         initEditImageWithPinViewPager()
-        observePostImage()
+        initHobbyCategoryRecycler()
+        observePostResource()
+
+        viewModel.getHobbyCategoryList()
     }
 
     // 선택된 이미지 리스트 Recyclerview
@@ -231,16 +259,41 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         })
     }
 
+    private fun initHobbyCategoryRecycler() {
+        hobbySubCategoryAdapter = HobbySubCategoryAdapter(
+            requireContext(),
+            viewModel
+        )
+        FlexboxLayoutManager(requireContext()).apply {
+            flexWrap = FlexWrap.WRAP // 다음 아이템의 크기가 남은 여유공간보다 큰 경우 자동으로 줄바꿈
+            flexDirection = FlexDirection.ROW
+            justifyContent = JustifyContent.FLEX_START // 좌측 정렬
+        }.let {
+            binding.recyclerviewHobbySubCategory.layoutManager = it
+            binding.recyclerviewHobbySubCategory.adapter = hobbySubCategoryAdapter
+        }
+    }
+
     // 이미지 추가되면 recyclerview adapter data 변경, 스크롤 이동 + 이미지 개수 확인
     // edit viewPager data도 변경
-    private fun observePostImage() {
+    private fun observePostResource() {
         // 추가된 이미지
         viewModel.postEditUiState.observe(viewLifecycleOwner, Observer {
             selectPostImageListAdapter.postImageList = it
             editImageWithPinAdapter.imageWithPinList = it
 
             if (!viewModel.postEditUiState.value.isNullOrEmpty()) { //  && !viewModel.isDeleteImageState && !isRestoringState
+                binding.relativeSelectPostImageList.visibility = View.VISIBLE
+                binding.viewLineSelectImages.visibility = View.VISIBLE
+                binding.relativeEmptyImage.visibility = View.GONE
+
                 viewModel.changeSelectImagePosition(viewModel.postEditUiState.value!!.size - 1)
+
+                // 이미지 있음 -> 카테고리까지 있는지 확인하고 포스트 작성 버튼 활성화
+                if(viewModel.isPossibleUploadPost()) {
+                    binding.textBtnUploadPost.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_primary)
+                    binding.textBtnUploadPost.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.white))
+                }
             }
 
             selectPostImageListAdapter.notifyDataSetChanged()
@@ -280,6 +333,21 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             binding.viewpagerPostEditImages.setCurrentItem(viewModel.selectImagePosition.value!!, false)
             selectPostImageListAdapter.notifyDataSetChanged()
         })
+
+        // 카테고리 추가
+        viewModel.hobbyCategoryUiState.observe(viewLifecycleOwner, Observer {
+            hobbySubCategoryAdapter.hobbySubCategoryList = it
+            hobbySubCategoryAdapter.notifyDataSetChanged()
+        })
+
+        // 카테고리 선택
+        viewModel.selectHobbyCategory.observe(viewLifecycleOwner, Observer {
+            // 카테고리 선택됨 -> 이미지까지 있는지 확인하고 포스트 작성 버튼 활성화
+            if(viewModel.isPossibleUploadPost()) {
+                binding.textBtnUploadPost.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_primary)
+                binding.textBtnUploadPost.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.white))
+            }
+        })
     }
 
     // 이미지 순서 변경 시 ViewPager에 적용
@@ -295,18 +363,37 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     }
 
     // 이미지 삭제 -> notice
-    private fun confirmDeleteImage(position: Int) {
-        viewModel.confirmDeleteImage(this@PostEditFragment, getString(R.string.confirm_delete_image_for_post_edit), position)
+    private fun confirmDeleteImage(imageIndex: Int) {
+        val dialog = PostDeleteImageConfirmDialog(this)
+        dialog.confirmPostReportListener { postId ->
+            confirmAgree(postId)
+        }
+        dialog.cancelPostReportListener { confirmCancel() }
+
+        dialog.show(imageIndex)
     }
 
     // 이미지 삭제
-    override fun confirmAgree(position: Int) {
+    fun confirmAgree(position: Int) {
         viewModel.deleteImage(position)
         viewModel.doneDeleteImage()
+        showToast(getString(R.string.toast_done_delete))
+
+        // 이미지 전체 삭제된 경우
+        if(viewModel.postEditUiState.value.isNullOrEmpty()) {
+            binding.relativeSelectPostImageList.visibility = View.GONE
+            binding.viewLineSelectImages.visibility = View.GONE
+
+            binding.relativeEmptyImage.visibility = View.VISIBLE
+        }
+
+        // 이미지가 없으므로 포스트 등록 버튼 비활성화
+        binding.textBtnUploadPost.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_neutral50)
+        binding.textBtnUploadPost.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.neutral_700))
     }
 
     // 이미지 삭제 취소
-    override fun confirmCancel() {
+    fun confirmCancel() {
         viewModel.doneDeleteImage()
     }
 
@@ -337,19 +424,6 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     private fun unlockViewPagerMoving() {
         binding.viewpagerPostEditImages.isUserInputEnabled = true
         binding.scrollEditPost.setScrollingEnabled(true)
-    }
-
-    // 카테고리 선택 완료 -> 포스트 작성
-    override fun doneSelectHobby(categoryId: Long) {
-        val content = binding.edittextInputContent.text.toString()
-        viewModel.uploadPost(
-            categoryId,
-            content,
-            showToast = {
-                showToast(it)
-            },
-            navController
-        )
     }
 
     private fun showToast(message: String) {

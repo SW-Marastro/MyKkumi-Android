@@ -79,6 +79,9 @@ buildscript {
 
         // Skeleton - facebook shimmer
         facebook_shimer_version = "0.5.0"
+
+        // FlexBox Layout
+        flexbox_version = "3.0.0"
     }
     dependencies {
         // Safe Args

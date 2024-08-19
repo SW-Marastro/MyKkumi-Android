@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -34,19 +35,23 @@ class ImagePickerFragment : BaseFragment<FragmentImagePickerBinding>(R.layout.fr
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.neutral_900)
+        activity?.window?.decorView?.systemUiVisibility =
+            activity?.window?.decorView?.systemUiVisibility?.and(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()) ?: 0
+
         navController = view.findNavController()
         maxImageCount = args.maxImageCount // 최대 선택 가능한 이미지 개수
 
         // 이미지 선택 완료
-        binding.btnDonePicker.setOnClickListener {
+        binding.btnDonePicker.setOnClickListener(View.OnClickListener {
             // 선택한 이미지가 있는지 확인
-            if(countSelectImage() == 0) {
+            if(viewModel.selectImage.value.isNullOrEmpty()) {
                 Toast.makeText(requireContext(), R.string.notice_not_select_image, Toast.LENGTH_SHORT).show()
             }
             else {
                 viewModel.doneSelectImages(navController)
             }
-        }
+        })
 
         // 이전 버튼
         binding.btnBack.setOnClickListener {
@@ -96,22 +101,14 @@ class ImagePickerFragment : BaseFragment<FragmentImagePickerBinding>(R.layout.fr
     }
 
     fun isAllowSelectImage(): Boolean {
-        var count = 0
-        viewModel.imagePickerUiState.value.let {
-            for (image in viewModel.imagePickerUiState.value!!) {
-                if (image.isSelect) count++
-            }
-        }
-        return count < maxImageCount
+        return (viewModel.selectImage.value?.size ?: 0) < maxImageCount
     }
 
-    fun countSelectImage(): Int {
-        var count = 0
-        viewModel.imagePickerUiState.value.let {
-            for (image in viewModel.imagePickerUiState.value!!) {
-                if (image.isSelect) count++
-            }
-        }
-        return count
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.white)
+        activity?.window?.decorView?.systemUiVisibility =
+            activity?.window?.decorView?.systemUiVisibility?.or(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) ?: View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
 }

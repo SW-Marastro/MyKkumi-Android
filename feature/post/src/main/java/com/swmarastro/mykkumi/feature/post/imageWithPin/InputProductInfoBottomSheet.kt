@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.swmarastro.mykkumi.common_ui.base.BaseBottomSheetFragment
 import com.swmarastro.mykkumi.feature.post.R
 import com.swmarastro.mykkumi.feature.post.databinding.FragmentInputProductInfoBottomSheetBinding
@@ -51,6 +52,34 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
                     binding.edittextInputProductName.setSelection(max(start, before)) // 커서를 입력하고 있던 곳에
                     Toast.makeText(requireContext(), getString(R.string.notice_product_name_max_length), Toast.LENGTH_SHORT).show()
                 }
+
+                if(s.isNullOrEmpty()) {
+                    binding.edittextInputProductName.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_input_border12_neutral200)
+                    binding.btnConfirmAgree.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_neutral50)
+                    binding.btnConfirmAgree.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.neutral_300))
+                }
+                else {
+                    binding.edittextInputProductName.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_input_border12_neutral800)
+                    binding.btnConfirmAgree.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_primary)
+                    binding.btnConfirmAgree.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.white))
+                }
+            }
+        })
+
+        binding.edittextInputProductUrl.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if(s.isNullOrEmpty()) {
+                    binding.edittextInputProductUrl.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_input_border12_neutral200)
+                }
+                else {
+                    binding.edittextInputProductUrl.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_input_border12_neutral800)
+                }
             }
         })
 
@@ -64,12 +93,12 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
         }
 
         // 입력 취소
-        binding.btnConfirmCancel.setOnClickListener {
+        binding.btnConfirmCancel.setOnClickListener(View.OnClickListener {
             dismiss()
-        }
+        })
 
         // 입력 완료
-        binding.btnConfirmAgree.setOnClickListener {
+        binding.btnConfirmAgree.setOnClickListener(View.OnClickListener {
             val inputProductName: String = binding.edittextInputProductName.text.toString()
             var inputProductUrl: String? = binding.edittextInputProductUrl.text.toString()
 
@@ -78,7 +107,6 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
             else {
                 // 핀 내용 수정
                 if(position != null) {
-                    Log.d("test", "test")
                     inputProductInfoListener?.updateProductInput(position!!, inputProductName, inputProductUrl)
                     dismiss()
                 }
@@ -89,7 +117,7 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
                     dismiss()
                 }
             }
-        }
+        })
     }
 
     override suspend fun initView() {

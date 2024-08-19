@@ -45,34 +45,79 @@ class PostImagesAdapter(
 
             val parent = binding.imagePost
 
-            // 이미지 세로 사이즈를 가로 사이즈와 동일하게 설정
-            parent.viewTreeObserver.addOnGlobalLayoutListener {
-                if(parentWidth == 0 || parentHeight == 0) {
-                    if(parent.width != 0 && parent.height != 0) {
-                        if(parent.width > parent.height) {
-                            parentWidth = parent.width
-                            parentHeight = parent.height
+//            if(position == 0) {
+//                parent.viewTreeObserver.addOnGlobalLayoutListener {
+//                    if (parentWidth == 0 || parentHeight == 0) {
+//                        if (parent.width != 0 && parent.height != 0) {
+//                            if (parent.width > parent.height) {
+//                                parentWidth = parent.width
+//                                parentHeight = parent.height
+//                            } else {
+//                                parentWidth =
+//                                    (parent.width.toDouble() * (parent.width.toDouble() / parent.height.toDouble())).toInt()
+//                                parentHeight = parent.width
+//                            }
+//
+//                            binding.relativePinsOfImages.layoutParams.width = parentWidth
+//                            binding.relativePinsOfImages.layoutParams.height = parentHeight
+//                            binding.relativePinsOfImages.requestLayout()
+//
+//                            val width = parent.width
+//                            parent.layoutParams.height = width
+//                            parent.requestLayout()
+//
+//                            binding.relativePostImage.layoutParams.height = parentHeight
+//                            binding.relativePostImage.requestLayout()
+//
+//                            notifyItemChanged(position)
+//                        }
+//                    }
+//                }
+//            }
+//
+//            else {
+                // 이미지 세로 사이즈를 가로 사이즈와 동일하게 설정
+                parent.viewTreeObserver.addOnGlobalLayoutListener(object :
+                    ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        if (parentWidth == 0 || parentHeight == 0) {
+                            Log.d(
+                                "test",
+                                "${position} - width: ${parentWidth}, height: ${parentHeight}"
+                            )
+                            if (parent.width != 0 && parent.height != 0) {
+                                if (parent.width > parent.height) {
+                                    parentWidth = parent.width
+                                    parentHeight = parent.height
+                                } else {
+                                    parentWidth =
+                                        (parent.width.toDouble() * (parent.width.toDouble() / parent.height.toDouble())).toInt()
+                                    parentHeight = parent.width
+                                }
+
+                                binding.relativePinsOfImages.layoutParams.width = parentWidth
+                                binding.relativePinsOfImages.layoutParams.height = parentHeight
+                                binding.relativePinsOfImages.requestLayout()
+
+                                val width = parent.width
+                                parent.layoutParams.height = width
+                                parent.requestLayout()
+
+                                binding.relativePostImage.layoutParams.height = binding.relativePostImage.width
+                                binding.relativePostImage.requestLayout()
+
+                                //notifyItemChanged(position)
+                            }
+                            else {
+                                notifyItemChanged(position)
+                            }
                         }
-                        else {
-                            parentWidth = (parent.width.toDouble() * (parent.width.toDouble() / parent.height.toDouble())).toInt()
-                            parentHeight = parent.width
-                        }
 
-                        binding.relativePinsOfImages.layoutParams.width = parentWidth
-                        binding.relativePinsOfImages.layoutParams.height = parentHeight
-                        binding.relativePinsOfImages.requestLayout()
-
-                        val width = parent.width
-                        parent.layoutParams.height = width
-                        parent.requestLayout()
-
-                        binding.relativePostImage.layoutParams.height = parentHeight
-                        binding.relativePostImage.requestLayout()
-
-                        notifyItemChanged(position)
+                        // 리스너 제거
+                        parent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
-                }
-            }
+                })
+//            }
 
             // 포스트에 핀 추가
             for(idx in 0..<item.pins.size) {
