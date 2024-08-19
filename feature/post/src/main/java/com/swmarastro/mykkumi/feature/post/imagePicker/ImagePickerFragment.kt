@@ -45,7 +45,7 @@ class ImagePickerFragment : BaseFragment<FragmentImagePickerBinding>(R.layout.fr
         // 이미지 선택 완료
         binding.btnDonePicker.setOnClickListener(View.OnClickListener {
             // 선택한 이미지가 있는지 확인
-            if(countSelectImage() == 0) {
+            if(viewModel.selectImage.value.isNullOrEmpty()) {
                 Toast.makeText(requireContext(), R.string.notice_not_select_image, Toast.LENGTH_SHORT).show()
             }
             else {
@@ -101,23 +101,7 @@ class ImagePickerFragment : BaseFragment<FragmentImagePickerBinding>(R.layout.fr
     }
 
     fun isAllowSelectImage(): Boolean {
-        var count = 0
-        viewModel.imagePickerUiState.value.let {
-            for (image in viewModel.imagePickerUiState.value!!) {
-                if (image.isSelect) count++
-            }
-        }
-        return count < maxImageCount
-    }
-
-    fun countSelectImage(): Int {
-        var count = 0
-        viewModel.imagePickerUiState.value.let {
-            for (image in viewModel.imagePickerUiState.value!!) {
-                if (image.isSelect) count++
-            }
-        }
-        return count
+        return (viewModel.selectImage.value?.size ?: 0) < maxImageCount
     }
 
     override fun onDestroyView() {

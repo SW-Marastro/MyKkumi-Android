@@ -59,7 +59,7 @@ class PostEditViewModel  @Inject constructor(
                             imageLocalUri = uri.toString()
                         )
                     )
-                    _postEditUiState.postValue( addPostImages!! )
+                    _postEditUiState.setValue( addPostImages!! )
                 }
 
             } catch (e: Exception) {

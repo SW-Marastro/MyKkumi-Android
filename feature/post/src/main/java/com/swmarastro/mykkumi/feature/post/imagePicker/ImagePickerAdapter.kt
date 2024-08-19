@@ -92,7 +92,7 @@ class ImagePickerAdapter (
                     }
                     // 선택 하려는데 최대 개수인 경우를 제외하고 가능
                     else {
-                        it[position - 1].isSelect = isChecked
+                        viewModel.toggleImageSelection(position - 1, isChecked)
                     }
                 }
             }
@@ -111,7 +111,7 @@ class ImagePickerAdapter (
                     // 선택 하려는데 최대 개수인 경우를 제외하고 가능
                     else {
                         binding.checkboxPickImage.isChecked = isChecked
-                        it[position - 1].isSelect = isChecked
+                        viewModel.toggleImageSelection(position - 1, isChecked)
                     }
                 }
             })
