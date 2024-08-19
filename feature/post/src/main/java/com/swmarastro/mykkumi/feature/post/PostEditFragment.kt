@@ -83,8 +83,13 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
         navController = view.findNavController()
 
+        binding.relativeEmptyImage.visibility = View.GONE
+
         // 이미지 추가
         binding.btnAddPostImage.setOnClickListener(View.OnClickListener {
+            viewModel.openImagePicker(navController)
+        })
+        binding.textBtnAddNewImage.setOnClickListener(View.OnClickListener {
             viewModel.openImagePicker(navController)
         })
 
@@ -164,6 +169,14 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             vm = viewModel
         }
 
+        if(_binding != null) {
+            val emptyImage = binding.relativeEmptyImage
+            emptyImage.viewTreeObserver.addOnGlobalLayoutListener {
+                emptyImage.layoutParams.height = emptyImage.width
+                emptyImage.requestLayout()
+            }
+        }
+
         initSelectPostImagesRecyclerView()
         initEditImageWithPinViewPager()
         observePostImage()
@@ -239,6 +252,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             if (!viewModel.postEditUiState.value.isNullOrEmpty()) { //  && !viewModel.isDeleteImageState && !isRestoringState
                 binding.relativeSelectPostImageList.visibility = View.VISIBLE
                 binding.viewLineSelectImages.visibility = View.VISIBLE
+                binding.relativeEmptyImage.visibility = View.GONE
+
                 viewModel.changeSelectImagePosition(viewModel.postEditUiState.value!!.size - 1)
             }
 
@@ -307,6 +322,10 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         if(viewModel.postEditUiState.value.isNullOrEmpty()) {
             binding.relativeSelectPostImageList.visibility = View.GONE
             binding.viewLineSelectImages.visibility = View.GONE
+
+            binding.relativeEmptyImage.visibility = View.VISIBLE
+
+
         }
     }
 

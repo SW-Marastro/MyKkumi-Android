@@ -57,17 +57,47 @@
                 android:layout_height="wrap_content">
 
                 <RelativeLayout
-                    android:id="@+id/relative_select_post_image"
+                    android:id="@+id/relative_select_post_image_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/gray_DD"
                     android:layout_alignParentTop="true">
 
-                    <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/viewpager_post_edit_images"
+                    <RelativeLayout
+                        android:id="@+id/relative_select_post_image"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"/>
+                        android:background="@color/gray_DD"
+                        android:layout_alignParentTop="true">
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/viewpager_post_edit_images"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relative_empty_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:background="@color/neutral_100">
+
+                        <TextView
+                            android:id="@+id/text_btn_add_new_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/add_new_image"
+                            android:textColor="@color/white"
+                            android:textSize="15sp"
+                            android:fontFamily="@font/pretendard_semibold"
+                            android:paddingVertical="12dp"
+                            android:paddingHorizontal="20dp"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/shape_btn_round999_neutral700"/>
+
+                    </RelativeLayout>
 
                 </RelativeLayout>
 
@@ -75,7 +105,7 @@
                     android:id="@+id/scroll_select_post_image_list"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/relative_select_post_image"
+                    android:layout_below="@id/relative_select_post_image_container"
                     android:scrollbars="none"
                     android:fillViewport="true">
 
