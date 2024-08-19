@@ -50,7 +50,8 @@
             android:id="@+id/scroll_edit_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/header_post_edit">
+            android:layout_below="@id/header_post_edit"
+            android:layout_above="@id/relative_upload_post">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -149,31 +150,67 @@
                     android:layout_marginBottom="4dp"
                     android:layout_below="@id/scroll_select_post_image_list"/>
 
-                <Button
+                <TextView
                     android:id="@+id/btn_add_pin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="핀 추가"
-                    android:padding="2dp"
+                    android:text="@string/btn_add_pin"
+                    android:textSize="14sp"
+                    android:textColor="@color/neutral_900"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginLeft="20dp"
                     android:layout_marginTop="20dp"
-                    android:background="@color/gray_DD"
+                    android:background="@drawable/shape_btn_round999_secondary"
                     android:layout_below="@id/view_line_select_images"
                     android:layout_alignParentLeft="true"/>
+
+                <TextView
+                    android:id="@+id/btn_auto_add_pin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_auto_add_pin"
+                    android:textSize="14sp"
+                    android:textColor="@color/neutral_900"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/shape_btn_round999_secondary"
+                    android:layout_below="@id/view_line_select_images"
+                    android:layout_toRightOf="@id/btn_add_pin"/>
+
+                <TextView
+                    android:id="@+id/text_title_input_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_input_content"
+                    android:textColor="@color/neutral_900"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/btn_add_pin"/>
 
                 <EditText
                     android:id="@+id/edittext_input_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="200dp"
+                    android:minHeight="112dp"
                     android:hint="@string/placeholder_input_post_content"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray_86"
-                    android:textSize="15sp"
+                    android:textColor="@color/neutral_900"
+                    android:textColorHint="@color/neutral_300"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/pretendard_medium"
                     android:gravity="top"
-                    android:layout_margin="10dp"
-                    android:padding="10dp"
-                    android:layout_below="@id/btn_add_pin"
-                    android:background="@color/gray_DD"/>
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:paddingVertical="14dp"
+                    android:paddingHorizontal="16dp"
+                    android:layout_below="@id/text_title_input_content"
+                    android:background="@drawable/shape_input_content_border"/>
 
             </RelativeLayout>
 

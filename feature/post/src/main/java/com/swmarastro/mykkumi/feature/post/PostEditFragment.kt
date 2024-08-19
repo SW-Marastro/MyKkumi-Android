@@ -46,6 +46,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     private var isRestoringState = false
     private var isStartPosting = false
 
+    private val waitingNotice = "${String(Character.toChars(0x1F525))} 준비 중입니다 ${String(Character.toChars(0x1F525))}"
+
     override fun onResume() {
         super.onResume()
 
@@ -94,7 +96,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         })
 
         // 핀 추가
-        binding.btnAddPin.setOnClickListener {
+        binding.btnAddPin.setOnClickListener(View.OnClickListener {
             // 핀 최대 개수
             if (viewModel.currentPinList.value!!.size >= viewModel.MAX_PIN_COUNT) {
                 showToast("핀은 최대 ${viewModel.MAX_PIN_COUNT}개까지 추가할 수 있어요.")
@@ -102,7 +104,12 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             else {
                 viewModel.requestProductInfoForPin(this@PostEditFragment, null)
             }
-        }
+        })
+
+        // 핀 자동 생성
+        binding.btnAutoAddPin.setOnClickListener(View.OnClickListener {
+            showToast(waitingNotice)
+        })
 
         // 본문 입력 글자 수 제한
         binding.edittextInputContent.addTextChangedListener(object: TextWatcher {
