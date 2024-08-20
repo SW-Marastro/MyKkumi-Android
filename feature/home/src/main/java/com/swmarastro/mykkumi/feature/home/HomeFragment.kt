@@ -51,6 +51,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         navController = view.findNavController()
         binding.includeListLoading.visibility = View.VISIBLE
+        binding.emptyPostList.visibility = View.GONE
 
         binding.scrollHomeBannerNPost.isSmoothScrollingEnabled = true
         binding.scrollHomeBannerNPost.post {
@@ -79,6 +80,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     if (count == 0) count = viewModel.postLimit.value ?: rangeEnd
                     postListAdapter.notifyItemRangeInserted(rangeEnd - count, rangeEnd)
                 }
+            }
+            else if(viewModel.bannerListUiState.value.isNullOrEmpty()) {
+                binding.includeListLoading.visibility = View.GONE
+                binding.emptyPostList.visibility = View.VISIBLE
             }
         })
     }

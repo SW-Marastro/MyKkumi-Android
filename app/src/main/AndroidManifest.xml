@@ -29,8 +29,8 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="${appIcon}"
-        android:label="${appName}"
+        android:icon="@drawable/ic_mykkumi_logo"
+        android:label="@string/app_name"
         android:roundIcon="@drawable/ic_mykkumi_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyKkumi_AOS"
@@ -57,7 +57,7 @@
 
         <!-- 이미지 저장하려면? -->
         <provider
-            android:authorities="${providerAuthority}"
+            android:authorities="com.swmarastro.mykkumi.android.provider"
             android:name="androidx.core.content.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">

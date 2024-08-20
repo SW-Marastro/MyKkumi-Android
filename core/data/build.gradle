@@ -39,6 +39,19 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+//        debug {
+//            // local.properties에서 base url, kakao native app key 받아오기
+//            def baseUrl = properties.getProperty('api.dev.baseurl', '')
+//            def kakaoNativeAppKey = properties.getProperty('kakao.native.app.key', '')
+//
+//            if (!baseUrl.isEmpty()) buildConfigField "String", 'BASE_URL', "${baseUrl}"
+//            else throw new GradleException("BASE_URL is not set in local.properties")
+//
+//            if (!kakaoNativeAppKey.isEmpty()) {
+//                buildConfigField "String", 'KAKAO_NATIVE_APP_KEY', "\"${kakaoNativeAppKey}\""
+//                //manifestPlaceholders = [KAKAO_NATIVE_APP_KEY: kakaoNativeAppKey]
+//            } else throw new GradleException("KAKAO_NATIVE_APP_KEY is not set in local.properties")
+//        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17

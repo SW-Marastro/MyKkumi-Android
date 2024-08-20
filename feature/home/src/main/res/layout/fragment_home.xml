@@ -144,6 +144,36 @@
                         android:nestedScrollingEnabled="false"
                         android:layout_marginTop="24dp"/>
 
+                    <RelativeLayout
+                        android:id="@+id/empty_post_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="100dp"
+                        android:paddingBottom="60dp"
+                        android:gravity="center_vertical"
+                        android:layout_below="@id/relative_banner"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/img_logo"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
+                            android:src="@drawable/ic_mykkumi_character_notice"
+                            android:layout_centerHorizontal="true"/>
+
+                        <TextView
+                            android:id="@+id/text_test"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/img_logo"
+                            android:layout_centerHorizontal="true"
+                            android:text="아직 작성된 포스트가 없습니다"
+                            android:textSize="15sp"
+                            android:textColor="@color/neutral_800"
+                            android:fontFamily="@font/pretendard_bold"/>
+
+                    </RelativeLayout>
+
                     <!-- 로딩 -->
                     <LinearLayout
                         android:id="@+id/include_list_loading"
