@@ -16,8 +16,6 @@ import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.common_ui.report.PostReportConfirmDialog
 import com.swmarastro.mykkumi.common_ui.report.PostWriterReportConfirmDialog
 import com.swmarastro.mykkumi.domain.entity.BannerItemVO
-import com.swmarastro.mykkumi.domain.entity.BannerListVO
-import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBinding
 import com.swmarastro.mykkumi.feature.home.post.PostListAdapter
@@ -257,7 +255,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
         dialog.setOnClickListener { postId ->
             Toast.makeText(context, getString(com.swmarastro.mykkumi.common_ui.R.string.post_report_confirm_clear_toast), Toast.LENGTH_SHORT).show()
         }
-
         dialog.show(postId)
     }
 
@@ -267,7 +264,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
         dialog.setOnClickListener { writerUuid ->
             Toast.makeText(context, getString(com.swmarastro.mykkumi.common_ui.R.string.post_report_confirm_clear_toast), Toast.LENGTH_SHORT).show()
         }
-
         dialog.show(writerUuid)
     }
 

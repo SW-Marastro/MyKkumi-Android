@@ -71,6 +71,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        
+        // 회원가입 도중에 닉네임 입력 안 하고 종료한 유저인지 확인
+        viewModel.checkIsSignDone(
+            navController = navController,
+            showToast = {
+                showToast(it)
+            }
+        )
     }
 
     private fun setBottomNavigation() {
@@ -127,6 +136,10 @@ class MainActivity : AppCompatActivity() {
             ImagePermissionUtils.requestPermissions(this)
         }
     }
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
 
     override fun onDestroy() {
         _binding = null

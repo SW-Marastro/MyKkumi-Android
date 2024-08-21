@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
+import com.swmarastro.mykkumi.domain.exception.ApiException
+import com.swmarastro.mykkumi.domain.usecase.auth.GetUserInfoUseCase
+import com.swmarastro.mykkumi.feature.auth.LoginScreens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val authTokenDataStore: AuthTokenDataStore,
+    private val getUserInfoUseCase: GetUserInfoUseCase,
 ) : ViewModel() {
     private val _currentMenu = MutableStateFlow<Int?>(null)
     val currentMenu: StateFlow<Int?> get() = _currentMenu
@@ -23,6 +27,29 @@ class MainViewModel @Inject constructor(
     fun selectMenu(selectMenu: Int) {
         viewModelScope.launch {
             _currentMenu.emit(selectMenu)
+        }
+    }
+
+    // token은 있지만, 회원가입 처리가 제대로 안 된 경우
+    fun checkIsSignDone(
+        navController: NavController,
+        showToast : (message: String) -> Unit
+    ) {
+        if(authTokenDataStore.isLogin()) {
+            viewModelScope.launch {
+                try {
+                    val userInfo = getUserInfoUseCase()
+
+                    // 최초 가입자 -> 추가 정보 입력 페이지로
+                    if (userInfo.nickname == null) {
+                        navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
+                    }
+                } catch (e: ApiException.UnknownApiException) {
+                    showToast("서비스 오류가 발생했습니다.")
+                } catch (e: Exception) {
+                    showToast("서비스 오류가 발생했습니다.")
+                }
+            }
         }
     }
 

@@ -25,6 +25,15 @@ class ChooseReportBottomSheet : BaseBottomSheetFragment<FragmentChooseReportBott
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.textBtnReportPost.setOnClickListener(View.OnClickListener {
+            postId?.let { postId -> chooseReportListener?.reportPost(postId) }
+            dismiss()
+        })
+
+        binding.textBtnReportWriter.setOnClickListener(View.OnClickListener {
+            writerUuid?.let { writerUuid -> chooseReportListener?.repostWriter(writerUuid) }
+            dismiss()
+        })
     }
 
     override suspend fun initView() {
