@@ -1,3 +1,5 @@
+![중간발표-001](https://github.com/user-attachments/assets/b912eef7-a6aa-4dfd-a7c8-f49c00bd1b43)
+
 # 마이꾸미
 ```
 💜 템빨 취미 및 제품 정보 공유 서비스
@@ -76,4 +78,11 @@
 **Backend**  
 <a href="https://spring.io/projects/spring-boot" target="_blank" rel="noreferrer"> <img src="http://img.shields.io/badge/-spring_boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="springboot" height="24"/> </a> <!-- SpringBoot -->
 <a href="https://www.java.com" target="_blank" rel="noreferrer"> <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white" alt="java" height="24"/> </a> <!-- Java -->  
+
+---
+
+### 💜 Result
+![020](https://github.com/user-attachments/assets/630e5a56-3c69-4469-ba9f-89de1143784d)
+![022](https://github.com/user-attachments/assets/c929b3f3-be17-4e9f-b743-0bc7d49a270b)
+![023](https://github.com/user-attachments/assets/986277ef-ce9e-492d-82f9-0c671d51b5f4)
 
