@@ -29,7 +29,7 @@ class PostListAdapter (
     private val context: Context,
     private val navController: NavController?,
     private val waitNotice: () -> Unit,
-    private val reportPost: (postId: Int) -> Unit,
+    private val reportPost: (writerUuid: String, postId: Int) -> Unit,
     private val viewModel: HomeViewModel
 ) : RecyclerView.Adapter<PostListAdapter.PostListViewHolder>(){
     private final val MAX_CONTENT_LENGTH = 50
@@ -126,7 +126,7 @@ class PostListAdapter (
 
             // 포스트 신고하기
             binding.textBtnPostReport.setOnClickListener(View.OnClickListener {
-                reportPost(item.id)
+                reportPost(item.writer.uuid, item.id)
             })
 
             // 로그인 된 유저한테만 보여줄 것 - 팔로우, 신고하기 버튼

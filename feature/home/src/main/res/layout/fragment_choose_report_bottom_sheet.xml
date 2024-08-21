@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingHorizontal="20dp">
+
+        <TextView
+            android:id="@+id/text_btn_report_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="포스트 신고하기"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:fontFamily="@font/pretendard_semibold"
+            android:background="@drawable/shape_btn_round12_primary"
+            android:gravity="center"
+            android:paddingVertical="15.5dp"/>
+
+        <TextView
+            android:id="@+id/text_btn_report_writer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="작성자 신고하기"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:fontFamily="@font/pretendard_semibold"
+            android:background="@drawable/shape_btn_round12_primary"
+            android:gravity="center"
+            android:paddingVertical="15.5dp"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+</layout>
