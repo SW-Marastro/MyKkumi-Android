@@ -19,21 +19,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
 # 공통 모듈의 클래스 유지
--keep class com.swmarastro.mykkumi.common.** { *; }
+-keep class com.swmarastro.mykkumi.common_ui.** { *; }
+-keep class java.lang.invoke.StringConcatFactory { *; }
+-keep class com.swmarastro.mykkumi.common_ui.base.BaseFragment
 
 # 기타 ProGuard 설정
 -keep class !a.a, * { *; }
 -dontwarn a.a
-
--dontwarn java.lang.invoke.StringConcatFactory
--dontwarn com.swmarastro.mykkumi.common_ui.post.PostImagesAdapter
--dontwarn com.swmarastro.mykkumi.common_ui.base.BaseFragment
--dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemListLoadingBinding
--dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemPostWriterBinding
--dontwarn com.swmarastro.mykkumi.common_ui.post.PostImageIndicator
--dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemSkeletonPostListBinding
--dontwarn com.swmarastro.mykkumi.common_ui.report.PostReportConfirmDialog
--dontwarn com.swmarastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProvider$Companion
--dontwarn com.swmarastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProvider

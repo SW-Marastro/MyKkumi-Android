@@ -18,7 +18,7 @@ android {
         minSdk min_sdk_version
         targetSdk target_sdk_version
 
-        versionCode 6
+        versionCode 7
         versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -67,20 +67,20 @@ android {
 
 dependencies {
     // feature
-    implementation project(path: ":feature:home")
-    implementation project(path: ":feature:around")
-    implementation project(path: ":feature:shopping")
-    implementation project(path: ":feature:mypage")
-    implementation project(path: ":feature:auth")
-    implementation project(path: ":feature:post")
+    implementation project(":feature:home")
+    implementation project(":feature:around")
+    implementation project(":feature:shopping")
+    implementation project(":feature:mypage")
+    implementation project(":feature:auth")
+    implementation project(":feature:post")
 
     // data
-    implementation project(path: ":core:data")
+    implementation project(":core:data")
 
     // domain
-    implementation project(path: ":core:domain")
+    implementation project(":core:domain")
 
-    implementation project(path: ":core:common-ui")
+    implementation project(":core:common-ui")
 
     // UI - Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
