@@ -70,7 +70,7 @@ kapt {
 }
 
 dependencies {
-    implementation project(path: ':core:domain')
+    implementation project(':core:domain')
 
     // Test
     testImplementation "junit:junit:$junit_version"
