@@ -127,8 +127,6 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
         productName = arguments?.getString("productName") ?: ""
         productUrl = arguments?.getString("productUrl") ?: ""
 
-        Log.d("test", "Pin position: ${position}")
-
         binding.edittextInputProductName.setText(productName)
         binding.edittextInputProductUrl.setText(productUrl)
     }

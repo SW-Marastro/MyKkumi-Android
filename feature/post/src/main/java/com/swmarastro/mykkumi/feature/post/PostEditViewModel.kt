@@ -164,12 +164,18 @@ class PostEditViewModel  @Inject constructor(
     }
 
     // 핀 삭제
-    fun deletePinOfImage(position: Int) {
+    fun deletePinOfImage(
+        position: Int,
+        message: String,
+        showToast: (message: String) -> Unit,
+    ) {
         val deletePinList = _currentPinList.value!!
         deletePinList.removeAt(position)
         _currentPinList.postValue(
             deletePinList
         )
+
+        showToast(message)
     }
 
     // 이미지 삭제

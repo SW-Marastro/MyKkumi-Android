@@ -14,12 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.common_ui.report.PostReportConfirmDialog
+import com.swmarastro.mykkumi.common_ui.report.PostWriterReportConfirmDialog
 import com.swmarastro.mykkumi.domain.entity.BannerItemVO
-import com.swmarastro.mykkumi.domain.entity.BannerListVO
-import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBinding
 import com.swmarastro.mykkumi.feature.home.post.PostListAdapter
+import com.swmarastro.mykkumi.feature.home.report.ChooseReportBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -27,7 +27,8 @@ import java.util.Timer
 import java.util.TimerTask
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
+class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
+    ChooseReportBottomSheet.ChooseReportListener {
     private val viewModel by viewModels<HomeViewModel>()
 
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
@@ -168,8 +169,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             waitNotice = {
                 waitNotice()
             },
-            reportPost = {
-                postReportConfirm(it)
+            reportPost = { writerUuid: String, postId: Int ->
+                postReportConfirm(writerUuid, postId)
             },
             viewModel
         )
@@ -224,20 +225,56 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     // 포스트 신고 확인 Dialog
-    private fun postReportConfirm(postId: Int) {
+    private fun postReportConfirm(writerUuid: String, postId: Int) {
+        // ✅ 1차 배포용
+        // 포스트 신고, 사용자 신고 중 선택
         val intent = viewModel.navigateLogin()
         if(intent == null) { // 로그인 됨
-            val dialog = PostReportConfirmDialog(this)
-            dialog.setOnClickListener { postId ->
-                Toast.makeText(context, getString(com.swmarastro.mykkumi.common_ui.R.string.post_report_confirm_clear_toast), Toast.LENGTH_SHORT).show()
-                Log.d("test", "신고 포스트: ${postId}")
-            }
-
-            dialog.show(postId)
+            viewModel.chooseReport(
+                fragment = this,
+                writerUuid = writerUuid,
+                postId = postId
+            )
+            // 포스트 신고 확인 팝업
+//            val dialog = PostReportConfirmDialog(this)
+//            dialog.setOnClickListener { postId ->
+//                Toast.makeText(context, getString(com.swmarastro.mykkumi.common_ui.R.string.post_report_confirm_clear_toast), Toast.LENGTH_SHORT).show()
+//                Log.d("test", "신고 포스트: ${postId}")
+//            }
+//
+//            dialog.show(postId)
         }
         else { // 로그인 안 됨
             startActivity(intent)
         }
+    }
+
+    // 포스트 신고
+    override fun reportPost(postId: Int) {
+        val dialog = PostReportConfirmDialog(this)
+        dialog.setOnClickListener { postId ->
+            viewModel.reportPost(
+                postId = postId.toLong(),
+                showToast = {
+                    showToast(it)
+                }
+            )
+        }
+        dialog.show(postId)
+    }
+
+    // 작성자 신고
+    override fun repostWriter(writerUuid: String) {
+        val dialog = PostWriterReportConfirmDialog(this)
+        dialog.setOnClickListener { writerUuid ->
+            viewModel.reportWriter(
+                userUuid = writerUuid,
+                showToast = {
+                    showToast(it)
+                }
+            )
+        }
+        dialog.show(writerUuid)
     }
 
     override fun onDestroyView() {
