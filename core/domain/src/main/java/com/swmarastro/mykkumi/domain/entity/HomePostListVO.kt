@@ -15,8 +15,9 @@ data class HomePostItemVO(
 )
 
 data class HomePostWriterVO(
-    val profileImage: String? = "",
-    val nickname: String? = "",
+    val uuid: String = "",
+    val profileImage: String = "",
+    val nickname: String = "",
 )
 
 // 본문 RichText

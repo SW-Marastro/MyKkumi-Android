@@ -50,11 +50,14 @@ data class HomePostListDTO(
         )
 
         data class HomePostWriterDTO(
+            @SerializedName("uuid")
+            val uuid: String,
+
             @SerializedName("profileImage")
-            val profileImage: String?,
+            val profileImage: String,
 
             @SerializedName("nickname")
-            val nickname: String?,
+            val nickname: String,
         ) {
             fun toEntity(): HomePostWriterVO = HomePostWriterVO(
                 profileImage = profileImage,
