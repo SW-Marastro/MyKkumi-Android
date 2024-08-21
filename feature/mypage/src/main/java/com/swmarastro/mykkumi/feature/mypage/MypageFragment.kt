@@ -20,8 +20,13 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(R.layout.fragment_myp
 
         // 로그아웃 테스트
         binding.btnLogout.setOnClickListener {
-            viewModel.logout()
-            Toast.makeText(context, "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
+            if(viewModel.isLogin()) {
+                viewModel.logout()
+                Toast.makeText(context, "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(context, "로그인 해주세요", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

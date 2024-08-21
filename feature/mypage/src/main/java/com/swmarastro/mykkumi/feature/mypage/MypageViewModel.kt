@@ -14,6 +14,10 @@ class MypageViewModel @Inject constructor(
     private val _mypageUiState = MutableStateFlow<String>("")
     val mypageUiState: StateFlow<String> get() = _mypageUiState
 
+    fun isLogin(): Boolean {
+        return authTokenDataStore.isLogin()
+    }
+
     // 로그아웃 테스트
     fun logout() {
         authTokenDataStore.deleteToken()
