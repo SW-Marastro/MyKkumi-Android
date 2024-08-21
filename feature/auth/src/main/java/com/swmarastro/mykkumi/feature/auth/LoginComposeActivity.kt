@@ -67,7 +67,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class LoginComposeActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<LoginViewModel>()
+    private val viewModel: LoginViewModel by viewModels()
 
     @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {

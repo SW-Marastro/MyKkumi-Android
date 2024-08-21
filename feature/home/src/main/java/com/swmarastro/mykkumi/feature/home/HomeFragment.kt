@@ -80,6 +80,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     if (count == 0) count = viewModel.postLimit.value ?: rangeEnd
                     postListAdapter.notifyItemRangeInserted(rangeEnd - count, rangeEnd)
                 }
+
+                binding.emptyPostList.visibility = View.GONE
             }
             else if(viewModel.bannerListUiState.value.isNullOrEmpty()) {
                 binding.includeListLoading.visibility = View.GONE
@@ -223,13 +225,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     // 포스트 신고 확인 Dialog
     private fun postReportConfirm(postId: Int) {
-        val dialog = PostReportConfirmDialog(this)
-        dialog.setOnClickListener { postId ->
-            Toast.makeText(context, getString(com.swmarastro.mykkumi.common_ui.R.string.post_report_confirm_clear_toast), Toast.LENGTH_SHORT).show()
-            Log.d("test", "신고 포스트: ${postId}")
-        }
+        val intent = viewModel.navigateLogin()
+        if(intent == null) { // 로그인 됨
+            val dialog = PostReportConfirmDialog(this)
+            dialog.setOnClickListener { postId ->
+                Toast.makeText(context, getString(com.swmarastro.mykkumi.common_ui.R.string.post_report_confirm_clear_toast), Toast.LENGTH_SHORT).show()
+                Log.d("test", "신고 포스트: ${postId}")
+            }
 
-        dialog.show(postId)
+            dialog.show(postId)
+        }
+        else { // 로그인 안 됨
+            startActivity(intent)
+        }
     }
 
     override fun onDestroyView() {

@@ -124,24 +124,24 @@ class PostListAdapter (
                 waitNotice()
             }
 
+            // 포스트 신고하기
+            binding.textBtnPostReport.setOnClickListener(View.OnClickListener {
+                reportPost(item.id)
+            })
+
             // 로그인 된 유저한테만 보여줄 것 - 팔로우, 신고하기 버튼
             if(viewModel.isLogined.value) {
                 binding.includePostWriter.btnFollow.visibility = View.VISIBLE // 팔로우
-                binding.textBtnPostReport.visibility = View.VISIBLE // 신고하기
+//                binding.textBtnPostReport.visibility = View.VISIBLE // 신고하기
 
                 // 팔로우 버튼 - 아직 안 됨
                 binding.includePostWriter.btnFollow.setOnClickListener(View.OnClickListener {
                     waitNotice()
                 })
-
-                // 포스트 신고하기
-                binding.textBtnPostReport.setOnClickListener(View.OnClickListener {
-                    reportPost(item.id)
-                })
             }
             else {
                 binding.includePostWriter.btnFollow.visibility = View.GONE // 팔로우
-                binding.textBtnPostReport.visibility = View.GONE // 신고하기
+//                binding.textBtnPostReport.visibility = View.GONE // 신고하기
             }
 
             // 댓글 작성 버튼 - 아직 안 됨

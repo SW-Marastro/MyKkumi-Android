@@ -33,3 +33,7 @@
 -dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemListLoadingBinding
 -dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemPostWriterBinding
 -dontwarn com.swmarastro.mykkumi.common_ui.post.PostImageIndicator
+-dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemSkeletonPostListBinding
+-dontwarn com.swmarastro.mykkumi.common_ui.report.PostReportConfirmDialog
+-dontwarn com.swmarastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProvider$Companion
+-dontwarn com.swmarastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProvider
