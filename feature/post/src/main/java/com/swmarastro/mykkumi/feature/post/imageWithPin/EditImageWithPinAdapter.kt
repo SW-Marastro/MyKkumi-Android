@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getString
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -173,7 +175,12 @@ class EditImageWithPinAdapter(
 
         val buttonDeletePin = tooltipView.findViewById<TextView>(R.id.btn_delete_pin)
         buttonDeletePin.setOnClickListener(View.OnClickListener {
-            viewModel.deletePinOfImage(pinIndex)
+            viewModel.deletePinOfImage(
+                position = pinIndex,
+                message = getString(context, com.swmarastro.mykkumi.feature.post.R.string.toast_delete_pin),
+                showToast = {
+                    showToast(it)
+                })
             popupWindow.dismiss()
         })
 
@@ -183,4 +190,7 @@ class EditImageWithPinAdapter(
         popupWindow.showAsDropDown(anchorView, xOffset, yOffset)
     }
 
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
 }
