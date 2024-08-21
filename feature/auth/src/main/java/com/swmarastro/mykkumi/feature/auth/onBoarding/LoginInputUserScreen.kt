@@ -152,10 +152,11 @@ fun LoginInputUserScreen(
     }
 
     Scaffold(
-        scaffoldState = scaffoldState
-    ) {
+        scaffoldState = scaffoldState,
+    ) { paddingValues ->
         Column(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
                 .background(Color.White),
         ) {
@@ -275,7 +276,7 @@ fun LoginInputUserScreen(
                     )
                 }
             }
-    
+
             Spacer(
                 modifier = Modifier.height(40.dp)
             )
@@ -366,7 +367,7 @@ fun LoginInputUserScreen(
                     )
                 }
             }
-    
+
             Spacer(
                 modifier = Modifier.height(12.dp),
             )

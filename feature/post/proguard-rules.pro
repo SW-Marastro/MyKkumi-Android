@@ -25,6 +25,8 @@
 -dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemListLoadingBinding
 -dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemPostWriterBinding
 -dontwarn com.swmarastro.mykkumi.common_ui.post.PostImageIndicator
+-dontwarn com.swmarastro.mykkumi.common_ui.permission.ImagePermissionUtils
+-dontwarn java.lang.invoke.StringConcatFactory
 
 # 공통 모듈의 클래스 유지
 -keep class com.swmarastro.mykkumi.common.** { *; }

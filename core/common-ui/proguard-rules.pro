@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-dontwarn com.swmarastro.mykkumi.common_ui.databinding.ItemSkeletonPostListBinding
+-dontwarn com.swmarastro.mykkumi.common_ui.report.PostReportConfirmDialog
+-dontwarn com.swmarastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProvider$Companion
+-dontwarn com.swmarastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProvider
+-dontwarn com.swmarastro.mykkumi.common_ui.permission.ImagePermissionUtils
+-dontwarn java.lang.invoke.StringConcatFactory

@@ -1,5 +1,7 @@
 package com.swmarastro.mykkumi.feature.home
 
+import android.content.Intent
+import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -99,6 +101,19 @@ class HomeViewModel @Inject constructor(
                 _postListUiState.emit(mutableListOf())
             }
         }
+    }
+
+    // 로그인 페이지 이동
+    fun navigateLogin() : Intent? {
+        if(authTokenDataStore.isLogin()) return null
+
+        val loginDeepLink = "mykkumi://mykkumi.signin"
+
+        val intent = Intent()
+        intent.setAction(Intent.ACTION_VIEW)
+        intent.setData(Uri.parse(loginDeepLink))
+
+        return intent
     }
 
     // 배너 전체 리스트 페이지로 이동
