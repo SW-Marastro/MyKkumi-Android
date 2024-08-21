@@ -60,6 +60,7 @@ data class HomePostListDTO(
             val nickname: String,
         ) {
             fun toEntity(): HomePostWriterVO = HomePostWriterVO(
+                uuid = uuid,
                 profileImage = profileImage,
                 nickname = nickname
             )

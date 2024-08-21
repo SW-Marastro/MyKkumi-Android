@@ -18,6 +18,7 @@ import com.swmarastro.mykkumi.data.datasource.PostDataSource
 import com.swmarastro.mykkumi.data.datasource.PreSignedUrlDataSource
 import com.swmarastro.mykkumi.data.datasource.PutImageS3DataSource
 import com.swmarastro.mykkumi.data.datasource.ReAccessTokenDataSource
+import com.swmarastro.mykkumi.data.datasource.ReportDataSource
 import com.swmarastro.mykkumi.data.datasource.UserInfoDataSource
 import com.swmarastro.mykkumi.data.interceptor.TokenAuthenticator
 import com.swmarastro.mykkumi.data.interceptor.TokenInterceptor
@@ -157,5 +158,11 @@ object NetworkModule {
     @Singleton
     fun putImageS3DataSource(@Named("S3Retrofit") retrofit: Retrofit): PutImageS3DataSource {
         return retrofit.create(PutImageS3DataSource::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun reportDataSource(retrofit: Retrofit): ReportDataSource {
+        return retrofit.create(ReportDataSource::class.java)
     }
 }

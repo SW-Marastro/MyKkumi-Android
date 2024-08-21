@@ -169,7 +169,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             waitNotice = {
                 waitNotice()
             },
-            reportPost = { writerUuid, postId ->
+            reportPost = { writerUuid: String, postId: Int ->
                 postReportConfirm(writerUuid, postId)
             },
             viewModel
@@ -253,7 +253,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     override fun reportPost(postId: Int) {
         val dialog = PostReportConfirmDialog(this)
         dialog.setOnClickListener { postId ->
-            Toast.makeText(context, getString(com.swmarastro.mykkumi.common_ui.R.string.post_report_confirm_clear_toast), Toast.LENGTH_SHORT).show()
+            viewModel.reportPost(
+                postId = postId.toLong(),
+                showToast = {
+                    showToast(it)
+                }
+            )
         }
         dialog.show(postId)
     }
@@ -262,7 +267,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     override fun repostWriter(writerUuid: String) {
         val dialog = PostWriterReportConfirmDialog(this)
         dialog.setOnClickListener { writerUuid ->
-            Toast.makeText(context, getString(com.swmarastro.mykkumi.common_ui.R.string.post_report_confirm_clear_toast), Toast.LENGTH_SHORT).show()
+            viewModel.reportWriter(
+                userUuid = writerUuid,
+                showToast = {
+                    showToast(it)
+                }
+            )
         }
         dialog.show(writerUuid)
     }

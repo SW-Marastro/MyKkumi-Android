@@ -126,7 +126,10 @@ class PostListAdapter (
 
             // 포스트 신고하기
             binding.textBtnPostReport.setOnClickListener(View.OnClickListener {
-                reportPost(item.writer.uuid, item.id)
+                reportPost(
+                    item.writer.uuid,
+                    item.id
+                )
             })
 
             // 로그인 된 유저한테만 보여줄 것 - 팔로우, 신고하기 버튼

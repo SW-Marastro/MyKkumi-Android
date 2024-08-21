@@ -12,8 +12,11 @@ import androidx.navigation.NavController
 import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.swmarastro.mykkumi.domain.entity.BannerItemVO
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
+import com.swmarastro.mykkumi.domain.exception.ApiException
 import com.swmarastro.mykkumi.domain.usecase.banner.GetBannerListUseCase
 import com.swmarastro.mykkumi.domain.usecase.post.GetHomePostListUseCase
+import com.swmarastro.mykkumi.domain.usecase.report.ReportPostUseCase
+import com.swmarastro.mykkumi.domain.usecase.report.ReportUserUseCase
 import com.swmarastro.mykkumi.feature.home.report.ChooseReportBottomSheet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +32,8 @@ class HomeViewModel @Inject constructor(
     private val getBannerListUseCase: GetBannerListUseCase,
     private val getHomePostListUseCase: GetHomePostListUseCase,
     private val authTokenDataStore: AuthTokenDataStore,
+    private val reportPostUseCase: ReportPostUseCase,
+    private val reportUserUseCase: ReportUserUseCase,
 ) : ViewModel() {
 
     // 홈 > 배너 캐러셀
@@ -139,5 +144,40 @@ class HomeViewModel @Inject constructor(
         val navigateDeepLink = "mykkumi://banner.detail?bannerId=${selectBannerId.value}"
         //val action = HomeFragmentDirections.actionNavigateFragmentToHomeBannerDetail(bannerId = selectBannerId)
         navController?.navigate(deepLink = navigateDeepLink.toUri())
+    }
+
+    // 포스트 신고
+    fun reportPost(
+        postId: Long,
+        showToast: (message: String) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val reportResult = reportPostUseCase(postId)
+                showToast(reportResult.result)
+            } catch (e: ApiException.DuplicateReportException) {
+                e.message?.let { showToast(it) }
+            } catch (e: ApiException.NotFoundException) {
+                e.message?.let { showToast(it) }
+            }
+        }
+    }
+
+
+    // 유저 신고
+    fun reportWriter(
+        userUuid: String,
+        showToast: (message: String) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val reportResult = reportUserUseCase(userUuid)
+                showToast(reportResult.result)
+            } catch (e: ApiException.DuplicateReportException) {
+                e.message?.let { showToast(it) }
+            } catch (e: ApiException.NotFoundException) {
+                e.message?.let { showToast(it) }
+            }
+        }
     }
 }
