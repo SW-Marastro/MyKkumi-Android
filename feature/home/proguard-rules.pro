@@ -37,3 +37,5 @@
 -dontwarn com.swmarastro.mykkumi.common_ui.report.PostReportConfirmDialog
 -dontwarn com.swmarastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProvider$Companion
 -dontwarn com.swmarastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProvider
+-dontwarn com.swmarastro.mykkumi.common_ui.base.BaseBottomSheetFragment
+-dontwarn com.swmarastro.mykkumi.common_ui.report.PostWriterReportConfirmDialog
