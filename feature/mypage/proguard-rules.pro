@@ -24,6 +24,14 @@
 -keep class java.lang.invoke.StringConcatFactory { *; }
 -keep class com.swmarastro.mykkumi.common_ui.base.BaseFragment
 
+# 카카오 로그인을 위한 카카오 SDK를 코드 축소, 난독화, 최적화에서 제외
+-keep class com.kakao.sdk.**.model.* { <fields>; }
+-keep class * extends com.google.gson.TypeAdapter
+
+# R8 full mode strips generic signatures from return types if not kept.
+-if interface * { @retrofit2.http.* public *** *(...); }
+-keep,allowoptimization,allowshrinking,allowobfuscation class <3>
+
 # 기타 ProGuard 설정
 -keep class !a.a, * { *; }
 -dontwarn a.a
