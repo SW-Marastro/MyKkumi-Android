@@ -3,6 +3,7 @@ package com.swmarastro.mykkumi.feature.home
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -93,12 +94,12 @@ class HomeViewModel @Inject constructor(
                 _isPostListLoading.emit(true) // 스크롤 이벤트가 연속적으로 호출되는 것을 방지
                 if(!isCursor) _postCursor.setValue(null)
 
-                val homePostList = withContext(Dispatchers.IO) {
-                    getHomePostListUseCase(postCursor.value, postLimit.value)
-                }
+                Log.d("test", "--------------------------")
+                val homePostList = getHomePostListUseCase(postCursor.value, postLimit.value)
 
+                Log.d("test", "${homePostList.posts.joinToString()}")
                 if (isCursor) _postListUiState.value.addAll(homePostList.posts)
-                else _postListUiState.emit(homePostList.posts.toMutableList())
+                else _postListUiState.value = homePostList.posts.toMutableList()
 
                 // 다음 커서
                 _postCursor.setValue( homePostList.cursor )
@@ -106,6 +107,8 @@ class HomeViewModel @Inject constructor(
                 _isPostListLoading.emit(false) // 스크롤 이벤트가 연속적으로 호출되는 것을 방지
             } catch (e: Exception) {
                 _postListUiState.emit(mutableListOf())
+
+                Log.e("Error", "${e}")
             }
         }
     }
