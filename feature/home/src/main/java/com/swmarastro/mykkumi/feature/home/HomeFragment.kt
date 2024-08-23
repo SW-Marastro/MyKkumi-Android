@@ -194,6 +194,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
                 val scroll = v.getChildAt(v.childCount - 1)
                 val diff = scroll.bottom - (v.height + v.scrollY)
 
+                binding.swipeRefreshLayout.isEnabled = !v.canScrollVertically(-1)
+
                 // includeListLoading이 보이기 시작하는 시점 확인
                 val loadingViewTop = binding.includeListLoading.top
 
