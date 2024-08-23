@@ -43,6 +43,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     override fun onResume() {
         super.onResume()
 
+        binding.includeListLoading.visibility = View.VISIBLE
         setHomeBanner() // 배너
         setPostList() // 포스트
     }
@@ -52,7 +53,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
 
         navController = view.findNavController()
         binding.includeListLoading.visibility = View.VISIBLE
-        binding.emptyPostList.visibility = View.GONE
 
         binding.scrollHomeBannerNPost.isSmoothScrollingEnabled = true
         binding.scrollHomeBannerNPost.post {
@@ -82,12 +82,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
                     postListAdapter.notifyItemRangeInserted(rangeEnd - count, rangeEnd)
                 }
 
-                binding.emptyPostList.visibility = View.GONE
+//                binding.emptyPostList.visibility = View.GONE
             }
-            else if(viewModel.bannerListUiState.value.isNullOrEmpty()) {
-                binding.includeListLoading.visibility = View.GONE
-                binding.emptyPostList.visibility = View.VISIBLE
-            }
+//            else if(viewModel.bannerListUiState.value.isNullOrEmpty()) {
+//                binding.includeListLoading.visibility = View.GONE
+//                binding.emptyPostList.visibility = View.VISIBLE
+//            }
         })
     }
 

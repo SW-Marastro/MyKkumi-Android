@@ -71,7 +71,7 @@ class PostImagesAdapter(
                             binding.relativePostImage.layoutParams.height = binding.relativePostImage.width
                             binding.relativePostImage.requestLayout()
 
-                            notifyItemChanged(position)
+//                            notifyItemChanged(position)
                         }
                         else {
                             notifyItemChanged(position)

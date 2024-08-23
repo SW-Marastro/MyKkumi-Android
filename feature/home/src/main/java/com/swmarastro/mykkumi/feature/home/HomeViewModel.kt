@@ -91,11 +91,12 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _isPostListLoading.emit(true) // 스크롤 이벤트가 연속적으로 호출되는 것을 방지
-                if(!isCursor) _postCursor.setValue(null)
-
-                val homePostList = withContext(Dispatchers.IO) {
-                    getHomePostListUseCase(postCursor.value, postLimit.value)
+                if(!isCursor) {
+                    _postCursor.setValue(null)
+                    _postListUiState.emit(mutableListOf())
                 }
+
+                val homePostList = getHomePostListUseCase(postCursor.value, postLimit.value)
 
                 if (isCursor) _postListUiState.value.addAll(homePostList.posts)
                 else _postListUiState.emit(homePostList.posts.toMutableList())
