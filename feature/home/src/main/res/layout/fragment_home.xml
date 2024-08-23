@@ -13,188 +13,196 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-            <!-- 상단바 -->
             <RelativeLayout
-                android:id="@+id/toolbar"
+                android:id="@+id/relative_home_all"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="15dp">
+                android:layout_height="wrap_content">
 
-
-                <ImageView
-                    android:id="@+id/img_mykkumi_typo"
-                    android:layout_width="107dp"
-                    android:layout_height="29dp"
-                    android:src="@drawable/img_mykkumi_typo" />
-
-                <ImageButton
-                    android:id="@+id/btn_search"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="@android:color/transparent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_search"
-                    android:layout_marginRight="16dp"
-                    android:layout_toLeftOf="@id/btn_notice"
-                    android:layout_centerVertical="true"/>
-
-                <ImageButton
-                    android:id="@+id/btn_notice"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="@android:color/transparent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_notice"
-                    android:layout_marginRight="4dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"/>
-
-            </RelativeLayout>
-
-
-            <ScrollView
-                android:id="@+id/scroll_home_banner_n_post"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/toolbar">
-
+                <!-- 상단바 -->
                 <RelativeLayout
+                    android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="60dp">
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="15dp">
 
-                    <!-- 배너 -->
+
+                    <ImageView
+                        android:id="@+id/img_mykkumi_typo"
+                        android:layout_width="107dp"
+                        android:layout_height="29dp"
+                        android:src="@drawable/img_mykkumi_typo" />
+
+                    <ImageButton
+                        android:id="@+id/btn_search"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_search"
+                        android:layout_marginRight="16dp"
+                        android:layout_toLeftOf="@id/btn_notice"
+                        android:layout_centerVertical="true"/>
+
+                    <ImageButton
+                        android:id="@+id/btn_notice"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_notice"
+                        android:layout_marginRight="4dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"/>
+
+                </RelativeLayout>
+
+
+                <ScrollView
+                    android:id="@+id/scroll_home_banner_n_post"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/toolbar">
+
                     <RelativeLayout
-                        android:id="@+id/relative_banner"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="8dp">
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="60dp">
 
-                        <com.facebook.shimmer.ShimmerFrameLayout
-                            android:id="@+id/skeleton_banner"
+                        <!-- 배너 -->
+                        <RelativeLayout
+                            android:id="@+id/relative_banner"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:layout_marginTop="8dp">
+
+                            <com.facebook.shimmer.ShimmerFrameLayout
+                                android:id="@+id/skeleton_banner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="16dp">
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="100dp"
+                                    android:background="@drawable/shape_banner_background" />
+
+                            </com.facebook.shimmer.ShimmerFrameLayout>
+
+                            <androidx.viewpager2.widget.ViewPager2
+                                android:id="@+id/viewpager_banner"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal" />
+
+                            <LinearLayout
+                                android:id="@+id/banner_page_num"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:background="@drawable/shape_banner_page_background"
+                                android:gravity="center"
+                                android:layout_alignParentBottom="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="28dp"
+                                android:layout_marginBottom="12dp"
+                                android:paddingVertical="2dp"
+                                android:paddingHorizontal="8dp">
+
+                                <TextView
+                                    android:id="@+id/text_banner_current_page"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="12sp"
+                                    android:fontFamily="@font/pretendard_medium"
+                                    android:textColor="@color/white"/>
+
+                                <TextView
+                                    android:id="@+id/text_banner_total_page"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="/0"
+                                    android:textSize="12sp"
+                                    android:fontFamily="@font/pretendard_medium"
+                                    android:textColor="@color/white"/>
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <!-- 포스트 리스트 -->
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerview_post_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="16dp">
+                            android:orientation="vertical"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/item_post_recyclerview"
+                            android:layout_below="@id/relative_banner"
+                            android:nestedScrollingEnabled="false"
+                            android:layout_marginTop="24dp"/>
 
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="100dp"
-                                android:background="@drawable/shape_banner_background" />
-
-                        </com.facebook.shimmer.ShimmerFrameLayout>
-
-                        <androidx.viewpager2.widget.ViewPager2
-                            android:id="@+id/viewpager_banner"
+                        <RelativeLayout
+                            android:id="@+id/empty_post_list"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal" />
+                            android:layout_marginTop="100dp"
+                            android:paddingBottom="60dp"
+                            android:gravity="center_vertical"
+                            android:layout_below="@id/relative_banner"
+                            android:visibility="gone">
 
+                            <ImageView
+                                android:id="@+id/img_logo"
+                                android:layout_width="140dp"
+                                android:layout_height="140dp"
+                                android:src="@drawable/ic_mykkumi_character_notice"
+                                android:layout_centerHorizontal="true"/>
+
+                            <TextView
+                                android:id="@+id/text_test"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/img_logo"
+                                android:layout_centerHorizontal="true"
+                                android:text="아직 작성된 포스트가 없습니다"
+                                android:textSize="15sp"
+                                android:textColor="@color/neutral_800"
+                                android:fontFamily="@font/pretendard_bold"/>
+
+                        </RelativeLayout>
+
+                        <!-- 로딩 -->
                         <LinearLayout
-                            android:id="@+id/banner_page_num"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/include_list_loading"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:background="@drawable/shape_banner_page_background"
-                            android:gravity="center"
-                            android:layout_alignParentBottom="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="28dp"
-                            android:layout_marginBottom="12dp"
-                            android:paddingVertical="2dp"
-                            android:paddingHorizontal="8dp">
+                            android:layout_margin="8dp"
+                            android:orientation="vertical"
+                            android:layout_below="@id/recyclerview_post_list">
 
-                            <TextView
-                                android:id="@+id/text_banner_current_page"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textSize="12sp"
-                                android:fontFamily="@font/pretendard_medium"
-                                android:textColor="@color/white"/>
-
-                            <TextView
-                                android:id="@+id/text_banner_total_page"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="/0"
-                                android:textSize="12sp"
-                                android:fontFamily="@font/pretendard_medium"
-                                android:textColor="@color/white"/>
+                            <include
+                                layout="@layout/item_skeleton_post_list"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
 
                         </LinearLayout>
 
                     </RelativeLayout>
 
-                    <!-- 포스트 리스트 -->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerview_post_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/item_post_recyclerview"
-                        android:layout_below="@id/relative_banner"
-                        android:nestedScrollingEnabled="false"
-                        android:layout_marginTop="24dp"/>
+                </ScrollView>
 
-                    <RelativeLayout
-                        android:id="@+id/empty_post_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="100dp"
-                        android:paddingBottom="60dp"
-                        android:gravity="center_vertical"
-                        android:layout_below="@id/relative_banner"
-                        android:visibility="gone">
+            </RelativeLayout>
 
-                        <ImageView
-                            android:id="@+id/img_logo"
-                            android:layout_width="140dp"
-                            android:layout_height="140dp"
-                            android:src="@drawable/ic_mykkumi_character_notice"
-                            android:layout_centerHorizontal="true"/>
-
-                        <TextView
-                            android:id="@+id/text_test"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/img_logo"
-                            android:layout_centerHorizontal="true"
-                            android:text="아직 작성된 포스트가 없습니다"
-                            android:textSize="15sp"
-                            android:textColor="@color/neutral_800"
-                            android:fontFamily="@font/pretendard_bold"/>
-
-                    </RelativeLayout>
-
-                    <!-- 로딩 -->
-                    <LinearLayout
-                        android:id="@+id/include_list_loading"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:orientation="vertical"
-                        android:layout_below="@id/recyclerview_post_list">
-
-                        <include
-                            layout="@layout/item_skeleton_post_list"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-
-                </RelativeLayout>
-
-            </ScrollView>
-
-        </RelativeLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </FrameLayout>
 

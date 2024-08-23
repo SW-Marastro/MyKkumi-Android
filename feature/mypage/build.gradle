@@ -36,8 +36,8 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':core:common-ui')
-    implementation project(path: ':core:domain')
+    implementation project(':core:common-ui')
+    implementation project(':core:domain')
 
     // UI
     implementation "androidx.core:core-ktx:$androidx_core_version"

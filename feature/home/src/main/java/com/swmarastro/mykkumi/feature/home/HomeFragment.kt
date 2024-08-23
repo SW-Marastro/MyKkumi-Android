@@ -69,6 +69,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             waitNotice()
         }
 
+        // Swipe 새로고침
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            onResume()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
+
         // 포스트 리스트 추가
         viewModel.postCursor.observe(viewLifecycleOwner, Observer {
             if(postListAdapter.postList.size != viewModel.postListUiState.value.size) {
