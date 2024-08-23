@@ -16,7 +16,7 @@ data class HomePostItemVO(
 
 data class HomePostWriterVO(
     val uuid: String = "",
-    val profileImage: String = "",
+    val profileImage: String? = "",
     val nickname: String = "",
 )
 

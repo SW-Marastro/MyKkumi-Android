@@ -54,7 +54,7 @@ data class HomePostListDTO(
             val uuid: String,
 
             @SerializedName("profileImage")
-            val profileImage: String,
+            val profileImage: String?,
 
             @SerializedName("nickname")
             val nickname: String,

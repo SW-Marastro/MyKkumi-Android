@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumi.data.datastore
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
@@ -14,13 +15,18 @@ class AuthTokenDataStoreImpl @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : AuthTokenDataStore {
 
-    private val sharedPreferences = EncryptedSharedPreferences.create(
-        "secret_shared_prefs",
-        MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
-        context,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-    )
+    private val sharedPreferences: SharedPreferences = try {
+        EncryptedSharedPreferences.create(
+            "secret_shared_prefs",
+            MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
+            context,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+    } catch (e: Exception) {
+        Log.e("AuthTokenDataStoreImpl", "Error initializing EncryptedSharedPreferences, falling back to default SharedPreferences", e)
+        context.getSharedPreferences("fallback_prefs", Context.MODE_PRIVATE)
+    }
 
     override fun saveAccessToken(accessToken: String) {
         sharedPreferences.edit().putString(ACCESS_TOKEN, accessToken).apply()
