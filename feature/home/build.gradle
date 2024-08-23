@@ -67,4 +67,7 @@ dependencies {
 
     // Skeleton - facebook shimmer
     implementation("com.facebook.shimmer:shimmer:$facebook_shimer_version")
+
+    // Swipe refresh Layout
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_refresh_layout_version"
 }

@@ -82,6 +82,9 @@ buildscript {
 
         // FlexBox Layout
         flexbox_version = "3.0.0"
+
+        // swipe refresh layout
+        swipe_refresh_layout_version = "1.1.0"
     }
     dependencies {
         // Safe Args
