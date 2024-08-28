@@ -21,6 +21,7 @@
 #-renamesourcefileattribute SourceFile
 -keep class com.swmarastro.mykkumi.data.** { *; }
 #-keep class java.lang.invoke.StringConcatFactory { *; }
+-dontwarn java.lang.invoke.StringConcatFactory
 
 # 카카오 로그인을 위한 카카오 SDK를 코드 축소, 난독화, 최적화에서 제외
 -keep class com.kakao.sdk.**.model.* { <fields>; }

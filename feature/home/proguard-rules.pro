@@ -22,6 +22,7 @@
 # 공통 모듈의 클래스 유지
 -keep class com.swmarastro.mykkumi.common_ui.** { *; }
 #-keep class java.lang.invoke.StringConcatFactory { *; }
+-dontwarn java.lang.invoke.StringConcatFactory
 -keep class com.swmarastro.mykkumi.common_ui.base.BaseFragment
 
 # 카카오 로그인을 위한 카카오 SDK를 코드 축소, 난독화, 최적화에서 제외
