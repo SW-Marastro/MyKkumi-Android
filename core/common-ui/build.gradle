@@ -34,7 +34,7 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':core:domain')
+    implementation project(':core:domain')
 
     // UI
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -42,6 +42,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$androidx_appcompat_version"
     implementation "com.google.android.material:material:$meterial_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
 
     // Test
     testImplementation "junit:junit:$junit_version"
@@ -50,4 +51,7 @@ dependencies {
 
     // Coil
     implementation("io.coil-kt:coil:$coil_version")
+
+    // Skeleton - facebook shimmer
+    implementation("com.facebook.shimmer:shimmer:$facebook_shimer_version")
 }

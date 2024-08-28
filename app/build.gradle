@@ -18,8 +18,8 @@ android {
         minSdk min_sdk_version
         targetSdk target_sdk_version
 
-        versionCode 1
-        versionName "1.0"
+        versionCode 11
+        versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -35,17 +35,21 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [
-                    appName : "@string/app_name"
+                    appName : "@string/app_name",
+//                    appIcon: "@drawable/ic_mykkumi_logo",
+                    providerAuthority: "com.swmarastro.mykkumi.android.provider"
             ]
 //            signingConfig signingConfigs.config
         }
 //        debug {
 //            applicationIdSuffix '.dev'
 //            manifestPlaceholders = [
-//                    appName : "@string/app_name_dev"
+//                    appName : "@string/app_name_dev",
+//                    appIcon: "@drawable/ic_mykkumi_logo_dev",
+//                    providerAuthority: "com.swmarastro.mykkumi.android.dev.provider"
 //            ]
 //        }
     }
@@ -63,18 +67,20 @@ android {
 
 dependencies {
     // feature
-    implementation project(path: ":feature:home")
-    implementation project(path: ":feature:around")
-    implementation project(path: ":feature:shopping")
-    implementation project(path: ":feature:mypage")
+    implementation project(":feature:home")
+    implementation project(":feature:around")
+    implementation project(":feature:shopping")
+    implementation project(":feature:mypage")
+    implementation project(":feature:auth")
+    implementation project(":feature:post")
 
     // data
-    implementation project(path: ":core:data")
+    implementation project(":core:data")
 
     // domain
-    implementation project(path: ":core:domain")
+    implementation project(":core:domain")
 
-    implementation project(path: ":core:common-ui")
+    implementation project(":core:common-ui")
 
     // UI - Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"

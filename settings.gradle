@@ -10,6 +10,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
+        maven { url "https://devrepo.kakao.com/nexus/content/groups/public/" }
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -22,4 +25,5 @@ include ':feature:home'
 include ':feature:around'
 include ':feature:shopping'
 include ':feature:mypage'
-//include ':feature:auth'
+include ':feature:auth'
+include ':feature:post'

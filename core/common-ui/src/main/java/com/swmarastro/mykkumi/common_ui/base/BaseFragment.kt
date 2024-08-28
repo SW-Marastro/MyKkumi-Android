@@ -30,12 +30,6 @@ abstract class BaseFragment<T: ViewDataBinding>(
         lifecycleScope.launchWhenCreated {
             initView()
         }
-
-//        lifecycleScope.launch {
-//            lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
-//                initView()
-//            }
-//        }
         super.onViewCreated(view, savedInstanceState)
     }
 

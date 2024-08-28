@@ -1,33 +1,40 @@
 package com.swmarastro.mykkumi.feature.home.post
 
+import android.content.Context
 import android.graphics.Color
-import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
 import com.swmarastro.mykkumi.common_ui.post.PostImagesAdapter
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.common_ui.R
+import com.swmarastro.mykkumi.common_ui.report.PostReportConfirmDialog
+import com.swmarastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProvider
+import com.swmarastro.mykkumi.feature.home.HomeViewModel
 import com.swmarastro.mykkumi.feature.home.databinding.ItemPostRecyclerviewBinding
 
 class PostListAdapter (
+    private val context: Context,
+    private val navController: NavController?,
+    private val waitNotice: () -> Unit,
+    private val reportPost: (writerUuid: String, postId: Int) -> Unit,
+    private val viewModel: HomeViewModel
 ) : RecyclerView.Adapter<PostListAdapter.PostListViewHolder>(){
+    private final val MAX_CONTENT_LENGTH = 50
 
     var postList = mutableListOf<HomePostItemVO>()
-
-    private val postContentMaxLine = 2
-    private val postContentShowMoreText = "...더보기"
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
@@ -37,7 +44,9 @@ class PostListAdapter (
     }
 
     override fun onBindViewHolder(holder: PostListViewHolder, position: Int) {
-        holder.bind(postList[position])
+        if (position >= 0 && position < postList.size) {
+            holder.bind(postList[position], position)
+        }
     }
 
     override fun getItemCount(): Int = postList.size
@@ -45,181 +54,163 @@ class PostListAdapter (
     inner class PostListViewHolder(
         private val binding: ItemPostRecyclerviewBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: HomePostItemVO) {
-            binding.includePostWriter.imageWriterProfile.load(item.writer.profileImage) // 사용자 프로필
-            binding.includePostWriter.textWriterNickname.text = item.writer.nickname // 닉네임
-            binding.includePostWriter.textPostCategory.text = item.category + " - " + item.subCategory // 포스트 카테고리
-
-            // 사용자 정보 우측 점3개 선택 -> 신고하기 버튼 보여주기
-            binding.frameUserComplaint.visibility = View.GONE
-            binding.includePostWriter.btnPostMoreMenu.setOnClickListener {
-                if(binding.frameUserComplaint.visibility == View.GONE)
-                    binding.frameUserComplaint.visibility = View.VISIBLE
-                else
-                    binding.frameUserComplaint.visibility = View.GONE
+        fun bind(item: HomePostItemVO, position: Int) {
+            // 사용자 프로필
+            if(item.writer.profileImage == null) {
+                binding.includePostWriter.imageWriterProfile.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.img_profile_default))
             }
+            else {
+                binding.includePostWriter.imageWriterProfile.load(item.writer.profileImage)
+            }
+
+            binding.includePostWriter.textWriterNickname.text = item.writer.nickname // 닉네임
+            binding.textContentWriterNickname.text = item.writer.nickname
+            binding.includePostWriter.textPostCategory.text = item.category + " - " + item.subCategory // 포스트 카테고리
 
             // 포스트 이미지 viewpager
             var postItemImageAdapter: PostImagesAdapter = PostImagesAdapter(
+                context,
                 item.images.toMutableList()
             )
             binding.viewpagerPostImages.adapter = postItemImageAdapter
             binding.viewpagerPostImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
-            // 이미지 총 페이지 수 표시
-            binding.textPostImagesTotalPage.text = "/" + item.images.size
-            if(item.images.size != 0) binding.textPostImagesCurrentPage.text = "1"
+            val viewPager = binding.viewpagerPostImages
+            viewPager.viewTreeObserver.addOnGlobalLayoutListener {
+                viewPager.layoutParams.height = viewPager.width
+                viewPager.requestLayout()
+            }
 
             // 이미지 indicator
-            binding.indicatorPostImage.createIndicator(item.images.size, 0)
+            if(item.images.size > 1)
+                binding.indicatorPostImage.createIndicator(item.images.size, 0)
+            else
+                binding.indicatorPostImage.visibility = View.GONE
 
             // 이미지 현재 페이지 표시 + indicator 이동
             binding.viewpagerPostImages.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     if(item.images.size != 0) {
-                        binding.textPostImagesCurrentPage.text = (position + 1).toString()
                         binding.indicatorPostImage.selectDot(position)
                     }
                 }
             })
 
-            // 좋아요 버튼 - 일단 클릭 이벤트 세팅만 -> 데이터 변경되는 건 이후에 수정
+            // 좋아요 수
+            binding.textPostLikeCount.visibility = View.GONE
+
+            // 댓글 수
+            binding.textPostCommentCount.visibility = View.GONE
+
+            // 스크랩 수
+            binding.textPostScrapCount.visibility = View.GONE
+
+            // 좋아요 버튼 - 아직 안 됨
             binding.btnPostLike.setOnClickListener {
-                binding.btnPostLike.setImageResource(R.drawable.ic_like_checked)
+//                binding.btnPostLike.setImageResource(R.drawable.ic_like_checked)
+                waitNotice()
             }
-            // 스크랩 버튼 - 일단 클릭 이벤트 세팅만 -> 데이터 변경되는 건 이후에 수정
+            // 스크랩 버튼 - 아직 안 됨
             binding.btnPostScrap.setOnClickListener {
-                binding.btnPostScrap.setImageResource(R.drawable.ic_scrap_checked)
+//                binding.btnPostScrap.setImageResource(R.drawable.ic_scrap_checked)
+                waitNotice()
             }
+            // 댓글 버튼 - 아직 안 됨
+            binding.btnPostComment.setOnClickListener {
+                waitNotice()
+            }
+            // 공유 버튼 - 아직 안 됨
+            binding.btnPostShare.setOnClickListener {
+                waitNotice()
+            }
+
+            // 포스트 신고하기
+            binding.textBtnPostReport.setOnClickListener(View.OnClickListener {
+                reportPost(
+                    item.writer.uuid,
+                    item.id
+                )
+            })
+
+            // 로그인 된 유저한테만 보여줄 것 - 팔로우, 신고하기 버튼
+            if(viewModel.isLogined.value) {
+                binding.includePostWriter.btnFollow.visibility = View.VISIBLE // 팔로우
+//                binding.textBtnPostReport.visibility = View.VISIBLE // 신고하기
+
+                // 팔로우 버튼 - 아직 안 됨
+                binding.includePostWriter.btnFollow.setOnClickListener(View.OnClickListener {
+                    waitNotice()
+                })
+            }
+            else {
+                binding.includePostWriter.btnFollow.visibility = View.GONE // 팔로우
+//                binding.textBtnPostReport.visibility = View.GONE // 신고하기
+            }
+
+            // 댓글 작성 버튼 - 아직 안 됨
+            binding.textBtnAddComment.setOnClickListener(View.OnClickListener {
+                waitNotice()
+            })
 
             // 글 내용 --------------------------------------------------------------------------------------
-
-            // val testContent = "#템빨 즉 아이템의 비중이 크거나 #다양한 취미를 즐기는 사람들이 모인 커뮤니티를 제공한다. #취미 생활에 관련된 팁을 주고 받거나, #새로운 제품과 스타일을 시도해볼 수 있다."
-
-            // 닉네임 클릭 이벤트
-            val clickableNicknameSpan = object : ClickableSpan() {
-                override fun onClick(widget: View) {
-                    Log.d("---", "닉네임 클릭")
-                }
-
-                // 스타일 설정
-                override fun updateDrawState(ds: TextPaint) {
-                    ds.isUnderlineText = false
-                    ds.color = Color.parseColor("#000000")
-                    ds.isFakeBoldText = true
-                }
+            binding.textBtnMoreContent.visibility = View.GONE
+            if(item.content.isNullOrEmpty()) {
+                binding.textPostContent.visibility = View.GONE
             }
+            else {
+                binding.textPostContent.visibility = View.VISIBLE
 
-            // 글 내용
-            var originalSpannableStringBuilder = SpannableStringBuilder().apply {
-                // 닉네임
-                append(item.writer.nickname)
-                // 닉네임 클릭 이벤트
-                setSpan(
-                    clickableNicknameSpan,
-                    0,
-                    item.writer.nickname.length,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-
-                append("  ")
-
-                // 글 내용 중 해시태그 색상 강조
-                val words = item.content.split(" ")
-                var startIndex = item.writer.nickname.length + 2 // 닉네임 + 공백 다음에 시작
-                for (word in words) {
-                    if (word.startsWith("#")) {
-                        // 해시태그 시작과 끝
-                        val start = startIndex
-                        val end = startIndex + word.length
-
-                        append(word)
-                        setSpan(
-                            ForegroundColorSpan(Color.BLUE),
-                            start,
-                            end,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                val allContent = item.content?.let { content ->
+                    SpannableStringBuilderProvider
+                        .getSpannableStringBuilder(
+                            content,
+                            navController
                         )
-                    } else {
-                        append(word)
-                    }
-                    append(" ")
-                    startIndex += word.length + 1
                 }
-            }
 
-            binding.textPostNicknameContent.text = originalSpannableStringBuilder
-            binding.textPostNicknameContent.movementMethod = LinkMovementMethod.getInstance()
+                var hideContent = allContent
+                // 본문 길이가 MAX_CONTENT_LENGTH를 넘는 경우
+                if (hideContent != null && hideContent.length > MAX_CONTENT_LENGTH) {
+                    val truncatedString =
+                        hideContent.subSequence(0, MAX_CONTENT_LENGTH) as SpannableStringBuilder
 
-            // 글이 2줄을 넘어가면 '...더보기'로 숨기기
-            binding.textPostNicknameContent.post {
-                if(binding.textPostNicknameContent.lineCount > postContentMaxLine) {
-                    // Log.d("--", binding.textPostNicknameContent.layout.getLineEnd(postContentMaxLine - 1).toString())
+                    // 단어 기준으로 자르기 위해 공백, 줄바꿈 위치 찾기
+                    val lastSpaceIndex = truncatedString.lastIndexOf(' ')
+                    val lastNewLineIndex = truncatedString.lastIndexOf('\n')
 
-                    var hideSpannableStringBuilder = SpannableStringBuilder().apply {
-                        // 닉네임
-                        append(item.writer.nickname)
-                        // 닉네임 클릭 이벤트
-                        setSpan(
-                            clickableNicknameSpan,
-                            0,
-                            item.writer.nickname.length,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-
-                        append("  ")
-
-                        // 숨기기
-                        val availableTextLength = binding.textPostNicknameContent.layout.getLineEnd(postContentMaxLine - 1) - item.writer.nickname.length - postContentShowMoreText.length - 2
-                        val hideContent = item.content.substring(0, availableTextLength)
-
-                        // 글 내용 중 해시태그 색상 강조
-                        val words = hideContent.split(" ")
-                        var startIndex = item.writer.nickname.length + 2 // 닉네임 + 공백 다음에 시작
-                        for (word in words) {
-                            if (word.startsWith("#")) {
-                                // 해시태그 시작과 끝
-                                val start = startIndex
-                                val end = startIndex + word.length
-
-                                append(word)
-                                setSpan(
-                                    ForegroundColorSpan(Color.BLUE),
-                                    start,
-                                    end,
-                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                                )
-
-                            } else {
-                                append(word)
-                            }
-                            append(" ")
-                            startIndex += word.length + 1
-                        }
-
-                        // ...더보기
-                        append(postContentShowMoreText)
-
-                        // 더보기 클릭 이벤트
-                        val clickableShowMoreSpan = object : ClickableSpan() {
-                            override fun onClick(widget: View) {
-                                binding.textPostNicknameContent.text = originalSpannableStringBuilder
-                            }
-
-                            // 스타일 설정
-                            override fun updateDrawState(ds: TextPaint) {
-                            }
-                        }
-                        setSpan(
-                            clickableShowMoreSpan,
-                            item.writer.nickname.length + hideContent.length + 2,
-                            item.writer.nickname.length + hideContent.length + postContentShowMoreText.length + 2,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
+                    // 공백과 줄바꿈 중 더 뒤에 있는 것 or 둘다 없다면 MAX length
+                    val finalCutIndex = when {
+                        lastSpaceIndex != -1 && lastSpaceIndex > lastNewLineIndex -> lastSpaceIndex
+                        lastNewLineIndex != -1 -> lastNewLineIndex
+                        else -> MAX_CONTENT_LENGTH
                     }
 
-                    binding.textPostNicknameContent.text = hideSpannableStringBuilder
+                    hideContent =
+                        SpannableStringBuilder(truncatedString.subSequence(0, finalCutIndex))
+
+                    if (hideContent.length != allContent!!.length) {
+                        hideContent.apply {
+                            append("...")
+                        }
+
+                        binding.textBtnMoreContent.visibility = View.VISIBLE
+                    }
                 }
+                binding.textPostContent.text = hideContent
+
+                // 더보기 버튼
+                binding.textBtnMoreContent.setOnClickListener(View.OnClickListener {
+                    binding.textBtnMoreContent.visibility = View.GONE
+                    binding.textPostContent.text = allContent
+                })
+            }
+
+            // 마지막 아이템은 선 지우기
+            if(postList.size - 1 == position) {
+                binding.viewBottomLine.visibility = View.GONE
+            }
+            else {
+                binding.viewBottomLine.visibility = View.VISIBLE
             }
         }
     }

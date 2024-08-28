@@ -13,6 +13,7 @@ jobs:
 
     env:
       BASE_URL: ${{ secrets.API_BASE_URL }}
+      KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
 
     steps:
     - uses: actions/checkout@v4
@@ -35,7 +36,9 @@ jobs:
         
     # BASE_URL -> local.properties 생성
     - name: Create local.properties
-      run: echo "api.baseurl=$BASE_URL" > $GITHUB_WORKSPACE/local.properties
+      run: |
+        echo "api.baseurl=$BASE_URL" > $GITHUB_WORKSPACE/local.properties
+        echo "kakao.native.app.key=$KAKAO_NATIVE_APP_KEY" >> $GITHUB_WORKSPACE/local.properties
 
     # 캐시 정리
 #    - name: Clean Gradle cache

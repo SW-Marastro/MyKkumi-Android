@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="78dp"
+        android:layout_height="78dp"
+        android:layout_marginRight="6dp">
+
+        <RelativeLayout
+            android:id="@+id/relative_post_edit_thumbnail"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:padding="2dp">
+
+            <ImageView
+                android:id="@+id/image_post_edit_thumbnail"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:scaleType="centerCrop"
+                android:clipToOutline="true"
+                android:background="@drawable/shape_post_image_thumbnail_unselected" />
+
+        </RelativeLayout>
+        
+        <ImageButton
+            android:id="@+id/btn_delete_edit_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_delete_x"
+            android:scaleType="fitXY"
+            android:background="@android:color/transparent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+</layout>

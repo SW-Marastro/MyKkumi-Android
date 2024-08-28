@@ -29,7 +29,7 @@ class PostImageIndicator: LinearLayout {
             imageDot.add(
                 ImageView(mContext)
                     .apply {
-                        setPadding(2)
+                        setPadding(6)
                     }
             )
             this.addView(imageDot[i])

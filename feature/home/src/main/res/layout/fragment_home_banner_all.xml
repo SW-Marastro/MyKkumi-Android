@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="bannerVm"
-            type="com.swmarastro.mykkumi.feature.home.banner.HomeBannerViewModel" />
+            name="vm"
+            type="com.swmarastro.mykkumi.feature.home.banner.HomeBannerAllViewModel" />
     </data>
 
     <RelativeLayout
@@ -29,7 +29,7 @@
                 android:background="@android:color/transparent"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_close"
-                android:layout_margin="10dp"
+                android:layout_marginLeft="20dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"/>
 
@@ -37,10 +37,11 @@
                 android:id="@+id/text_title_banner_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="14dp"
                 android:text="@string/home_banner_all_title"
-                android:textSize="16dp"
-                android:textColor="@color/black"
-                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/neutral_900"
+                android:fontFamily="@font/pretendard_semibold"
                 android:layout_centerInParent="true"/>
 
         </RelativeLayout>
@@ -50,6 +51,8 @@
             android:id="@+id/recyclerview_banner_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="20dp"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_banner_all_recyclerview"

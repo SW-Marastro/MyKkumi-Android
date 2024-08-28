@@ -10,49 +10,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:padding="10dp">
+        android:paddingHorizontal="16dp">
 
         <ImageView
             android:id="@+id/image_writer_profile"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:scaleType="centerCrop"
+            android:src="@drawable/img_profile_default"
+            android:clipToOutline="true"
+            android:background="@drawable/shape_profile_round"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="13dp"/>
 
-        <!--android:text="@{item.writer.nickname}"-->
         <TextView
             android:id="@+id/text_writer_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="nickname"
-            android:textColor="@color/black"
-            android:textSize="14dp"
-            android:textStyle="bold"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/neutral_900"
+            android:textSize="14sp"
+            android:fontFamily="@font/pretendard_semibold"
             android:layout_toRightOf="@id/image_writer_profile"
             android:layout_alignParentTop="true"/>
 
-        <!--android:text="@{item.category + '-' + item.subCategory}"-->
         <TextView
             android:id="@+id/text_post_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="요리 - 일식"
-            android:textColor="@color/black"
-            android:textSize="14dp"
+            android:layout_marginTop="1dp"
+            android:textColor="@color/neutral_500"
+            android:textSize="13sp"
+            android:fontFamily="@font/pretendard_medium"
             android:layout_toRightOf="@id/image_writer_profile"
-            android:layout_alignParentBottom="true"/>
+            android:layout_below="@id/text_writer_nickname"/>
 
-        <ImageButton
-            android:id="@+id/btn_post_more_menu"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_more_menu_dots"
-            android:background="@android:color/transparent"
-            android:scaleType="fitXY"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
+        <TextView
+            android:id="@+id/btn_follow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="@string/btn_follow"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:fontFamily="@font/pretendard_medium"
+            android:background="@drawable/shape_btn_round6_primary"
+            android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 

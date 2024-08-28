@@ -9,9 +9,6 @@ plugins {
 Properties properties = new Properties()
 if (project.rootProject.file('local.properties').exists()) {
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    println "local.properties 파일을 읽었습니다."
-} else {
-    println "local.properties 파일을 찾을 수 없습니다."
 }
 
 android {
@@ -24,14 +21,17 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        // local.properties에서 base url, kakao native app key 받아오기
         def baseUrl = properties.getProperty('api.baseurl', '')
-        println "BASE_URL: ${baseUrl}"
+        def kakaoNativeAppKey = properties.getProperty('kakao.native.app.key', '')
 
-        if (!baseUrl.isEmpty()) {
-            buildConfigField "String", 'BASE_URL', "${properties.getProperty('api.baseurl', '')}"
-        } else {
-            throw new GradleException("BASE_URL is not set in local.properties")
-        }
+        if (!baseUrl.isEmpty()) buildConfigField "String", 'BASE_URL', "${baseUrl}"
+        else throw new GradleException("BASE_URL is not set in local.properties")
+
+        if (!kakaoNativeAppKey.isEmpty()) {
+            buildConfigField "String", 'KAKAO_NATIVE_APP_KEY', "\"${kakaoNativeAppKey}\""
+            //manifestPlaceholders = [KAKAO_NATIVE_APP_KEY: kakaoNativeAppKey]
+        } else throw new GradleException("KAKAO_NATIVE_APP_KEY is not set in local.properties")
     }
 
     buildTypes {
@@ -39,6 +39,19 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+//        debug {
+//            // local.properties에서 base url, kakao native app key 받아오기
+//            def baseUrl = properties.getProperty('api.dev.baseurl', '')
+//            def kakaoNativeAppKey = properties.getProperty('kakao.native.app.key', '')
+//
+//            if (!baseUrl.isEmpty()) buildConfigField "String", 'BASE_URL', "${baseUrl}"
+//            else throw new GradleException("BASE_URL is not set in local.properties")
+//
+//            if (!kakaoNativeAppKey.isEmpty()) {
+//                buildConfigField "String", 'KAKAO_NATIVE_APP_KEY', "\"${kakaoNativeAppKey}\""
+//                //manifestPlaceholders = [KAKAO_NATIVE_APP_KEY: kakaoNativeAppKey]
+//            } else throw new GradleException("KAKAO_NATIVE_APP_KEY is not set in local.properties")
+//        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -57,7 +70,7 @@ kapt {
 }
 
 dependencies {
-    implementation project(path: ':core:domain')
+    implementation project(':core:domain')
 
     // Test
     testImplementation "junit:junit:$junit_version"
@@ -77,4 +90,10 @@ dependencies {
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
+    // 카카오 로그인 SDK
+    implementation "com.kakao.sdk:v2-user:$kakao_sdk_version" // 카카오 로그인 API 모듈
+
+    // EncryptedSharedPreferences
+    implementation "androidx.security:security-crypto:$security_crypto_version"
 }

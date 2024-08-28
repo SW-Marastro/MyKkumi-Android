@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -36,8 +37,8 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':core:common-ui')
-    implementation project(path: ':core:domain')
+    implementation project(':core:common-ui')
+    implementation project(':core:domain')
 
     // UI
     implementation "androidx.core:core-ktx:$androidx_core_version"
@@ -63,4 +64,10 @@ dependencies {
 
     // Coil
     implementation("io.coil-kt:coil:$coil_version")
+
+    // Skeleton - facebook shimmer
+    implementation("com.facebook.shimmer:shimmer:$facebook_shimer_version")
+
+    // Swipe refresh Layout
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_refresh_layout_version"
 }
