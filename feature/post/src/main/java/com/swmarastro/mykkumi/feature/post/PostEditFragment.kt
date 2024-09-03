@@ -90,6 +90,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         binding.relativeEmptyImage.visibility = View.GONE
         binding.textBtnUploadPost.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_neutral50)
         binding.textBtnUploadPost.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.neutral_700))
+        binding.textCountContent.visibility = View.GONE
 
         // 이미지 추가
         binding.btnAddPostImage.setOnClickListener(View.OnClickListener {
@@ -145,6 +146,15 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                         binding.edittextInputContent.setSelection(hashTagIndex) // 커서를 입력하고 있던 곳에
                         showToast(getString(R.string.notice_post_hashtag_max_count))
                     }
+
+                    // 본문 입력 중
+                    if (s.length > 0) {
+                        binding.textCountContent.visibility = View.VISIBLE
+                        binding.textCountContent.text = "${s.length}/${MAX_POST_CONTENT_LENGTH}"
+                    }
+                }
+                else {
+                    binding.textCountContent.visibility = View.GONE
                 }
             }
         })
