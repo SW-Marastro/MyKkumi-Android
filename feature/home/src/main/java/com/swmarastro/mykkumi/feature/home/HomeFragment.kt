@@ -122,7 +122,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
         if(banners.size != 0) binding.viewpagerBanner.setCurrentItem(1000 / banners.size * banners.size, false) // 좌측으로도 배너 전환 가능하도록
 
         // 배너 페이지 표시
-        binding.textBannerTotalPage.text = "/" + banners.size
+        binding.textBannerTotalPage.text = "/" + (banners.size - 1) // '더 많은 이벤트가 있어요'는 페이지 카운트에서 제외
         if(!banners.isEmpty()) binding.textBannerCurrentPage.text = "1"
 
         // 배너가 수동으로 변경되면, 자동 전환되는 타이머를 리셋 - 변경된 시점부터 3초 카운트
@@ -132,8 +132,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
                 startAutoScroll() // 타이머 리셋
 
                 // 현재 배너 페이지 표시
-                if(banners.size != 0)
-                    binding.textBannerCurrentPage.text = (binding.viewpagerBanner.currentItem % banners.size + 1).toString()
+                if(banners.size != 0) {
+                    binding.textBannerCurrentPage.text =
+                        (binding.viewpagerBanner.currentItem % banners.size + 1).toString()
+
+                    // 더 많은 이벤트가 있어요 배너에는 페이지 표시 숨기기
+                    if (position % banners.size == banners.size - 1) {
+                        binding.bannerPageNum.visibility = View.GONE
+                    } else {
+                        binding.bannerPageNum.visibility = View.VISIBLE
+                    }
+                }
             }
         })
     }
