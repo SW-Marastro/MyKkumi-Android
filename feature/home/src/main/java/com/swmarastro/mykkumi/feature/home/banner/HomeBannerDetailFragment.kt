@@ -1,7 +1,10 @@
 package com.swmarastro.mykkumi.feature.home.banner
 
+import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBannerDetailBinding
@@ -14,6 +17,14 @@ class HomeBannerDetailFragment : BaseFragment<FragmentHomeBannerDetailBinding>(R
 
     private val viewModel by viewModels<HomeBannerDetailViewModel>()
     private val args: HomeBannerDetailFragmentArgs by navArgs()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnCloseBannerDetail.setOnClickListener {
+            view?.findNavController()?.popBackStack()
+        }
+    }
 
     override suspend fun initView() {
         bind {
