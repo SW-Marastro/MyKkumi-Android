@@ -53,11 +53,34 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
                     Toast.makeText(requireContext(), getString(R.string.notice_product_name_max_length), Toast.LENGTH_SHORT).show()
                 }
 
-                if(binding.edittextInputProductName.text.isNullOrEmpty()) {
+                // 제품명이 입력되지 않았거나 수정사항이 없을 경우 등록 버튼 비활성화
+                if(s.isNullOrEmpty() || (productName == binding.edittextInputProductName.text.toString() && productUrl == binding.edittextInputProductUrl.text.toString())) {
                     binding.btnConfirmAgree.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_neutral50)
                     binding.btnConfirmAgree.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.neutral_300))
                 }
                 else {
+                    binding.btnConfirmAgree.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_primary)
+                    binding.btnConfirmAgree.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.white))
+                }
+            }
+        })
+
+        // 구매처 입력
+        binding.edittextInputProductUrl.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // 수정사항이 없을 경우 등록 버튼 비활성화
+                if(productName == binding.edittextInputProductName.text.toString() && productUrl == binding.edittextInputProductUrl.text.toString()) {
+                    binding.btnConfirmAgree.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_neutral50)
+                    binding.btnConfirmAgree.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.neutral_300))
+                }
+                // 수정사항이 있고, 제품명이 있는 경우 활성화
+                else if(binding.edittextInputProductName.text.isNotEmpty()) {
                     binding.btnConfirmAgree.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_primary)
                     binding.btnConfirmAgree.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.white))
                 }
@@ -127,10 +150,5 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
 
         binding.edittextInputProductName.setText(productName)
         binding.edittextInputProductUrl.setText(productUrl)
-
-        if(productName.isNotEmpty()) {
-            binding.btnConfirmAgree.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_primary)
-            binding.btnConfirmAgree.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.white))
-        }
     }
 }
