@@ -144,6 +144,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
                     }
                 }
             }
+
+            // Swipe 새로고침과 ViewPager 이벤트 중첩 방지
+            override fun onPageScrollStateChanged(state: Int) {
+                super.onPageScrollStateChanged(state)
+
+                blockNestedSwipeRefreshAndViewPager(state)
+            }
         })
     }
 
@@ -183,6 +190,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             navController,
             waitNotice = {
                 waitNotice()
+            },
+            blockNestedSwipeRefreshAndViewPager = {
+                blockNestedSwipeRefreshAndViewPager(it)
             },
             reportPost = { writerUuid: String, postId: Int ->
                 postReportConfirm(writerUuid, postId)
@@ -231,6 +241,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     // 배너 전체 리스트 페이지로 이동
     private fun navigateBannerAll() {
         viewModel.navigateBannerAll(navController)
+    }
+
+    // Swipe 새로고침과 ViewPager 이벤트 중첩 방지
+    private fun blockNestedSwipeRefreshAndViewPager(state: Int) {
+        binding.swipeRefreshLayout.isEnabled = state == ViewPager2.SCROLL_STATE_IDLE
     }
 
     private fun showToast(message: String) {

@@ -29,6 +29,7 @@ class PostListAdapter (
     private val context: Context,
     private val navController: NavController?,
     private val waitNotice: () -> Unit,
+    private val blockNestedSwipeRefreshAndViewPager: (state: Int) -> Unit,
     private val reportPost: (writerUuid: String, postId: Int) -> Unit,
     private val viewModel: HomeViewModel
 ) : RecyclerView.Adapter<PostListAdapter.PostListViewHolder>(){
@@ -93,6 +94,13 @@ class PostListAdapter (
                     if(item.images.size != 0) {
                         binding.indicatorPostImage.selectDot(position)
                     }
+                }
+
+                // Swipe 새로고침과 ViewPager 이벤트 중첩 방지
+                override fun onPageScrollStateChanged(state: Int) {
+                    super.onPageScrollStateChanged(state)
+
+                    blockNestedSwipeRefreshAndViewPager(state)
                 }
             })
 

@@ -53,42 +53,40 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
                     Toast.makeText(requireContext(), getString(R.string.notice_product_name_max_length), Toast.LENGTH_SHORT).show()
                 }
 
-                if(s.isNullOrEmpty()) {
-                    binding.edittextInputProductName.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_input_border12_neutral200)
+                if(binding.edittextInputProductName.text.isNullOrEmpty()) {
                     binding.btnConfirmAgree.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_neutral50)
                     binding.btnConfirmAgree.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.neutral_300))
                 }
                 else {
-                    binding.edittextInputProductName.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_input_border12_neutral800)
                     binding.btnConfirmAgree.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_primary)
                     binding.btnConfirmAgree.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.white))
                 }
             }
         })
 
-        binding.edittextInputProductUrl.addTextChangedListener(object: TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(s.isNullOrEmpty()) {
-                    binding.edittextInputProductUrl.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_input_border12_neutral200)
+        // 제품명: 이어서 입력할 때 커서가 맨 뒤로 배치되도록 + 커서가 위치하고 있을 때 강조
+        binding.edittextInputProductName.setOnFocusChangeListener { v, hasFocus ->
+            if(hasFocus) {
+                binding.edittextInputProductName.text?.let {
+                    binding.edittextInputProductName.setSelection(it.length)
                 }
-                else {
-                    binding.edittextInputProductUrl.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_input_border12_neutral800)
-                }
+                binding.edittextInputProductName.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_input_border12_neutral800)
             }
-        })
+            else {
+                binding.edittextInputProductName.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_input_border12_neutral200)
+            }
+        }
 
-        // 이어서 입력할 때 커서가 맨 뒤로 배치되도록
+        // 구매처: 이어서 입력할 때 커서가 맨 뒤로 배치되도록 + 커서가 위치하고 있을 때 강조
         binding.edittextInputProductUrl.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 binding.edittextInputProductUrl.text?.let {
                     binding.edittextInputProductUrl.setSelection(it.length)
                 }
+                binding.edittextInputProductUrl.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_input_border12_neutral800)
+            }
+            else {
+                binding.edittextInputProductUrl.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_input_border12_neutral200)
             }
         }
 
@@ -129,5 +127,10 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
 
         binding.edittextInputProductName.setText(productName)
         binding.edittextInputProductUrl.setText(productUrl)
+
+        if(productName.isNotEmpty()) {
+            binding.btnConfirmAgree.setBackgroundResource(com.swmarastro.mykkumi.common_ui.R.drawable.shape_btn_round12_primary)
+            binding.btnConfirmAgree.setTextColor(ContextCompat.getColor(requireContext(), com.swmarastro.mykkumi.common_ui.R.color.white))
+        }
     }
 }
