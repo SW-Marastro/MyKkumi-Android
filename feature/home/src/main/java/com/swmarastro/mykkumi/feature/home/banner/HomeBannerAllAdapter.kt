@@ -1,14 +1,16 @@
 package com.swmarastro.mykkumi.feature.home.banner
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.bumptech.glide.Glide
 import com.swmarastro.mykkumi.domain.entity.BannerItemVO
 import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerAllRecyclerviewBinding
 
 class HomeBannerAllAdapter (
+    private val context: Context,
     private var bannerList: MutableList<BannerItemVO>,
     private val onClickBannerItem: (bannerId: Int) -> Unit
 ) : RecyclerView.Adapter<HomeBannerAllAdapter.HomeBannerAllViewHolder>(){
@@ -29,7 +31,10 @@ class HomeBannerAllAdapter (
         private val binding: ItemBannerAllRecyclerviewBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: BannerItemVO) {
-            binding.imageHomeBanner.load(item.imageUrl)
+            Glide
+                .with(context)
+                .load(item.imageUrl)
+                .into(binding.imageHomeBanner)
 
             // 배너 클릭
             binding.imageHomeBanner.setOnClickListener(View.OnClickListener {

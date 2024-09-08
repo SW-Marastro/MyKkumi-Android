@@ -78,6 +78,8 @@ class HomeViewModel @Inject constructor(
                 _bannerListUiState.emit( mutableListOf() )
             }
         }
+
+
     }
 
     // 홈 > 배너 캐러셀에서 배너 선택

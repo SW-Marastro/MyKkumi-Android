@@ -36,3 +36,5 @@
 # 기타 ProGuard 설정
 -keep class !a.a, * { *; }
 -dontwarn a.a
+
+-keep class androidx.databinding.** { *; }

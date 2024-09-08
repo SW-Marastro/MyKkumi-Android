@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.bumptech.glide.Glide
 import com.swmarastro.mykkumi.feature.post.databinding.ItemCameraBtnBinding
 import com.swmarastro.mykkumi.feature.post.databinding.ItemImagePickerBinding
 
@@ -79,7 +79,10 @@ class ImagePickerAdapter (
         private val binding: ItemImagePickerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ImagePickerData, position: Int) {
-            binding.imageForPicker.load(item.localUri)
+            Glide
+                .with(context)
+                .load(item.localUri)
+                .into(binding.imageForPicker)
 
             // 체크박스 선택
             binding.checkboxPickImage.setOnCheckedChangeListener { _, isChecked ->

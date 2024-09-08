@@ -1,16 +1,18 @@
 package com.swmarastro.mykkumi.feature.post
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.swmarastro.mykkumi.domain.entity.PostImageVO
 import com.swmarastro.mykkumi.feature.post.databinding.ItemSelectPostImageBinding
 import com.swmarastro.mykkumi.feature.post.touchEvent.ItemTouchHelperListener
 
 class SelectPostImageListAdapter (
+    private val context: Context,
     private val viewModel: PostEditViewModel,
     private val confirmDeleteImage: (position: Int) -> Unit,
     private val onClickPostImage: () -> Unit,
@@ -70,8 +72,10 @@ class SelectPostImageListAdapter (
         private val binding: ItemSelectPostImageBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PostImageVO, position: Int) {
-            binding.imagePostEditThumbnail.load(item.imageUri.toUri())
-            //binding.imagePostEditThumbnail.load(item.imageLocalUri.toUri())
+            Glide
+                .with(context)
+                .load(item.imageUri)
+                .into(binding.imagePostEditThumbnail)
 
             if (item.isSelect) {
                 binding.relativePostEditThumbnail.setBackgroundResource(R.drawable.shape_post_image_thumbnail_selected)

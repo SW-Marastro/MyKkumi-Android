@@ -3,12 +3,11 @@ package com.swmarastro.mykkumi.feature.home.banner
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.swmarastro.mykkumi.common_ui.base.BaseFragment
 import com.swmarastro.mykkumi.feature.home.databinding.FragmentHomeBannerDetailBinding
-import coil.load
+import com.bumptech.glide.Glide
 import com.swmarastro.mykkumi.feature.home.R
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,7 +21,7 @@ class HomeBannerDetailFragment : BaseFragment<FragmentHomeBannerDetailBinding>(R
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnCloseBannerDetail.setOnClickListener {
-            view?.findNavController()?.popBackStack()
+            view.findNavController()?.popBackStack()
         }
     }
 
@@ -37,7 +36,10 @@ class HomeBannerDetailFragment : BaseFragment<FragmentHomeBannerDetailBinding>(R
     private suspend fun setBannerDetail() {
         viewModel.setBannerDetail(args.bannerId)
         viewModel.bannerDetailUiState.collect { response ->
-            binding.imageBannerDetail.load(response.imageUrl)
+            Glide
+                .with(this)
+                .load(response.imageUrl)
+                .into(binding.imageBannerDetail)
         }
     }
 }

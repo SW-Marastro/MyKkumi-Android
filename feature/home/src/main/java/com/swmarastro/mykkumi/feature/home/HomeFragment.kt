@@ -1,7 +1,6 @@
 package com.swmarastro.mykkumi.feature.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
@@ -109,6 +108,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     // 배너 viewpager
     private fun initBannerViewPager(banners: MutableList<BannerItemVO>) {
         bannerAdapter = HomeBannerViewPagerAdapter(
+            requireContext(),
             banners,
             onClickBannerItem = {
                 onClickBannerItem(it)

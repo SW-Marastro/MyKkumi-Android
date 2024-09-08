@@ -1,12 +1,11 @@
 package com.swmarastro.mykkumi.common_ui.post
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.bumptech.glide.Glide
 import com.swmarastro.mykkumi.common_ui.R
 import com.swmarastro.mykkumi.common_ui.databinding.ItemPostImageViewViewpagerBinding
 import com.swmarastro.mykkumi.domain.entity.HomePostImageVO
@@ -39,7 +38,11 @@ class PostImagesAdapter(
         fun bind(item: HomePostImageVO, position: Int) {
             // 포스트 이미지 세팅
             // 페이지 넘길 때 이미지 로드
-            binding.imagePost.load(item.url)
+            Glide
+                .with(context)
+                .load(item.url)
+                .placeholder(R.drawable.img_loading_post)
+                .into(binding.imagePost)
 
             binding.relativePinsOfImages.removeAllViews()
 

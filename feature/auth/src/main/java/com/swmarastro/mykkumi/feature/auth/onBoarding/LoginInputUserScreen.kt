@@ -68,6 +68,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import coil.compose.rememberAsyncImagePainter
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.swmarastro.mykkumi.common_ui.permission.ImagePermissionUtils
@@ -85,7 +87,7 @@ private const val RC_CROP_IMAGE = 101
 private lateinit var localContext: Context
 
 // 사용자 정보 입력 페이지 - 프로필 이미지, 닉네임
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalGlideComposeApi::class)
 @ExperimentalPermissionsApi
 @Composable
 fun LoginInputUserScreen(
@@ -145,7 +147,6 @@ fun LoginInputUserScreen(
             }
             // 카메라로 촬영했을 경우
             else if(viewModel.cameraImagePath.value != null) {
-
                 viewModel.selectProfileImage(viewModel.cameraImagePath.value!!)
             }
         }
@@ -212,6 +213,16 @@ fun LoginInputUserScreen(
                         .align(Alignment.CenterHorizontally)
                         .clip(CircleShape)
                 )
+
+//                GlideImage(
+//                    model = viewModel.profileImage.collectAsState().value as Uri,
+//                    contentDescription = "default profile image",
+//                    contentScale = ContentScale.Crop, // CenterCrop
+//                    modifier = Modifier
+//                        .size(88.dp)
+//                        .align(Alignment.CenterHorizontally)
+//                        .clip(CircleShape),
+//                )
 
                 Spacer(
                     modifier = Modifier.height(24.dp)

@@ -1,14 +1,7 @@
 package com.swmarastro.mykkumi.feature.home.post
 
 import android.content.Context
-import android.graphics.Color
-import android.text.Spannable
 import android.text.SpannableStringBuilder
-import android.text.TextPaint
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +9,10 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import coil.load
+import com.bumptech.glide.Glide
 import com.swmarastro.mykkumi.common_ui.post.PostImagesAdapter
 import com.swmarastro.mykkumi.domain.entity.HomePostItemVO
 import com.swmarastro.mykkumi.common_ui.R
-import com.swmarastro.mykkumi.common_ui.report.PostReportConfirmDialog
 import com.swmarastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProvider
 import com.swmarastro.mykkumi.feature.home.HomeViewModel
 import com.swmarastro.mykkumi.feature.home.databinding.ItemPostRecyclerviewBinding
@@ -61,7 +53,12 @@ class PostListAdapter (
                 binding.includePostWriter.imageWriterProfile.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.img_profile_default))
             }
             else {
-                binding.includePostWriter.imageWriterProfile.load(item.writer.profileImage)
+                Glide
+                    .with(context)
+                    .load(item.writer.profileImage)
+                    .placeholder(R.drawable.img_loading_post)
+                    .circleCrop()
+                    .into(binding.includePostWriter.imageWriterProfile)
             }
 
             binding.includePostWriter.textWriterNickname.text = item.writer.nickname // 닉네임

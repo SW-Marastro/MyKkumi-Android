@@ -34,6 +34,19 @@
             android:layout_below="@id/img_logo"/>
 
         <Button
+            android:id="@+id/btn_login"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:text="로그인"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/pretendard_bold"
+            android:background="@drawable/shape_btn_round6_primary"
+            android:layout_below="@id/text_test"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"/>
+
+        <Button
             android:id="@+id/btn_logout"
             android:layout_width="200dp"
             android:layout_height="50dp"
@@ -42,9 +55,9 @@
             android:textColor="@color/white"
             android:fontFamily="@font/pretendard_bold"
             android:background="@drawable/shape_btn_round6_primary"
-            android:layout_below="@id/text_test"
+            android:layout_below="@id/btn_login"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="10dp"/>
 
         <Button
             android:id="@+id/btn_delete_user"

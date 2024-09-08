@@ -36,6 +36,7 @@ class HomeBannerAllFragment : BaseFragment<FragmentHomeBannerAllBinding>(R.layou
     // 배너 리스트 recyclerview
     private fun initBannerRecyclerView(banners: BannerListVO) {
         bannerAllAdapter = HomeBannerAllAdapter(
+            requireContext(),
             banners.banners.toMutableList(),
             onClickBannerItem = {
                 onClickBannerItem(it)

@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumi.feature.home.banner
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -9,11 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.swmarastro.mykkumi.domain.entity.BannerItemVO
 import java.util.TimerTask
-import coil.load
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.swmarastro.mykkumi.feature.home.databinding.ItemBannerViewpagerBinding
 import com.swmarastro.mykkumi.feature.home.databinding.ItemLastBannerViewpagerBinding
 
 class HomeBannerViewPagerAdapter(
+    private val context: Context,
     private var bannerList: MutableList<BannerItemVO>,
     private val onClickBannerItem: (bannerId: Int) -> Unit,
     private val navigateBannerAll: () -> Unit,
@@ -67,7 +70,11 @@ class HomeBannerViewPagerAdapter(
         private val binding: ItemBannerViewpagerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: BannerItemVO) {
-            binding.imageHomeBanner.load(item.imageUrl)
+            Glide
+                .with(context)
+                .load(item.imageUrl)
+                .transform(RoundedCorners(12))
+                .into(binding.imageHomeBanner)
 
             // 배너 클릭
             binding.imageHomeBanner.setOnClickListener(View.OnClickListener {

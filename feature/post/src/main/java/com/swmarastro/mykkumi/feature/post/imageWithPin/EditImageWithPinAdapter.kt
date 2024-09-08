@@ -11,9 +11,8 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getString
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.bumptech.glide.Glide
 import com.swmarastro.mykkumi.common_ui.R
 import com.swmarastro.mykkumi.common_ui.databinding.ItemPostImageViewpagerBinding
 import com.swmarastro.mykkumi.domain.entity.PostEditPinVO
@@ -49,8 +48,10 @@ class EditImageWithPinAdapter(
         private var parentHeight = 0
 
         fun bind(item: PostImageVO, position: Int) {
-            binding.imagePost.load(item.imageUri.toUri())
-            //binding.imagePost.load(item.imageLocalUri.toUri())
+            Glide
+                .with(context)
+                .load(item.imageUri)
+                .into(binding.imagePost)
 
             val currentPinList = if(position == viewModel.selectImagePosition.value) { // 현재 선택된, 편집 중인 이미지
                 viewModel.currentPinList.value ?: mutableListOf<PostEditPinVO>()

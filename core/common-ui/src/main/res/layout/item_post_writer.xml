@@ -19,7 +19,6 @@
             android:scaleType="centerCrop"
             android:src="@drawable/img_profile_default"
             android:clipToOutline="true"
-            android:background="@drawable/shape_profile_round"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="13dp"/>

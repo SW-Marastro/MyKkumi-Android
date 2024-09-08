@@ -115,6 +115,9 @@ dependencies {
     // Compose Coil
     implementation "io.coil-kt:coil-compose:$coil_compose_version"
 
+    // Compose Glide
+    implementation "com.github.bumptech.glide:compose:$glide_compose_version"
+
     // Croppy
     implementation "com.github.lyrebirdstudio:Croppy:$croppy_version"
 

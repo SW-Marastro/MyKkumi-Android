@@ -58,6 +58,7 @@ buildscript {
 
         // Gilde
         glide_version = "4.16.0"
+        glide_compose_version = "1.0.0-alpha.1"
 
         // Kakao SDK
         kakao_sdk_version = "2.20.3"

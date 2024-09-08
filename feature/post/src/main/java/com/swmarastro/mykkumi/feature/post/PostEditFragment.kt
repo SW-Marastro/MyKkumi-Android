@@ -213,6 +213,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     // 선택된 이미지 리스트 Recyclerview
     private fun initSelectPostImagesRecyclerView() {
         selectPostImageListAdapter = SelectPostImageListAdapter(
+            requireContext(),
             viewModel,
             confirmDeleteImage ={
                 confirmDeleteImage(it)
