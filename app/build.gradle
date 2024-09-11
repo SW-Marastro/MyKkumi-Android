@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
 }
 
 //def keystorePropertiesFile = project.rootProject.file("keystore.properties")
@@ -18,7 +19,7 @@ android {
         minSdk min_sdk_version
         targetSdk target_sdk_version
 
-        versionCode 13
+        versionCode 14
         versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -94,4 +95,9 @@ dependencies {
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
+    // Firebase
+    implementation platform("com.google.firebase:firebase-bom:$firebase_version")
+    implementation "com.google.firebase:firebase-analytics"
+    //implementation "com.google.firebase:firebase-crashlytics"
 }

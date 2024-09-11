@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumi.android
 
 import android.app.Application
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.swmarastro.mykkumi.data.util.KakaoInitializer
 import com.swmarastro.mykkumi.domain.datastore.AuthTokenDataStore
 import dagger.hilt.android.HiltAndroidApp
@@ -18,9 +19,14 @@ class MyKkumiApplication : Application() {
     @Inject
     lateinit var authTokenDataStore: AuthTokenDataStore
 
+    lateinit var firebaseAnalytics: FirebaseAnalytics
+
     override fun onCreate() {
         super.onCreate()
         // Kakao SDK 초기화
         kakaoInitializer.initialize()
+
+        // Firebase Analytics
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
     }
 }
