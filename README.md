@@ -48,36 +48,28 @@
 
 ---
 
-### 👏🏻 SW마라스트로
-###### (이름 가나다순입니다)  
-| 안채완 | 조정미 | 최재혁 |                                                                    
-| :---: | :---: | :---: | 
-| <img width="180px" src="https://avatars.githubusercontent.com/u/59831262?v=4" /> | <img width="180px" src="https://avatars.githubusercontent.com/u/76805879?v=4" /> | <img width="180px" src="https://avatars.githubusercontent.com/u/102780858?v=4"/> |
-|   [@eekrwl](https://github.com/eekrwl)   |    [@jung0115](https://github.com/jung0115)  | [@GomHyeok](https://github.com/GomHyeok)  |
-| Backend(Spring) | Android(Kotlin) | Leader, iOS(Swift) |
+### 👥 SW마라스트로 Team
+| 조정미 | 안채완 | 최재혁 |
+| :---: | :---: | :---: |
+| <img width="140px" src="https://avatars.githubusercontent.com/u/76805879?v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/59831262?v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/102780858?v=4"/> |
+| [@jung0115](https://github.com/jung0115) | [@eekrwl](https://github.com/eekrwl) | [@GomHyeok](https://github.com/GomHyeok) |
+| Android(Kotlin) | Backend(Spring) | iOS(Swift) |
 
 #### Extra Member
 | 이연재 |
 | :---: | 
 | Design(Figma) |
 
-### 🚦Team Rules
-- [x] 9:30am까지 센터 출근
-- [x] 주중에는 매일 출근, 주말은 필요시 자유롭게 출근
-- [x] 2주 단위 Sprint. Spint 시작할 때 Task별 MD 설정
-- [x] [Git Convention Rules](https://github.com/SW-Marastro/MyKkumi-Android/wiki/%F0%9F%8C%B1-Git-Convention)
+---
+
+### 🛠️ Android Tech Stack
+<img width="680px" alt="Tech Stack" src="https://github.com/user-attachments/assets/04a815c9-c162-4301-8a36-f83b169d56bd"/>
 
 ---
 
-### 🛠️ Tech Stack
-**Android**  
-<a href="https://developer.android.com" target="_blank" rel="noreferrer"> <img src="http://img.shields.io/badge/-Android_Studio-3DDC84?style=for-the-badge&logo=Android%20Studio&logoColor=white" alt="android" height="24"/> </a> <!-- 안드로이드 -->
-<a href="https://kotlinlang.org" target="_blank" rel="noreferrer"> <img src="http://img.shields.io/badge/-Kotlin-7f52ff?style=for-the-badge&logo=Kotlin&logoColor=white" alt="kotlin" height="24"/> </a> <!-- Kotlin -->  
-**iOS**  
-<a href="https://developer.apple.com/kr/swift" target="_blank" rel="noreferrer"> <img src="http://img.shields.io/badge/-Swift-F05138?style=for-the-badge&logo=swift&logoColor=white" alt="Swift" height="24"/> </a> <!-- Swift -->  
-**Backend**  
-<a href="https://spring.io/projects/spring-boot" target="_blank" rel="noreferrer"> <img src="http://img.shields.io/badge/-spring_boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="springboot" height="24"/> </a> <!-- SpringBoot -->
-<a href="https://www.java.com" target="_blank" rel="noreferrer"> <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white" alt="java" height="24"/> </a> <!-- Java -->  
+### 🔥 Architecture
+<img width="550px" alt="Multi Module" src="https://github.com/user-attachments/assets/b98d6f28-dbd4-4a30-a4bf-1b755ab80c19">
+<img width="800px" alt="Clean Architecture" src="https://github.com/user-attachments/assets/88f62185-f8d2-4df3-94c7-b91619ba33b3">
 
 ---
 
