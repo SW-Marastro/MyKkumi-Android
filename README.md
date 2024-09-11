@@ -63,13 +63,15 @@
 ---
 
 ### 🛠️ Android Tech Stack
-<img width="680px" alt="Tech Stack" src="https://github.com/user-attachments/assets/04a815c9-c162-4301-8a36-f83b169d56bd"/>
+<img width="600px" alt="Tech Stack" src="https://github.com/user-attachments/assets/04a815c9-c162-4301-8a36-f83b169d56bd"/>
 
 ---
 
 ### 🔥 Architecture
-<img width="550px" alt="Multi Module" src="https://github.com/user-attachments/assets/b98d6f28-dbd4-4a30-a4bf-1b755ab80c19">
-<img width="800px" alt="Clean Architecture" src="https://github.com/user-attachments/assets/88f62185-f8d2-4df3-94c7-b91619ba33b3">
+<img width="560px" alt="Multi Module" src="https://github.com/user-attachments/assets/b98d6f28-dbd4-4a30-a4bf-1b755ab80c19">
+<img width="800px" alt="Clean Architecture" src="https://github.com/user-attachments/assets/88f62185-f8d2-4df3-94c7-b91619ba33b3">  
+
+> ✅ 프로젝트 전체를 Clean Architecture로 구현했습니다. 이해를 돕기 위해 edit post에 한정하여 구조를 이미지화 하였습니다!
 
 ---
 
