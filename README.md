@@ -51,7 +51,7 @@
 ### 👥 SW마라스트로 Team
 | 조정미 | 안채완 | 최재혁 |
 | :---: | :---: | :---: |
-| <img width="140px" src="https://avatars.githubusercontent.com/u/76805879?v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/59831262?v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/102780858?v=4"/> |
+| <img width="160px" src="https://avatars.githubusercontent.com/u/76805879?v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/59831262?v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/102780858?v=4"/> |
 | [@jung0115](https://github.com/jung0115) | [@eekrwl](https://github.com/eekrwl) | [@GomHyeok](https://github.com/GomHyeok) |
 | Android(Kotlin) | Backend(Spring) | iOS(Swift) |
 
@@ -62,16 +62,21 @@
 
 ---
 
-### 🛠️ Android Tech Stack
-<img width="600px" alt="Tech Stack" src="https://github.com/user-attachments/assets/04a815c9-c162-4301-8a36-f83b169d56bd"/>
+### 🔥 Architecture
+<img width="560px" alt="Multi Module" src="https://github.com/user-attachments/assets/9d9e1f2f-f2a5-46d8-a628-1a4951da5c9f">
+
+> ✅ feature 모듈 중 auth 모듈은 compos로, 나머지는 View System(Activity, Fragment, xml)로 구현했습니다.
+
+<img width="800px" alt="Clean Architecture" src="https://github.com/user-attachments/assets/88f62185-f8d2-4df3-94c7-b91619ba33b3">  
+
+> ✅ 프로젝트 전체를 Clean Architecture로 구현했으나, 이해를 돕기 위해 edit post의 구조를 이미지화 하였습니다!
 
 ---
 
-### 🔥 Architecture
-<img width="560px" alt="Multi Module" src="https://github.com/user-attachments/assets/b98d6f28-dbd4-4a30-a4bf-1b755ab80c19">
-<img width="800px" alt="Clean Architecture" src="https://github.com/user-attachments/assets/88f62185-f8d2-4df3-94c7-b91619ba33b3">  
+### 🛠️ Android Tech Stack
+<img width="600px" alt="Tech Stack" src="https://github.com/user-attachments/assets/5984d758-884c-4dfc-b367-28f03c7771b0"/>
 
-> ✅ 프로젝트 전체를 Clean Architecture로 구현했습니다. 이해를 돕기 위해 edit post에 한정하여 구조를 이미지화 하였습니다!
+> ✅ 이미지 로드 라이브러리: Compose에서는 Coil, View System에서는 Glide 사용
 
 ---
 
