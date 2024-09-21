@@ -28,6 +28,7 @@ class LoginViewModel @Inject constructor(
 
     private val INVALID_TOKEN = "INVALID_TOKEN"
     private val MAX_RETRIES = 1
+    private val KAKAO_INSTALL_BUT_NOT_ACCOUNT = "KakaoTalk is installed but not connected to Kakao account."
 
     private val _finishLoginUiState = MutableLiveData<Unit>()
     val finishLoginUiState: LiveData<Unit> get() = _finishLoginUiState
@@ -39,6 +40,10 @@ class LoginViewModel @Inject constructor(
 
     private val _userInfoUiState = MutableStateFlow<UserInfoVO>(UserInfoVO(null, null, null, null))
     val userInfoUiState: StateFlow<UserInfoVO> get() = _userInfoUiState
+
+    private val _needKakaoAccount = MutableLiveData<Boolean>(false)
+    val needKakaoAccount: LiveData<Boolean> get() = _needKakaoAccount
+
 
     fun kakaoLogin() {
         _loginUiState.value = LoginUiState.KakaoLogin
@@ -101,8 +106,13 @@ class LoginViewModel @Inject constructor(
                         showToast("요청 권한이 없는 앱입니다.") // 앱이 요청 권한이 없음
                     }
 
+                    error.message == KAKAO_INSTALL_BUT_NOT_ACCOUNT -> {
+                        // 카카오톡 앱이 설치되어 있지만, 로그인은 안 되어있는 경우
+                        _needKakaoAccount.setValue(true)
+                    }
+
                     else -> { // Unknown
-                        showToast("서비스 에러가 발생했습니다.") // 기타 에러
+                        showToast("서비스 에러가 발생했습니다") // 기타 에러
                     }
                 }
                 Log.e(TAG, "카카오계정으로 로그인 실패", error)
@@ -113,6 +123,10 @@ class LoginViewModel @Inject constructor(
                 setKakaoToken(token.accessToken, token.refreshToken)
             }
         }
+    }
+
+    fun doneKakaoAccount() {
+        _needKakaoAccount.setValue(false)
     }
 
     // 카카오 로그인 token 값

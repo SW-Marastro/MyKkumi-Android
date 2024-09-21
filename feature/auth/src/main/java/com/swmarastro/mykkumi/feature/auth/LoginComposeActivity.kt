@@ -68,6 +68,7 @@ import kotlinx.coroutines.launch
 class LoginComposeActivity : ComponentActivity() {
 
     private val viewModel: LoginViewModel by viewModels()
+    private val activityContext = this
 
     @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,6 +84,13 @@ class LoginComposeActivity : ComponentActivity() {
                 showToast(it)
             }
         )
+
+        // 카카오 계정으로 로그인 handling 필요
+        viewModel.needKakaoAccount.observe(this, Observer {
+            if(it) {
+                handleKakaoAccount()
+            }
+        })
 
         enableEdgeToEdge()
         setContent {
@@ -245,7 +253,6 @@ class LoginComposeActivity : ComponentActivity() {
 
     // 카카오 로그인
     private fun handleKakaoLogin() {
-        val activityContext = this
         viewModel.kakaoLogin()
 
         lifecycleScope.launch {
@@ -259,6 +266,29 @@ class LoginComposeActivity : ComponentActivity() {
                     UserApiClient.instance.loginWithKakaoAccount(activityContext, callback = viewModel.kakaoCallback)
                     Log.d(TAG, "카카오 계정으로 로그인")
                 }
+            } catch (error: Throwable) {
+                // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
+                // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+                if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                    Log.d(TAG, "사용자의 의도적인 로그인 취소")
+                } else {
+                    Log.e(TAG, "인증 에러 발생", error)
+                }
+            }
+        }
+    }
+
+    // 카카오 계정으로 로그인
+    private fun handleKakaoAccount() {
+        viewModel.kakaoLogin()
+
+        lifecycleScope.launch {
+            try {
+                viewModel.doneKakaoAccount()
+
+                // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
+                UserApiClient.instance.loginWithKakaoAccount(activityContext, callback = viewModel.kakaoCallback)
+                Log.d(TAG, "카카오 계정으로 로그인")
             } catch (error: Throwable) {
                 // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
                 // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
