@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'com.swmarastro.mykkumi.common_ui'
+    namespace 'com.marastro.mykkumi.common_ui'
     compileSdk compile_sdk_version
 
     defaultConfig {

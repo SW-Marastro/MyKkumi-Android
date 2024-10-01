@@ -11,11 +11,11 @@ plugins {
 //keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    namespace 'com.swmarastro.mykkumi.android'
+    namespace 'com.marastro.mykkumi.android'
     compileSdk compile_sdk_version
 
     defaultConfig {
-        applicationId "com.swmarastro.mykkumi.android"
+        applicationId "com.marastro.mykkumi.android"
         minSdk min_sdk_version
         targetSdk target_sdk_version
 
@@ -41,7 +41,7 @@ android {
             manifestPlaceholders = [
                     appName : "@string/app_name",
 //                    appIcon: "@drawable/ic_mykkumi_logo",
-                    providerAuthority: "com.swmarastro.mykkumi.android.provider"
+                    providerAuthority: "com.marastro.mykkumi.android.provider"
             ]
 //            signingConfig signingConfigs.config
         }
@@ -50,7 +50,7 @@ android {
 //            manifestPlaceholders = [
 //                    appName : "@string/app_name_dev",
 //                    appIcon: "@drawable/ic_mykkumi_logo_dev",
-//                    providerAuthority: "com.swmarastro.mykkumi.android.dev.provider"
+//                    providerAuthority: "com.marastro.mykkumi.android.dev.provider"
 //            ]
 //        }
     }

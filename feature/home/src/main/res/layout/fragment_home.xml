@@ -8,7 +8,7 @@
     <data>
         <variable
             name="vm"
-            type="com.swmarastro.mykkumi.feature.home.HomeViewModel" />
+            type="com.marastro.mykkumi.feature.home.HomeViewModel" />
     </data>
 
 

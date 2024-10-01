@@ -19,8 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class com.swmarastro.mykkumi.common_ui.** { *; }
--keep class com.swmarastro.mykkumi.common_ui.base.BaseFragment { *; }
+-keep class com.marastro.mykkumi.common_ui.** { *; }
+-keep class com.marastro.mykkumi.common_ui.base.BaseFragment { *; }
 -keep class java.lang.invoke.StringConcatFactory { *; }
 -dontwarn java.lang.invoke.StringConcatFactory
 

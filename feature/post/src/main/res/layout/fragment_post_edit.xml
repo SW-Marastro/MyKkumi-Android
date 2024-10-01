@@ -7,7 +7,7 @@
     <data>
         <variable
             name="vm"
-            type="com.swmarastro.mykkumi.feature.post.PostEditViewModel" />
+            type="com.marastro.mykkumi.feature.post.PostEditViewModel" />
     </data>
 
     <RelativeLayout
@@ -46,7 +46,7 @@
 
         </RelativeLayout>
 
-        <com.swmarastro.mykkumi.common_ui.custom.CustomScrollView
+        <com.marastro.mykkumi.common_ui.custom.CustomScrollView
             android:id="@+id/scroll_edit_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -260,7 +260,7 @@
 
             </RelativeLayout>
 
-        </com.swmarastro.mykkumi.common_ui.custom.CustomScrollView>
+        </com.marastro.mykkumi.common_ui.custom.CustomScrollView>
 
         <RelativeLayout
             android:id="@+id/relative_upload_post"
