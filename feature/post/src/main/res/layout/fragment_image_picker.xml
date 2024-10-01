@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.swmarastro.mykkumi.feature.post.imagePicker.ImagePickerFragment">
+    tools:context="com.marastro.mykkumi.feature.post.imagePicker.ImagePickerFragment">
 
     <data>
         <variable
             name="vm"
-            type="com.swmarastro.mykkumi.feature.post.imagePicker.ImagePickerViewModel" />
+            type="com.marastro.mykkumi.feature.post.imagePicker.ImagePickerViewModel" />
     </data>
 
     <RelativeLayout

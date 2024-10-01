@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace 'com.swmarastro.mykkumi.feature.post'
+    namespace 'com.marastro.mykkumi.feature.post'
     compileSdk compile_sdk_version
 
     defaultConfig {

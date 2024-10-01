@@ -13,7 +13,7 @@ if (project.rootProject.file('local.properties').exists()) {
 }
 
 android {
-    namespace 'com.swmarastro.mykkumi.feature.auth'
+    namespace 'com.marastro.mykkumi.feature.auth'
     compileSdk compile_sdk_version
 
     defaultConfig {

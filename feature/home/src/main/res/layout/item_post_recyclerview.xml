@@ -27,7 +27,7 @@
                 android:orientation="horizontal" />
 
             <!-- 이미지 indicator -->
-            <com.swmarastro.mykkumi.common_ui.post.PostImageIndicator
+            <com.marastro.mykkumi.common_ui.post.PostImageIndicator
                 android:id="@+id/indicator_post_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

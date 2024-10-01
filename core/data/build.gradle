@@ -12,7 +12,7 @@ if (project.rootProject.file('local.properties').exists()) {
 }
 
 android {
-    namespace 'com.swmarastro.mykkumi.data'
+    namespace 'com.marastro.mykkumi.data'
     compileSdk compile_sdk_version
 
     defaultConfig {

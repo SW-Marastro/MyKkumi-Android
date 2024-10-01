@@ -7,7 +7,7 @@
     <data>
         <variable
             name="vm"
-            type="com.swmarastro.mykkumi.feature.mypage.MypageViewModel" />
+            type="com.marastro.mykkumi.feature.mypage.MypageViewModel" />
     </data>
 
     <RelativeLayout

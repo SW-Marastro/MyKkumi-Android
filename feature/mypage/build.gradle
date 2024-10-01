@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace 'com.swmarastro.mykkumi.feature.mypage'
+    namespace 'com.marastro.mykkumi.feature.mypage'
     compileSdk compile_sdk_version
 
     defaultConfig {

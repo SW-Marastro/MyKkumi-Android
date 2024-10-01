@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.swmarastro.mykkumi.android">
+    package="com.marastro.mykkumi.android">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -23,7 +23,7 @@
         android:maxSdkVersion="28" /> <!-- 사진 촬영 후 저장 권한 -->
 
     <application
-        android:name=".MyKkumiApplication"
+        android:name="com.marastro.mykkumi.android.MyKkumiApplication"
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -37,7 +37,7 @@
 
         <!-- Splash -->
         <activity
-            android:name=".SplashActivity"
+            android:name="com.marastro.mykkumi.android.SplashActivity"
             android:theme="@style/SplashTheme"
             android:exported="true">
 
@@ -49,14 +49,14 @@
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.marastro.mykkumi.android.MainActivity"
             android:exported="true">
             <nav-graph android:value="@navigation/nav_graph"/>
         </activity>
 
         <!-- 이미지 저장하려면? -->
         <provider
-            android:authorities="com.swmarastro.mykkumi.android.provider"
+            android:authorities="com.marastro.mykkumi.android.provider"
             android:name="androidx.core.content.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">

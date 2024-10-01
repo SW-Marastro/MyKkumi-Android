@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace 'com.swmarastro.mykkumi.feature.shopping'
+    namespace 'com.marastro.mykkumi.feature.shopping'
     compileSdk compile_sdk_version
 
     defaultConfig {
