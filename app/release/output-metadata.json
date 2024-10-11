@@ -4,15 +4,15 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.swmarastro.mykkumi.android",
+  "applicationId": "com.marastro.mykkumi.android",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 7,
-      "versionName": "1.1.0",
+      "versionCode": 1,
+      "versionName": "1.0.0",
       "outputFile": "app-release.apk"
     }
   ],

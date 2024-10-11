@@ -87,15 +87,15 @@ class LoginViewModel @Inject constructor(
                     }
 
                     error.toString() == AuthErrorCause.InvalidRequest.toString() -> {
-                        showToast("서비스 에러가 발생했습니다.") // 요청 파라미터 오류
+                        showToast("서비스에 문제가 발생했습니다.") // 요청 파라미터 오류
                     }
 
                     error.toString() == AuthErrorCause.InvalidScope.toString() -> {
-                        showToast("서비스 에러가 발생했습니다.") // 유효하지 않은 scope ID
+                        showToast("에러가 발생했습니다.") // 유효하지 않은 scope ID
                     }
 
                     error.toString() == AuthErrorCause.Misconfigured.toString() -> {
-                        showToast("서비스 에러가 발생했습니다.") // 설정이 올바르지 않음(android key hash)
+                        showToast("로그인 서비스에 문제가 발생했습니다") // 설정이 올바르지 않음(android key hash)
                     }
 
                     error.toString() == AuthErrorCause.ServerError.toString() -> {
