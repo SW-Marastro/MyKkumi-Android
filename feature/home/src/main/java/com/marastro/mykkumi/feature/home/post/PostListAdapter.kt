@@ -129,6 +129,11 @@ class PostListAdapter (
                 waitNotice()
             }
 
+            // 팔로우 버튼 - 아직 안 됨
+            binding.includePostWriter.btnFollow.setOnClickListener(View.OnClickListener {
+                waitNotice()
+            })
+
             // 포스트 신고하기
             binding.textBtnPostReport.setOnClickListener(View.OnClickListener {
                 reportPost(
