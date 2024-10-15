@@ -6,7 +6,7 @@
     <data>
         <variable
             name="vm"
-            type="com.swmarastro.mykkumi.feature.home.banner.HomeBannerDetailViewModel" />
+            type="com.marastro.mykkumi.feature.home.banner.HomeBannerDetailViewModel" />
     </data>
 
     <RelativeLayout
@@ -15,12 +15,43 @@
         android:background="@color/white"
         android:clickable="true">
 
+        <RelativeLayout
+            android:id="@+id/toolbar_banner_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true">
+
+            <ImageButton
+                android:id="@+id/btn_close_banner_detail"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_close"
+                android:layout_marginLeft="20dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/text_title_banner_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="14dp"
+                android:text="@string/home_banner_all_title"
+                android:textSize="18sp"
+                android:textColor="@color/neutral_900"
+                android:fontFamily="@font/pretendard_semibold"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+
         <ImageView
             android:id="@+id/image_banner_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:layout_below="@id/toolbar_banner_detail"/>
 
     </RelativeLayout>
 

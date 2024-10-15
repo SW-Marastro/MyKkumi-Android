@@ -7,7 +7,7 @@
     <data>
         <variable
             name="vm"
-            type="com.swmarastro.mykkumi.feature.post.PostEditViewModel" />
+            type="com.marastro.mykkumi.feature.post.PostEditViewModel" />
     </data>
 
     <RelativeLayout
@@ -19,16 +19,17 @@
             android:id="@+id/header_post_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="14dp"
+            android:paddingVertical="10dp"
             android:layout_alignParentTop="true">
 
             <ImageButton
                 android:id="@+id/btn_back"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="5dp"
                 android:src="@drawable/ic_close"
                 android:scaleType="fitXY"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="15dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:background="@android:color/transparent"
@@ -46,7 +47,7 @@
 
         </RelativeLayout>
 
-        <com.swmarastro.mykkumi.common_ui.custom.CustomScrollView
+        <com.marastro.mykkumi.common_ui.custom.CustomScrollView
             android:id="@+id/scroll_edit_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -114,19 +115,23 @@
                         android:id="@+id/relative_select_post_image_list"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:layout_marginTop="18dp"
-                        android:layout_marginBottom="24dp">
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="20dp">
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerview_select_post_image"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginBottom="0dp"
+                            android:nestedScrollingEnabled="false"
                             android:orientation="horizontal"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            tools:listitem="@layout/item_select_post_image"
                             android:overScrollMode="never"
-                            android:nestedScrollingEnabled="false"/>
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/item_select_post_image" />
 
                         <ImageButton
                             android:id="@+id/btn_add_post_image"
@@ -182,45 +187,62 @@
                     android:layout_below="@id/view_line_select_images"
                     android:layout_toRightOf="@id/btn_add_pin"/>
 
-                <TextView
-                    android:id="@+id/text_title_input_content"
+                <RelativeLayout
+                    android:id="@+id/relative_input_content"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/title_input_content"
-                    android:textColor="@color/neutral_900"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/pretendard_bold"
-                    android:layout_marginLeft="20dp"
                     android:layout_marginTop="20dp"
-                    android:layout_below="@id/btn_add_pin"/>
-
-                <EditText
-                    android:id="@+id/edittext_input_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="112dp"
-                    android:hint="@string/placeholder_input_post_content"
-                    android:textColor="@color/neutral_900"
-                    android:textColorHint="@color/neutral_300"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/pretendard_medium"
-                    android:gravity="top"
-                    android:layout_marginTop="8dp"
                     android:layout_marginHorizontal="20dp"
-                    android:paddingVertical="14dp"
-                    android:paddingHorizontal="16dp"
-                    android:layout_below="@id/text_title_input_content"
-                    android:background="@drawable/shape_input_border12_neutral200"/>
+                    android:layout_below="@id/btn_add_pin">
+
+                    <TextView
+                        android:id="@+id/text_title_input_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_input_content"
+                        android:textColor="@color/neutral_900"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/pretendard_bold"/>
+
+                    <EditText
+                        android:id="@+id/edittext_input_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="112dp"
+                        android:hint="@string/placeholder_input_post_content"
+                        android:textColor="@color/neutral_900"
+                        android:textColorHint="@color/neutral_300"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/pretendard_medium"
+                        android:gravity="top"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:paddingVertical="14dp"
+                        android:paddingHorizontal="16dp"
+                        android:layout_below="@id/text_title_input_content"
+                        android:background="@drawable/shape_input_border12_neutral200"/>
+
+                    <TextView
+                        android:id="@+id/text_count_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/neutral_700"
+                        android:textSize="13sp"
+                        android:fontFamily="@font/pretendard_medium"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@id/edittext_input_content"/>
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/linear_hobby_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="12dp"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="20dp"
                     android:orientation="vertical"
-                    android:layout_below="@id/edittext_input_content">
+                    android:layout_below="@id/relative_input_content">
 
                     <TextView
                         android:id="@+id/text_title_select_category"
@@ -243,7 +265,7 @@
 
             </RelativeLayout>
 
-        </com.swmarastro.mykkumi.common_ui.custom.CustomScrollView>
+        </com.marastro.mykkumi.common_ui.custom.CustomScrollView>
 
         <RelativeLayout
             android:id="@+id/relative_upload_post"

@@ -13,7 +13,7 @@ if (project.rootProject.file('local.properties').exists()) {
 }
 
 android {
-    namespace 'com.swmarastro.mykkumi.feature.auth'
+    namespace 'com.marastro.mykkumi.feature.auth'
     compileSdk compile_sdk_version
 
     defaultConfig {
@@ -114,6 +114,9 @@ dependencies {
 
     // Compose Coil
     implementation "io.coil-kt:coil-compose:$coil_compose_version"
+
+    // Compose Glide
+    implementation "com.github.bumptech.glide:compose:$glide_compose_version"
 
     // Croppy
     implementation "com.github.lyrebirdstudio:Croppy:$croppy_version"

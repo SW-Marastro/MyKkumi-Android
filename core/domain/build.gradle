@@ -9,7 +9,4 @@ java {
 }
 dependencies {
     implementation "javax.inject:javax.inject:1"
-
-    // Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 }

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="vm"
-            type="com.swmarastro.mykkumi.feature.around.AroundViewModel" />
+            type="com.marastro.mykkumi.feature.around.AroundViewModel" />
     </data>
 
     <RelativeLayout

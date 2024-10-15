@@ -2,9 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
-        android:layout_width="78dp"
-        android:layout_height="78dp"
-        android:layout_marginRight="6dp">
+        android:layout_width="82dp"
+        android:layout_height="82dp"
+        android:layout_marginRight="2dp">
 
         <RelativeLayout
             android:id="@+id/relative_post_edit_thumbnail"
@@ -26,8 +26,9 @@
         
         <ImageButton
             android:id="@+id/btn_delete_edit_image"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:padding="4dp"
             android:src="@drawable/ic_delete_x"
             android:scaleType="fitXY"
             android:background="@android:color/transparent"

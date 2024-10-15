@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.swmarastro.mykkumi.feature.home.HomeFragment"
+        android:name="com.marastro.mykkumi.feature.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
 
@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/homeBannerDetailFragment"
-        android:name="com.swmarastro.mykkumi.feature.home.banner.HomeBannerDetailFragment"
+        android:name="com.marastro.mykkumi.feature.home.banner.HomeBannerDetailFragment"
         android:label="fragment_home_banner_detail"
         tools:layout="@layout/fragment_home_banner_detail">
 
@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/homeBannerAllFragment"
-        android:name="com.swmarastro.mykkumi.feature.home.banner.HomeBannerAllFragment"
+        android:name="com.marastro.mykkumi.feature.home.banner.HomeBannerAllFragment"
         android:label="fragment_home_banner_all"
         tools:layout="@layout/fragment_home_banner_all">
 

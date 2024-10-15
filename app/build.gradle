@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
 }
 
 //def keystorePropertiesFile = project.rootProject.file("keystore.properties")
@@ -10,16 +11,16 @@ plugins {
 //keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    namespace 'com.swmarastro.mykkumi.android'
+    namespace 'com.marastro.mykkumi.android'
     compileSdk compile_sdk_version
 
     defaultConfig {
-        applicationId "com.swmarastro.mykkumi.android"
+        applicationId "com.marastro.mykkumi.android"
         minSdk min_sdk_version
         targetSdk target_sdk_version
 
-        versionCode 11
-        versionName "1.1.0"
+        versionCode 2
+        versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -35,12 +36,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [
                     appName : "@string/app_name",
 //                    appIcon: "@drawable/ic_mykkumi_logo",
-                    providerAuthority: "com.swmarastro.mykkumi.android.provider"
+                    providerAuthority: "com.marastro.mykkumi.android.provider"
             ]
 //            signingConfig signingConfigs.config
         }
@@ -49,7 +50,7 @@ android {
 //            manifestPlaceholders = [
 //                    appName : "@string/app_name_dev",
 //                    appIcon: "@drawable/ic_mykkumi_logo_dev",
-//                    providerAuthority: "com.swmarastro.mykkumi.android.dev.provider"
+//                    providerAuthority: "com.marastro.mykkumi.android.dev.provider"
 //            ]
 //        }
     }
@@ -94,4 +95,9 @@ dependencies {
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
+    // Firebase
+    implementation platform("com.google.firebase:firebase-bom:$firebase_version")
+    implementation "com.google.firebase:firebase-analytics"
+    //implementation "com.google.firebase:firebase-crashlytics"
 }
