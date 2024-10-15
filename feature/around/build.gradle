@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace 'com.swmarastro.mykkumi.feature.around'
+    namespace 'com.marastro.mykkumi.feature.around'
     compileSdk compile_sdk_version
 
     defaultConfig {

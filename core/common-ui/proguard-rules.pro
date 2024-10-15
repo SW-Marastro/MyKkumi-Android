@@ -19,8 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class com.swmarastro.mykkumi.common_ui.** { *; }
--keep class com.swmarastro.mykkumi.common_ui.base.BaseFragment { *; }
+-keep class com.marastro.mykkumi.common_ui.** { *; }
+-keep class com.marastro.mykkumi.common_ui.base.BaseFragment { *; }
 -keep class java.lang.invoke.StringConcatFactory { *; }
 -dontwarn java.lang.invoke.StringConcatFactory
 
@@ -29,5 +29,7 @@
 -keep class * extends com.google.gson.TypeAdapter
 
 # R8 full mode strips generic signatures from return types if not kept.
-#-if interface * { @retrofit2.http.* public *** *(...); }
-#-keep,allowoptimization,allowshrinking,allowobfuscation class <3>
+-if interface * { @retrofit2.http.* public *** *(...); }
+-keep,allowoptimization,allowshrinking,allowobfuscation class <3>
+
+-keep class androidx.databinding.** { *; }

@@ -15,6 +15,7 @@
             android:id="@+id/linear_input_product_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="119dp"
             android:orientation="vertical">
 
             <TextView
@@ -71,8 +72,7 @@
                 android:hint="@string/placeholder_product_url_for_input_product_info"
                 android:paddingVertical="14dp"
                 android:paddingHorizontal="16dp"
-                android:background="@drawable/shape_input_border12_neutral200"
-                android:layout_marginBottom="20dp"/>
+                android:background="@drawable/shape_input_border12_neutral200"/>
 
         </LinearLayout>
 

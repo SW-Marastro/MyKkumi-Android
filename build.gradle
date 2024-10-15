@@ -58,6 +58,7 @@ buildscript {
 
         // Gilde
         glide_version = "4.16.0"
+        glide_compose_version = "1.0.0-alpha.1"
 
         // Kakao SDK
         kakao_sdk_version = "2.20.3"
@@ -85,6 +86,9 @@ buildscript {
 
         // swipe refresh layout
         swipe_refresh_layout_version = "1.1.0"
+
+        // Firebase
+        firebase_version = "33.2.0"
     }
     dependencies {
         // Safe Args
@@ -98,4 +102,6 @@ plugins {
     id "com.google.dagger.hilt.android" version "$hilt_version" apply false
     id 'org.jetbrains.kotlin.jvm' version '1.8.0' apply false
     id 'com.android.library' version '8.5.0' apply false
+    // firebase
+    id 'com.google.gms.google-services' version '4.4.2' apply false
 }

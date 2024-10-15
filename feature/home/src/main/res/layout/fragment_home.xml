@@ -8,68 +8,71 @@
     <data>
         <variable
             name="vm"
-            type="com.swmarastro.mykkumi.feature.home.HomeViewModel" />
+            type="com.marastro.mykkumi.feature.home.HomeViewModel" />
     </data>
+
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
+        <RelativeLayout
+            android:id="@+id/relative_home_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!-- 상단바 -->
             <RelativeLayout
-                android:id="@+id/relative_home_all"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <!-- 상단바 -->
-                <RelativeLayout
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="15dp">
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="11dp"
+                android:paddingVertical="10dp">
 
 
-                    <ImageView
-                        android:id="@+id/img_mykkumi_typo"
-                        android:layout_width="107dp"
-                        android:layout_height="29dp"
-                        android:src="@drawable/img_mykkumi_typo" />
+                <ImageView
+                    android:id="@+id/img_mykkumi_typo"
+                    android:layout_width="107dp"
+                    android:layout_height="29dp"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/img_mykkumi_typo" />
 
-                    <ImageButton
-                        android:id="@+id/btn_search"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:background="@android:color/transparent"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_search"
-                        android:layout_marginRight="16dp"
-                        android:layout_toLeftOf="@id/btn_notice"
-                        android:layout_centerVertical="true"/>
+                <ImageButton
+                    android:id="@+id/btn_search"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_search"
+                    android:padding="5dp"
+                    android:layout_marginRight="6dp"
+                    android:layout_toLeftOf="@id/btn_notice"
+                    android:layout_centerVertical="true"/>
 
-                    <ImageButton
-                        android:id="@+id/btn_notice"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:background="@android:color/transparent"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_notice"
-                        android:layout_marginRight="4dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"/>
+                <ImageButton
+                    android:id="@+id/btn_notice"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_notice"
+                    android:padding="5dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"/>
 
-                </RelativeLayout>
+            </RelativeLayout>
 
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/toolbar">
 
                 <ScrollView
                     android:id="@+id/scroll_home_banner_n_post"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/toolbar">
+                    android:layout_height="wrap_content">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -200,9 +203,9 @@
 
                 </ScrollView>
 
-            </RelativeLayout>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </RelativeLayout>
 
     </FrameLayout>
 

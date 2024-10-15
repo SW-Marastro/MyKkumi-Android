@@ -19,7 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class com.swmarastro.mykkumi.data.** { *; }
+-keep class com.marastro.mykkumi.data.** { *; }
 #-keep class java.lang.invoke.StringConcatFactory { *; }
 -dontwarn java.lang.invoke.StringConcatFactory
 
@@ -28,5 +28,10 @@
 -keep class * extends com.google.gson.TypeAdapter
 
 # R8 full mode strips generic signatures from return types if not kept.
-#-if interface * { @retrofit2.http.* public *** *(...); }
-#-keep,allowoptimization,allowshrinking,allowobfuscation class <3>
+-if interface * { @retrofit2.http.* public *** *(...); }
+-keep,allowoptimization,allowshrinking,allowobfuscation class <3>
+
+# Missing Rule
+-dontwarn hilt_aggregated_deps._com_marastro_mykkumi_data_di_DataStoreModule
+-dontwarn hilt_aggregated_deps._com_marastro_mykkumi_data_di_NetworkModule
+-dontwarn hilt_aggregated_deps._com_marastro_mykkumi_data_di_RepositoryModule

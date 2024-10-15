@@ -3,6 +3,7 @@
     <string name="home_banner_all_title">이벤트</string>
     <string name="user_report">신고하기</string>
     <string name="btn_more_content">더보기</string>
+    <string name="btn_close_content">접기</string>
 
     <string name="notice_more_banner">더 많은 이벤트가 있어요!</string>
     <string name="btn_open_more_banner">이벤트 모두 보기</string>

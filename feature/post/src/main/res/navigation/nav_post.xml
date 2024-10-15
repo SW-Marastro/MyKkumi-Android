@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/postEditFragment"
-        android:name="com.swmarastro.mykkumi.feature.post.PostEditFragment"
+        android:name="com.marastro.mykkumi.feature.post.PostEditFragment"
         android:label="fragment_post_edit"
         tools:layout="@layout/fragment_post_edit">
 
@@ -22,13 +22,13 @@
 
     <fragment
         android:id="@+id/imagePickerFragment"
-        android:name="com.swmarastro.mykkumi.feature.post.imagePicker.ImagePickerFragment"
+        android:name="com.marastro.mykkumi.feature.post.imagePicker.ImagePickerFragment"
         android:label="fragment_image_picker"
         tools:layout="@layout/fragment_image_picker">
 
         <argument
             android:name="selectImages"
-            app:argType="com.swmarastro.mykkumi.feature.post.imagePicker.ImagePickerArgument"
+            app:argType="com.marastro.mykkumi.feature.post.imagePicker.ImagePickerArgument"
             app:nullable="true"
             android:defaultValue="@null"/>
 
