@@ -1,64 +1,29 @@
-![중간발표-001](https://github.com/user-attachments/assets/b912eef7-a6aa-4dfd-a7c8-f49c00bd1b43)
+![cover](https://github.com/user-attachments/assets/4f934bb4-6b6e-45bc-99a4-c1d9084407e1)
+
+<div align="right"> 
+  <a href="https://hits.seeyoufarm.com">
+      <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FSW-Marastro%2FMyKkumi_AOS%2Fedit%2Fmain%2FREADME.md&count_bg=%23E267F6&title_bg=%23A238D2&icon=&icon_color=%23E7E7E7&title=%EB%A7%88%EC%9D%B4%EA%BE%B8%EB%AF%B8+Android&edge_flat=false"/>
+  </a>
+</div>
+<div align="center"> 
+  <a href="https://play.google.com/store/apps/details?id=com.marastro.mykkumi.android">
+    <img width="21%" alt="play store" src="https://github.com/user-attachments/assets/29f0c9a3-44a8-40b1-b6eb-c056e6e421f1">
+  </a>
+  <a href="https://apps.apple.com/kr/app/%EB%A7%88%EC%9D%B4%EA%BE%B8%EB%AF%B8-mykkumi/id6661018655">
+    <img width="21%" alt="app store" src="https://github.com/user-attachments/assets/99541c2a-7ab1-4d46-9222-0e8b53651c70">
+  </a>
+</div>
 
 # 마이꾸미
 ```
-💜 템빨 취미 및 제품 정보 공유 서비스
-📆 2024.04 ~
-✨ SW Maestro 15th
+📆 2024.04 ~  
+✨ Sofeware Maestro 15th (과학기술정보통신부 주관)
 ```
+> 💜 템빨 취미 및 제품 정보 공유 서비스 💜
+> 
+> '마이꾸미'는 취미 생활에 다양한 아이템을 구매하는 사람들이 더욱 즐겁게 취미를 즐길 수 있기를 바라는 마음에서 등장하게 되었습니다.   
+> 나의(**MY**) 인생을 **꾸미**는 취미, 그것을 즐기는 모습과 제품 정보까지 서로 공유하며 더 깊게 파고들 수 있는 환경을 제공해주고자 합니다.
 
-<div align="center"> 
-  <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FSW-Marastro%2FMyKkumi_AOS%2Fedit%2Fmain%2FREADME.md&count_bg=%23E267F6&title_bg=%23A238D2&icon=&icon_color=%23E7E7E7&title=%EB%A7%88%EC%9D%B4%EA%BE%B8%EB%AF%B8+AOS&edge_flat=false"/></a>
-</div>
-
----
-
-### ✨ 취미로 나의 인생을 꾸미다 ✨
-**[ 취미를 더 깊게 즐기고, 다양한 아이템 정보를 얻을 수 있는 서비스 ]**  
-  
-'마이꾸미'는 취미 생활에 다양한 아이템을 구매하는 사람들이 더욱 즐겁게 취미를 즐길 수 있기를 바라는 마음에서 등장하게 되었습니다.  
-나의(**MY**) 인생을 **꾸미**는 취미, 그것을 즐기는 모습과 제품 정보까지 서로 공유하며 더 깊게 파고들 수 있는 환경을 제공해주고자 합니다.  
-
----
-
-### 😎 템빨 시대, 취미에 쓰는 돈은 아깝지 않다
-1️⃣ 취미생활에 쓰는 돈은 아깝지 않은 디깅 소비  
-
-`'트렌드 코리아 2023'에서 10가지 키워드 중 하나로 뽑힌 '디깅 모멘텀'`  
-`선호하는 영역에 깊게 파고드는 행위가 제품 소비로 이어짐`  
-
-2️⃣ 취미 아이템 종류의 다양성  
-
-`캠핑: 텐트, 침구, 취사도구, 조명, 화로, 전기용품, 캠핑퍼니처 등`  
-`다이어리 꾸미기: 다이어리, 스티커, 마스킹테이프, 떡메모지, 속지, 바인더 등`  
-`골프: 골프채, 골프공, 골프백, 큐, 스윙매트, 퍼터키퍼 등`  
-
-3️⃣ 제품 정보 수집의 어려움
-
-`SNS에 공유된 사진에 등장한 제품 정보를 알 수 없는 불편함`  
-`설명글에 적힌 제품 정보와 사진 속 제품의 매칭이 어려움` 
-
----
-
-### 🔎 이거 어디서 살 수 있나요?
-- [x] 사진 위에 핀을 찍고 제품 정보를 표시하여 효과적으로 정보를 공유할 수 있어요.
-- [x] 템빨, 즉 아이템의 비중이 큰 취미를 즐기는 사람들이 모여서 팁을 주고 받을 수 있어요.
-- [x] 같은 취미를 즐기는 사람들의 모습을 보면서 새로운 제품과 스타일을 시도해볼 수 있어요.
-- [x] 제품 검색과 고민에 사용되는 시간과 번거로움을 줄이고, 자연스럽게 제품 구매로 이어질 수 있어요.
-
----
-
-### 👥 SW마라스트로 Team
-| 조정미 | 안채완 | 최재혁 |
-| :---: | :---: | :---: |
-| <img width="160px" src="https://avatars.githubusercontent.com/u/76805879?v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/59831262?v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/102780858?v=4"/> |
-| [@jung0115](https://github.com/jung0115) | [@eekrwl](https://github.com/eekrwl) | [@GomHyeok](https://github.com/GomHyeok) |
-| Android(Kotlin) | Backend(Spring) | iOS(Swift) |
-
-#### Extra Member
-| 이연재 |
-| :---: | 
-| Design(Figma) |
 
 ---
 
@@ -77,6 +42,20 @@
 <img width="600px" alt="Tech Stack" src="https://github.com/user-attachments/assets/5984d758-884c-4dfc-b367-28f03c7771b0"/>
 
 > ✅ 이미지 로드 라이브러리: Compose에서는 Coil, View System에서는 Glide 사용
+
+---
+
+### 👥 SW마라스트로 Team
+| 조정미 | 안채완 | 최재혁 |
+| :---: | :---: | :---: |
+| <img width="160px" src="https://avatars.githubusercontent.com/u/76805879?v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/59831262?v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/102780858?v=4"/> |
+| [@jung0115](https://github.com/jung0115) | [@eekrwl](https://github.com/eekrwl) | [@GomHyeok](https://github.com/GomHyeok) |
+| Android(Kotlin) | Backend(Spring) | iOS(Swift) |
+
+#### Extra Member
+| 이연재 |
+| :---: | 
+| Design(Figma) |
 
 ---
 
