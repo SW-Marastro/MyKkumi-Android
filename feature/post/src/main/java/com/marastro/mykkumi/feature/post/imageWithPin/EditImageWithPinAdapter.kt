@@ -1,9 +1,12 @@
 package com.marastro.mykkumi.feature.post.imageWithPin
 
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.Rect
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -25,7 +28,8 @@ class EditImageWithPinAdapter(
     private val viewModel: PostEditViewModel,
     private val lockViewPagerMoving: () -> Unit,
     private val unlockViewPagerMoving: () -> Unit,
-    private val updateProductInfo: (position: Int) -> Unit
+    private val updateProductInfo: (position: Int) -> Unit,
+    private val resources: Resources
 ) : RecyclerView.Adapter<EditImageWithPinAdapter.EditImageWithPinViewHolder>() {
 
     var imageWithPinList = mutableListOf<PostImageVO>()
@@ -48,6 +52,10 @@ class EditImageWithPinAdapter(
         private var parentHeight = 0
 
         fun bind(item: PostImageVO, position: Int) {
+            val parent = binding.imagePost
+            val editImageView = binding.relativePinsOfImages
+            val expandPx = (10 * resources.displayMetrics.density).toInt() // 10dp를 px로 변환
+
             Glide
                 .with(context)
                 .load(item.imageUri)
@@ -61,9 +69,8 @@ class EditImageWithPinAdapter(
             }
 
             binding.relativePinsOfImages.removeAllViews()
-            // pin이 이미지의 크기를 벗어나지 않도록 제한
-            val parent = binding.imagePost
 
+            // pin이 이미지의 크기를 벗어나지 않도록 제한
             parent.viewTreeObserver.addOnGlobalLayoutListener (
                 object : ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
@@ -86,13 +93,22 @@ class EditImageWithPinAdapter(
             for(idx in 0..<currentPinList.size) {
                 val pin = currentPinList[idx]
 
-                val pinView = LayoutInflater.from(context).inflate(R.layout.item_pin_of_post_edit, binding.relativePinsOfImages, false)
-                binding.relativePinsOfImages.addView(pinView)
+                val pinView = LayoutInflater.from(context).inflate(R.layout.item_pin_of_post_edit, editImageView, false)
+                editImageView.addView(pinView)
 
                 // 핀의 가운데를 기준으로
                 var pinWidth = 0
                 var pinHeight = 0
 
+                // 핀 터치 영역 가져와서 넓혀주기
+                editImageView.post {
+                    val pinRect = Rect()
+                    pinView.getHitRect(pinRect)
+                    pinRect.inset(-expandPx, -expandPx)
+                    editImageView.touchDelegate = TouchDelegate(pinRect, pinView)
+                }
+
+                // 핀 크기
                 pinView.post {
                     pinWidth = pinView.width
                     pinHeight = pinView.height
@@ -147,7 +163,7 @@ class EditImageWithPinAdapter(
                 }
             }
 
-            binding.relativePinsOfImages.layoutParams.height = parentHeight
+            editImageView.layoutParams.height = parentHeight
         }
     }
 

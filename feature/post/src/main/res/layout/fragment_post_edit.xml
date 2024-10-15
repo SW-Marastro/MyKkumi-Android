@@ -19,16 +19,17 @@
             android:id="@+id/header_post_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="14dp"
+            android:paddingVertical="10dp"
             android:layout_alignParentTop="true">
 
             <ImageButton
                 android:id="@+id/btn_back"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="5dp"
                 android:src="@drawable/ic_close"
                 android:scaleType="fitXY"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="15dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:background="@android:color/transparent"
@@ -114,19 +115,23 @@
                         android:id="@+id/relative_select_post_image_list"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:layout_marginTop="18dp"
-                        android:layout_marginBottom="24dp">
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="20dp">
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerview_select_post_image"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginBottom="0dp"
+                            android:nestedScrollingEnabled="false"
                             android:orientation="horizontal"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            tools:listitem="@layout/item_select_post_image"
                             android:overScrollMode="never"
-                            android:nestedScrollingEnabled="false"/>
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/item_select_post_image" />
 
                         <ImageButton
                             android:id="@+id/btn_add_post_image"

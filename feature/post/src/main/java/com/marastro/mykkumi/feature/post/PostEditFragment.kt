@@ -254,7 +254,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             },
             updateProductInfo = {
                 requestUpdateProductInfo(it)
-            }
+            },
+            resources = resources
         )
         binding.viewpagerPostEditImages.adapter = editImageWithPinAdapter
         binding.viewpagerPostEditImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
