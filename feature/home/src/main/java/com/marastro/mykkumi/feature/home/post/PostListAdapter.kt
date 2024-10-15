@@ -205,8 +205,16 @@ class PostListAdapter (
 
                 // 더보기 버튼
                 binding.textBtnMoreContent.setOnClickListener(View.OnClickListener {
-                    binding.textBtnMoreContent.visibility = View.GONE
-                    binding.textPostContent.text = allContent
+                    binding.textBtnMoreContent.visibility = View.GONE     // 더보기 버튼 가리기
+                    binding.textBtnCloseContent.visibility = View.VISIBLE // 접기 버튼 보여주기
+                    binding.textPostContent.text = allContent             // 글 전체 보여주기
+                })
+
+                // 접기 버튼
+                binding.textBtnCloseContent.setOnClickListener(View.OnClickListener {
+                    binding.textBtnMoreContent.visibility = View.VISIBLE // 더보기 버튼 보여주기
+                    binding.textBtnCloseContent.visibility = View.GONE   // 접기 버튼 가리기
+                    binding.textPostContent.text = hideContent           // 글 일부 숨기기
                 })
             }
 
