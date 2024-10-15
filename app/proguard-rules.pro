@@ -21,9 +21,9 @@
 #-renamesourcefileattribute SourceFile
 -keep class com.marastro.mykkumi.common_ui.** { *; }
 -keep class com.marastro.mykkumi.data.** { *; }
-#-keep class java.lang.invoke.StringConcatFactory { *; }
+-keep class com.marastro.mykkumi.common_ui.base.BaseFragment { *; }
+-keep class java.lang.invoke.StringConcatFactory { *; }
 -dontwarn java.lang.invoke.StringConcatFactory
--keep class com.marastro.mykkumi.common_ui.base.BaseFragment
 
 # 카카오 로그인을 위한 카카오 SDK를 코드 축소, 난독화, 최적화에서 제외
 -keep class com.kakao.sdk.**.model.* { <fields>; }
@@ -38,4 +38,13 @@
 -keep class org.conscrypt.*
 -keep class org.openjsse.**
 
+# 기타 ProGuard 설정
+-keep class !a.a, * { *; }
+-dontwarn a.a
+
 -keep class androidx.databinding.** { *; }
+
+# Missing Rule
+-dontwarn hilt_aggregated_deps._com_marastro_mykkumi_data_di_DataStoreModule
+-dontwarn hilt_aggregated_deps._com_marastro_mykkumi_data_di_NetworkModule
+-dontwarn hilt_aggregated_deps._com_marastro_mykkumi_data_di_RepositoryModule

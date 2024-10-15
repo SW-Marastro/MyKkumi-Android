@@ -36,8 +36,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [
                     appName : "@string/app_name",
 //                    appIcon: "@drawable/ic_mykkumi_logo",

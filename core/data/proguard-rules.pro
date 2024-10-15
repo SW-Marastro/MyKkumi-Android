@@ -30,3 +30,8 @@
 # R8 full mode strips generic signatures from return types if not kept.
 -if interface * { @retrofit2.http.* public *** *(...); }
 -keep,allowoptimization,allowshrinking,allowobfuscation class <3>
+
+# Missing Rule
+-dontwarn hilt_aggregated_deps._com_marastro_mykkumi_data_di_DataStoreModule
+-dontwarn hilt_aggregated_deps._com_marastro_mykkumi_data_di_NetworkModule
+-dontwarn hilt_aggregated_deps._com_marastro_mykkumi_data_di_RepositoryModule
