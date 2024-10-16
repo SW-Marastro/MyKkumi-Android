@@ -14,6 +14,7 @@ import com.marastro.mykkumi.common_ui.post.PostImagesAdapter
 import com.marastro.mykkumi.domain.entity.HomePostItemVO
 import com.marastro.mykkumi.common_ui.R
 import com.marastro.mykkumi.common_ui.server_driven.SpannableStringBuilderProvider
+import com.marastro.mykkumi.domain.entity.HomePostProductVO
 import com.marastro.mykkumi.feature.home.HomeViewModel
 import com.marastro.mykkumi.feature.home.databinding.ItemPostRecyclerviewBinding
 
@@ -23,7 +24,8 @@ class PostListAdapter (
     private val waitNotice: () -> Unit,
     private val blockNestedSwipeRefreshAndViewPager: (state: Int) -> Unit,
     private val reportPost: (writerUuid: String, postId: Int) -> Unit,
-    private val viewModel: HomeViewModel
+    private val viewModel: HomeViewModel,
+    private val openViewProductInfo: (productInfo: HomePostProductVO) -> Unit,
 ) : RecyclerView.Adapter<PostListAdapter.PostListViewHolder>(){
     private final val MAX_CONTENT_LENGTH = 50
 
@@ -68,7 +70,10 @@ class PostListAdapter (
             // 포스트 이미지 viewpager
             var postItemImageAdapter: PostImagesAdapter = PostImagesAdapter(
                 context,
-                item.images.toMutableList()
+                item.images.toMutableList(),
+                openViewProductInfo = {
+                    openViewProductInfo(it)
+                }
             )
             binding.viewpagerPostImages.adapter = postItemImageAdapter
             binding.viewpagerPostImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL

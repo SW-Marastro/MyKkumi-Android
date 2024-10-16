@@ -12,11 +12,13 @@ import androidx.navigation.NavController
 import com.marastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.marastro.mykkumi.domain.entity.BannerItemVO
 import com.marastro.mykkumi.domain.entity.HomePostItemVO
+import com.marastro.mykkumi.domain.entity.HomePostProductVO
 import com.marastro.mykkumi.domain.exception.ApiException
 import com.marastro.mykkumi.domain.usecase.banner.GetBannerListUseCase
 import com.marastro.mykkumi.domain.usecase.post.GetHomePostListUseCase
 import com.marastro.mykkumi.domain.usecase.report.ReportPostUseCase
 import com.marastro.mykkumi.domain.usecase.report.ReportUserUseCase
+import com.marastro.mykkumi.common_ui.post.ViewProductInfoBottomSheet
 import com.marastro.mykkumi.feature.home.report.ChooseReportBottomSheet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -182,5 +184,16 @@ class HomeViewModel @Inject constructor(
                 e.message?.let { showToast(it) }
             }
         }
+    }
+
+    // 제품 정보 BottomSheet 열람
+    fun viewProductInfoForPin(fragment: HomeFragment, productInfo: HomePostProductVO) {
+        val bundle = Bundle()
+        bundle.putString("productName", productInfo.name)
+        bundle.putString("productUrl", productInfo.url)
+
+        val bottomSheet = ViewProductInfoBottomSheet()
+        bottomSheet.arguments = bundle
+        bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
     }
 }

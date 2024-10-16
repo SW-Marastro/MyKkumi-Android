@@ -194,7 +194,7 @@ class EditImageWithPinAdapter(
         buttonDeletePin.setOnClickListener(View.OnClickListener {
             viewModel.deletePinOfImage(
                 position = pinIndex,
-                message = getString(context, com.marastro.mykkumi.feature.post.R.string.toast_delete_pin),
+                message = getString(context, R.string.toast_delete_pin),
                 showToast = {
                     showToast(it)
                 })

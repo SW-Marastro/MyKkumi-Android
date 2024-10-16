@@ -10,6 +10,7 @@
 
     <color name="primary_color">#12D6E3</color>
     <color name="secondary_color">#FFF493</color>
+    <color name="main_light_color">#E7FAFC</color>
     
     <color name="neutral_900">#131417</color>
     <color name="neutral_800">#2A2C34</color>

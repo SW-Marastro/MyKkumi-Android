@@ -15,6 +15,7 @@ import com.marastro.mykkumi.common_ui.base.BaseFragment
 import com.marastro.mykkumi.common_ui.report.PostReportConfirmDialog
 import com.marastro.mykkumi.common_ui.report.PostWriterReportConfirmDialog
 import com.marastro.mykkumi.domain.entity.BannerItemVO
+import com.marastro.mykkumi.domain.entity.HomePostProductVO
 import com.marastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.marastro.mykkumi.feature.home.databinding.FragmentHomeBinding
 import com.marastro.mykkumi.feature.home.post.PostListAdapter
@@ -197,7 +198,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             reportPost = { writerUuid: String, postId: Int ->
                 postReportConfirm(writerUuid, postId)
             },
-            viewModel
+            viewModel,
+            openViewProductInfo = {
+                openViewProductInfo(it)
+            }
         )
         binding.recyclerviewPostList.layoutManager = LinearLayoutManager(
             context,
@@ -307,6 +311,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             )
         }
         dialog.show(writerUuid)
+    }
+
+    // 제품 정보 열람
+    fun openViewProductInfo(productInfo: HomePostProductVO) {
+        viewModel.viewProductInfoForPin(this@HomeFragment, productInfo)
     }
 
     override fun onDestroyView() {

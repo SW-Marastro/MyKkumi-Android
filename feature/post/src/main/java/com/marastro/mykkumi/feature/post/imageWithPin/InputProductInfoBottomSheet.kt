@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.marastro.mykkumi.common_ui.base.BaseBottomSheetFragment
 import com.marastro.mykkumi.feature.post.R
+import com.marastro.mykkumi.common_ui.R as StringR
 import com.marastro.mykkumi.feature.post.databinding.FragmentInputProductInfoBottomSheetBinding
 import kotlin.math.max
 
@@ -49,7 +50,7 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
                     else binding.edittextInputProductName.setText(concat(s.subSequence(0, before), s.subSequence(count, s.length)))
 
                     binding.edittextInputProductName.setSelection(max(start, before)) // 커서를 입력하고 있던 곳에
-                    Toast.makeText(requireContext(), getString(R.string.notice_product_name_max_length), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(StringR.string.notice_product_name_max_length), Toast.LENGTH_SHORT).show()
                 }
 
                 // 제품명이 입력되지 않았거나 수정사항이 없을 경우 등록 버튼 비활성화
@@ -123,7 +124,7 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
             var inputProductUrl: String? = binding.edittextInputProductUrl.text.toString()
 
             if(inputProductUrl?.length == 0) inputProductUrl = null
-            if(inputProductName.isEmpty()) Toast.makeText(requireContext(), getString(R.string.notice_product_name_not_null), Toast.LENGTH_SHORT).show()
+            if(inputProductName.isEmpty()) Toast.makeText(requireContext(), getString(StringR.string.notice_product_name_not_null), Toast.LENGTH_SHORT).show()
             else {
                 // 핀 내용 수정
                 if(position != null) {
