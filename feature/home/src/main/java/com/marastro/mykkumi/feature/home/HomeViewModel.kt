@@ -62,6 +62,15 @@ class HomeViewModel @Inject constructor(
     private var _isLogined = MutableStateFlow<Boolean>(false)
     val isLogined: StateFlow<Boolean> get() = _isLogined
 
+    // TODO: 나증에 uuid로 바꿀 것
+    private var _userNickname = MutableStateFlow<String>("")
+    val userNickname: StateFlow<String> get() = _userNickname
+
+    // 유저 정보 세팅
+    fun initUserInfo() {
+        _userNickname.value = authTokenDataStore.getUserNickname() ?: ""
+    }
+
     // 홈 > 배너 캐러셀
     fun setHomeBanner() {
         viewModelScope.launch {

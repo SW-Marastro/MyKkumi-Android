@@ -2,6 +2,7 @@ package com.marastro.mykkumi.feature.home.post
 
 import android.content.Context
 import android.text.SpannableStringBuilder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ class PostListAdapter (
     private val reportPost: (writerUuid: String, postId: Int) -> Unit,
     private val viewModel: HomeViewModel,
     private val openViewProductInfo: (productInfo: HomePostProductVO) -> Unit,
+    private val userNickname: String, // TODO: uuid로 변경
 ) : RecyclerView.Adapter<PostListAdapter.PostListViewHolder>(){
     private final val MAX_CONTENT_LENGTH = 50
 
@@ -133,7 +135,6 @@ class PostListAdapter (
             binding.btnPostShare.setOnClickListener {
                 waitNotice()
             }
-
             // 팔로우 버튼 - 아직 안 됨
             binding.includePostWriter.btnFollow.setOnClickListener(View.OnClickListener {
                 waitNotice()
@@ -147,20 +148,30 @@ class PostListAdapter (
                 )
             })
 
-            // 로그인 된 유저한테만 보여줄 것 - 신고하기 버튼
+            // 로그인 했을 때
             if(viewModel.isLogined.value) {
-//                binding.includePostWriter.btnFollow.visibility = View.VISIBLE // 팔로우
-                binding.textBtnPostReport.visibility = View.VISIBLE // 신고하기
-
-                // 팔로우 버튼 - 아직 안 됨
-                binding.includePostWriter.btnFollow.setOnClickListener(View.OnClickListener {
-                    waitNotice()
-                })
+                Log.d("test", "${item.writer.nickname}, ${userNickname}")
+                // 내가 쓴 글일 때
+                if(item.writer.nickname == userNickname) {
+                    binding.includePostWriter.btnFollow.visibility = View.GONE // 팔로우 숨기기
+                    binding.includePostWriter.btnDeletePost.visibility = View.VISIBLE // 포스트 삭제 버튼 보여주기
+                    binding.textBtnPostReport.visibility = View.GONE // 신고하기 숨기기
+                }
+                // 남이 쓴 글일 때
+                else {
+                    binding.includePostWriter.btnFollow.visibility = View.VISIBLE // 팔로우 보여주기
+                    binding.includePostWriter.btnDeletePost.visibility = View.GONE // 포스트 삭제 버튼 숨기기
+                    binding.textBtnPostReport.visibility = View.VISIBLE // 신고하기 보여주기
+                }
             }
+            // 로그인 안 했을 때
             else {
-//                binding.includePostWriter.btnFollow.visibility = View.GONE // 팔로우
-                binding.textBtnPostReport.visibility = View.GONE // 신고하기
+                binding.includePostWriter.btnFollow.visibility = View.GONE // 팔로우 숨기기
+                binding.includePostWriter.btnDeletePost.visibility = View.GONE // 포스트 삭제 버튼 숨기기
+                binding.textBtnPostReport.visibility = View.GONE // 신고하기 숨기기
             }
+
+            // 로그인
 
             // 댓글 작성 버튼 - 아직 안 됨
             binding.textBtnAddComment.setOnClickListener(View.OnClickListener {

@@ -36,6 +36,12 @@ class AuthTokenDataStoreImpl @Inject constructor(
         sharedPreferences.edit().putString(REFRESH_TOKEN, refreshToken).apply()
     }
 
+    // TODO: uuid로 변경
+    override fun saveUserNickname(nickname: String) {
+        sharedPreferences.edit().putString(USER_NICKNAME, nickname).apply()
+    }
+
+
     override fun getAccessToken(): String? {
         val accessToken = sharedPreferences.getString(ACCESS_TOKEN, null)
 
@@ -47,6 +53,12 @@ class AuthTokenDataStoreImpl @Inject constructor(
         return sharedPreferences.getString(REFRESH_TOKEN, null)
     }
 
+    // TODO: uuid로 변경
+    override fun getUserNickname(): String? {
+        return sharedPreferences.getString(USER_NICKNAME, null)
+    }
+
+
     override fun deleteAccessToken() {
         sharedPreferences.edit().remove(ACCESS_TOKEN).apply()
     }
@@ -54,6 +66,8 @@ class AuthTokenDataStoreImpl @Inject constructor(
     override fun deleteToken() {
         sharedPreferences.edit().remove(ACCESS_TOKEN).apply()
         sharedPreferences.edit().remove(REFRESH_TOKEN).apply()
+
+        sharedPreferences.edit().remove(USER_NICKNAME).apply() // TODO: uuid로 변경
     }
 
     override fun isLogin(): Boolean { // 로그인 유무 = Token 존재 유무
@@ -68,5 +82,6 @@ class AuthTokenDataStoreImpl @Inject constructor(
 
         private const val ACCESS_TOKEN = "access_token"
         private const val REFRESH_TOKEN = "refresh_token"
+        private const val USER_NICKNAME = "nickname"
     }
 }

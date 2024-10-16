@@ -30,6 +30,7 @@
     <string name="home_banner_all_title">이벤트</string>
     <string name="user_report">신고하기</string>
     <string name="btn_follow">팔로우</string>
+    <string name="btn_delete_post">삭제</string>
     <string name="btn_add_comment">댓글 작성</string>
     <string name="btn_more_content">더보기</string>
     <string name="btn_close_content">접기</string>

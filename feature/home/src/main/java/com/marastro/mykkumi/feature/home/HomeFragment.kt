@@ -102,6 +102,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             vm = viewModel
         }
 
+        viewModel.initUserInfo()
+
         setHomeBanner() // 배너
         setPostList() // 포스트
     }
@@ -201,7 +203,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             viewModel,
             openViewProductInfo = {
                 openViewProductInfo(it)
-            }
+            },
+            userNickname = viewModel.userNickname.value
         )
         binding.recyclerviewPostList.layoutManager = LinearLayoutManager(
             context,

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.marastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.marastro.mykkumi.domain.exception.ApiException
 import com.marastro.mykkumi.domain.entity.UpdateUserInfoRequestVO
 import com.marastro.mykkumi.domain.repository.PreSignedUrlRepository
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class LoginInputUserViewModel @Inject constructor(
     private val updateUserInfoUseCase: UpdateUserInfoUseCase,
     private val preSignedUrlRepository: PreSignedUrlRepository,
+    private val authTokenDataStore: AuthTokenDataStore,
 ): ViewModel() {
     private val _finishLoginUiState = MutableLiveData<Unit>()
     val finishLoginUiState: LiveData<Unit> get() = _finishLoginUiState
@@ -106,6 +108,10 @@ class LoginInputUserViewModel @Inject constructor(
                 viewModelScope.launch {
                     try { // 회원가입 완료
                         val response = updateUserInfoUseCase(userInfo)
+
+                        // 닉네임 저장
+                        authTokenDataStore.saveUserNickname(userInfo.nickname!!)
+
                         finishLogin()
                     } catch (e: ApiException.DuplicateValueException) { // 중복된 닉네임
                         e.message?.let { showToast(it) }
