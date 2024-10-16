@@ -25,6 +25,7 @@ class PostListAdapter (
     private val waitNotice: () -> Unit,
     private val blockNestedSwipeRefreshAndViewPager: (state: Int) -> Unit,
     private val reportPost: (writerUuid: String, postId: Int) -> Unit,
+    private val deletePost: (postId: Int) -> Unit,
     private val viewModel: HomeViewModel,
     private val openViewProductInfo: (productInfo: HomePostProductVO) -> Unit,
     private val userNickname: String, // TODO: uuid로 변경
@@ -146,6 +147,11 @@ class PostListAdapter (
                     item.writer.uuid,
                     item.id
                 )
+            })
+
+            // 포스트 삭제하기
+            binding.includePostWriter.btnDeletePost.setOnClickListener(View.OnClickListener {
+                deletePost(item.id)
             })
 
             // 로그인 했을 때

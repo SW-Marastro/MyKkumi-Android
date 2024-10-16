@@ -1,6 +1,7 @@
 package com.marastro.mykkumi.feature.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
@@ -18,6 +19,7 @@ import com.marastro.mykkumi.domain.entity.BannerItemVO
 import com.marastro.mykkumi.domain.entity.HomePostProductVO
 import com.marastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.marastro.mykkumi.feature.home.databinding.FragmentHomeBinding
+import com.marastro.mykkumi.feature.home.post.PostDeleteConfirmDialog
 import com.marastro.mykkumi.feature.home.post.PostListAdapter
 import com.marastro.mykkumi.feature.home.report.ChooseReportBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +30,7 @@ import java.util.TimerTask
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
-    ChooseReportBottomSheet.ChooseReportListener {
+    ChooseReportBottomSheet.ChooseReportListener{
     private val viewModel by viewModels<HomeViewModel>()
 
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
@@ -200,6 +202,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             reportPost = { writerUuid: String, postId: Int ->
                 postReportConfirm(writerUuid, postId)
             },
+            deletePost = {
+                deletePostDialog(it)
+            },
             viewModel,
             openViewProductInfo = {
                 openViewProductInfo(it)
@@ -314,6 +319,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             )
         }
         dialog.show(writerUuid)
+    }
+
+    // 포스트 삭제
+    fun deletePostDialog(postId: Int) {
+        val dialog = PostDeleteConfirmDialog(this)
+        dialog.setOnClickListener { postId ->
+            Log.d("test", "${postId} 게시물 삭제")
+        }
+        dialog.show(postId)
     }
 
     // 제품 정보 열람
