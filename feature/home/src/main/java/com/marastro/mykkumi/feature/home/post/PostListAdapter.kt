@@ -156,7 +156,6 @@ class PostListAdapter (
 
             // 로그인 했을 때
             if(viewModel.isLogined.value) {
-                Log.d("test", "${item.writer.nickname}, ${userNickname}")
                 // 내가 쓴 글일 때
                 if(item.writer.nickname == userNickname) {
                     binding.includePostWriter.btnFollow.visibility = View.GONE // 팔로우 숨기기

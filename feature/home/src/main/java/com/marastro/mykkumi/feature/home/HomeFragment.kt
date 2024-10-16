@@ -77,6 +77,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             binding.swipeRefreshLayout.isRefreshing = false
         }
 
+        // 포스트 삭제됨 -> 새로 고침
+        viewModel.isDeletePostDone.observe(viewLifecycleOwner, Observer { isDeletePostDone ->
+            if(isDeletePostDone) {
+                onResume()
+                viewModel.doneResume()
+            }
+        })
+
         // 포스트 리스트 추가
         viewModel.postCursor.observe(viewLifecycleOwner, Observer {
             if(postListAdapter.postList.size != viewModel.postListUiState.value.size) {
@@ -325,7 +333,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     fun deletePostDialog(postId: Int) {
         val dialog = PostDeleteConfirmDialog(this)
         dialog.setOnClickListener { postId ->
-            Log.d("test", "${postId} 게시물 삭제")
+            viewModel.deletePost(
+                postId = postId,
+                showToast = {
+                    showToast(it)
+                }
+            )
         }
         dialog.show(postId)
     }
