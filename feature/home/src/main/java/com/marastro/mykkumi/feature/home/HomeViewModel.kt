@@ -12,11 +12,14 @@ import androidx.navigation.NavController
 import com.marastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.marastro.mykkumi.domain.entity.BannerItemVO
 import com.marastro.mykkumi.domain.entity.HomePostItemVO
+import com.marastro.mykkumi.domain.entity.HomePostProductVO
 import com.marastro.mykkumi.domain.exception.ApiException
 import com.marastro.mykkumi.domain.usecase.banner.GetBannerListUseCase
 import com.marastro.mykkumi.domain.usecase.post.GetHomePostListUseCase
 import com.marastro.mykkumi.domain.usecase.report.ReportPostUseCase
 import com.marastro.mykkumi.domain.usecase.report.ReportUserUseCase
+import com.marastro.mykkumi.common_ui.post.ViewProductInfoBottomSheet
+import com.marastro.mykkumi.domain.usecase.post.DeletePostUseCase
 import com.marastro.mykkumi.feature.home.report.ChooseReportBottomSheet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +34,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getBannerListUseCase: GetBannerListUseCase,
     private val getHomePostListUseCase: GetHomePostListUseCase,
+    private val deletePostUseCase: DeletePostUseCase,
     private val authTokenDataStore: AuthTokenDataStore,
     private val reportPostUseCase: ReportPostUseCase,
     private val reportUserUseCase: ReportUserUseCase,
@@ -60,6 +64,18 @@ class HomeViewModel @Inject constructor(
     private var _isLogined = MutableStateFlow<Boolean>(false)
     val isLogined: StateFlow<Boolean> get() = _isLogined
 
+    // TODO: 나증에 uuid로 바꿀 것
+    private var _userNickname = MutableStateFlow<String>("")
+    val userNickname: StateFlow<String> get() = _userNickname
+
+    private var _isDeletePostDone = MutableLiveData<Boolean>(false)
+    val isDeletePostDone: LiveData<Boolean> get() = _isDeletePostDone
+
+    // 유저 정보 세팅
+    fun initUserInfo() {
+        _userNickname.value = authTokenDataStore.getUserNickname() ?: ""
+    }
+
     // 홈 > 배너 캐러셀
     fun setHomeBanner() {
         viewModelScope.launch {
@@ -78,8 +94,6 @@ class HomeViewModel @Inject constructor(
                 _bannerListUiState.emit( mutableListOf() )
             }
         }
-
-
     }
 
     // 홈 > 배너 캐러셀에서 배너 선택
@@ -182,5 +196,39 @@ class HomeViewModel @Inject constructor(
                 e.message?.let { showToast(it) }
             }
         }
+    }
+
+    // 제품 정보 BottomSheet 열람
+    fun viewProductInfoForPin(fragment: HomeFragment, productInfo: HomePostProductVO) {
+        val bundle = Bundle()
+        bundle.putString("productName", productInfo.name)
+        bundle.putString("productUrl", productInfo.url)
+
+        val bottomSheet = ViewProductInfoBottomSheet()
+        bottomSheet.arguments = bundle
+        bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
+    }
+
+    // 포스트 삭제
+    fun deletePost(
+        postId: Int,
+        showToast: (message: String) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                deletePostUseCase(postId)
+
+                showToast("게시물이 삭제되었습니다")
+                _isDeletePostDone.setValue(true)
+            } catch (e: ApiException.AccessDeniedUserForPost) {
+                e.message?.let { showToast(it) }
+            } catch (e: ApiException.InvalidPostValue) {
+                e.message?.let { showToast(it) }
+            }
+        }
+    }
+
+    fun doneResume() {
+        _isDeletePostDone.setValue(false)
     }
 }

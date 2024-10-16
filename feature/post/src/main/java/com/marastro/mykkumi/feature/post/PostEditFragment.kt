@@ -29,6 +29,7 @@ import com.marastro.mykkumi.feature.post.imageWithPin.EditImageWithPinAdapter
 import com.marastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import com.marastro.mykkumi.feature.post.touchEvent.PostEditImageTouchCallback
 import dagger.hilt.android.AndroidEntryPoint
+import com.marastro.mykkumi.common_ui.R as StringR
 
 @AndroidEntryPoint
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit),
@@ -134,7 +135,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                         binding.edittextInputContent.setText(concat(s.subSequence(0, start + subLength), s.subSequence(start + count, s.length)))
 
                         binding.edittextInputContent.setSelection(start + subLength) // 커서를 입력하고 있던 곳에
-                        showToast(getString(R.string.notice_post_content_max_length))
+                        showToast(getString(StringR.string.notice_post_content_max_length))
                     }
 
                     // 해시태그 개수
@@ -144,7 +145,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                         binding.edittextInputContent.setText(concat(s.subSequence(0, hashTagIndex), s.subSequence(start + count, s.length)))
 
                         binding.edittextInputContent.setSelection(hashTagIndex) // 커서를 입력하고 있던 곳에
-                        showToast(getString(R.string.notice_post_hashtag_max_count))
+                        showToast(getString(StringR.string.notice_post_hashtag_max_count))
                     }
 
                     // 본문 입력 중
@@ -169,8 +170,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             val content = binding.edittextInputContent.text.toString()
             viewModel.doneEditPost(
                 content = content,
-                noticeEmptyImage = getString(R.string.notice_not_select_image),
-                noticeEmptyCategory = getString(R.string.notice_select_hobby_category_of_post),
+                noticeEmptyImage = getString(StringR.string.notice_not_select_image),
+                noticeEmptyCategory = getString(StringR.string.notice_select_hobby_category_of_post),
                 showToast = {
                     showToast(it)
                 },
@@ -389,7 +390,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     fun confirmAgree(position: Int) {
         viewModel.deleteImage(position)
         viewModel.doneDeleteImage()
-        showToast(getString(R.string.toast_done_delete))
+        showToast(getString(StringR.string.toast_done_delete))
 
         // 이미지 전체 삭제된 경우
         if(viewModel.postEditUiState.value.isNullOrEmpty()) {

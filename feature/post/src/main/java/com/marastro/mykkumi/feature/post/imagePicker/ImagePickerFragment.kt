@@ -15,6 +15,7 @@ import com.marastro.mykkumi.common_ui.base.BaseFragment
 import com.marastro.mykkumi.common_ui.permission.ImagePermissionUtils
 import com.marastro.mykkumi.feature.post.R
 import com.marastro.mykkumi.feature.post.databinding.FragmentImagePickerBinding
+import com.marastro.mykkumi.common_ui.R as StringR
 
 class ImagePickerFragment : BaseFragment<FragmentImagePickerBinding>(R.layout.fragment_image_picker) {
 
@@ -46,7 +47,7 @@ class ImagePickerFragment : BaseFragment<FragmentImagePickerBinding>(R.layout.fr
         binding.btnDonePicker.setOnClickListener(View.OnClickListener {
             // 선택한 이미지가 있는지 확인
             if(viewModel.selectImage.value.isNullOrEmpty()) {
-                Toast.makeText(requireContext(), R.string.notice_not_select_image, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), StringR.string.notice_not_select_image, Toast.LENGTH_SHORT).show()
             }
             else {
                 viewModel.doneSelectImages(navController)

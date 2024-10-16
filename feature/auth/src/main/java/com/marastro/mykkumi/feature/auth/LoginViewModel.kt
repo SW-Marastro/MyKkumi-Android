@@ -9,6 +9,7 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.marastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.marastro.mykkumi.domain.entity.KakaoToken
 import com.marastro.mykkumi.domain.entity.UserInfoVO
 import com.marastro.mykkumi.domain.exception.ApiException
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val kakaoLoginUseCase: KakaoLoginUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val authTokenDataStore: AuthTokenDataStore,
 ): ViewModel() {
 
     private val INVALID_TOKEN = "INVALID_TOKEN"
@@ -173,6 +175,10 @@ class LoginViewModel @Inject constructor(
                         }
                         // 기존 가입자 -> 홈 화면으로
                         else {
+                            // TODO: uuid로 변경
+                            // 닉네임 저장
+                            authTokenDataStore.saveUserNickname(userInfo.nickname!!)
+
                             finishLogin()
                         }
                     }

@@ -187,6 +187,10 @@ fun HobbySubCategoryItem(
     subCategory: HobbySubCategoryItemVO,
     viewModel: LoginSelectHobbyViewModel
 ) {
+    val imageDrawablePath = "ic_hobby_category_${subCategory.subCategoryId}"
+    val context = LocalContext.current
+    val imageResId = context.resources.getIdentifier(imageDrawablePath, "drawable", context.packageName)
+
     var backgroundColor = remember { mutableStateOf(
         if (viewModel.isHobbySelected(subCategory)) {
             Color.Green
@@ -223,11 +227,10 @@ fun HobbySubCategoryItem(
             }
     ) {
         Image(
-            painter = painterResource(
-                id = R.drawable.img_hobby_category_default),
-            contentDescription = "default image",
+            painter = painterResource(id = imageResId),
+            contentDescription = "hobby category image",
             modifier = Modifier
-                .size(60.dp)
+                .size(72.dp)
                 .align(Alignment.CenterHorizontally)
                 .clip(RoundedCornerShape(16.dp))
                 .then(borderModifier.value),

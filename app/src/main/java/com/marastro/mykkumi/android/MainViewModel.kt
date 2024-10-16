@@ -44,6 +44,12 @@ class MainViewModel @Inject constructor(
                     if (userInfo.nickname == null) {
                         navController.navigate(route = LoginScreens.LoginSelectHobbyScreen.name)
                     }
+                    // 로그인 상태
+                    else {
+                        // TODO: uuid로 변경
+                        // 닉네임 저장
+                        authTokenDataStore.saveUserNickname(userInfo.nickname!!)
+                    }
                 } catch (e: ApiException.UnknownApiException) {
                     showToast("서비스 오류가 발생했습니다.")
                 } catch (e: Exception) {

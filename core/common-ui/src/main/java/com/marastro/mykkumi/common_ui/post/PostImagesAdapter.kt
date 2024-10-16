@@ -2,6 +2,7 @@ package com.marastro.mykkumi.common_ui.post
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.RecyclerView
@@ -9,11 +10,13 @@ import com.bumptech.glide.Glide
 import com.marastro.mykkumi.common_ui.R
 import com.marastro.mykkumi.common_ui.databinding.ItemPostImageViewViewpagerBinding
 import com.marastro.mykkumi.domain.entity.HomePostImageVO
+import com.marastro.mykkumi.domain.entity.HomePostProductVO
 
 
 class PostImagesAdapter(
     private val context: Context,
-    private var postImageList: MutableList<HomePostImageVO>
+    private var postImageList: MutableList<HomePostImageVO>,
+    private val openViewProductInfo: (productInfo: HomePostProductVO) -> Unit,
 ) : RecyclerView.Adapter<PostImagesAdapter.PostItemImageViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -97,6 +100,11 @@ class PostImagesAdapter(
                     pinView.x = pin.positionX * (parentWidth - pinView.width)
                     pinView.y = pin.positionY * (parentHeight - pinView.height)
                 }
+
+                // 핀 터치 시 내용 열람
+                pinView.setOnClickListener(View.OnClickListener {
+                    openViewProductInfo(item.pins[idx].productInfo)
+                })
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.marastro.mykkumi.feature.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
@@ -15,8 +16,10 @@ import com.marastro.mykkumi.common_ui.base.BaseFragment
 import com.marastro.mykkumi.common_ui.report.PostReportConfirmDialog
 import com.marastro.mykkumi.common_ui.report.PostWriterReportConfirmDialog
 import com.marastro.mykkumi.domain.entity.BannerItemVO
+import com.marastro.mykkumi.domain.entity.HomePostProductVO
 import com.marastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.marastro.mykkumi.feature.home.databinding.FragmentHomeBinding
+import com.marastro.mykkumi.feature.home.post.PostDeleteConfirmDialog
 import com.marastro.mykkumi.feature.home.post.PostListAdapter
 import com.marastro.mykkumi.feature.home.report.ChooseReportBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +30,7 @@ import java.util.TimerTask
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
-    ChooseReportBottomSheet.ChooseReportListener {
+    ChooseReportBottomSheet.ChooseReportListener{
     private val viewModel by viewModels<HomeViewModel>()
 
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
@@ -74,6 +77,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             binding.swipeRefreshLayout.isRefreshing = false
         }
 
+        // 포스트 삭제됨 -> 새로 고침
+        viewModel.isDeletePostDone.observe(viewLifecycleOwner, Observer { isDeletePostDone ->
+            if(isDeletePostDone) {
+                onResume()
+                viewModel.doneResume()
+            }
+        })
+
         // 포스트 리스트 추가
         viewModel.postCursor.observe(viewLifecycleOwner, Observer {
             if(postListAdapter.postList.size != viewModel.postListUiState.value.size) {
@@ -100,6 +111,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
         bind {
             vm = viewModel
         }
+
+        viewModel.initUserInfo()
 
         setHomeBanner() // 배너
         setPostList() // 포스트
@@ -197,7 +210,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             reportPost = { writerUuid: String, postId: Int ->
                 postReportConfirm(writerUuid, postId)
             },
-            viewModel
+            deletePost = {
+                deletePostDialog(it)
+            },
+            viewModel,
+            openViewProductInfo = {
+                openViewProductInfo(it)
+            },
+            userNickname = viewModel.userNickname.value
         )
         binding.recyclerviewPostList.layoutManager = LinearLayoutManager(
             context,
@@ -307,6 +327,25 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             )
         }
         dialog.show(writerUuid)
+    }
+
+    // 포스트 삭제
+    fun deletePostDialog(postId: Int) {
+        val dialog = PostDeleteConfirmDialog(this)
+        dialog.setOnClickListener { postId ->
+            viewModel.deletePost(
+                postId = postId,
+                showToast = {
+                    showToast(it)
+                }
+            )
+        }
+        dialog.show(postId)
+    }
+
+    // 제품 정보 열람
+    fun openViewProductInfo(productInfo: HomePostProductVO) {
+        viewModel.viewProductInfoForPin(this@HomeFragment, productInfo)
     }
 
     override fun onDestroyView() {
