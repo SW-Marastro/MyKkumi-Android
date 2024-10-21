@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 //def keystorePropertiesFile = project.rootProject.file("keystore.properties")
@@ -19,8 +20,8 @@ android {
         minSdk min_sdk_version
         targetSdk target_sdk_version
 
-        versionCode 2
-        versionName "1.0.0"
+        versionCode 3
+        versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -99,5 +100,5 @@ dependencies {
     // Firebase
     implementation platform("com.google.firebase:firebase-bom:$firebase_version")
     implementation "com.google.firebase:firebase-analytics"
-    //implementation "com.google.firebase:firebase-crashlytics"
+    implementation "com.google.firebase:firebase-crashlytics"
 }
