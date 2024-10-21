@@ -7,9 +7,9 @@ plugins {
     id 'com.google.firebase.crashlytics'
 }
 
-//def keystorePropertiesFile = project.rootProject.file("keystore.properties")
-//def keystoreProperties = new Properties()
-//keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+def keystorePropertiesFile = project.rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     namespace 'com.marastro.mykkumi.android'
@@ -26,14 +26,14 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-//    signingConfigs {
-//        config {
-//            keyAlias keystoreProperties['keyAlias']
-//            keyPassword keystoreProperties['keyPassword']
-//            storeFile file(keystoreProperties['storeFile'])
-//            storePassword keystoreProperties['storePassword']
-//        }
-//    }
+    signingConfigs {
+        config {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
 
     buildTypes {
         release {
@@ -41,19 +41,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [
                     appName : "@string/app_name",
-//                    appIcon: "@drawable/ic_mykkumi_logo",
-                    providerAuthority: "com.marastro.mykkumi.android.provider"
+                    appIcon: "@drawable/ic_mykkumi_logo"
             ]
-//            signingConfig signingConfigs.config
+            signingConfig signingConfigs.config
         }
-//        debug {
-//            applicationIdSuffix '.dev'
-//            manifestPlaceholders = [
-//                    appName : "@string/app_name_dev",
-//                    appIcon: "@drawable/ic_mykkumi_logo_dev",
-//                    providerAuthority: "com.marastro.mykkumi.android.dev.provider"
-//            ]
-//        }
+        debug {
+            applicationIdSuffix '.dev'
+            manifestPlaceholders = [
+                    appName : "@string/app_name_dev",
+                    appIcon: "@drawable/ic_mykkumi_logo_dev"
+            ]
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -83,6 +81,7 @@ dependencies {
     implementation project(":core:domain")
 
     implementation project(":core:common-ui")
+    implementation project(":core:analytics")
 
     // UI - Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
