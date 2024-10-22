@@ -16,9 +16,11 @@ import com.marastro.mykkumi.common_ui.base.BaseFragment
 import com.marastro.mykkumi.common_ui.permission.ImagePermissionUtils
 import com.marastro.mykkumi.feature.post.R
 import com.marastro.mykkumi.feature.post.databinding.FragmentImagePickerBinding
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import com.marastro.mykkumi.common_ui.R as StringR
 
+@AndroidEntryPoint
 class ImagePickerFragment : BaseFragment<FragmentImagePickerBinding>(R.layout.fragment_image_picker) {
 
     @Inject
