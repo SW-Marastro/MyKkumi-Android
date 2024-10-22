@@ -35,6 +35,7 @@ android {
 
 dependencies {
     implementation project(':core:domain')
+    implementation project(':core:analytics')
 
     // UI
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

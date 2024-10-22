@@ -20,6 +20,7 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
+import com.marastro.mykkumi.analytics.AnalyticsHelper
 import com.marastro.mykkumi.common_ui.base.BaseFragment
 import com.marastro.mykkumi.feature.post.confirm.PostDeleteImageConfirmDialog
 import com.marastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
@@ -29,11 +30,16 @@ import com.marastro.mykkumi.feature.post.imageWithPin.EditImageWithPinAdapter
 import com.marastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import com.marastro.mykkumi.feature.post.touchEvent.PostEditImageTouchCallback
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import com.marastro.mykkumi.common_ui.R as StringR
 
 @AndroidEntryPoint
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit),
     InputProductInfoBottomSheet.InputProductInfoListener {
+
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
+
     private val viewModel by viewModels<PostEditViewModel>()
 
     private final val MAX_POST_CONTENT_LENGTH = 2000      // 본문 글자 수
@@ -86,6 +92,9 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Firebase Analytics 화면 이름 로깅
+        analyticsHelper.logScreenView(getString(com.marastro.mykkumi.analytics.R.string.edit_post_screen))
+
         navController = view.findNavController()
 
         binding.relativeEmptyImage.visibility = View.GONE
@@ -108,7 +117,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                 showToast("핀은 최대 ${viewModel.MAX_PIN_COUNT}개까지 추가할 수 있어요.")
             }
             else {
-                viewModel.requestProductInfoForPin(this@PostEditFragment, null)
+                requestUpdateProductInfo(null)
             }
         })
 
@@ -377,7 +386,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
     // 이미지 삭제 -> notice
     private fun confirmDeleteImage(imageIndex: Int) {
-        val dialog = PostDeleteImageConfirmDialog(this)
+        val dialog = PostDeleteImageConfirmDialog(this, analyticsHelper)
         dialog.confirmPostReportListener { postId ->
             confirmAgree(postId)
         }
@@ -416,8 +425,15 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     }
 
     // 핀 내용 수정을 위한 입력 요청
-    private fun requestUpdateProductInfo(position: Int) {
-        viewModel.requestProductInfoForPin(this@PostEditFragment, position)
+    private fun requestUpdateProductInfo(position: Int?) {
+        val bundle = viewModel.requestProductInfoForPin(position)
+
+        val bottomSheet = InputProductInfoBottomSheet().apply {
+            setListener(this@PostEditFragment)
+            setAnalyticsHelper(analyticsHelper)
+        }
+        bottomSheet.arguments = bundle
+        bottomSheet.show(this.parentFragmentManager, bottomSheet.tag)
     }
 
     // 핀 내용(제품 정보) 수정

@@ -140,17 +140,6 @@ class HomeViewModel @Inject constructor(
         return intent
     }
 
-    // 신고하기 - 포스트, 유저 중 어떤 걸 신고할지 선택
-    fun chooseReport(fragment: HomeFragment, writerUuid: String, postId: Int) {
-        val bundle = Bundle()
-        bundle.putString("writerUuid", writerUuid)
-        bundle.putInt("postId", postId)
-
-        val bottomSheet = ChooseReportBottomSheet().apply { setListener(fragment) }
-        bottomSheet.arguments = bundle
-        bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
-    }
-
     // 배너 전체 리스트 페이지로 이동
     fun navigateBannerAll(navController: NavController?) {
         navController?.navigate(R.id.action_navigate_fragment_to_home_banner_all)
@@ -196,17 +185,6 @@ class HomeViewModel @Inject constructor(
                 e.message?.let { showToast(it) }
             }
         }
-    }
-
-    // 제품 정보 BottomSheet 열람
-    fun viewProductInfoForPin(fragment: HomeFragment, productInfo: HomePostProductVO) {
-        val bundle = Bundle()
-        bundle.putString("productName", productInfo.name)
-        bundle.putString("productUrl", productInfo.url)
-
-        val bottomSheet = ViewProductInfoBottomSheet()
-        bottomSheet.arguments = bundle
-        bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
     }
 
     // 포스트 삭제

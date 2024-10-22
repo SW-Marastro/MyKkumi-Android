@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.marastro.mykkumi.analytics.AnalyticsHelper
 import com.marastro.mykkumi.common_ui.base.BaseBottomSheetFragment
 import com.marastro.mykkumi.feature.post.R
 import com.marastro.mykkumi.common_ui.R as StringR
@@ -15,6 +16,8 @@ import kotlin.math.max
 
 
 class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProductInfoBottomSheetBinding>(R.layout.fragment_input_product_info_bottom_sheet) {
+
+    private lateinit var analyticsHelper: AnalyticsHelper
 
     private final val MAX_PRODUCT_NAME_LENGTH = 20
 
@@ -32,8 +35,15 @@ class InputProductInfoBottomSheet : BaseBottomSheetFragment<FragmentInputProduct
         this.inputProductInfoListener = inputProductInfoListener
     }
 
+    fun setAnalyticsHelper(analyticsHelper: AnalyticsHelper) {
+        this.analyticsHelper = analyticsHelper
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Firebase Analytics 화면 이름 로깅
+        analyticsHelper.logScreenView(getString(com.marastro.mykkumi.analytics.R.string.input_product_screen))
 
         // 제품명 글자 수 제한
         binding.edittextInputProductName.addTextChangedListener(object: TextWatcher {

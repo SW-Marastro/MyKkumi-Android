@@ -8,9 +8,11 @@
 
     <string name="home_screen">HomeScreen</string>
     <string name="view_product_screen">ViewProductScreen</string>
+    <string name="delete_post_dialog">DeletePostDialog</string>
     <string name="post_comment_screen">PostCommentScreen</string>
     <string name="banner_all_screen">BannerAllScreen</string>
     <string name="banner_detail_screen">BannerDetailScreen</string>
+    <string name="choose_report_screen">ChooseReportScreen</string>
     <string name="report_post_dialog">ReportPostDialog</string>
     <string name="report_user_dialog">ReportUserDialog</string>
     <string name="search_result_screen">SearchResultScreen</string>

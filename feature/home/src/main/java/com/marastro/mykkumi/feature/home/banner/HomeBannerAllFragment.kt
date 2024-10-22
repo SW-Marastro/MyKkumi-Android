@@ -5,14 +5,19 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.marastro.mykkumi.analytics.AnalyticsHelper
 import com.marastro.mykkumi.common_ui.base.BaseFragment
 import com.marastro.mykkumi.domain.entity.BannerListVO
 import com.marastro.mykkumi.feature.home.R
 import com.marastro.mykkumi.feature.home.databinding.FragmentHomeBannerAllBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeBannerAllFragment : BaseFragment<FragmentHomeBannerAllBinding>(R.layout.fragment_home_banner_all) {
+
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
 
     private val viewModel by viewModels<HomeBannerAllViewModel>()
     private lateinit var bannerAllAdapter: HomeBannerAllAdapter
@@ -20,6 +25,9 @@ class HomeBannerAllFragment : BaseFragment<FragmentHomeBannerAllBinding>(R.layou
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this
         super.onViewCreated(view, savedInstanceState)
+
+        // Firebase Analytics 화면 이름 로깅
+        analyticsHelper.logScreenView(getString(com.marastro.mykkumi.analytics.R.string.banner_all_screen))
 
         onClickBack() // 창
     }
