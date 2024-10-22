@@ -10,8 +10,10 @@ class AnalyticsHelper @Inject constructor(
     private val firebaseAnalytics: FirebaseAnalytics
 ) {
     fun logScreenView(screenName: String) {
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
-            param("screen_name", screenName)
-        }
+        //if (!BuildConfig.DEBUG) {
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+                param(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
+            }
+        //}
     }
 }

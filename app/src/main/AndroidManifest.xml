@@ -37,6 +37,10 @@
         android:theme="@style/Theme.MyKkumi_AOS"
         tools:targetApi="31">
 
+        <meta-data
+            android:name="google_analytics_automatic_screen_reporting_enabled"
+            android:value="false" />
+
         <!-- Splash -->
         <activity
             android:name="com.marastro.mykkumi.android.SplashActivity"

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="splash_screen">SplashScreen</string>
+
+    <string name="home_screen">HomeScreen</string>
+    <string name="view_product_screen">ViewProductScreen</string>
+    <string name="post_comment_screen">PostCommentScreen</string>
+
+    <string name="around_screen">AroundScreen</string>
+
+    <string name="shopping_screen">ShoppingScreen</string>
+
+    <string name="mypage_screen">MypageScreen</string>
+
+</resources>

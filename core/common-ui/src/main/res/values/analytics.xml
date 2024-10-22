@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="home_screen">HomeScreen</string>
-    <string name="view_product_screen">ViewProductScreen</string>
-    <string name="splash_screen">SplashScreen</string>
-</resources>

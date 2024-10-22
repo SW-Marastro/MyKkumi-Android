@@ -21,6 +21,7 @@
 #-renamesourcefileattribute SourceFile
 # 공통 모듈의 클래스 유지
 -keep class com.marastro.mykkumi.common_ui.** { *; }
+-keep class com.marastro.mykkumi.analytics.** { *; }
 #-keep class java.lang.invoke.StringConcatFactory { *; }
 -dontwarn java.lang.invoke.StringConcatFactory
 -keep class com.marastro.mykkumi.common_ui.base.BaseFragment
@@ -38,3 +39,9 @@
 -dontwarn a.a
 
 -keep class androidx.databinding.** { *; }
+
+-dontwarn com.marastro.mykkumi.analytics.AnalyticsHelper
+-dontwarn com.marastro.mykkumi.analytics.AnalyticsModule
+-dontwarn com.marastro.mykkumi.analytics.AnalyticsModule_ProvideAnalyticsHelperFactory
+-dontwarn com.marastro.mykkumi.analytics.AnalyticsModule_ProvideFirebaseAnalyticsFactory
+-dontwarn hilt_aggregated_deps._com_marastro_mykkumi_analytics_AnalyticsModule

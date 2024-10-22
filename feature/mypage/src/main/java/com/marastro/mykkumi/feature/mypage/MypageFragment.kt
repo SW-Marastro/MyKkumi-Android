@@ -6,12 +6,17 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import com.marastro.mykkumi.analytics.AnalyticsHelper
 import com.marastro.mykkumi.common_ui.base.BaseFragment
 import com.marastro.mykkumi.feature.mypage.databinding.FragmentMypageBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MypageFragment : BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypage) {
+
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
 
     private val viewModel by viewModels<MypageViewModel>()
 
@@ -38,6 +43,9 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(R.layout.fragment_myp
         bind {
             vm = viewModel
         }
+
+        // Firebase Analytics 화면 이름 로깅
+        analyticsHelper.logScreenView(getString(com.marastro.mykkumi.analytics.R.string.mypage_screen))
 
         binding.textTest.text = "${String(Character.toChars(0x1F525))} 열심히 준비 중입니다 ${String(Character.toChars(0x1F525))}"
 

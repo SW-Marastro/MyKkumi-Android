@@ -18,8 +18,13 @@ android {
 
     buildTypes {
         release {
+            buildConfigField "Boolean", "DEBUG_MODE", "false"
+
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField "Boolean", "DEBUG_MODE", "true"
         }
     }
     compileOptions {
@@ -28,6 +33,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = jvm_target_version
+    }
+    buildFeatures {
+        buildConfig true
     }
 }
 

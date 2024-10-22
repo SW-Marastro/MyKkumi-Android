@@ -2,6 +2,7 @@ package com.marastro.mykkumi.android
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.marastro.mykkumi.analytics.AnalyticsHelper
@@ -20,7 +21,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         //if (!BuildConfig.DEBUG) {
-        analyticsHelper.logScreenView(getString(com.marastro.mykkumi.common_ui.R.string.splash_screen))
+        analyticsHelper.logScreenView(getString(com.marastro.mykkumi.analytics.R.string.splash_screen))
 
         lifecycleScope.launch {
             delay(300)

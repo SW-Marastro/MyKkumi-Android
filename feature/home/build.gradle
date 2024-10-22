@@ -30,7 +30,6 @@ android {
     kotlinOptions {
         jvmTarget = jvm_target_version
     }
-
     buildFeatures {
         dataBinding = true
     }
@@ -39,6 +38,7 @@ android {
 dependencies {
     implementation project(':core:common-ui')
     implementation project(':core:domain')
+    implementation project(':core:analytics')
 
     // UI
     implementation "androidx.core:core-ktx:$androidx_core_version"
@@ -61,9 +61,6 @@ dependencies {
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-
-    // Coil
-    // implementation("io.coil-kt:coil:$coil_version")
 
     // Glide
     implementation "com.github.bumptech.glide:glide:$glide_version"

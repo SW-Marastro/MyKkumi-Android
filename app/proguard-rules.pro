@@ -21,6 +21,7 @@
 #-renamesourcefileattribute SourceFile
 -keep class com.marastro.mykkumi.common_ui.** { *; }
 -keep class com.marastro.mykkumi.data.** { *; }
+-keep class com.marastro.mykkumi.analytics.** { *; }
 -keep class com.marastro.mykkumi.common_ui.base.BaseFragment { *; }
 -keep class java.lang.invoke.StringConcatFactory { *; }
 -dontwarn java.lang.invoke.StringConcatFactory
@@ -48,3 +49,9 @@
 -dontwarn hilt_aggregated_deps._com_marastro_mykkumi_data_di_DataStoreModule
 -dontwarn hilt_aggregated_deps._com_marastro_mykkumi_data_di_NetworkModule
 -dontwarn hilt_aggregated_deps._com_marastro_mykkumi_data_di_RepositoryModule
+
+-dontwarn com.marastro.mykkumi.analytics.AnalyticsHelper
+-dontwarn com.marastro.mykkumi.analytics.AnalyticsModule
+-dontwarn com.marastro.mykkumi.analytics.AnalyticsModule_ProvideAnalyticsHelperFactory
+-dontwarn com.marastro.mykkumi.analytics.AnalyticsModule_ProvideFirebaseAnalyticsFactory
+-dontwarn hilt_aggregated_deps._com_marastro_mykkumi_analytics_AnalyticsModule

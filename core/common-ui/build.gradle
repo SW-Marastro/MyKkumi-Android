@@ -35,7 +35,6 @@ android {
 
 dependencies {
     implementation project(':core:domain')
-    implementation project(":core:analytics")
 
     // UI
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -44,8 +43,6 @@ dependencies {
     implementation "com.google.android.material:material:$meterial_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
-
-    implementation "javax.inject:javax.inject:1"
 
     // Test
     testImplementation "junit:junit:$junit_version"

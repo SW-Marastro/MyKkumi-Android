@@ -1,7 +1,6 @@
 package com.marastro.mykkumi.feature.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
@@ -12,6 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.marastro.mykkumi.analytics.AnalyticsHelper
 import com.marastro.mykkumi.common_ui.base.BaseFragment
 import com.marastro.mykkumi.common_ui.report.PostReportConfirmDialog
 import com.marastro.mykkumi.common_ui.report.PostWriterReportConfirmDialog
@@ -27,10 +27,15 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.Timer
 import java.util.TimerTask
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     ChooseReportBottomSheet.ChooseReportListener{
+
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
+
     private val viewModel by viewModels<HomeViewModel>()
 
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
@@ -52,6 +57,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Firebase Analytics 화면 이름 로깅
+        analyticsHelper.logScreenView(getString(com.marastro.mykkumi.analytics.R.string.home_screen))
 
         navController = view.findNavController()
         binding.includeListLoading.visibility = View.VISIBLE
