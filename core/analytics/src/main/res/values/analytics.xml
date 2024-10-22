@@ -2,14 +2,33 @@
 <resources>
     <string name="splash_screen">SplashScreen</string>
 
+    <string name="login_screen">LoginScreen</string>
+    <string name="select_category_screen">SelectCategoryScreen</string>
+    <string name="input_user_info_screen">InputUserInfoScreen</string>
+
     <string name="home_screen">HomeScreen</string>
     <string name="view_product_screen">ViewProductScreen</string>
     <string name="post_comment_screen">PostCommentScreen</string>
+    <string name="banner_all_screen">BannerAllScreen</string>
+    <string name="banner_detail_screen">BannerDetailScreen</string>
+    <string name="report_post_dialog">ReportPostDialog</string>
+    <string name="report_user_dialog">ReportUserDialog</string>
+    <string name="search_result_screen">SearchResultScreen</string>
+
+    <string name="edit_post_screen">EditPostScreen</string>
+    <string name="image_picker_screen">ImagePickerScreen</string>
+    <string name="input_product_screen">InputProductScreen</string>
+    <string name="stop_edit_post_dialog">StopEditPostDialog</string>
+    <string name="delete_image_dialog">DeleteImageDialog</string>
 
     <string name="around_screen">AroundScreen</string>
 
     <string name="shopping_screen">ShoppingScreen</string>
 
     <string name="mypage_screen">MypageScreen</string>
+    <string name="view_follower_screen">ViewFollowerScreen</string>
+    <string name="view_following_screen">ViewFollowingScreen</string>
+    <string name="cancel_following_dialog">CancelFollowingDialog</string>
+    <string name="edit_profile_screen">EditProfileScreen</string>
 
 </resources>
