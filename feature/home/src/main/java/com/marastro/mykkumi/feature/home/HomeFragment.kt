@@ -107,9 +107,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
         })
     }
 
-    override fun getScreenForLogAnalytics(): String {
-        return getString(com.marastro.mykkumi.common_ui.R.string.home_screen)
-    }
+//    override fun getScreenForLogAnalytics(): String {
+//        return getString(com.marastro.mykkumi.common_ui.R.string.home_screen)
+//    }
 
     override suspend fun initView() {
         bind {

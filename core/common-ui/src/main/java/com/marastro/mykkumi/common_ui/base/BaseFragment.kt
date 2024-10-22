@@ -14,14 +14,15 @@ import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.marastro.mykkumi.analytics.AnalyticsHelper
 import javax.inject.Inject
 
+
 abstract class BaseFragment<T: ViewDataBinding>(
     @LayoutRes private val layoutId: Int
 ) : Fragment() {
     protected var _binding: T? = null
     protected val binding get() = _binding ?: throw IllegalStateException("Binding is not initialized")
 
-    @Inject
-    lateinit var analyticsHelper: AnalyticsHelper
+//    @Inject
+//    lateinit var analyticsHelper: AnalyticsHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +36,7 @@ abstract class BaseFragment<T: ViewDataBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this@BaseFragment
 
-        analyticsHelper.logScreenView(getScreenForLogAnalytics())
+        //analyticsHelper.logScreenView(getScreenForLogAnalytics())
 
         lifecycleScope.launchWhenCreated {
             initView()
@@ -45,7 +46,7 @@ abstract class BaseFragment<T: ViewDataBinding>(
 
     abstract suspend fun initView()
 
-    open fun getScreenForLogAnalytics(): String = "BaseScreen"
+//    open fun getScreenForLogAnalytics(): String = "BaseScreen"
 
     protected inline fun bind(block: T.() -> Unit) {
         binding.apply(block)

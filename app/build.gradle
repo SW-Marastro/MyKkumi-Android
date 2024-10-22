@@ -37,6 +37,12 @@ android {
 
     buildTypes {
         release {
+            // Firebase Crashlytics 활성화
+            firebaseCrashlytics {
+                nativeSymbolUploadEnabled true
+                mappingFileUploadEnabled true
+            }
+
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [
@@ -46,6 +52,12 @@ android {
             signingConfig signingConfigs.config
         }
         debug {
+            // Firebase Crashlytics 비활성화
+            firebaseCrashlytics {
+                nativeSymbolUploadEnabled false
+                mappingFileUploadEnabled false
+            }
+
             applicationIdSuffix '.dev'
             manifestPlaceholders = [
                     appName : "@string/app_name_dev",
@@ -99,5 +111,5 @@ dependencies {
     // Firebase
     implementation platform("com.google.firebase:firebase-bom:$firebase_version")
     implementation "com.google.firebase:firebase-analytics"
-    implementation "com.google.firebase:firebase-crashlytics"
+    releaseImplementation "com.google.firebase:firebase-crashlytics"
 }
