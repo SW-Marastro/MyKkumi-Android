@@ -254,8 +254,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     // 선택된 이미지 편집 화면 viewpager init
     private fun initEditImageWithPinViewPager() {
         editImageWithPinAdapter = EditImageWithPinAdapter(
-            requireContext(),
-            viewModel,
+            context = requireContext(),
+            resources = resources,
             lockViewPagerMoving = {
                 lockViewPagerMoving()
             },
@@ -265,7 +265,13 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             updateProductInfo = {
                 requestUpdateProductInfo(it)
             },
-            resources = resources
+            deletePinOfImage = { position ->
+                viewModel.deletePinOfImage(
+                    position = position,
+                    message = getString(com.marastro.mykkumi.common_ui.R.string.toast_delete_pin),
+                    showToast = { showToast(it) }
+                )
+            },
         )
         binding.viewpagerPostEditImages.adapter = editImageWithPinAdapter
         binding.viewpagerPostEditImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
@@ -350,6 +356,18 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             }
         })
 
+        // 핀 추가 및 변화 강조
+        viewModel.newEditPin.observe(viewLifecycleOwner, Observer { newPin ->
+            if(newPin != -1) {
+                editImageWithPinAdapter.updateNewEditPin(
+                    selectImagePosition = viewModel.selectImagePosition.value!!,
+                    newEditPin = viewModel.newEditPin.value!!
+                )
+                viewModel.doneHighlightNewPin()
+            }
+            // else editImageWithPinAdapter.notifyDataSetChanged()
+        })
+
         // 이미지 삭제 처리
         viewModel.isDeleteImageState.observe(viewLifecycleOwner, Observer {
             binding.viewpagerPostEditImages.setCurrentItem(viewModel.selectImagePosition.value!!, false)
@@ -421,11 +439,23 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
     // 핀 추가
     override fun submitProductInput(productName: String, productUrl: String?) {
+        binding.scrollEditPost.smoothScrollToTop() // 핀 추가 후 스크롤 최상단으로 이동
+
         viewModel.addPinOfImage(productName, productUrl)
+
+        // 핀 내용 입력 완료되면 스크롤 풀어주기
+        binding.viewpagerPostEditImages.isUserInputEnabled = true
+        binding.scrollEditPost.setScrollingEnabled(true)
+
+        // showToast(getString(com.marastro.mykkumi.common_ui.R.string.notice_edit_post_add_pin))
     }
 
     // 핀 내용 수정을 위한 입력 요청
     private fun requestUpdateProductInfo(position: Int?) {
+        // 핀 내용 입력되는 동안 스크롤 막기
+        binding.viewpagerPostEditImages.isUserInputEnabled = false
+        binding.scrollEditPost.setScrollingEnabled(false)
+
         val bundle = viewModel.requestProductInfoForPin(position)
 
         val bottomSheet = InputProductInfoBottomSheet().apply {
@@ -438,7 +468,13 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
     // 핀 내용(제품 정보) 수정
     override fun updateProductInput(position: Int, productName: String, productUrl: String?) {
+        binding.scrollEditPost.smoothScrollToTop() // 핀 수정 후 스크롤 최상단으로 이동
+
         viewModel.updateProductInfoForPin(position, productName, productUrl)
+
+        // 핀 내용 입력 완료되면 스크롤 풀어주기
+        binding.viewpagerPostEditImages.isUserInputEnabled = true
+        binding.scrollEditPost.setScrollingEnabled(true)
     }
 
     // pin 이동 중일 때는 viewPager 전환 안 되게 막기

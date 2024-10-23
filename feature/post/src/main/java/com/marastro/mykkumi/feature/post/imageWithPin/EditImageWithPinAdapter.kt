@@ -3,6 +3,7 @@ package com.marastro.mykkumi.feature.post.imageWithPin
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
+import android.util.Log
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -12,27 +13,33 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.PopupWindow
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat.getString
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.marastro.mykkumi.common_ui.R
 import com.marastro.mykkumi.common_ui.databinding.ItemPostImageViewpagerBinding
-import com.marastro.mykkumi.domain.entity.PostEditPinVO
 import com.marastro.mykkumi.domain.entity.PostImageVO
-import com.marastro.mykkumi.feature.post.PostEditViewModel
 
 // ViewPager
 class EditImageWithPinAdapter(
     private val context: Context,
-    private val viewModel: PostEditViewModel,
+    private val resources: Resources,
     private val lockViewPagerMoving: () -> Unit,
     private val unlockViewPagerMoving: () -> Unit,
     private val updateProductInfo: (position: Int) -> Unit,
-    private val resources: Resources
+    private val deletePinOfImage: (position: Int) -> Unit,
 ) : RecyclerView.Adapter<EditImageWithPinAdapter.EditImageWithPinViewHolder>() {
 
     var imageWithPinList = mutableListOf<PostImageVO>()
+
+    private var selectImagePosition: Int = -1
+    private var newEditPin: Int = -1
+
+    fun updateNewEditPin(selectImagePosition: Int, newEditPin: Int) {
+        this.selectImagePosition = selectImagePosition
+        this.newEditPin = newEditPin
+        notifyItemChanged(selectImagePosition)
+        //notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditImageWithPinViewHolder {
         val binding = ItemPostImageViewpagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -61,12 +68,7 @@ class EditImageWithPinAdapter(
                 .load(item.imageUri)
                 .into(binding.imagePost)
 
-            val currentPinList = if(position == viewModel.selectImagePosition.value) { // 현재 선택된, 편집 중인 이미지
-                viewModel.currentPinList.value ?: mutableListOf<PostEditPinVO>()
-            }
-            else { // 안 보이지만 ViewPager의 다른 페이지로 존재하는 다른 이미지들
-                item.pinList
-            }
+            val currentPinList = item.pinList
 
             binding.relativePinsOfImages.removeAllViews()
 
@@ -89,6 +91,8 @@ class EditImageWithPinAdapter(
                     }
                 }
             )
+
+            editImageView.layoutParams.height = parentHeight
 
             for(idx in 0..<currentPinList.size) {
                 val pin = currentPinList[idx]
@@ -115,6 +119,12 @@ class EditImageWithPinAdapter(
 
                     pinView.x = pin.positionX * (parentWidth - pinWidth)
                     pinView.y = pin.positionY * (parentHeight - pinHeight)
+
+                    // 새로 추가된 핀
+                    if(newEditPin != -1 && position == selectImagePosition && idx == newEditPin) {
+                        showTooltipOfPin(pinView, idx, pin.product.productName)
+                        newEditPin = -1
+                    }
                 }
 
                 var moveX = 0f
@@ -162,8 +172,6 @@ class EditImageWithPinAdapter(
                     true
                 }
             }
-
-            editImageView.layoutParams.height = parentHeight
         }
     }
 
@@ -171,6 +179,7 @@ class EditImageWithPinAdapter(
     private fun showTooltipOfPin(anchorView: View, pinIndex: Int, productName: String) {
         val tooltipView = LayoutInflater.from(anchorView.context).inflate(R.layout.tooltip_pin_of_image, null)
 
+        // 제품명
         val textProductName = tooltipView.findViewById<TextView>(R.id.text_product_name)
         textProductName.text = productName
 
@@ -185,29 +194,23 @@ class EditImageWithPinAdapter(
         val tooltipWidth = tooltipView.measuredWidth
         val tooltipHeight = tooltipView.measuredHeight
 
+        // 핀 수정
         val buttonUpdateProductInfo = tooltipView.findViewById<TextView>(R.id.btn_update_product_info)
         buttonUpdateProductInfo.setOnClickListener(View.OnClickListener {
             updateProductInfo(pinIndex)
+            popupWindow.dismiss()
         })
 
+        // 핀 삭제
         val buttonDeletePin = tooltipView.findViewById<TextView>(R.id.btn_delete_pin)
         buttonDeletePin.setOnClickListener(View.OnClickListener {
-            viewModel.deletePinOfImage(
-                position = pinIndex,
-                message = getString(context, R.string.toast_delete_pin),
-                showToast = {
-                    showToast(it)
-                })
             popupWindow.dismiss()
+            deletePinOfImage(pinIndex)
         })
 
         val xOffset = (anchorView.width - tooltipWidth) / 2
         val yOffset = -anchorView.height - tooltipHeight
 
         popupWindow.showAsDropDown(anchorView, xOffset, yOffset)
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }

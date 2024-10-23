@@ -56,6 +56,6 @@
 
     <View
         android:layout_width="1dp"
-        android:layout_height="8dp" />
+        android:layout_height="8dp"/>
 
 </LinearLayout>

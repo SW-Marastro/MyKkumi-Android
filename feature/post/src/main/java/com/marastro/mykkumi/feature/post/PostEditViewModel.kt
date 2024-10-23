@@ -2,6 +2,7 @@ package com.marastro.mykkumi.feature.post
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -47,6 +48,10 @@ class PostEditViewModel  @Inject constructor(
 
     private val _currentPinList = MutableLiveData<MutableList<PostEditPinVO>>(mutableListOf())
     val currentPinList : LiveData<MutableList<PostEditPinVO>> get() = _currentPinList
+
+    // 새롭게 추가되거나 수정된 핀
+    private val _newEditPin =  MutableLiveData<Int>(-1)
+    val newEditPin : LiveData<Int> get() = _newEditPin
 
     private val _isDeleteImageState = MutableLiveData<Boolean>(false)
     val isDeleteImageState : LiveData<Boolean> get() = _isDeleteImageState
@@ -151,6 +156,9 @@ class PostEditViewModel  @Inject constructor(
             }
             _currentPinList.value = mutableListOf()
             _currentPinList.postValue( addPinList )
+
+            // 추가된 핀 표시를 위한
+            _newEditPin.value = currentPinList.value?.size!! - 1
         }
     }
 
@@ -158,6 +166,14 @@ class PostEditViewModel  @Inject constructor(
     fun updateProductInfoForPin(position: Int, productName: String, productUrl: String?) {
         _currentPinList.value?.get(position)?.product!!.productName = productName
         _currentPinList.value?.get(position)?.product!!.productUrl = productUrl
+
+        // 수정된 핀 표시를 위한
+        _newEditPin.value = position
+    }
+
+    // 새로운 핀 강조 끝남
+    fun doneHighlightNewPin() {
+        _newEditPin.value = -1
     }
 
     // 핀 삭제
@@ -242,6 +258,12 @@ class PostEditViewModel  @Inject constructor(
             showToast(noticeEmptyCategory)
         }
         else {
+            if(selectImagePosition.value!! >= 0) {
+                _postEditUiState.value?.get(selectImagePosition.value!!)?.apply {
+                    pinList = currentPinList.value ?: mutableListOf()
+                }
+            }
+
             uploadPost(
                 content,
                 showToast = {
@@ -273,6 +295,7 @@ class PostEditViewModel  @Inject constructor(
     ) {
         viewModelScope.launch {
             try {
+                // TODO: 포스트 조회 API 완성되면, 아래 id로 조회해서 상세 페이지로 이동
                 val uploadPostId = uploadPostUseCase(
                     subCategory = selectHobbyCategory.value!!, // 카테고리 선택됐는지 확인하고 넘어옴
                     content = content,
