@@ -40,6 +40,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation.NavController
+import com.marastro.mykkumi.analytics.AnalyticsHelper
 import com.marastro.mykkumi.domain.entity.HobbyCategoryItemVO
 import com.marastro.mykkumi.domain.entity.HobbySubCategoryItemVO
 import com.marastro.mykkumi.feature.auth.R
@@ -48,7 +49,11 @@ import com.marastro.mykkumi.feature.auth.R
 @Composable
 fun LoginSelectHobbyScreen(
     navController: NavController,
+    analyticsHelper: AnalyticsHelper,
 ) {
+    // Firebase Analytics 화면 이름 로깅
+    analyticsHelper.logScreenView(stringResource(id = com.marastro.mykkumi.analytics.R.string.select_category_screen))
+
     val viewModel: LoginSelectHobbyViewModel = ViewModelProvider(
         LocalContext.current as ComponentActivity
     ).get(LoginSelectHobbyViewModel::class.java)

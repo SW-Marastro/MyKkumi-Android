@@ -21,6 +21,9 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -44,6 +47,7 @@ android {
 dependencies {
     implementation project(':core:common-ui')
     implementation project(':core:domain')
+    implementation project(':core:analytics')
 
     // UI
     implementation "androidx.core:core-ktx:$androidx_core_version"

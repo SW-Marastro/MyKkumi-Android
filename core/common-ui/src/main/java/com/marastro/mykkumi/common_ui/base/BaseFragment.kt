@@ -29,6 +29,7 @@ abstract class BaseFragment<T: ViewDataBinding>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.lifecycleOwner = this@BaseFragment
+
         lifecycleScope.launchWhenCreated {
             initView()
         }

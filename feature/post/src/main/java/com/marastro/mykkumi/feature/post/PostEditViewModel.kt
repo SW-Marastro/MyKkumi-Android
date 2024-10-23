@@ -121,7 +121,7 @@ class PostEditViewModel  @Inject constructor(
     }
 
     // 핀 추가를 위한 제품명 입력 요청
-    fun requestProductInfoForPin(fragment: PostEditFragment, position: Int?) {
+    fun requestProductInfoForPin(position: Int?): Bundle {
         val bundle = Bundle()
         if (position != null) { // 핀 수정
             bundle.putInt("position", position)
@@ -131,9 +131,8 @@ class PostEditViewModel  @Inject constructor(
         else {
             bundle.putInt("position", -1)
         }
-        val bottomSheet = InputProductInfoBottomSheet().apply { setListener(fragment) }
-        bottomSheet.arguments = bundle
-        bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
+
+        return bundle
     }
 
     // 핀 추가

@@ -41,6 +41,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -54,6 +55,7 @@ import com.google.gson.Gson
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
+import com.marastro.mykkumi.analytics.AnalyticsHelper
 import com.marastro.mykkumi.feature.auth.onBoarding.LoginInputUserScreen
 import com.marastro.mykkumi.feature.auth.onBoarding.LoginSelectHobbyScreen
 import com.marastro.mykkumi.feature.auth.ui.theme.MyKkumi_AOSTheme
@@ -62,9 +64,13 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginComposeActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
 
     private val viewModel: LoginViewModel by viewModels()
     private val activityContext = this
@@ -124,11 +130,14 @@ class LoginComposeActivity : ComponentActivity() {
         NavHost(navController = navController,
             startDestination = LoginScreens.KakaoLoginScreen.name) {
             composable(LoginScreens.KakaoLoginScreen.name) {
-                KakaoLoginScreen(navController = navController)
+                KakaoLoginScreen(
+                    navController = navController,
+                )
             }
             composable(LoginScreens.LoginSelectHobbyScreen.name) {
                 LoginSelectHobbyScreen(
                     navController = navController,
+                    analyticsHelper= analyticsHelper,
                 )
             }
             composable(
@@ -144,6 +153,7 @@ class LoginComposeActivity : ComponentActivity() {
 
                 LoginInputUserScreen(
                     activity = activity,
+                    analyticsHelper= analyticsHelper,
                     selectedHobbies = selectedHobbies,
                 )
             }
@@ -154,6 +164,9 @@ class LoginComposeActivity : ComponentActivity() {
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
     private fun KakaoLoginScreen(navController: NavController) {
+        // Firebase Analytics 화면 이름 로깅
+        analyticsHelper.logScreenView(getString(com.marastro.mykkumi.analytics.R.string.login_screen))
+
         // 로그인 완료되면 화면 이동
         viewModel.loginUiState
             .filter { it == LoginUiState.MykkumiLoginSuccess } // 로그인 성공으로 바뀌었을 때

@@ -71,6 +71,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.marastro.mykkumi.analytics.AnalyticsHelper
 import com.marastro.mykkumi.common_ui.permission.ImagePermissionUtils
 import com.marastro.mykkumi.feature.auth.R
 import kotlinx.coroutines.CoroutineScope
@@ -91,8 +92,12 @@ private lateinit var localContext: Context
 @Composable
 fun LoginInputUserScreen(
     activity: ComponentActivity,
+    analyticsHelper: AnalyticsHelper,
     selectedHobbies: List<Long>?
 ) {
+    // Firebase Analytics 화면 이름 로깅
+    analyticsHelper.logScreenView(stringResource(id = com.marastro.mykkumi.analytics.R.string.input_user_info_screen))
+
     localContext = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
