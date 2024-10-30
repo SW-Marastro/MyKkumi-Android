@@ -79,8 +79,6 @@ class EditImageWithPinAdapter(
             }
             */
 
-            binding.relativePinsOfImages.removeAllViews()
-
             // pin이 이미지의 크기를 벗어나지 않도록 제한
             parent.viewTreeObserver.addOnGlobalLayoutListener (
                 object : ViewTreeObserver.OnGlobalLayoutListener {
@@ -96,93 +94,105 @@ class EditImageWithPinAdapter(
                             }
                         }
 
+                        else {
+                            editImageView.layoutParams.height = parentHeight
+
+                            binding.relativePinsOfImages.removeAllViews()
+
+                            for (idx in 0..<currentPinList.size) {
+                                val pin = currentPinList[idx]
+
+                                val pinView = LayoutInflater.from(context)
+                                    .inflate(R.layout.item_pin_of_post_edit, editImageView, false)
+                                editImageView.addView(pinView)
+
+                                // 핀의 가운데를 기준으로
+                                var pinWidth = 0
+                                var pinHeight = 0
+
+                                // 핀 터치 영역 가져와서 넓혀주기
+                                editImageView.post {
+                                    val pinRect = Rect()
+                                    pinView.getHitRect(pinRect)
+                                    pinRect.inset(-expandPx, -expandPx)
+                                    editImageView.touchDelegate = TouchDelegate(pinRect, pinView)
+                                }
+
+                                // 핀 크기
+                                pinView.post {
+                                    pinWidth = pinView.width
+                                    pinHeight = pinView.height
+
+                                    pinView.x = pin.positionX * (parentWidth - pinWidth)
+                                    pinView.y = pin.positionY * (parentHeight - pinHeight)
+
+                                    // 새로 추가된 핀
+                                    if (newEditPin != -1 && position == selectImagePosition && idx == newEditPin) {
+                                        Log.d("test", "새로운 핀")
+                                        showTooltipOfPin(pinView, idx, pin.product.productName)
+                                        newEditPin = -1
+                                    }
+                                }
+
+                                var moveX = 0f
+                                var moveY = 0f
+
+                                // 제품 정보 수정 / 삭제 tooltip을 위한 touchEvent 체크
+                                val gestureDetector = GestureDetector(
+                                    context,
+                                    object : GestureDetector.SimpleOnGestureListener() {
+                                        override fun onSingleTapUp(e: MotionEvent): Boolean {
+                                            showTooltipOfPin(pinView, idx, pin.product.productName)
+                                            return super.onSingleTapUp(e)
+                                        }
+                                    })
+
+                                pinView.setOnTouchListener { v, event ->
+                                    gestureDetector.onTouchEvent(event)
+
+                                    when (event.action) {
+                                        MotionEvent.ACTION_DOWN -> { // Pin 선택하면 현재 위치 가져오기
+                                            moveX = v.x - event.rawX
+                                            moveY = v.y - event.rawY
+
+                                            lockViewPagerMoving() // Pin 움직이는 동안 ViewPager 화면 전환 막아두기
+                                        }
+
+                                        MotionEvent.ACTION_MOVE -> {
+                                            // 현재 위치
+                                            val currentX = event.rawX + moveX
+                                            val currentY = event.rawY + moveY
+
+                                            val clampedX = currentX.coerceIn(
+                                                0f,
+                                                (parentWidth - pinWidth).toFloat()
+                                            )
+                                            val clampedY = currentY.coerceIn(
+                                                0f,
+                                                (parentHeight - pinHeight).toFloat()
+                                            )
+
+                                            v.x = clampedX
+                                            v.y = clampedY
+
+                                            // 핀의 비율 위치 계산
+                                            pin.positionX = clampedX / (parentWidth - pinWidth)
+                                            pin.positionY = clampedY / (parentHeight - pinHeight)
+                                        }
+
+                                        MotionEvent.ACTION_UP -> {
+                                            unlockViewPagerMoving() // Pin 이동 종료 후 ViewPager 스크롤 다시 가능
+                                        }
+                                    }
+                                    true
+                                }
+                            }
+                        }
+
                         parent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
                 }
             )
-
-            editImageView.layoutParams.height = parentHeight
-
-            for(idx in 0..<currentPinList.size) {
-                val pin = currentPinList[idx]
-
-                val pinView = LayoutInflater.from(context).inflate(R.layout.item_pin_of_post_edit, editImageView, false)
-                editImageView.addView(pinView)
-
-                // 핀의 가운데를 기준으로
-                var pinWidth = 0
-                var pinHeight = 0
-
-                // 핀 터치 영역 가져와서 넓혀주기
-                editImageView.post {
-                    val pinRect = Rect()
-                    pinView.getHitRect(pinRect)
-                    pinRect.inset(-expandPx, -expandPx)
-                    editImageView.touchDelegate = TouchDelegate(pinRect, pinView)
-                }
-
-                // 핀 크기
-                pinView.post {
-                    pinWidth = pinView.width
-                    pinHeight = pinView.height
-
-                    pinView.x = pin.positionX * (parentWidth - pinWidth)
-                    pinView.y = pin.positionY * (parentHeight - pinHeight)
-
-                    // 새로 추가된 핀
-                    if(newEditPin != -1 && position == selectImagePosition && idx == newEditPin) {
-                        showTooltipOfPin(pinView, idx, pin.product.productName)
-                        newEditPin = -1
-                    }
-                }
-
-                var moveX = 0f
-                var moveY = 0f
-
-                // 제품 정보 수정 / 삭제 tooltip을 위한 touchEvent 체크
-                val gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
-                    override fun onSingleTapUp(e: MotionEvent): Boolean {
-                        showTooltipOfPin(pinView, idx, pin.product.productName)
-                        return super.onSingleTapUp(e)
-                    }
-                })
-
-                pinView.setOnTouchListener { v, event ->
-                    gestureDetector.onTouchEvent(event)
-
-                    when (event.action) {
-                        MotionEvent.ACTION_DOWN -> { // Pin 선택하면 현재 위치 가져오기
-                            moveX = v.x - event.rawX
-                            moveY = v.y - event.rawY
-
-                            lockViewPagerMoving() // Pin 움직이는 동안 ViewPager 화면 전환 막아두기
-                        }
-
-                        MotionEvent.ACTION_MOVE -> {
-                            // 현재 위치
-                            val currentX = event.rawX + moveX
-                            val currentY = event.rawY + moveY
-
-                            val clampedX = currentX.coerceIn(0f, (parentWidth - pinWidth).toFloat())
-                            val clampedY = currentY.coerceIn(0f, (parentHeight - pinHeight).toFloat())
-
-                            v.x = clampedX
-                            v.y = clampedY
-
-                            // 핀의 비율 위치 계산
-                            pin.positionX = clampedX / (parentWidth - pinWidth)
-                            pin.positionY = clampedY / (parentHeight - pinHeight)
-
-                            Log.d("test pin", "${pin.positionX}, ${pin.positionY}")
-                        }
-
-                        MotionEvent.ACTION_UP -> {
-                            unlockViewPagerMoving() // Pin 이동 종료 후 ViewPager 스크롤 다시 가능
-                        }
-                    }
-                    true
-                }
-            }
         }
     }
 

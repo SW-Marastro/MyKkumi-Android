@@ -123,6 +123,8 @@ class PostEditViewModel  @Inject constructor(
         else {
             _currentPinList.setValue( mutableListOf() )
         }
+
+        _newEditPin.value = -1
     }
 
     // 핀 추가를 위한 제품명 입력 요청
@@ -154,8 +156,7 @@ class PostEditViewModel  @Inject constructor(
                     )
                 )
             }
-            _currentPinList.value = mutableListOf()
-            _currentPinList.postValue( addPinList )
+            _currentPinList.value = addPinList
 
             // 추가된 핀 표시를 위한
             _newEditPin.value = currentPinList.value?.size!! - 1
