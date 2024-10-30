@@ -1,4 +1,4 @@
-package com.marastro.mykkumi.data.util
+package com.marastro.mykkumi.data.utils
 
 import android.content.Context
 import com.kakao.sdk.common.KakaoSdk

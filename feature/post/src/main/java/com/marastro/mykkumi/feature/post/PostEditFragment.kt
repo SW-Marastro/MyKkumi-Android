@@ -85,6 +85,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         if(navController?.currentDestination?.id == R.id.postEditFragment && !isStartPosting) {
             navController?.popBackStack()
         }
+
         // 상태 복원 완료
         isRestoringState = false
     }
@@ -97,7 +98,9 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
         navController = view.findNavController()
 
-        binding.relativeEmptyImage.visibility = View.GONE
+        if(!viewModel.postEditUiState.value.isNullOrEmpty()) binding.relativeEmptyImage.visibility = View.GONE
+        else binding.relativeEmptyImage.visibility = View.VISIBLE
+
         binding.textBtnUploadPost.setBackgroundResource(com.marastro.mykkumi.common_ui.R.drawable.shape_btn_round12_neutral50)
         binding.textBtnUploadPost.setTextColor(ContextCompat.getColor(requireContext(), com.marastro.mykkumi.common_ui.R.color.neutral_700))
         binding.textCountContent.visibility = View.GONE
