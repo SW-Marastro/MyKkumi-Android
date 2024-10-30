@@ -70,6 +70,15 @@ class EditImageWithPinAdapter(
 
             val currentPinList = item.pinList
 
+            /*
+            val currentPinList = if(position == viewModel.selectImagePosition.value) { // 현재 선택된, 편집 중인 이미지
+                viewModel.currentPinList.value ?: mutableListOf<PostEditPinVO>()
+            }
+            else { // 안 보이지만 ViewPager의 다른 페이지로 존재하는 다른 이미지들
+                item.pinList
+            }
+            */
+
             binding.relativePinsOfImages.removeAllViews()
 
             // pin이 이미지의 크기를 벗어나지 않도록 제한
@@ -163,6 +172,8 @@ class EditImageWithPinAdapter(
                             // 핀의 비율 위치 계산
                             pin.positionX = clampedX / (parentWidth - pinWidth)
                             pin.positionY = clampedY / (parentHeight - pinHeight)
+
+                            Log.d("test pin", "${pin.positionX}, ${pin.positionY}")
                         }
 
                         MotionEvent.ACTION_UP -> {
