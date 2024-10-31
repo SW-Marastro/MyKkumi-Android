@@ -1,4 +1,4 @@
-![cover](https://github.com/user-attachments/assets/4f934bb4-6b6e-45bc-99a4-c1d9084407e1)
+<!--![cover](https://github.com/user-attachments/assets/4f934bb4-6b6e-45bc-99a4-c1d9084407e1)-->
 
 <div align="right"> 
   <a href="https://hits.seeyoufarm.com">
