@@ -3,7 +3,6 @@ package com.marastro.mykkumi.feature.post.imageWithPin
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
-import android.util.Log
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -18,6 +17,9 @@ import com.bumptech.glide.Glide
 import com.marastro.mykkumi.common_ui.R
 import com.marastro.mykkumi.common_ui.databinding.ItemPostImageViewpagerBinding
 import com.marastro.mykkumi.domain.entity.PostImageVO
+import com.marastro.mykkumi.feature.post.AccessableToCurrentPinList
+import com.marastro.mykkumi.feature.post.PostEditItemClickListener
+import com.marastro.mykkumi.feature.post.PostEditViewModel
 
 // ViewPager
 class EditImageWithPinAdapter(
@@ -27,7 +29,9 @@ class EditImageWithPinAdapter(
     private val unlockViewPagerMoving: () -> Unit,
     private val updateProductInfo: (position: Int) -> Unit,
     private val deletePinOfImage: (position: Int) -> Unit,
-) : RecyclerView.Adapter<EditImageWithPinAdapter.EditImageWithPinViewHolder>() {
+    private val accessableToCurrentPinList: AccessableToCurrentPinList,
+    private val postEditItemClickListener: PostEditItemClickListener,
+    ) : RecyclerView.Adapter<EditImageWithPinAdapter.EditImageWithPinViewHolder>() {
 
     var imageWithPinList = mutableListOf<PostImageVO>()
 
@@ -68,7 +72,11 @@ class EditImageWithPinAdapter(
                 .load(item.imageUri)
                 .into(binding.imagePost)
 
-            val currentPinList = item.pinList
+            val currentPinList = accessableToCurrentPinList.currentPinList.value
+
+            binding.root.setOnClickListener {
+                accessableToCurrentPinList.postEditItemClick()
+            }
 
             /*
             val currentPinList = if(position == viewModel.selectImagePosition.value) { // 현재 선택된, 편집 중인 이미지
@@ -128,7 +136,6 @@ class EditImageWithPinAdapter(
 
                                     // 새로 추가된 핀
                                     if (newEditPin != -1 && position == selectImagePosition && idx == newEditPin) {
-                                        Log.d("test", "새로운 핀")
                                         showTooltipOfPin(pinView, idx, pin.product.productName)
                                         newEditPin = -1
                                     }

@@ -30,7 +30,7 @@ class PostEditViewModel  @Inject constructor(
     private val preSignedUrlRepository: PreSignedUrlRepository,
     private val uploadPostUseCase: UploadPostUseCase,
     private val getHobbyCategoryListUseCase: GetHobbyCategoryListUseCase,
-) : ViewModel() {
+) : ViewModel(), AccessableToCurrentPinList, PostEditItemClickListener {
     final val MAX_IMAGE_COUNT = 10
     final val MAX_PIN_COUNT = 10
 
@@ -47,7 +47,7 @@ class PostEditViewModel  @Inject constructor(
     val selectImagePosition : LiveData<Int> get() = _selectImagePosition
 
     private val _currentPinList = MutableLiveData<MutableList<PostEditPinVO>>(mutableListOf())
-    val currentPinList : LiveData<MutableList<PostEditPinVO>> get() = _currentPinList
+    override val currentPinList : LiveData<MutableList<PostEditPinVO>> get() = _currentPinList
 
     // 새롭게 추가되거나 수정된 핀
     private val _newEditPin =  MutableLiveData<Int>(-1)
@@ -308,5 +308,9 @@ class PostEditViewModel  @Inject constructor(
                 showToast("포스트 등록에 실패했습니다.")
             }
         }
+    }
+
+    override fun postEditItemClick() {
+
     }
 }

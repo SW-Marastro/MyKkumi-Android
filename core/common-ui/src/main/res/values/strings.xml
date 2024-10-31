@@ -92,4 +92,16 @@
     <string name="notice_post_hashtag_max_count">해시태그는 최대 20개까지 추가할 수 있어요.</string>
     <string name="notice_select_hobby_category_of_post">취미 카테고리를 선택해주세요.</string>
     <string name="toast_delete_pin">해당 핀을 삭제했어요</string>
+
+    <!-- 마이페이지 -->
+    <string name="login_btn">로그인하기</string>
+    <string name="login_title">로그인하세요</string>
+    <string name="login_notice">로그인 후 마이꾸미의 더 많은 서비스를\n이용할 수 있어요.</string>
+    <string name="more_service_notice">더 많은 기능을 준비 중이에요!</string>
+
+    <string name="profile_title">프로필</string>
+    <string name="edit_profile_btn">프로필 수정</string>
+    <string name="share_profile_btn">프로필 공유</string>
+    <string name="edit_profile_title">프로필 수정</string>
+    <string name="profile_image">프로필 사진</string>
 </resources>
