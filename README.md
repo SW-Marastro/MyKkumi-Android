@@ -1,4 +1,4 @@
-<!--![cover](https://github.com/user-attachments/assets/4f934bb4-6b6e-45bc-99a4-c1d9084407e1)-->
+![마이꾸미 Cover](https://github.com/user-attachments/assets/e34e6d18-ca2f-494a-ab67-98e662902835)
 
 <div align="right"> 
   <a href="https://hits.seeyoufarm.com">
@@ -60,7 +60,7 @@
 ---
 
 ### 💜 Result
-![020](https://github.com/user-attachments/assets/630e5a56-3c69-4469-ba9f-89de1143784d)
-![022](https://github.com/user-attachments/assets/c929b3f3-be17-4e9f-b743-0bc7d49a270b)
-![023](https://github.com/user-attachments/assets/986277ef-ce9e-492d-82f9-0c671d51b5f4)
+<img width="1920" alt="001" src="https://github.com/user-attachments/assets/4918c4e4-6621-4143-a388-0a262f185c71">
+<img width="1920" alt="001" src="https://github.com/user-attachments/assets/c929b3f3-be17-4e9f-b743-0bc7d49a270b">
+<img width="1920" alt="001" src="https://github.com/user-attachments/assets/986277ef-ce9e-492d-82f9-0c671d51b5f4">
 
