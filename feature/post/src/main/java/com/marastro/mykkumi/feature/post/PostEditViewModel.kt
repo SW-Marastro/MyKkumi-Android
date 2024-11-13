@@ -16,6 +16,7 @@ import com.marastro.mykkumi.domain.entity.PostImageVO
 import com.marastro.mykkumi.domain.repository.PreSignedUrlRepository
 import com.marastro.mykkumi.domain.usecase.post.GetHobbyCategoryListUseCase
 import com.marastro.mykkumi.domain.usecase.post.UploadPostUseCase
+import com.marastro.mykkumi.feature.post.hobbyCategory.AccessAbleToHobbyCategory
 import com.marastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +31,7 @@ class PostEditViewModel  @Inject constructor(
     private val preSignedUrlRepository: PreSignedUrlRepository,
     private val uploadPostUseCase: UploadPostUseCase,
     private val getHobbyCategoryListUseCase: GetHobbyCategoryListUseCase,
-) : ViewModel() { // , AccessableToCurrentPinList , PostEditItemClickListener
+) : ViewModel(), AccessAbleToHobbyCategory { // , AccessableToCurrentPinList , PostEditItemClickListener
     final val MAX_IMAGE_COUNT = 10
     final val MAX_PIN_COUNT = 10
 
@@ -57,7 +58,7 @@ class PostEditViewModel  @Inject constructor(
     val isDeleteImageState : LiveData<Boolean> get() = _isDeleteImageState
 
     private val _selectHobbyCategory = MutableLiveData<Long>(-1L)
-    val selectHobbyCategory : LiveData<Long> get() = _selectHobbyCategory
+    override val selectHobbyCategory : LiveData<Long> get() = _selectHobbyCategory
 
     fun selectPostImage(uris: MutableList<Uri>) {
         viewModelScope.launch {
@@ -238,7 +239,7 @@ class PostEditViewModel  @Inject constructor(
     }
 
     // 관심 취미 선택
-    fun setHobbySelected(selectHobbyId: Long) {
+    override fun setHobbySelected(selectHobbyId: Long) {
         _selectHobbyCategory.value = selectHobbyId
     }
 

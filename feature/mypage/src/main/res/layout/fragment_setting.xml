@@ -16,7 +16,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/header_post_edit"
+            android:id="@+id/header_setting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingVertical="10dp"

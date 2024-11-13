@@ -22,4 +22,15 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.marastro.mykkumi.feature.mypage.editProfile.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile">
+
+        <deepLink
+            app:uri="mykkumi://profile.edit"/>
+
+    </fragment>
+
 </navigation>

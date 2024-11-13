@@ -11,8 +11,6 @@ import javax.inject.Inject
 class SettingViewModel @Inject constructor(
     private val authTokenDataStore: AuthTokenDataStore,
 ) : ViewModel() {
-    private val _settingUiState = MutableStateFlow<String>("")
-    val settingUiState: StateFlow<String> get() = _settingUiState
 
     fun logout() {
         authTokenDataStore.deleteToken()
