@@ -64,7 +64,13 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(
 
             // 회원탈퇴
             binding.relativeDeleteUser.setOnClickListener(View.OnClickListener {
-
+                val dialog = DeleteUserConfirmDialog(this, analyticsHelper)
+                dialog.setOnClickListener {
+                    val url = "https://forms.gle/A4dkrPLf7W3wwKYs6"
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    startActivity(intent)
+                }
+                dialog.show()
             })
         }
 

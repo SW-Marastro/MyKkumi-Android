@@ -94,20 +94,6 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(R.layout.fragment_myp
         bind {
             vm = viewModel
         }
-
-//        // 로그아웃 테스트
-//        binding.btnLogout.setOnClickListener {
-//            viewModel.logout()
-//            Toast.makeText(context, "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
-//            onResume()
-//        }
-//
-//        // 회원탈퇴 - 구글폼 연결
-//        binding.btnDeleteUser.setOnClickListener {
-//            val url = "https://forms.gle/A4dkrPLf7W3wwKYs6"
-//            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-//            startActivity(intent)
-//        }
     }
 
     private fun observeUserInfo() {
