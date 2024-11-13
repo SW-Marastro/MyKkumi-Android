@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".setting.SettingFragment">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.marastro.mykkumi.feature.mypage.setting.SettingViewModel"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/header_post_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:layout_alignParentTop="true">
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_back_btn"
+                android:scaleType="fitXY"
+                android:layout_marginLeft="15dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:background="@android:color/transparent"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/text_setting_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_title"
+                android:textSize="18sp"
+                android:textColor="@color/neutral_900"
+                android:fontFamily="@font/pretendard_semibold"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relative_app_version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="25dp"
+            android:layout_marginVertical="20dp">
+            
+            <TextView
+                android:id="@+id/text_app_version_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_app_version_title"
+                android:textSize="15sp"
+                android:textColor="@color/neutral_900"
+                android:fontFamily="@font/pretendard_semibold"/>
+
+            <TextView
+                android:id="@+id/text_app_version_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@color/neutral_500"
+                android:fontFamily="@font/pretendard_medium"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/text_app_version_title"/>
+
+        </RelativeLayout>
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/neutral_200"/>
+
+    </LinearLayout>
+
+</layout>

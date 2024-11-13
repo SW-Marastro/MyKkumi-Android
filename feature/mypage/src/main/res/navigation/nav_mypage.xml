@@ -11,4 +11,15 @@
         android:label="fragment_mypage"
         tools:layout="@layout/fragment_mypage" />
 
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.marastro.mykkumi.feature.mypage.setting.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting">
+
+        <deepLink
+            app:uri="mykkumi://setting"/>
+
+    </fragment>
+
 </navigation>

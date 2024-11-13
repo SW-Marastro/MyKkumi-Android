@@ -32,5 +32,6 @@
     <string name="view_following_screen">ViewFollowingScreen</string>
     <string name="cancel_following_dialog">CancelFollowingDialog</string>
     <string name="edit_profile_screen">EditProfileScreen</string>
+    <string name="setting_screen">SettingScreen</string>
 
 </resources>
