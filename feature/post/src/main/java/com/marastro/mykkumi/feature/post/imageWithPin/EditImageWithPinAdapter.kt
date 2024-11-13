@@ -17,9 +17,9 @@ import com.bumptech.glide.Glide
 import com.marastro.mykkumi.common_ui.R
 import com.marastro.mykkumi.common_ui.databinding.ItemPostImageViewpagerBinding
 import com.marastro.mykkumi.domain.entity.PostImageVO
-import com.marastro.mykkumi.feature.post.AccessableToCurrentPinList
-import com.marastro.mykkumi.feature.post.PostEditItemClickListener
-import com.marastro.mykkumi.feature.post.PostEditViewModel
+//import com.marastro.mykkumi.feature.post.AccessableToCurrentPinList
+//import com.marastro.mykkumi.feature.post.PostEditItemClickListener
+//import com.marastro.mykkumi.feature.post.PostEditViewModel
 
 // ViewPager
 class EditImageWithPinAdapter(
@@ -29,8 +29,8 @@ class EditImageWithPinAdapter(
     private val unlockViewPagerMoving: () -> Unit,
     private val updateProductInfo: (position: Int) -> Unit,
     private val deletePinOfImage: (position: Int) -> Unit,
-    private val accessableToCurrentPinList: AccessableToCurrentPinList,
-    private val postEditItemClickListener: PostEditItemClickListener,
+    //private val accessableToCurrentPinList: AccessableToCurrentPinList,
+    //private val postEditItemClickListener: PostEditItemClickListener,
     ) : RecyclerView.Adapter<EditImageWithPinAdapter.EditImageWithPinViewHolder>() {
 
     var imageWithPinList = mutableListOf<PostImageVO>()
@@ -72,11 +72,13 @@ class EditImageWithPinAdapter(
                 .load(item.imageUri)
                 .into(binding.imagePost)
 
-            val currentPinList = accessableToCurrentPinList.currentPinList.value
+            val currentPinList = item.pinList
 
-            binding.root.setOnClickListener {
-                accessableToCurrentPinList.postEditItemClick()
-            }
+//            val currentPinList = accessableToCurrentPinList.currentPinList.value
+//
+//            binding.root.setOnClickListener {
+//                accessableToCurrentPinList.postEditItemClick()
+//            }
 
             /*
             val currentPinList = if(position == viewModel.selectImagePosition.value) { // 현재 선택된, 편집 중인 이미지

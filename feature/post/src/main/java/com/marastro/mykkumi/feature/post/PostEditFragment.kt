@@ -275,8 +275,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                     showToast = { showToast(it) }
                 )
             },
-            accessableToCurrentPinList = viewModel,
-            postEditItemClickListener = viewModel,
+            //accessableToCurrentPinList = viewModel,
+            //postEditItemClickListener = viewModel,
         )
         binding.viewpagerPostEditImages.adapter = editImageWithPinAdapter
         binding.viewpagerPostEditImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
