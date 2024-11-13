@@ -1,7 +1,10 @@
 package com.marastro.mykkumi.feature.mypage.setting
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -39,6 +42,30 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(
             // 앱 버전
             binding.textAppVersionContent.text = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName
 
+            // 개인정보처리방침
+            binding.relativePersonalInfoNotice.setOnClickListener(View.OnClickListener {
+                val url = "http://swmarastro.notion.site"
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(intent)
+            })
+
+            // 로그아웃
+            binding.relativeLogout.setOnClickListener(View.OnClickListener {
+                val dialog = LogoutConfirmDialog(this, analyticsHelper)
+                dialog.setOnClickListener {
+                    viewModel.logout()
+                    Toast.makeText(context, "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
+
+                    // 마이페이지로
+                    navController?.popBackStack()
+                }
+                dialog.show()
+            })
+
+            // 회원탈퇴
+            binding.relativeDeleteUser.setOnClickListener(View.OnClickListener {
+
+            })
         }
 
         override suspend fun initView() {

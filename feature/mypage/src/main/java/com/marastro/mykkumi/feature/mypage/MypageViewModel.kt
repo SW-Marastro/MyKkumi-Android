@@ -59,9 +59,4 @@ class MypageViewModel @Inject constructor(
             }
         }
     }
-
-    // 로그아웃 테스트
-    fun logout() {
-        authTokenDataStore.deleteToken()
-    }
 }

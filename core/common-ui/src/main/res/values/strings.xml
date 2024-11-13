@@ -110,4 +110,10 @@
     <string name="setting_personal_info_notice_title">개인정보처리방침</string>
     <string name="setting_logout_title">로그아웃</string>
     <string name="setting_delete_user_title">회원 탈퇴</string>
+    
+    <string name="logout_confirm_dialog_title">로그아웃 하시겠습니까?</string>
+    <string name="logout_confirm_dialog_notice_content">확인 버튼을 누르면 로그아웃 후\n마이페이지로 이동됩니다</string>
+
+    <string name="delete_user_dialog_confirm_title">계정을 탈퇴하시겠습니까?</string>
+    <string name="delete_user_dialog_notice_content">탈퇴 버튼을 누르면 탈퇴 신청을 위한\n웹 페이지로 접근합니다</string>
 </resources>
