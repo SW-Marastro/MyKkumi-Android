@@ -21,6 +21,8 @@ class EditProfileViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val getHobbyCategoryListUseCase: GetHobbyCategoryListUseCase,
 ) : ViewModel(), AccessAbleToHobbyCategory {
+    private lateinit var originProfileUiState : UserInfoVO
+
     private val _editProfileUiState = MutableLiveData<UserInfoVO>(null)
     val editProfileUiState: LiveData<UserInfoVO> get() = _editProfileUiState
 
@@ -30,11 +32,15 @@ class EditProfileViewModel @Inject constructor(
     private val _selectHobbyCategories = MutableLiveData<MutableSet<Long>>(mutableSetOf())
     override val selectHobbyCategories : LiveData<MutableSet<Long>> get() = _selectHobbyCategories
 
+    private val _isChangeInfo = MutableLiveData<Boolean>(false)
+    val isChangeInfo : LiveData<Boolean> get() = _isChangeInfo
+
     fun getLoginUser(showToast : (message: String) -> Unit) {
         viewModelScope.launch {
             try {
                 val userInfo = getUserInfoUseCase()
-                _editProfileUiState.value = userInfo
+                _editProfileUiState.setValue(userInfo)
+                originProfileUiState = userInfo
             }
             catch (e: ApiException.UnknownApiException) {
                 showToast("서비스 오류가 발생했습니다.")
@@ -66,12 +72,31 @@ class EditProfileViewModel @Inject constructor(
 
     // 관심 취미 선택
     override fun setHobbySelected(selectHobbyId: Long) {
+        var changeSelected = _selectHobbyCategories.value
         if(_selectHobbyCategories.value.isNullOrEmpty())
-            _selectHobbyCategories.setValue(mutableSetOf())
+            changeSelected = mutableSetOf()
 
         if(_selectHobbyCategories.value!!.contains((selectHobbyId)))
-            _selectHobbyCategories.value!!.remove(selectHobbyId)
+            changeSelected!!.remove(selectHobbyId)
         else
-            _selectHobbyCategories.value!!.add(selectHobbyId)
+            changeSelected!!.add(selectHobbyId)
+
+        _selectHobbyCategories.setValue(changeSelected ?: mutableSetOf())
+    }
+
+    fun checkChangeInfo() : Boolean {
+        // 변경된 내용이 있는지
+        if(originProfileUiState.nickname != editProfileUiState.value?.nickname
+            || originProfileUiState.introduction != editProfileUiState.value?.introduction
+            || originProfileUiState.profileImage != editProfileUiState.value?.profileImage
+            || !selectHobbyCategories.value.isNullOrEmpty()) { // TODO: 이전 카테고리 선택 정보 알게 되면 이전이랑 비교하는 작업으로 변경 필
+            _isChangeInfo.setValue(true)
+            return true
+        }
+
+        else {
+            _isChangeInfo.setValue(false)
+            return false
+        }
     }
 }

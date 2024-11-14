@@ -308,6 +308,22 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/text_edit_profile_done_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/edit_profile_submit_button"
+                    android:textSize="15sp"
+                    android:textColor="@color/neutral_300"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:background="@drawable/shape_btn_round12_neutral50"
+                    android:paddingVertical="15.5dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:gravity="center"
+                    android:layout_below="@id/linear_hobby_category"/>
+
             </RelativeLayout>
 
         </ScrollView>

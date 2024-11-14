@@ -3,6 +3,7 @@ package com.marastro.mykkumi.feature.mypage.editProfile
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -51,6 +52,8 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>(
         binding.btnBack.setOnClickListener {
             navController?.popBackStack()
         }
+
+        // 닉네임 입력
     }
 
     override suspend fun initView() {
@@ -77,14 +80,36 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>(
                     .placeholder(com.marastro.mykkumi.common_ui.R.drawable.img_profile_default)
                     .circleCrop()
                     .into(binding.imgEditProfileImage)
+
+                // 변경된 내용이 있는지
+                if(viewModel.checkChangeInfo()) {
+                    binding.textEditProfileDoneBtn.setBackgroundResource(com.marastro.mykkumi.common_ui.R.drawable.shape_btn_round12_primary)
+                    binding.textEditProfileDoneBtn.setTextColor(ContextCompat.getColor(requireContext(), com.marastro.mykkumi.common_ui.R.color.white))
+                }
+                else {
+                    binding.textEditProfileDoneBtn.setBackgroundResource(com.marastro.mykkumi.common_ui.R.drawable.shape_btn_round12_neutral50)
+                    binding.textEditProfileDoneBtn.setTextColor(ContextCompat.getColor(requireContext(), com.marastro.mykkumi.common_ui.R.color.neutral_300))
+                }
             }
         })
 
         // 카테고리 세팅
-        // 카테고리 추가
         viewModel.hobbyCategoryUiState.observe(viewLifecycleOwner, Observer {
             hobbySubCategoryAdapter.hobbySubCategoryList = it
             hobbySubCategoryAdapter.notifyDataSetChanged()
+        })
+
+        // 카테고리 선택 변경
+        viewModel.selectHobbyCategories.observe(viewLifecycleOwner, Observer {
+            // 변경된 내용이 있는지
+            if(viewModel.checkChangeInfo()) {
+                binding.textEditProfileDoneBtn.setBackgroundResource(com.marastro.mykkumi.common_ui.R.drawable.shape_btn_round12_primary)
+                binding.textEditProfileDoneBtn.setTextColor(ContextCompat.getColor(requireContext(), com.marastro.mykkumi.common_ui.R.color.white))
+            }
+            else {
+                binding.textEditProfileDoneBtn.setBackgroundResource(com.marastro.mykkumi.common_ui.R.drawable.shape_btn_round12_neutral50)
+                binding.textEditProfileDoneBtn.setTextColor(ContextCompat.getColor(requireContext(), com.marastro.mykkumi.common_ui.R.color.neutral_300))
+            }
         })
     }
 
