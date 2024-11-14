@@ -130,18 +130,32 @@
                     android:layout_marginTop="2dp"/>
 
                 <TextView
-                    android:id="@+id/text_edit_profile"
+                    android:id="@+id/text_edit_profile_prepare"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/edit_profile_btn"
+                    android:text="프로필 수정 기능이 준비 중이에요"
                     android:textSize="14sp"
-                    android:textColor="@color/neutral_900"
+                    android:textColor="@color/neutral_400"
                     android:fontFamily="@font/pretendard_semibold"
-                    android:background="@drawable/shape_btn_round10_secondary"
+                    android:background="@drawable/shape_btn_round12_neutral50"
                     android:paddingVertical="12dp"
                     android:layout_marginTop="23dp"
                     android:gravity="center"
                     android:layout_below="@id/img_profile"/>
+
+<!--                <TextView-->
+<!--                    android:id="@+id/text_edit_profile"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="@string/edit_profile_btn"-->
+<!--                    android:textSize="14sp"-->
+<!--                    android:textColor="@color/neutral_900"-->
+<!--                    android:fontFamily="@font/pretendard_semibold"-->
+<!--                    android:background="@drawable/shape_btn_round10_secondary"-->
+<!--                    android:paddingVertical="12dp"-->
+<!--                    android:layout_marginTop="23dp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:layout_below="@id/img_profile"/>-->
 
             </RelativeLayout>
 

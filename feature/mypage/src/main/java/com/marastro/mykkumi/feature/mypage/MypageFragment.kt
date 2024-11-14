@@ -90,10 +90,10 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(R.layout.fragment_myp
         }
 
         // 프로필 수정 페이지
-        binding.textEditProfile.setOnClickListener(View.OnClickListener {
-            val settingDeepLink = "mykkumi://profile.edit"
-            navController?.navigate(deepLink = settingDeepLink.toUri())
-        })
+//        binding.textEditProfile.setOnClickListener(View.OnClickListener {
+//            val settingDeepLink = "mykkumi://profile.edit"
+//            navController?.navigate(deepLink = settingDeepLink.toUri())
+//        })
     }
 
     override suspend fun initView() {
