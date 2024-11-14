@@ -39,8 +39,8 @@ class EditProfileViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val userInfo = getUserInfoUseCase()
-                _editProfileUiState.setValue(userInfo)
                 originProfileUiState = userInfo
+                _editProfileUiState.setValue(userInfo)
             }
             catch (e: ApiException.UnknownApiException) {
                 showToast("서비스 오류가 발생했습니다.")

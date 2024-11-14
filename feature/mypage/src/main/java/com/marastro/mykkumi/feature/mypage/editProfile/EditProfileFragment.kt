@@ -101,14 +101,25 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>(
 
         // 카테고리 선택 변경
         viewModel.selectHobbyCategories.observe(viewLifecycleOwner, Observer {
-            // 변경된 내용이 있는지
-            if(viewModel.checkChangeInfo()) {
-                binding.textEditProfileDoneBtn.setBackgroundResource(com.marastro.mykkumi.common_ui.R.drawable.shape_btn_round12_primary)
-                binding.textEditProfileDoneBtn.setTextColor(ContextCompat.getColor(requireContext(), com.marastro.mykkumi.common_ui.R.color.white))
-            }
-            else {
-                binding.textEditProfileDoneBtn.setBackgroundResource(com.marastro.mykkumi.common_ui.R.drawable.shape_btn_round12_neutral50)
-                binding.textEditProfileDoneBtn.setTextColor(ContextCompat.getColor(requireContext(), com.marastro.mykkumi.common_ui.R.color.neutral_300))
+            if(viewModel.editProfileUiState.value != null) {
+                // 변경된 내용이 있는지
+                if (viewModel.checkChangeInfo()) {
+                    binding.textEditProfileDoneBtn.setBackgroundResource(com.marastro.mykkumi.common_ui.R.drawable.shape_btn_round12_primary)
+                    binding.textEditProfileDoneBtn.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            com.marastro.mykkumi.common_ui.R.color.white
+                        )
+                    )
+                } else {
+                    binding.textEditProfileDoneBtn.setBackgroundResource(com.marastro.mykkumi.common_ui.R.drawable.shape_btn_round12_neutral50)
+                    binding.textEditProfileDoneBtn.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            com.marastro.mykkumi.common_ui.R.color.neutral_300
+                        )
+                    )
+                }
             }
         })
     }
