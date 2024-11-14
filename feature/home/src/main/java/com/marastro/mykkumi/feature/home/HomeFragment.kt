@@ -73,13 +73,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
 
         startAutoScroll()
 
-        binding.btnSearch.setOnClickListener {
-            waitNotice()
-        }
-        binding.btnNotice.setOnClickListener {
-            waitNotice()
-        }
-
         // Swipe 새로고침
         binding.swipeRefreshLayout.setOnRefreshListener {
             onResume()
