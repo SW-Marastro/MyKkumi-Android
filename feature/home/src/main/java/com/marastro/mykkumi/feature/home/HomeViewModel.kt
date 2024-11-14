@@ -19,6 +19,7 @@ import com.marastro.mykkumi.domain.usecase.post.GetHomePostListUseCase
 import com.marastro.mykkumi.domain.usecase.report.ReportPostUseCase
 import com.marastro.mykkumi.domain.usecase.report.ReportUserUseCase
 import com.marastro.mykkumi.common_ui.post.ViewProductInfoBottomSheet
+import com.marastro.mykkumi.domain.usecase.auth.GetUserInfoUseCase
 import com.marastro.mykkumi.domain.usecase.post.DeletePostUseCase
 import com.marastro.mykkumi.feature.home.report.ChooseReportBottomSheet
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,6 +37,7 @@ class HomeViewModel @Inject constructor(
     private val getHomePostListUseCase: GetHomePostListUseCase,
     private val deletePostUseCase: DeletePostUseCase,
     private val authTokenDataStore: AuthTokenDataStore,
+    private val getUserInfoUseCase: GetUserInfoUseCase,
     private val reportPostUseCase: ReportPostUseCase,
     private val reportUserUseCase: ReportUserUseCase,
 ) : ViewModel() {
@@ -73,7 +75,19 @@ class HomeViewModel @Inject constructor(
 
     // 유저 정보 세팅
     fun initUserInfo() {
-        _userNickname.value = authTokenDataStore.getUserNickname() ?: ""
+        //_userNickname.value = authTokenDataStore.getUserNickname() ?: ""
+        viewModelScope.launch {
+            try {
+                val userInfo = getUserInfoUseCase()
+                _userNickname.value = userInfo.nickname ?: ""
+            }
+            catch (e: ApiException.UnknownApiException) {
+                //showToast("서비스 오류가 발생했습니다.")
+            }
+            catch (e: Exception) {
+                //showToast("서비스 오류가 발생했습니다.")
+            }
+        }
     }
 
     // 홈 > 배너 캐러셀

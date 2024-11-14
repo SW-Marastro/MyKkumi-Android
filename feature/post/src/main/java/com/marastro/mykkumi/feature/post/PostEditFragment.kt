@@ -42,8 +42,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
     private val viewModel by viewModels<PostEditViewModel>()
 
-    private final val MAX_POST_CONTENT_LENGTH = 2000      // 본문 글자 수
-    private final val MAX_POST_CONTENT_HASHTAG_COUNT = 20 // 본문 해시태그 수
+    private val MAX_POST_CONTENT_LENGTH = 2000      // 본문 글자 수
+    private val MAX_POST_CONTENT_HASHTAG_COUNT = 20 // 본문 해시태그 수
 
     private lateinit var selectPostImageListAdapter: SelectPostImageListAdapter // 이미지들 썸네일 나열
     private lateinit var editImageWithPinAdapter: EditImageWithPinAdapter // 이미지 편집 view (핀 추가할 수 있는)
@@ -275,6 +275,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                     showToast = { showToast(it) }
                 )
             },
+            //accessableToCurrentPinList = viewModel,
+            //postEditItemClickListener = viewModel,
         )
         binding.viewpagerPostEditImages.adapter = editImageWithPinAdapter
         binding.viewpagerPostEditImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL

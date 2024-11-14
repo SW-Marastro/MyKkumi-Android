@@ -275,7 +275,7 @@
             android:paddingHorizontal="20dp"
             android:paddingVertical="10dp"
             android:layout_alignParentBottom="true"
-            android:elevation="5dp">
+            android:elevation="10dp">
 
             <TextView
                 android:id="@+id/text_btn_upload_post"

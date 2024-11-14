@@ -9,8 +9,6 @@ import androidx.core.content.ContextCompat.getString
 import androidx.fragment.app.Fragment
 import com.marastro.mykkumi.analytics.AnalyticsHelper
 import com.marastro.mykkumi.feature.home.databinding.DialogPostDeleteConfirmBinding
-import javax.inject.Inject
-
 
 class PostDeleteConfirmDialog(
     private val context: Fragment,

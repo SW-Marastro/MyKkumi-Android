@@ -1,4 +1,4 @@
-package com.marastro.mykkumi.feature.post.hobbyCategory
+package com.marastro.mykkumi.feature.mypage.editProfile.hobbyCategory
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -19,7 +19,8 @@ class HobbySubCategoryAdapter (
         parent: ViewGroup,
         viewType: Int
     ): HobbySubCategoryViewHolder {
-        val binding = ItemHobbySubCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemHobbySubCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HobbySubCategoryViewHolder(binding)
     }
 
@@ -38,13 +39,22 @@ class HobbySubCategoryAdapter (
         fun bind(item: HobbySubCategoryItemVO) {
             binding.textHobbySubCategory.text = item.subCategoryName
 
-            if(item.subCategoryId == viewModel.selectHobbyCategory.value) {
+            if (viewModel.selectHobbyCategories.value!!.contains(item.subCategoryId)) {
                 binding.linearSubHobbyCategory.setBackgroundResource(com.marastro.mykkumi.common_ui.R.drawable.shape_sub_category_selected)
-                binding.textHobbySubCategory.setTextColor(ContextCompat.getColor(context, com.marastro.mykkumi.common_ui.R.color.white))
-            }
-            else {
+                binding.textHobbySubCategory.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        com.marastro.mykkumi.common_ui.R.color.white
+                    )
+                )
+            } else {
                 binding.linearSubHobbyCategory.setBackgroundResource(com.marastro.mykkumi.common_ui.R.drawable.shape_sub_category_unselected)
-                binding.textHobbySubCategory.setTextColor(ContextCompat.getColor(context, com.marastro.mykkumi.common_ui.R.color.neutral_700))
+                binding.textHobbySubCategory.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        com.marastro.mykkumi.common_ui.R.color.neutral_700
+                    )
+                )
             }
 
             binding.linearSubHobbyCategory.setOnClickListener(View.OnClickListener {

@@ -80,8 +80,6 @@ android {
 dependencies {
     // feature
     implementation project(":feature:home")
-    implementation project(":feature:around")
-    implementation project(":feature:shopping")
     implementation project(":feature:mypage")
     implementation project(":feature:auth")
     implementation project(":feature:post")

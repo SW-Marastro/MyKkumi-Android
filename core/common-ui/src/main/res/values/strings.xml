@@ -92,4 +92,39 @@
     <string name="notice_post_hashtag_max_count">해시태그는 최대 20개까지 추가할 수 있어요.</string>
     <string name="notice_select_hobby_category_of_post">취미 카테고리를 선택해주세요.</string>
     <string name="toast_delete_pin">해당 핀을 삭제했어요</string>
+
+    <!-- 마이페이지 -->
+    <string name="login_btn">로그인하기</string>
+    <string name="login_title">로그인하세요</string>
+    <string name="login_notice">로그인 후 마이꾸미의 더 많은 서비스를\n이용할 수 있어요.</string>
+    <string name="more_service_notice">더 많은 기능을 준비 중이에요!</string>
+
+    <string name="profile_title">프로필</string>
+    <string name="edit_profile_btn">프로필 수정</string>
+    <string name="share_profile_btn">프로필 공유</string>
+
+    <string name="edit_profile_title">프로필 수정</string>
+    <string name="edit_profile_image_title">프로필 사진</string>
+    <string name="edit_profile_change_profile_image">프로필 이미지 변경</string>
+    <string name="edit_profile_nickname_title">닉네임</string>
+    <string name="edit_profile_nickname_placeholder">닉네임을 입력해주세요</string>
+    <string name="edit_profile_nickname_notice1">한글/영문/숫자/특수문자(.-_) 모두 가능해요</string>
+    <string name="edit_profile_nickname_notice2">최소 3자 ~ 최대 16자로 적어주세요</string>
+    <string name="edit_profile_email_title">이메일</string>
+    <string name="edit_profile_introduction_title">한 줄 소개</string>
+    <string name="edit_profile_introduction_placeholder">한 줄로 자신을 소개해보세요 (최대 50자)</string>
+    <string name="edit_profile_hobby_title">관심 취미</string>
+    <string name="edit_profile_submit_button">수정 완료</string>
+
+    <string name="setting_title">설정</string>
+    <string name="setting_app_version_title">앱 버전</string>
+    <string name="setting_personal_info_notice_title">개인정보처리방침</string>
+    <string name="setting_logout_title">로그아웃</string>
+    <string name="setting_delete_user_title">회원 탈퇴</string>
+    
+    <string name="logout_confirm_dialog_title">로그아웃 하시겠습니까?</string>
+    <string name="logout_confirm_dialog_notice_content">확인 버튼을 누르면 로그아웃 후\n마이페이지로 이동됩니다</string>
+
+    <string name="delete_user_confirm_dialog_title">계정을 탈퇴하시겠습니까?</string>
+    <string name="delete_user_confirm_dialog_notice_content">탈퇴 버튼을 누르면 탈퇴 신청을 위한\n웹 페이지로 접근합니다</string>
 </resources>

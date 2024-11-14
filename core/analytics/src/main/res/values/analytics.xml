@@ -32,5 +32,9 @@
     <string name="view_following_screen">ViewFollowingScreen</string>
     <string name="cancel_following_dialog">CancelFollowingDialog</string>
     <string name="edit_profile_screen">EditProfileScreen</string>
+    <string name="setting_screen">SettingScreen</string>
+    <string name="logout_confirm_dialog">LogoutConfirmDialog</string>
+    <string name="delete_user_confirm_dialog">DeleteUserConfirmDialog</string>
+    <string name="stop_edit_profile_dialog">StopEditProfileDialog</string>
 
 </resources>
