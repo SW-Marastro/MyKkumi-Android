@@ -2,8 +2,8 @@ name: Android CI/CD to Firebase App Distribution
 
 # Develop 브랜치에 push 될 때 확인
 on:
-  push:
-    branches: [ "develop" ]
+  # push:
+  #   branches: [ "develop" ]
   workflow_dispatch: # 테스트를 위한 수동 실행 옵션
 
 jobs:
