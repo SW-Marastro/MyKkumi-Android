@@ -47,8 +47,6 @@ class PostImagesAdapter(
                 .placeholder(R.drawable.img_loading_post)
                 .into(binding.imagePost)
 
-            binding.relativePinsOfImages.removeAllViews()
-
             val parent = binding.imagePost
 
             // 이미지 세로 사이즈를 가로 사이즈와 동일하게 설정
@@ -82,30 +80,31 @@ class PostImagesAdapter(
                         else {
                             notifyItemChanged(position)
                         }
+
+                        binding.relativePinsOfImages.removeAllViews()
+                        // 포스트에 핀 추가
+                        for(idx in 0..<item.pins.size) {
+                            val pin = item.pins[idx]
+
+                            val pinView = LayoutInflater.from(context).inflate(R.layout.item_pin_of_post_image, binding.relativePinsOfImages, false)
+                            binding.relativePinsOfImages.addView(pinView)
+
+                            pinView.post {
+                                pinView.x = pin.positionX * (parentWidth - pinView.width)
+                                pinView.y = pin.positionY * (parentHeight - pinView.height)
+                            }
+
+                            // 핀 터치 시 내용 열람
+                            pinView.setOnClickListener(View.OnClickListener {
+                                openViewProductInfo(item.pins[idx].productInfo)
+                            })
+                        }
                     }
 
                     // 리스너 제거
                     parent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
             })
-
-            // 포스트에 핀 추가
-            for(idx in 0..<item.pins.size) {
-                val pin = item.pins[idx]
-
-                val pinView = LayoutInflater.from(context).inflate(R.layout.item_pin_of_post_image, binding.relativePinsOfImages, false)
-                binding.relativePinsOfImages.addView(pinView)
-
-                pinView.post {
-                    pinView.x = pin.positionX * (parentWidth - pinView.width)
-                    pinView.y = pin.positionY * (parentHeight - pinView.height)
-                }
-
-                // 핀 터치 시 내용 열람
-                pinView.setOnClickListener(View.OnClickListener {
-                    openViewProductInfo(item.pins[idx].productInfo)
-                })
-            }
         }
     }
 }

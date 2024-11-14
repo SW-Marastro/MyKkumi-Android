@@ -2,7 +2,7 @@ package com.marastro.mykkumi.android
 
 import android.app.Application
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.marastro.mykkumi.data.util.KakaoInitializer
+import com.marastro.mykkumi.data.utils.KakaoInitializer
 import com.marastro.mykkumi.domain.datastore.AuthTokenDataStore
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject

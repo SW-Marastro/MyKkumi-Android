@@ -22,7 +22,7 @@ import com.marastro.mykkumi.data.datasource.ReportDataSource
 import com.marastro.mykkumi.data.datasource.UserInfoDataSource
 import com.marastro.mykkumi.data.interceptor.TokenAuthenticator
 import com.marastro.mykkumi.data.interceptor.TokenInterceptor
-import com.marastro.mykkumi.data.util.KakaoInitializer
+import com.marastro.mykkumi.data.utils.KakaoInitializer
 import com.marastro.mykkumi.domain.datastore.AuthTokenDataStore
 import com.marastro.mykkumi.domain.repository.ReAccessTokenRepository
 import dagger.hilt.android.qualifiers.ApplicationContext

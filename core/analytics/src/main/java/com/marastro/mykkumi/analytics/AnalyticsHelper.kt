@@ -17,8 +17,6 @@ class AnalyticsHelper @Inject constructor(
                 param(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
                 param("screen_name", screenName)
             }
-
-            Log.d("test", screenName)
         }
     }
 }
