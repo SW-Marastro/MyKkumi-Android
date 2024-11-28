@@ -2,6 +2,7 @@ package com.marastro.mykkumi.common_ui.post
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.RecyclerView
@@ -9,11 +10,13 @@ import com.bumptech.glide.Glide
 import com.marastro.mykkumi.common_ui.R
 import com.marastro.mykkumi.common_ui.databinding.ItemPostImageViewViewpagerBinding
 import com.marastro.mykkumi.domain.entity.HomePostImageVO
+import com.marastro.mykkumi.domain.entity.HomePostProductVO
 
 
 class PostImagesAdapter(
     private val context: Context,
-    private var postImageList: MutableList<HomePostImageVO>
+    private var postImageList: MutableList<HomePostImageVO>,
+    private val openViewProductInfo: (productInfo: HomePostProductVO) -> Unit,
 ) : RecyclerView.Adapter<PostImagesAdapter.PostItemImageViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -43,8 +46,6 @@ class PostImagesAdapter(
                 .load(item.url)
                 .placeholder(R.drawable.img_loading_post)
                 .into(binding.imagePost)
-
-            binding.relativePinsOfImages.removeAllViews()
 
             val parent = binding.imagePost
 
@@ -79,25 +80,31 @@ class PostImagesAdapter(
                         else {
                             notifyItemChanged(position)
                         }
+
+                        binding.relativePinsOfImages.removeAllViews()
+                        // 포스트에 핀 추가
+                        for(idx in 0..<item.pins.size) {
+                            val pin = item.pins[idx]
+
+                            val pinView = LayoutInflater.from(context).inflate(R.layout.item_pin_of_post_image, binding.relativePinsOfImages, false)
+                            binding.relativePinsOfImages.addView(pinView)
+
+                            pinView.post {
+                                pinView.x = pin.positionX * (parentWidth - pinView.width)
+                                pinView.y = pin.positionY * (parentHeight - pinView.height)
+                            }
+
+                            // 핀 터치 시 내용 열람
+                            pinView.setOnClickListener(View.OnClickListener {
+                                openViewProductInfo(item.pins[idx].productInfo)
+                            })
+                        }
                     }
 
                     // 리스너 제거
                     parent.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
             })
-
-            // 포스트에 핀 추가
-            for(idx in 0..<item.pins.size) {
-                val pin = item.pins[idx]
-
-                val pinView = LayoutInflater.from(context).inflate(R.layout.item_pin_of_post_image, binding.relativePinsOfImages, false)
-                binding.relativePinsOfImages.addView(pinView)
-
-                pinView.post {
-                    pinView.x = pin.positionX * (parentWidth - pinView.width)
-                    pinView.y = pin.positionY * (parentHeight - pinView.height)
-                }
-            }
         }
     }
 }

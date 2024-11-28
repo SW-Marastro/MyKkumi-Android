@@ -86,8 +86,6 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 com.marastro.mykkumi.feature.home.R.id.homeFragment,
-                com.marastro.mykkumi.feature.around.R.id.aroundFragment,
-                com.marastro.mykkumi.feature.shopping.R.id.shoppingFragment,
                 com.marastro.mykkumi.feature.mypage.R.id.mypageFragment -> {
                     binding.bottomNav.visibility = View.VISIBLE
                 }
@@ -100,8 +98,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if(navController.currentDestination?.id == com.marastro.mykkumi.feature.home.R.id.homeFragment ||
-            navController.currentDestination?.id == com.marastro.mykkumi.feature.around.R.id.aroundFragment ||
-            navController.currentDestination?.id == com.marastro.mykkumi.feature.shopping.R.id.shoppingFragment ||
             navController.currentDestination?.id == com.marastro.mykkumi.feature.mypage.R.id.mypageFragment) {
             if(System.currentTimeMillis() - waitTime >= 1500 ) {
                 waitTime = System.currentTimeMillis()

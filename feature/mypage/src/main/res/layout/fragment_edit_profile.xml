@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".editProfile.EditProfileFragment">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.marastro.mykkumi.feature.mypage.editProfile.EditProfileViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/header_edit_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:layout_alignParentTop="true">
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_back_btn"
+                android:scaleType="fitXY"
+                android:layout_marginLeft="15dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:background="@android:color/transparent"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/text_edit_profile_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_profile_title"
+                android:textSize="18sp"
+                android:textColor="@color/neutral_900"
+                android:fontFamily="@font/pretendard_semibold"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/relative_profile_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="20dp"
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:id="@+id/text_edit_profile_image_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/edit_profile_image_title"
+                        android:textSize="15sp"
+                        android:textColor="@color/neutral_900"
+                        android:fontFamily="@font/pretendard_semibold" />
+
+                    <ImageView
+                        android:id="@+id/img_edit_profile_image"
+                        android:layout_width="88dp"
+                        android:layout_height="88dp"
+                        android:src="@drawable/img_profile_default"
+                        android:layout_marginTop="12dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@+id/text_edit_profile_image_title"/>
+
+                    <TextView
+                        android:id="@+id/text_edit_profile_image_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/edit_profile_change_profile_image"
+                        android:textSize="13sp"
+                        android:textColor="@color/neutral_900"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:background="@drawable/shape_btn_round12_secondary"
+                        android:paddingVertical="12dp"
+                        android:paddingHorizontal="19.5dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/img_edit_profile_image"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relative_nickname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="20dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_below="@id/relative_profile_image">
+
+                    <TextView
+                        android:id="@+id/text_edit_nickname_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/edit_profile_nickname_title"
+                        android:textSize="15sp"
+                        android:textColor="@color/neutral_900"
+                        android:fontFamily="@font/pretendard_semibold" />
+
+                    <TextView
+                        android:id="@+id/text_edit_nickname_title_essential"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="*"
+                        android:textSize="15sp"
+                        android:textColor="@color/primary_color"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:layout_toRightOf="@id/text_edit_nickname_title"/>
+
+                    <EditText
+                        android:id="@+id/edittext_input_nickname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/edit_profile_nickname_placeholder"
+                        android:textColor="@color/neutral_900"
+                        android:textColorHint="@color/neutral_300"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/pretendard_medium"
+                        android:lines="1"
+                        android:inputType="text"
+                        android:gravity="top"
+                        android:layout_marginVertical="12dp"
+                        android:paddingVertical="14dp"
+                        android:paddingHorizontal="16dp"
+                        android:layout_below="@id/text_edit_nickname_title"
+                        android:background="@drawable/shape_input_border12_neutral200"/>
+
+                    <LinearLayout
+                        android:id="@+id/relative_edit_nickname_notice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/edittext_input_nickname"
+                        android:layout_marginLeft="16dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="4dp"
+                                android:layout_height="4dp"
+                                android:layout_marginRight="6dp"
+                                android:src="@drawable/ic_ellipse"/>
+
+                            <TextView
+                                android:id="@+id/text_edit_nickname_notice1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/edit_profile_nickname_notice1"
+                                android:textSize="12sp"
+                                android:textColor="@color/neutral_400"
+                                android:fontFamily="@font/pretendard_medium" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="1dp"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="4dp"
+                                android:layout_height="4dp"
+                                android:layout_marginRight="6dp"
+                                android:src="@drawable/ic_ellipse"/>
+
+                            <TextView
+                                android:id="@+id/text_edit_nickname_notice2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/edit_profile_nickname_notice2"
+                                android:textSize="12sp"
+                                android:textColor="@color/neutral_400"
+                                android:fontFamily="@font/pretendard_medium" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relative_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="20dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_below="@id/relative_nickname">
+
+                    <TextView
+                        android:id="@+id/text_edit_email_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/edit_profile_email_title"
+                        android:textSize="15sp"
+                        android:textColor="@color/neutral_900"
+                        android:fontFamily="@font/pretendard_semibold" />
+
+                    <TextView
+                        android:id="@+id/text_edit_email_title_essential"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="*"
+                        android:textSize="15sp"
+                        android:textColor="@color/primary_color"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:layout_toRightOf="@id/text_edit_email_title"/>
+
+                    <TextView
+                        android:id="@+id/text_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/neutral_900"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/pretendard_medium"
+                        android:layout_marginVertical="12dp"
+                        android:paddingVertical="14dp"
+                        android:paddingHorizontal="16dp"
+                        android:layout_below="@id/text_edit_email_title"
+                        android:background="@drawable/shape_input_border12_neutral200_50"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relative_introduction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="20dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_below="@id/relative_email">
+
+                    <TextView
+                        android:id="@+id/text_edit_introduction_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/edit_profile_introduction_title"
+                        android:textSize="15sp"
+                        android:textColor="@color/neutral_900"
+                        android:fontFamily="@font/pretendard_semibold" />
+
+                    <EditText
+                        android:id="@+id/edittext_input_introduction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/edit_profile_introduction_placeholder"
+                        android:textColor="@color/neutral_900"
+                        android:textColorHint="@color/neutral_300"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/pretendard_medium"
+                        android:gravity="top"
+                        android:layout_marginVertical="12dp"
+                        android:paddingVertical="14dp"
+                        android:paddingHorizontal="16dp"
+                        android:layout_below="@id/text_edit_introduction_title"
+                        android:background="@drawable/shape_input_border12_neutral200"/>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_hobby_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="40dp"
+                    android:orientation="vertical"
+                    android:layout_below="@id/relative_introduction">
+
+                    <TextView
+                        android:id="@+id/text_title_select_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/edit_profile_hobby_title"
+                        android:textSize="16sp"
+                        android:textColor="@color/neutral_900"
+                        android:fontFamily="@font/pretendard_bold"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerview_hobby_sub_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:nestedScrollingEnabled="false"
+                        android:overScrollMode="never"
+                        tools:listitem="@layout/item_hobby_sub_category" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/text_edit_profile_done_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/edit_profile_submit_button"
+                    android:textSize="15sp"
+                    android:textColor="@color/neutral_300"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:background="@drawable/shape_btn_round12_neutral50"
+                    android:paddingVertical="15.5dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:gravity="center"
+                    android:layout_below="@id/linear_hobby_category"/>
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</layout>

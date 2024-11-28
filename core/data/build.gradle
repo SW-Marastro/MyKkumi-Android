@@ -7,8 +7,11 @@ plugins {
 
 // 프로퍼티를 선언하고, 저장한 키값을 불러온다.
 Properties properties = new Properties()
-if (project.rootProject.file('local.properties').exists()) {
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def localPropertiesFile = project.rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { stream ->
+        properties.load(stream)
+    }
 }
 
 android {
@@ -20,38 +23,44 @@ android {
         targetSdk target_sdk_version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        // local.properties에서 base url, kakao native app key 받아오기
-        def baseUrl = properties.getProperty('api.baseurl', '')
-        def kakaoNativeAppKey = properties.getProperty('kakao.native.app.key', '')
-
-        if (!baseUrl.isEmpty()) buildConfigField "String", 'BASE_URL', "${baseUrl}"
-        else throw new GradleException("BASE_URL is not set in local.properties")
-
-        if (!kakaoNativeAppKey.isEmpty()) {
-            buildConfigField "String", 'KAKAO_NATIVE_APP_KEY', "\"${kakaoNativeAppKey}\""
-            //manifestPlaceholders = [KAKAO_NATIVE_APP_KEY: kakaoNativeAppKey]
-        } else throw new GradleException("KAKAO_NATIVE_APP_KEY is not set in local.properties")
     }
 
     buildTypes {
         release {
+            def baseUrl = properties.getProperty('api.release.baseurl', '')
+            def kakaoNativeAppKey = properties.getProperty('kakao.native.app.release.key', '')
+
+            if (!baseUrl.isEmpty()) {
+                buildConfigField "String", 'BASE_URL', "${baseUrl}"
+            } else {
+                throw new GradleException("BASE_URL is not set in local.properties")
+            }
+
+            if (!kakaoNativeAppKey.isEmpty()) {
+                buildConfigField "String", 'KAKAO_NATIVE_APP_KEY', "\"${kakaoNativeAppKey}\""
+            } else {
+                throw new GradleException("KAKAO_NATIVE_APP_KEY is not set in local.properties")
+            }
+
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-//        debug {
-//            // local.properties에서 base url, kakao native app key 받아오기
-//            def baseUrl = properties.getProperty('api.dev.baseurl', '')
-//            def kakaoNativeAppKey = properties.getProperty('kakao.native.app.key', '')
-//
-//            if (!baseUrl.isEmpty()) buildConfigField "String", 'BASE_URL', "${baseUrl}"
-//            else throw new GradleException("BASE_URL is not set in local.properties")
-//
-//            if (!kakaoNativeAppKey.isEmpty()) {
-//                buildConfigField "String", 'KAKAO_NATIVE_APP_KEY', "\"${kakaoNativeAppKey}\""
-//                //manifestPlaceholders = [KAKAO_NATIVE_APP_KEY: kakaoNativeAppKey]
-//            } else throw new GradleException("KAKAO_NATIVE_APP_KEY is not set in local.properties")
-//        }
+        debug {
+            def baseUrl = properties.getProperty('api.dev.baseurl', '')
+            def kakaoNativeAppKey = properties.getProperty('kakao.native.app.dev.key', '')
+
+            if (!baseUrl.isEmpty()) {
+                buildConfigField "String", 'BASE_URL', "${baseUrl}"
+            } else {
+                throw new GradleException("BASE_URL is not set in local.properties")
+            }
+
+            if (!kakaoNativeAppKey.isEmpty()) {
+                buildConfigField "String", 'KAKAO_NATIVE_APP_KEY', "\"${kakaoNativeAppKey}\""
+            } else {
+                throw new GradleException("KAKAO_NATIVE_APP_KEY is not set in local.properties")
+            }
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -75,7 +84,6 @@ dependencies {
     // Test
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$junit_test_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core_version"
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"

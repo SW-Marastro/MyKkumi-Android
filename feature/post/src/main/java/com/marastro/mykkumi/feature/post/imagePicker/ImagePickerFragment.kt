@@ -11,12 +11,20 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import com.marastro.mykkumi.analytics.AnalyticsHelper
 import com.marastro.mykkumi.common_ui.base.BaseFragment
 import com.marastro.mykkumi.common_ui.permission.ImagePermissionUtils
 import com.marastro.mykkumi.feature.post.R
 import com.marastro.mykkumi.feature.post.databinding.FragmentImagePickerBinding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import com.marastro.mykkumi.common_ui.R as StringR
 
+@AndroidEntryPoint
 class ImagePickerFragment : BaseFragment<FragmentImagePickerBinding>(R.layout.fragment_image_picker) {
+
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
 
     private val viewModel by viewModels<ImagePickerViewModel>()
     private val args: ImagePickerFragmentArgs by navArgs()
@@ -35,6 +43,9 @@ class ImagePickerFragment : BaseFragment<FragmentImagePickerBinding>(R.layout.fr
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Firebase Analytics 화면 이름 로깅
+        analyticsHelper.logScreenView(getString(com.marastro.mykkumi.analytics.R.string.image_picker_screen))
+
         activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), com.marastro.mykkumi.common_ui.R.color.neutral_900)
         activity?.window?.decorView?.systemUiVisibility =
             activity?.window?.decorView?.systemUiVisibility?.and(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()) ?: 0
@@ -46,7 +57,7 @@ class ImagePickerFragment : BaseFragment<FragmentImagePickerBinding>(R.layout.fr
         binding.btnDonePicker.setOnClickListener(View.OnClickListener {
             // 선택한 이미지가 있는지 확인
             if(viewModel.selectImage.value.isNullOrEmpty()) {
-                Toast.makeText(requireContext(), R.string.notice_not_select_image, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), StringR.string.notice_not_select_image, Toast.LENGTH_SHORT).show()
             }
             else {
                 viewModel.doneSelectImages(navController)

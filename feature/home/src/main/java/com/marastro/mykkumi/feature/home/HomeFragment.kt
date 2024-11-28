@@ -11,12 +11,16 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.marastro.mykkumi.analytics.AnalyticsHelper
 import com.marastro.mykkumi.common_ui.base.BaseFragment
+import com.marastro.mykkumi.common_ui.post.ViewProductInfoBottomSheet
 import com.marastro.mykkumi.common_ui.report.PostReportConfirmDialog
 import com.marastro.mykkumi.common_ui.report.PostWriterReportConfirmDialog
 import com.marastro.mykkumi.domain.entity.BannerItemVO
+import com.marastro.mykkumi.domain.entity.HomePostProductVO
 import com.marastro.mykkumi.feature.home.banner.HomeBannerViewPagerAdapter
 import com.marastro.mykkumi.feature.home.databinding.FragmentHomeBinding
+import com.marastro.mykkumi.feature.home.post.PostDeleteConfirmDialog
 import com.marastro.mykkumi.feature.home.post.PostListAdapter
 import com.marastro.mykkumi.feature.home.report.ChooseReportBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,10 +28,15 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.Timer
 import java.util.TimerTask
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
-    ChooseReportBottomSheet.ChooseReportListener {
+    ChooseReportBottomSheet.ChooseReportListener{
+
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
+
     private val viewModel by viewModels<HomeViewModel>()
 
     private lateinit var bannerAdapter: HomeBannerViewPagerAdapter
@@ -50,6 +59,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Firebase Analytics 화면 이름 로깅
+        analyticsHelper.logScreenView(getString(com.marastro.mykkumi.analytics.R.string.home_screen))
+
         navController = view.findNavController()
         binding.includeListLoading.visibility = View.VISIBLE
 
@@ -61,18 +73,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
 
         startAutoScroll()
 
-        binding.btnSearch.setOnClickListener {
-            waitNotice()
-        }
-        binding.btnNotice.setOnClickListener {
-            waitNotice()
-        }
-
         // Swipe 새로고침
         binding.swipeRefreshLayout.setOnRefreshListener {
             onResume()
             binding.swipeRefreshLayout.isRefreshing = false
         }
+
+        // 포스트 삭제됨 -> 새로 고침
+        viewModel.isDeletePostDone.observe(viewLifecycleOwner, Observer { isDeletePostDone ->
+            if(isDeletePostDone) {
+                onResume()
+                viewModel.doneResume()
+            }
+        })
 
         // 포스트 리스트 추가
         viewModel.postCursor.observe(viewLifecycleOwner, Observer {
@@ -96,10 +109,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
         })
     }
 
+//    override fun getScreenForLogAnalytics(): String {
+//        return getString(com.marastro.mykkumi.common_ui.R.string.home_screen)
+//    }
+
     override suspend fun initView() {
         bind {
             vm = viewModel
         }
+
+        viewModel.initUserInfo()
 
         setHomeBanner() // 배너
         setPostList() // 포스트
@@ -197,7 +216,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             reportPost = { writerUuid: String, postId: Int ->
                 postReportConfirm(writerUuid, postId)
             },
-            viewModel
+            deletePost = {
+                deletePostDialog(it)
+            },
+            viewModel,
+            openViewProductInfo = {
+                openViewProductInfo(it)
+            },
+            userNickname = viewModel.userNickname.value
         )
         binding.recyclerviewPostList.layoutManager = LinearLayoutManager(
             context,
@@ -257,24 +283,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     }
 
     // 포스트 신고 확인 Dialog
+    // 신고하기 - 포스트, 유저 중 어떤 걸 신고할지 선택
     private fun postReportConfirm(writerUuid: String, postId: Int) {
         // ✅ 1차 배포용
         // 포스트 신고, 사용자 신고 중 선택
         val intent = viewModel.navigateLogin()
         if(intent == null) { // 로그인 됨
-            viewModel.chooseReport(
-                fragment = this,
-                writerUuid = writerUuid,
-                postId = postId
-            )
-            // 포스트 신고 확인 팝업
-//            val dialog = PostReportConfirmDialog(this)
-//            dialog.setOnClickListener { postId ->
-//                Toast.makeText(context, getString(com.swmarastro.mykkumi.common_ui.R.string.post_report_confirm_clear_toast), Toast.LENGTH_SHORT).show()
-//                Log.d("test", "신고 포스트: ${postId}")
-//            }
-//
-//            dialog.show(postId)
+            val bundle = Bundle()
+            bundle.putString("writerUuid", writerUuid)
+            bundle.putInt("postId", postId)
+
+            val bottomSheet = ChooseReportBottomSheet().apply {
+                setListener(this@HomeFragment)
+                setAnalyticsHelper(analyticsHelper)
+            }
+            bottomSheet.arguments = bundle
+            bottomSheet.show(this.parentFragmentManager, bottomSheet.tag)
         }
         else { // 로그인 안 됨
             startActivity(intent)
@@ -283,7 +307,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
 
     // 포스트 신고
     override fun reportPost(postId: Int) {
-        val dialog = PostReportConfirmDialog(this)
+        val dialog = PostReportConfirmDialog(this, analyticsHelper)
         dialog.setOnClickListener { postId ->
             viewModel.reportPost(
                 postId = postId.toLong(),
@@ -297,7 +321,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
 
     // 작성자 신고
     override fun repostWriter(writerUuid: String) {
-        val dialog = PostWriterReportConfirmDialog(this)
+        val dialog = PostWriterReportConfirmDialog(this, analyticsHelper)
         dialog.setOnClickListener { writerUuid ->
             viewModel.reportWriter(
                 userUuid = writerUuid,
@@ -307,6 +331,33 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             )
         }
         dialog.show(writerUuid)
+    }
+
+    // 포스트 삭제
+    fun deletePostDialog(postId: Int) {
+        val dialog = PostDeleteConfirmDialog(this, analyticsHelper)
+        dialog.setOnClickListener { postId ->
+            viewModel.deletePost(
+                postId = postId,
+                showToast = {
+                    showToast(it)
+                }
+            )
+        }
+        dialog.show(postId)
+    }
+
+    // 제품 정보 열람
+    fun openViewProductInfo(productInfo: HomePostProductVO) {
+        val bundle = Bundle()
+        bundle.putString("productName", productInfo.name)
+        bundle.putString("productUrl", productInfo.url)
+
+        val bottomSheet = ViewProductInfoBottomSheet().apply {
+            setAnalyticsHelper(analyticsHelper)
+        }
+        bottomSheet.arguments = bundle
+        bottomSheet.show(this.parentFragmentManager, bottomSheet.tag)
     }
 
     override fun onDestroyView() {

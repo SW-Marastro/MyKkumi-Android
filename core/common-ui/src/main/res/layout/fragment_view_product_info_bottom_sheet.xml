@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.marastro.mykkumi.common_ui.post.ViewProductInfoBottomSheet">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingHorizontal="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/neutral_900"
+            android:fontFamily="@font/pretendard_semibold"
+            android:text="@string/title_view_product_info"
+            android:layout_marginBottom="28dp"/>
+
+        <LinearLayout
+            android:id="@+id/linear_input_product_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="84dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_input_product_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_product_name_for_input_product_info"
+                android:textSize="15sp"
+                android:textColor="@color/neutral_700"
+                android:fontFamily="@font/pretendard_semibold"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/text_input_product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/neutral_900"
+                android:fontFamily="@font/pretendard_medium"
+                android:textColorHint="@color/neutral_300"
+                android:gravity="top"
+                android:paddingVertical="14dp"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/shape_back_light_round12" />
+
+            <TextView
+                android:id="@+id/text_input_product_url_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_product_url_for_input_product_info"
+                android:textSize="15sp"
+                android:textColor="@color/neutral_700"
+                android:fontFamily="@font/pretendard_semibold"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/text_input_product_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/neutral_900"
+                android:fontFamily="@font/pretendard_medium"
+                android:textColorHint="@color/neutral_300"
+                android:gravity="top"
+                android:paddingVertical="14dp"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/shape_back_light_round12"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_confirm_btns"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp">
+
+
+            <TextView
+                android:id="@+id/btn_close"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/close_view_product_info"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:fontFamily="@font/pretendard_semibold"
+                android:background="@drawable/shape_btn_round12_primary"
+                android:gravity="center"
+                android:paddingVertical="15.5dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

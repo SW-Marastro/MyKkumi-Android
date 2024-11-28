@@ -20,4 +20,14 @@ class CustomScrollView(context: Context, attrs: AttributeSet?) : ScrollView(cont
     fun setScrollingEnabled(enabled: Boolean) {
         isScrollable = enabled
     }
+
+    // 스크롤을 즉시 맨 위로 이동
+    fun scrollToTop() {
+        scrollTo(0, 0)
+    }
+
+    // 스크롤을 부드럽게 맨 위로 이동
+    fun smoothScrollToTop() {
+        smoothScrollTo(0, 0)
+    }
 }

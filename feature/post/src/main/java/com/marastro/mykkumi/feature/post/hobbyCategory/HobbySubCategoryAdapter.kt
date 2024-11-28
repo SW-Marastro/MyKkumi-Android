@@ -6,27 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.marastro.mykkumi.common_ui.databinding.ItemHobbySubCategoryBinding
 import com.marastro.mykkumi.domain.entity.HobbySubCategoryItemVO
-import com.marastro.mykkumi.feature.post.PostEditViewModel
-import com.marastro.mykkumi.feature.post.R
-import com.marastro.mykkumi.feature.post.databinding.ItemHobbySubCategoryBinding
 
 class HobbySubCategoryAdapter (
     private val context: Context,
-    private val viewModel: PostEditViewModel
+    private val viewModel: AccessAbleToHobbyCategory
 ) : RecyclerView.Adapter<HobbySubCategoryAdapter.HobbySubCategoryViewHolder>(){
     var hobbySubCategoryList = mutableListOf<HobbySubCategoryItemVO>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): HobbySubCategoryAdapter.HobbySubCategoryViewHolder {
+    ): HobbySubCategoryViewHolder {
         val binding = ItemHobbySubCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HobbySubCategoryViewHolder(binding)
     }
 
     override fun onBindViewHolder(
-        holder: HobbySubCategoryAdapter.HobbySubCategoryViewHolder,
+        holder: HobbySubCategoryViewHolder,
         position: Int
     ) {
         holder.bind(hobbySubCategoryList[position])
@@ -41,11 +39,11 @@ class HobbySubCategoryAdapter (
             binding.textHobbySubCategory.text = item.subCategoryName
 
             if(item.subCategoryId == viewModel.selectHobbyCategory.value) {
-                binding.linearSubHobbyCategory.setBackgroundResource(R.drawable.shape_sub_category_selected)
+                binding.linearSubHobbyCategory.setBackgroundResource(com.marastro.mykkumi.common_ui.R.drawable.shape_sub_category_selected)
                 binding.textHobbySubCategory.setTextColor(ContextCompat.getColor(context, com.marastro.mykkumi.common_ui.R.color.white))
             }
             else {
-                binding.linearSubHobbyCategory.setBackgroundResource(R.drawable.shape_sub_category_unselected)
+                binding.linearSubHobbyCategory.setBackgroundResource(com.marastro.mykkumi.common_ui.R.drawable.shape_sub_category_unselected)
                 binding.textHobbySubCategory.setTextColor(ContextCompat.getColor(context, com.marastro.mykkumi.common_ui.R.color.neutral_700))
             }
 

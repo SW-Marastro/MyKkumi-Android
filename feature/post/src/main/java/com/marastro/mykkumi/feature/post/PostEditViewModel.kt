@@ -2,6 +2,7 @@ package com.marastro.mykkumi.feature.post
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,6 +16,7 @@ import com.marastro.mykkumi.domain.entity.PostImageVO
 import com.marastro.mykkumi.domain.repository.PreSignedUrlRepository
 import com.marastro.mykkumi.domain.usecase.post.GetHobbyCategoryListUseCase
 import com.marastro.mykkumi.domain.usecase.post.UploadPostUseCase
+import com.marastro.mykkumi.feature.post.hobbyCategory.AccessAbleToHobbyCategory
 import com.marastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +31,7 @@ class PostEditViewModel  @Inject constructor(
     private val preSignedUrlRepository: PreSignedUrlRepository,
     private val uploadPostUseCase: UploadPostUseCase,
     private val getHobbyCategoryListUseCase: GetHobbyCategoryListUseCase,
-) : ViewModel() {
+) : ViewModel(), AccessAbleToHobbyCategory { // , AccessableToCurrentPinList , PostEditItemClickListener
     final val MAX_IMAGE_COUNT = 10
     final val MAX_PIN_COUNT = 10
 
@@ -48,11 +50,15 @@ class PostEditViewModel  @Inject constructor(
     private val _currentPinList = MutableLiveData<MutableList<PostEditPinVO>>(mutableListOf())
     val currentPinList : LiveData<MutableList<PostEditPinVO>> get() = _currentPinList
 
+    // 새롭게 추가되거나 수정된 핀
+    private val _newEditPin =  MutableLiveData<Int>(-1)
+    val newEditPin : LiveData<Int> get() = _newEditPin
+
     private val _isDeleteImageState = MutableLiveData<Boolean>(false)
     val isDeleteImageState : LiveData<Boolean> get() = _isDeleteImageState
 
     private val _selectHobbyCategory = MutableLiveData<Long>(-1L)
-    val selectHobbyCategory : LiveData<Long> get() = _selectHobbyCategory
+    override val selectHobbyCategory : LiveData<Long> get() = _selectHobbyCategory
 
     fun selectPostImage(uris: MutableList<Uri>) {
         viewModelScope.launch {
@@ -118,10 +124,12 @@ class PostEditViewModel  @Inject constructor(
         else {
             _currentPinList.setValue( mutableListOf() )
         }
+
+        _newEditPin.value = -1
     }
 
     // 핀 추가를 위한 제품명 입력 요청
-    fun requestProductInfoForPin(fragment: PostEditFragment, position: Int?) {
+    fun requestProductInfoForPin(position: Int?): Bundle {
         val bundle = Bundle()
         if (position != null) { // 핀 수정
             bundle.putInt("position", position)
@@ -131,9 +139,8 @@ class PostEditViewModel  @Inject constructor(
         else {
             bundle.putInt("position", -1)
         }
-        val bottomSheet = InputProductInfoBottomSheet().apply { setListener(fragment) }
-        bottomSheet.arguments = bundle
-        bottomSheet.show(fragment.parentFragmentManager, bottomSheet.tag)
+
+        return bundle
     }
 
     // 핀 추가
@@ -150,8 +157,10 @@ class PostEditViewModel  @Inject constructor(
                     )
                 )
             }
-            _currentPinList.value = mutableListOf()
-            _currentPinList.postValue( addPinList )
+            _currentPinList.value = addPinList
+
+            // 추가된 핀 표시를 위한
+            _newEditPin.value = currentPinList.value?.size!! - 1
         }
     }
 
@@ -159,6 +168,14 @@ class PostEditViewModel  @Inject constructor(
     fun updateProductInfoForPin(position: Int, productName: String, productUrl: String?) {
         _currentPinList.value?.get(position)?.product!!.productName = productName
         _currentPinList.value?.get(position)?.product!!.productUrl = productUrl
+
+        // 수정된 핀 표시를 위한
+        _newEditPin.value = position
+    }
+
+    // 새로운 핀 강조 끝남
+    fun doneHighlightNewPin() {
+        _newEditPin.value = -1
     }
 
     // 핀 삭제
@@ -222,7 +239,7 @@ class PostEditViewModel  @Inject constructor(
     }
 
     // 관심 취미 선택
-    fun setHobbySelected(selectHobbyId: Long) {
+    override fun setHobbySelected(selectHobbyId: Long) {
         _selectHobbyCategory.value = selectHobbyId
     }
 
@@ -243,6 +260,12 @@ class PostEditViewModel  @Inject constructor(
             showToast(noticeEmptyCategory)
         }
         else {
+            if(selectImagePosition.value!! >= 0) {
+                _postEditUiState.value?.get(selectImagePosition.value!!)?.apply {
+                    pinList = currentPinList.value ?: mutableListOf()
+                }
+            }
+
             uploadPost(
                 content,
                 showToast = {
@@ -274,6 +297,7 @@ class PostEditViewModel  @Inject constructor(
     ) {
         viewModelScope.launch {
             try {
+                // TODO: 포스트 조회 API 완성되면, 아래 id로 조회해서 상세 페이지로 이동
                 val uploadPostId = uploadPostUseCase(
                     subCategory = selectHobbyCategory.value!!, // 카테고리 선택됐는지 확인하고 넘어옴
                     content = content,

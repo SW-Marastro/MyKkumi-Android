@@ -58,6 +58,19 @@
             android:background="@drawable/shape_btn_round6_primary"
             android:layout_alignParentRight="true"/>
 
+        <TextView
+            android:id="@+id/btn_delete_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:text="@string/btn_delete_post"
+            android:textColor="@color/neutral_900"
+            android:textSize="13sp"
+            android:fontFamily="@font/pretendard_medium"
+            android:background="@drawable/shape_btn_round6_neutral100"
+            android:layout_alignParentRight="true"/>
+
     </RelativeLayout>
 
 </layout>

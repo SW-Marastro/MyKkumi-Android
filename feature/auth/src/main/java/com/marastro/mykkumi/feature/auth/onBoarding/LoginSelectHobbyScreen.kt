@@ -40,6 +40,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation.NavController
+import com.marastro.mykkumi.analytics.AnalyticsHelper
 import com.marastro.mykkumi.domain.entity.HobbyCategoryItemVO
 import com.marastro.mykkumi.domain.entity.HobbySubCategoryItemVO
 import com.marastro.mykkumi.feature.auth.R
@@ -48,7 +49,11 @@ import com.marastro.mykkumi.feature.auth.R
 @Composable
 fun LoginSelectHobbyScreen(
     navController: NavController,
+    analyticsHelper: AnalyticsHelper,
 ) {
+    // Firebase Analytics 화면 이름 로깅
+    analyticsHelper.logScreenView(stringResource(id = com.marastro.mykkumi.analytics.R.string.select_category_screen))
+
     val viewModel: LoginSelectHobbyViewModel = ViewModelProvider(
         LocalContext.current as ComponentActivity
     ).get(LoginSelectHobbyViewModel::class.java)
@@ -187,6 +192,10 @@ fun HobbySubCategoryItem(
     subCategory: HobbySubCategoryItemVO,
     viewModel: LoginSelectHobbyViewModel
 ) {
+    val imageDrawablePath = "ic_hobby_category_${subCategory.subCategoryId}"
+    val context = LocalContext.current
+    val imageResId = context.resources.getIdentifier(imageDrawablePath, "drawable", context.packageName)
+
     var backgroundColor = remember { mutableStateOf(
         if (viewModel.isHobbySelected(subCategory)) {
             Color.Green
@@ -223,11 +232,10 @@ fun HobbySubCategoryItem(
             }
     ) {
         Image(
-            painter = painterResource(
-                id = R.drawable.img_hobby_category_default),
-            contentDescription = "default image",
+            painter = painterResource(id = imageResId),
+            contentDescription = "hobby category image",
             modifier = Modifier
-                .size(60.dp)
+                .size(72.dp)
                 .align(Alignment.CenterHorizontally)
                 .clip(RoundedCornerShape(16.dp))
                 .then(borderModifier.value),

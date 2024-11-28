@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -38,6 +39,7 @@ android {
 dependencies {
     implementation project(':core:common-ui')
     implementation project(':core:domain')
+    implementation project(':core:analytics')
 
     // UI
     implementation "androidx.core:core-ktx:$androidx_core_version"
@@ -60,4 +62,10 @@ dependencies {
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+
+    // flexboxLayoutManager
+    implementation "com.google.android.flexbox:flexbox:$flexbox_version"
 }

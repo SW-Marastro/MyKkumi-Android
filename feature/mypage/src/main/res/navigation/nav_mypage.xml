@@ -11,4 +11,26 @@
         android:label="fragment_mypage"
         tools:layout="@layout/fragment_mypage" />
 
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.marastro.mykkumi.feature.mypage.setting.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting">
+
+        <deepLink
+            app:uri="mykkumi://setting"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.marastro.mykkumi.feature.mypage.editProfile.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile">
+
+        <deepLink
+            app:uri="mykkumi://profile.edit"/>
+
+    </fragment>
+
 </navigation>

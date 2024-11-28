@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import com.marastro.mykkumi.data.datasource.PreSignedUrlDataSource
 import com.marastro.mykkumi.data.datasource.PutImageS3DataSource
-import com.marastro.mykkumi.data.util.FormDataUtil
+import com.marastro.mykkumi.data.utils.FormDataUtil
 import com.marastro.mykkumi.domain.repository.PreSignedUrlRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

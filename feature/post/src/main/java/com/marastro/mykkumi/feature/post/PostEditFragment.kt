@@ -20,6 +20,7 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
+import com.marastro.mykkumi.analytics.AnalyticsHelper
 import com.marastro.mykkumi.common_ui.base.BaseFragment
 import com.marastro.mykkumi.feature.post.confirm.PostDeleteImageConfirmDialog
 import com.marastro.mykkumi.feature.post.databinding.FragmentPostEditBinding
@@ -29,14 +30,20 @@ import com.marastro.mykkumi.feature.post.imageWithPin.EditImageWithPinAdapter
 import com.marastro.mykkumi.feature.post.imageWithPin.InputProductInfoBottomSheet
 import com.marastro.mykkumi.feature.post.touchEvent.PostEditImageTouchCallback
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import com.marastro.mykkumi.common_ui.R as StringR
 
 @AndroidEntryPoint
 class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment_post_edit),
     InputProductInfoBottomSheet.InputProductInfoListener {
+
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
+
     private val viewModel by viewModels<PostEditViewModel>()
 
-    private final val MAX_POST_CONTENT_LENGTH = 2000      // 본문 글자 수
-    private final val MAX_POST_CONTENT_HASHTAG_COUNT = 20 // 본문 해시태그 수
+    private val MAX_POST_CONTENT_LENGTH = 2000      // 본문 글자 수
+    private val MAX_POST_CONTENT_HASHTAG_COUNT = 20 // 본문 해시태그 수
 
     private lateinit var selectPostImageListAdapter: SelectPostImageListAdapter // 이미지들 썸네일 나열
     private lateinit var editImageWithPinAdapter: EditImageWithPinAdapter // 이미지 편집 view (핀 추가할 수 있는)
@@ -78,6 +85,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
         if(navController?.currentDestination?.id == R.id.postEditFragment && !isStartPosting) {
             navController?.popBackStack()
         }
+
         // 상태 복원 완료
         isRestoringState = false
     }
@@ -85,9 +93,14 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Firebase Analytics 화면 이름 로깅
+        analyticsHelper.logScreenView(getString(com.marastro.mykkumi.analytics.R.string.edit_post_screen))
+
         navController = view.findNavController()
 
-        binding.relativeEmptyImage.visibility = View.GONE
+        if(!viewModel.postEditUiState.value.isNullOrEmpty()) binding.relativeEmptyImage.visibility = View.GONE
+        else binding.relativeEmptyImage.visibility = View.VISIBLE
+
         binding.textBtnUploadPost.setBackgroundResource(com.marastro.mykkumi.common_ui.R.drawable.shape_btn_round12_neutral50)
         binding.textBtnUploadPost.setTextColor(ContextCompat.getColor(requireContext(), com.marastro.mykkumi.common_ui.R.color.neutral_700))
         binding.textCountContent.visibility = View.GONE
@@ -107,7 +120,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                 showToast("핀은 최대 ${viewModel.MAX_PIN_COUNT}개까지 추가할 수 있어요.")
             }
             else {
-                viewModel.requestProductInfoForPin(this@PostEditFragment, null)
+                requestUpdateProductInfo(null)
             }
         })
 
@@ -134,7 +147,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                         binding.edittextInputContent.setText(concat(s.subSequence(0, start + subLength), s.subSequence(start + count, s.length)))
 
                         binding.edittextInputContent.setSelection(start + subLength) // 커서를 입력하고 있던 곳에
-                        showToast(getString(R.string.notice_post_content_max_length))
+                        showToast(getString(StringR.string.notice_post_content_max_length))
                     }
 
                     // 해시태그 개수
@@ -144,7 +157,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
                         binding.edittextInputContent.setText(concat(s.subSequence(0, hashTagIndex), s.subSequence(start + count, s.length)))
 
                         binding.edittextInputContent.setSelection(hashTagIndex) // 커서를 입력하고 있던 곳에
-                        showToast(getString(R.string.notice_post_hashtag_max_count))
+                        showToast(getString(StringR.string.notice_post_hashtag_max_count))
                     }
 
                     // 본문 입력 중
@@ -169,8 +182,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             val content = binding.edittextInputContent.text.toString()
             viewModel.doneEditPost(
                 content = content,
-                noticeEmptyImage = getString(R.string.notice_not_select_image),
-                noticeEmptyCategory = getString(R.string.notice_select_hobby_category_of_post),
+                noticeEmptyImage = getString(StringR.string.notice_not_select_image),
+                noticeEmptyCategory = getString(StringR.string.notice_select_hobby_category_of_post),
                 showToast = {
                     showToast(it)
                 },
@@ -244,8 +257,8 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     // 선택된 이미지 편집 화면 viewpager init
     private fun initEditImageWithPinViewPager() {
         editImageWithPinAdapter = EditImageWithPinAdapter(
-            requireContext(),
-            viewModel,
+            context = requireContext(),
+            resources = resources,
             lockViewPagerMoving = {
                 lockViewPagerMoving()
             },
@@ -255,7 +268,15 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             updateProductInfo = {
                 requestUpdateProductInfo(it)
             },
-            resources = resources
+            deletePinOfImage = { position ->
+                viewModel.deletePinOfImage(
+                    position = position,
+                    message = getString(com.marastro.mykkumi.common_ui.R.string.toast_delete_pin),
+                    showToast = { showToast(it) }
+                )
+            },
+            //accessableToCurrentPinList = viewModel,
+            //postEditItemClickListener = viewModel,
         )
         binding.viewpagerPostEditImages.adapter = editImageWithPinAdapter
         binding.viewpagerPostEditImages.orientation = ViewPager2.ORIENTATION_HORIZONTAL
@@ -340,6 +361,18 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
             }
         })
 
+        // 핀 추가 및 변화 강조
+        viewModel.newEditPin.observe(viewLifecycleOwner, Observer { newPin ->
+            if(newPin != -1) {
+                editImageWithPinAdapter.updateNewEditPin(
+                    selectImagePosition = viewModel.selectImagePosition.value!!,
+                    newEditPin = viewModel.newEditPin.value!!
+                )
+                viewModel.doneHighlightNewPin()
+            }
+            // else editImageWithPinAdapter.notifyDataSetChanged()
+        })
+
         // 이미지 삭제 처리
         viewModel.isDeleteImageState.observe(viewLifecycleOwner, Observer {
             binding.viewpagerPostEditImages.setCurrentItem(viewModel.selectImagePosition.value!!, false)
@@ -376,7 +409,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
     // 이미지 삭제 -> notice
     private fun confirmDeleteImage(imageIndex: Int) {
-        val dialog = PostDeleteImageConfirmDialog(this)
+        val dialog = PostDeleteImageConfirmDialog(this, analyticsHelper)
         dialog.confirmPostReportListener { postId ->
             confirmAgree(postId)
         }
@@ -389,7 +422,7 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
     fun confirmAgree(position: Int) {
         viewModel.deleteImage(position)
         viewModel.doneDeleteImage()
-        showToast(getString(R.string.toast_done_delete))
+        showToast(getString(StringR.string.toast_done_delete))
 
         // 이미지 전체 삭제된 경우
         if(viewModel.postEditUiState.value.isNullOrEmpty()) {
@@ -411,17 +444,42 @@ class PostEditFragment : BaseFragment<FragmentPostEditBinding>(R.layout.fragment
 
     // 핀 추가
     override fun submitProductInput(productName: String, productUrl: String?) {
+        binding.scrollEditPost.smoothScrollToTop() // 핀 추가 후 스크롤 최상단으로 이동
+
         viewModel.addPinOfImage(productName, productUrl)
+
+        // 핀 내용 입력 완료되면 스크롤 풀어주기
+        binding.viewpagerPostEditImages.isUserInputEnabled = true
+        binding.scrollEditPost.setScrollingEnabled(true)
+
+        // showToast(getString(com.marastro.mykkumi.common_ui.R.string.notice_edit_post_add_pin))
     }
 
     // 핀 내용 수정을 위한 입력 요청
-    private fun requestUpdateProductInfo(position: Int) {
-        viewModel.requestProductInfoForPin(this@PostEditFragment, position)
+    private fun requestUpdateProductInfo(position: Int?) {
+        // 핀 내용 입력되는 동안 스크롤 막기
+        binding.viewpagerPostEditImages.isUserInputEnabled = false
+        binding.scrollEditPost.setScrollingEnabled(false)
+
+        val bundle = viewModel.requestProductInfoForPin(position)
+
+        val bottomSheet = InputProductInfoBottomSheet().apply {
+            setListener(this@PostEditFragment)
+            setAnalyticsHelper(analyticsHelper)
+        }
+        bottomSheet.arguments = bundle
+        bottomSheet.show(this.parentFragmentManager, bottomSheet.tag)
     }
 
     // 핀 내용(제품 정보) 수정
     override fun updateProductInput(position: Int, productName: String, productUrl: String?) {
+        binding.scrollEditPost.smoothScrollToTop() // 핀 수정 후 스크롤 최상단으로 이동
+
         viewModel.updateProductInfoForPin(position, productName, productUrl)
+
+        // 핀 내용 입력 완료되면 스크롤 풀어주기
+        binding.viewpagerPostEditImages.isUserInputEnabled = true
+        binding.scrollEditPost.setScrollingEnabled(true)
     }
 
     // pin 이동 중일 때는 viewPager 전환 안 되게 막기

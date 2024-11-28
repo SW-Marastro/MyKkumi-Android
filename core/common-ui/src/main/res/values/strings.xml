@@ -28,9 +28,21 @@
 
     <!-- 홈 -->
     <string name="home_banner_all_title">이벤트</string>
-    <string name="user_complaint">신고하기</string>
+    <string name="user_report">신고하기</string>
     <string name="btn_follow">팔로우</string>
+    <string name="btn_delete_post">삭제</string>
     <string name="btn_add_comment">댓글 작성</string>
+    <string name="btn_more_content">더보기</string>
+    <string name="btn_close_content">접기</string>
+
+    <string name="notice_more_banner">더 많은 이벤트가 있어요!</string>
+    <string name="btn_open_more_banner">이벤트 모두 보기</string>
+
+    <string name="title_view_product_info">제품 정보</string>
+    <string name="close_view_product_info">닫기</string>
+
+    <string name="post_delete_confirm_dialog_title">게시물을 삭제할까요?</string>
+    <string name="post_delete_confirm_dialog_notice_content">삭제된 게시물은 복구할 수 없으니\n신중히 선택해주세요</string>
 
     <!-- 포스트 작성 -->
     <string name="update_product_info_of_pin">수정</string>
@@ -39,6 +51,8 @@
     <string name="confirm_agree">확인</string>
     <string name="confirm_cancel">취소</string>
 
+    <string name="notice_edit_post_add_pin">이미지의 중앙에 핀이 추가됐어요</string>
+
     <!-- 신고 -->
     <string name="post_report_confirm_dialog_title">해당 게시물을 신고할까요?</string>
     <string name="post_writer_report_confirm_dialog_title">해당 게시물의 작성자를 신고할까요?</string>
@@ -46,4 +60,71 @@
     <string name="post_report_confirm_dialog_confirm">신고할게요</string>
     <string name="post_report_confirm_dialog_cancel">아니요</string>
     <string name="post_report_confirm_clear_toast">신고 처리되었습니다.</string>
+
+    <!-- post -->
+    <string name="post_edit_title">새 게시물</string>
+    <string name="upload_post">등록하기</string>
+    <string name="done_image_picker">다음</string>
+    <string name="done_select_hobby_category">완료</string>
+    <string name="image_picker_title">이미지 선택</string>
+    <string name="add_new_image">이미지 올리기</string>
+    <string name="notice_not_select_image">이미지를 하나 이상 첨부해주세요.</string>
+    <string name="btn_add_pin">핀 추가</string>
+    <string name="btn_auto_add_pin">핀 자동 생성</string>
+    <string name="title_input_content">내용 입력</string>
+    <string name="title_select_category">카테고리 선택</string>
+    <string name="done_input_product_info">저장하기</string>
+
+    <string name="confirm_delete_image_for_post_edit">사진을 삭제할까요?</string>
+    <string name="confirm_delete_image_for_post_edit_description">사진을 삭제하시면 사진에 포함된\n제품 핀도 함께 삭제됩니다.</string>
+    <string name="btn_cancel">취소</string>
+    <string name="btn_agree_delete">삭제</string>
+    <string name="toast_done_delete">삭제되었습니다.</string>
+    <string name="notice_input_product_info_for_pin">핀에 보여줄 제품 정보를 입력해주세요.\n(제품명은 필수입니다)</string>
+    <string name="label_product_name_for_input_product_info">제품명</string>
+    <string name="label_product_url_for_input_product_info">구매처</string>
+    <string name="placeholder_product_name_for_input_product_info">최대 20자까지 작성할 수 있어요.</string>
+    <string name="placeholder_product_url_for_input_product_info">구매한 사이트의 URL을 작성해주세요. (예: https://www.shop.com)</string>
+    <string name="notice_product_name_not_null">제품명을 입력해주세요.</string>
+    <string name="notice_product_name_max_length">제품명은 20자 이내로 입력해주세요.</string>
+    <string name="placeholder_input_post_content">최대 2000자까지 작성할 수 있어요.\n해시태그는 20개까지 추가할 수 있어요.</string>
+    <string name="notice_post_content_max_length">내용은 2000자 이내로 입력해주세요.</string>
+    <string name="notice_post_hashtag_max_count">해시태그는 최대 20개까지 추가할 수 있어요.</string>
+    <string name="notice_select_hobby_category_of_post">취미 카테고리를 선택해주세요.</string>
+    <string name="toast_delete_pin">해당 핀을 삭제했어요</string>
+
+    <!-- 마이페이지 -->
+    <string name="login_btn">로그인하기</string>
+    <string name="login_title">로그인하세요</string>
+    <string name="login_notice">로그인 후 마이꾸미의 더 많은 서비스를\n이용할 수 있어요.</string>
+    <string name="more_service_notice">더 많은 기능을 준비 중이에요!</string>
+
+    <string name="profile_title">프로필</string>
+    <string name="edit_profile_btn">프로필 수정</string>
+    <string name="share_profile_btn">프로필 공유</string>
+
+    <string name="edit_profile_title">프로필 수정</string>
+    <string name="edit_profile_image_title">프로필 사진</string>
+    <string name="edit_profile_change_profile_image">프로필 이미지 변경</string>
+    <string name="edit_profile_nickname_title">닉네임</string>
+    <string name="edit_profile_nickname_placeholder">닉네임을 입력해주세요</string>
+    <string name="edit_profile_nickname_notice1">한글/영문/숫자/특수문자(.-_) 모두 가능해요</string>
+    <string name="edit_profile_nickname_notice2">최소 3자 ~ 최대 16자로 적어주세요</string>
+    <string name="edit_profile_email_title">이메일</string>
+    <string name="edit_profile_introduction_title">한 줄 소개</string>
+    <string name="edit_profile_introduction_placeholder">한 줄로 자신을 소개해보세요 (최대 50자)</string>
+    <string name="edit_profile_hobby_title">관심 취미</string>
+    <string name="edit_profile_submit_button">수정 완료</string>
+
+    <string name="setting_title">설정</string>
+    <string name="setting_app_version_title">앱 버전</string>
+    <string name="setting_personal_info_notice_title">개인정보처리방침</string>
+    <string name="setting_logout_title">로그아웃</string>
+    <string name="setting_delete_user_title">회원 탈퇴</string>
+    
+    <string name="logout_confirm_dialog_title">로그아웃 하시겠습니까?</string>
+    <string name="logout_confirm_dialog_notice_content">확인 버튼을 누르면 로그아웃 후\n마이페이지로 이동됩니다</string>
+
+    <string name="delete_user_confirm_dialog_title">계정을 탈퇴하시겠습니까?</string>
+    <string name="delete_user_confirm_dialog_notice_content">탈퇴 버튼을 누르면 탈퇴 신청을 위한\n웹 페이지로 접근합니다</string>
 </resources>
